@@ -1,0 +1,44 @@
+ nav {
+    width: 200px;
+    background: #859422;
+    border-left: 10px solid #859422;
+    transition: 0.5s;
+  }
+  nav.active {
+    width: 65px;
+  }
+  nav ul li {
+    padding: 10px 15px;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+    transition: background-color 0.3s;
+  }
+  nav ul li:hover,
+  nav ul li.hovered {
+    background: grey;
+  }
+  nav ul li .nav-link {
+    color: black;
+  }
+  nav ul li:hover .nav-link,
+  nav ul li.hovered .nav-link {
+    color: white;
+  }
+  nav ul li .nav-link .icon {
+    min-width: 40px;
+    height: 30px;
+    line-height: 30px;
+  }
+  
+  @media screen and (max-width: 1024px) {
+    nav {
+      left: -150px;
+      transition: 0.5s;
+    }
+    nav.active {
+      left: 0;
+      transition: 0.5s;
+      width: 200px;
+    }
+  }
+  

@@ -1,0 +1,16 @@
+<div class="container-fluid p-0 min-vh-100">
+    <app-menu [isActive]="isMenuActive"></app-menu>
+    <div [class.active]="isMenuActive" class="main position-absolute min-vh-100">
+        <div class="d-flex justify-content-between align-items-center p-1 border-bottom border-2">
+            <div class="toggle" style="cursor: pointer">
+                <span (click)="toggleMenu()" class="icon d-flex align-items-center"><img src="/assets/icons/iconCategories.png" alt="toggle-menu" width="30px"
+                        height="30px"></span>
+            </div>
+            <div class="search">
+                <span class="icon d-flex align-items-center"><img src="/assets/icons/usercircle.png"
+                        alt="toggle-menu" width="30px" height="30px"></span>
+            </div>
+        </div>
+        <router-outlet></router-outlet>
+    </div>
+</div>

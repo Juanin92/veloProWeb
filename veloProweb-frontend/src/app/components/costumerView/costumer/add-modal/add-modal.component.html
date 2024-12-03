@@ -1,0 +1,37 @@
+<div class="modal fade" id="addCostumer" tabindex="-1" aria-labelledby="addCostumer" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-center w-100">
+                <h1 class="modal-title fs-3 w-100">Registro de Clientes</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form (ngSubmit)="addCostumer(form.value)" #form="ngForm">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="name" placeholder="Ingrese nombre" name="name"
+                            required />
+                        <label for="name" class="form-label">Nombre</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="surname" placeholder="Ingrese apellidos"
+                            name="surname" required />
+                        <label for="surname" class="form-label">Apellido</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="tel" class="form-control" id="phone" placeholder="Ingrese número de teléfono"
+                            value="+569 " name="phone" required />
+                        <label for="phone" class="form-label">Número de Teléfono</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="email" placeholder="Ingrese email" />
+                        <label for="email" class="form-label">Correo Electrónico</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-success" (click)="addCostumer(form.value)">Guardar</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>

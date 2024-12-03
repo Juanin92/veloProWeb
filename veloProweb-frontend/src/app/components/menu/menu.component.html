@@ -1,0 +1,58 @@
+<nav [class.active]="isActive" class="position-fixed start-0 h-100 overflow-hidden">
+    <ul class="position-absolute top-0 start-0 w-100 list-unstyled">
+        <li class="mb-5" style="pointer-events: none">
+            <a class="nav-link d-flex align-items-center">
+                <span class="icon d-flex align-items-center"><img src="/assets/icons/home.png" alt="home" width="24px" height="24px"></span>
+                <span class="title">HOME</span>
+            </a>
+        </li>
+        <li class="w-100">
+            <a class="nav-link d-flex align-items-center">
+                <span class="icon d-flex align-items-center"><img src="/assets/icons/cashregister.png" alt="home" width="24px" height="24px"></span>
+                <span class="title">Ventas</span>
+            </a>
+        </li>
+        <li class="w-100">
+            <a class="nav-link d-flex align-items-center">
+                <span class="icon d-flex align-items-center"><img src="/assets/icons/inventory.png" alt="home" width="24px"
+                        height="24px"></span>
+                <span class="title">Inventario</span>
+            </a>
+        </li>
+        <li class="w-100">
+            <a class="nav-link d-flex align-items-center" [routerLink]="['/costumer']">
+                <span class="icon d-flex align-items-center"><img src="/assets/icons/user.png" alt="home" width="24px"
+                        height="24px"></span>
+                <span class="title">Clientes</span>
+            </a>
+        </li>
+        <li class="w-100">
+            <a class="nav-link d-flex align-items-center">
+                <span class="icon d-flex align-items-center"><img src="/assets/icons/report.png" alt="home" width="24px"
+                        height="24px"></span>
+                <span class="title">Informes</span>
+            </a>
+        </li>
+        <li class="w-100">
+            <a class="nav-link d-flex align-items-center">
+                <span class="icon d-flex align-items-center"><img src="/assets/icons/settings.png" alt="home" width="24px"
+                        height="24px"></span>
+                <span class="title">Ajuste</span>
+            </a>
+        </li>
+        <li class="w-100">
+            <a class="nav-link d-flex align-items-center">
+                <span class="icon d-flex align-items-center"><img src="/assets/icons/history.png" alt="home" width="24px"
+                        height="24px"></span>
+                <span class="title">Historial</span>
+            </a>
+        </li>
+        <li class="w-100 mt-5">
+            <a class="nav-link d-flex align-items-center">
+                <span class="icon d-flex align-items-center"><img src="/assets/icons/signout.png" alt="home" width="24px"
+                        height="24px"></span>
+                <span class="title">Salir</span>
+            </a>
+        </li>
+    </ul>
+</nav>
