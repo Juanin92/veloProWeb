@@ -17,6 +17,7 @@ export class CostumerComponent implements OnInit{
   filteredCostumers: Costumer[] = [];
   selectedCostumer: Costumer | null = null;
   textFilter: string = '';
+  totalDebts: number = 0;
 
   constructor(private costumerService: CostumerService){}
 
@@ -29,35 +30,11 @@ export class CostumerComponent implements OnInit{
       (data) => {
         this.costumers = data;
         this.filteredCostumers = data;
+        this.updateTotalDebtLabel();
       }, (error) => {
         console.log('Error no se encontró ningún cliente', error);
       }
     );
-  }
-
-  statusColor(status: string): string{
-    switch(status){
-      case 'PAGADA': return 'rgb(40, 238, 40)';
-      case 'PENDIENTE': return 'red';
-      case 'PARCIAL': return 'rgb(9, 180, 237)';
-      case 'VENCIDA': return 'blue';
-      default: return 'transparent';
-    }
-  }
-
-  getStatusAccount(account: boolean): string{
-    if(account){
-      return 'Activo';
-    }else{
-      return 'Inactivo';
-    }
-  }
-
-  getEmailEmpty(email: string): string{
-    if (email.includes('x@x.xxx')) {
-      return 'Sin Registro';
-    }
-    return email;
   }
 
   updateCostumer(): void{
@@ -75,6 +52,28 @@ export class CostumerComponent implements OnInit{
       }
     );
     }
+  }
+
+  updateTotalDebtLabel(): void{
+    this.totalDebts = this.costumers.reduce((sum, costumer) => sum + costumer.debt, 0);
+  }
+
+  statusColor(status: string): string{
+    switch(status){
+      case 'PAGADA': return 'rgb(40, 238, 40)';
+      case 'PENDIENTE': return 'red';
+      case 'PARCIAL': return 'rgb(9, 180, 237)';
+      case 'VENCIDA': return 'blue';
+      default: return 'transparent';
+    }
+  }
+
+  getStatusAccount(account: boolean): string{
+    return account ? 'Activo':'Inactivo';
+  }
+
+  getEmailEmpty(email: string): string{
+    return email.includes('x@x.xxx') ? 'Sin Registro': email;
   }
 
   editModalCostumer(costumer: Costumer): void{
