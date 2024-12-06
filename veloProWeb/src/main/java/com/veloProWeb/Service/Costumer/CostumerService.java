@@ -77,10 +77,10 @@ public class CostumerService implements ICostumerService{
         if (costumer.getTotalDebt() == 0) {
             costumer.setStatus(PaymentStatus.NULO);
         }
-        if (costumer.getDebt() >= 0 && costumer.getTotalDebt() > 0) {
+        if (costumer.getDebt() > 0 && costumer.getTotalDebt() > 0) {
             costumer.setStatus(PaymentStatus.PENDIENTE);
         }
-        if (costumer.getDebt() < (costumer.getTotalDebt() / 2)) {
+        if (costumer.getDebt() <= (costumer.getTotalDebt() / 2)) {
             costumer.setStatus(PaymentStatus.PARCIAL);
         }
         if (costumer.getDebt() == 0 && costumer.getTotalDebt() > 0){

@@ -2,6 +2,7 @@ package com.veloProWeb.Model.Entity.Costumer;
 
 import com.veloProWeb.Model.Enum.PaymentStatus;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Entity
 @Data
+@AllArgsConstructor
 public class Costumer {
 
     @Id
