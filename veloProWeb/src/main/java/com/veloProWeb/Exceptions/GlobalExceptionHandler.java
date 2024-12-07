@@ -30,6 +30,4 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acceso denegado. No tienes permiso para acceder a este recurso.");
     }
-
-
 }

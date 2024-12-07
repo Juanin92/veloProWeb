@@ -74,7 +74,7 @@ public class CostumerControllerTest {
     //Pruebas para agregar un nuevo cliente
     @Test
     public void addCostumer_valid() throws Exception{
-        mockMvc.perform(post("/clientes/add")
+        mockMvc.perform(post("/clientes/agregar")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\": \"Juan\", \"surname\": \"Perez\"}"))
                 .andExpect(status().isOk())
@@ -90,7 +90,7 @@ public class CostumerControllerTest {
     public void addCostumer_invalidExistingCostumer() throws Exception {
         doThrow(new IllegalArgumentException("Cliente Existente: Hay registro de este cliente."))
                 .when(costumerService).addNewCostumer(any(Costumer.class));
-        mockMvc.perform(post("/clientes/add")
+        mockMvc.perform(post("/clientes/agregar")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\": \"Juan\", \"surname\": \"Perez\"}"))
                         .andExpect(status().isBadRequest())
@@ -106,7 +106,7 @@ public class CostumerControllerTest {
     //Pruebas para actualizar un cliente
     @Test
     public void updateCostumer_valid() throws Exception{
-        mockMvc.perform(put("/clientes/update")
+        mockMvc.perform(put("/clientes/actualizar")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\": \"Juan\", \"surname\": \"Perez\"}"))
                 .andExpect(status().isOk())
@@ -122,7 +122,7 @@ public class CostumerControllerTest {
     public void updateCostumer_invalidExistingCostumer() throws Exception{
         doThrow(new IllegalArgumentException("Cliente Existente: Hay registro de este cliente."))
                 .when(costumerService).updateCostumer(any(Costumer.class));
-        mockMvc.perform(put("/clientes/update")
+        mockMvc.perform(put("/clientes/actualizar")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\": \"Juan\", \"surname\": \"Perez\"}"))
                 .andExpect(status().isBadRequest())
