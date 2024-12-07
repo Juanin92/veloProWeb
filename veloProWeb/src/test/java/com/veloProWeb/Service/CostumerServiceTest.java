@@ -15,9 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -128,5 +126,11 @@ public class CostumerServiceTest {
         costumerService.addSaleToCostumer(costumer);
         assertEquals(20000, costumer.getDebt());
         verify(costumerRepo, times(2)).save(costumer);
+    }
+
+    @Test
+    public void updateTotalDebt_valid(){
+        costumerService.updateTotalDebt(costumer);
+        verify(costumerRepo).save(costumer);
     }
 }

@@ -23,8 +23,12 @@ public class CostumerController {
 
     @PostMapping("/add")
     public ResponseEntity<String> addCostumer(@RequestBody Costumer costumer){
-        costumerService.addNewCostumer(costumer);
-        return ResponseEntity.ok("Cliente agregado correctamente!");
+        try {
+            costumerService.addNewCostumer(costumer);
+            return ResponseEntity.ok("Cliente agregado correctamente!");
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @PutMapping("/update")
