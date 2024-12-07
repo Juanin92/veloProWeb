@@ -21,7 +21,7 @@ public class CostumerController {
         return costumerService.getAll();
     }
 
-    @PostMapping("/add")
+    @PostMapping("/agregar")
     public ResponseEntity<String> addCostumer(@RequestBody Costumer costumer){
         try {
             costumerService.addNewCostumer(costumer);
@@ -31,7 +31,7 @@ public class CostumerController {
         }
     }
 
-    @PutMapping("/update")
+    @PutMapping("/actualizar")
     public ResponseEntity<String> updateCostumer(@RequestBody Costumer costumer){
         try {
             costumerService.updateCostumer(costumer);
