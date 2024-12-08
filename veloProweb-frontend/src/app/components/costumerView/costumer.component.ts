@@ -3,6 +3,7 @@ import { Costumer } from '../../models/Costumer/costumer.model';
 import { CostumerService } from '../../services/costumer.service';
 import { CommonModule, NgStyle } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -19,7 +20,10 @@ export class CostumerComponent implements OnInit{
   textFilter: string = '';
   totalDebts: number = 0;
 
-  constructor(private costumerService: CostumerService){}
+  constructor(
+    private costumerService: CostumerService, 
+    private router: Router,
+  ){}
 
   ngOnInit(): void {
     this.getAllCostumer();
@@ -46,6 +50,9 @@ export class CostumerComponent implements OnInit{
         }
         this.selectedCostumer = null;
         console.log('Se actualizo el cliente: ');
+        this.router.navigate(['/clientes']).then(() => {
+          window.location.reload();
+        });
       },
       (error) => {
         console.log('Error al actualizar cliente: ', error);
@@ -78,7 +85,7 @@ export class CostumerComponent implements OnInit{
 
   editModalCostumer(costumer: Costumer): void{
     if (costumer) {
-      this.selectedCostumer = costumer;
+      this.selectedCostumer = {...costumer};
     } else {
         console.error('No se pudo editar, el cliente es undefined');
     }
