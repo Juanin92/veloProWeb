@@ -25,17 +25,18 @@ describe('CostumerService', () => {
         httpMock.verify();
     });  
 
-    it('Debería ser creado', () => {
+    it('Debería ser creado el servicio de Costumer', () => {
         expect(service).toBeTruthy();
     });
 
-    it('Debería traer clientes', () => {
+    it('Debería traer una lista de clientes, "getCostumer(): Observable<Costumer[]>"', () => {
         const mockCustomers: Costumer[] = [
-            {id: 1, name: 'Juan', surname: 'Perez', debt:0, totalDebt: 0, status: PaymentStatus.NULO, account: true, email: 'test@test.com', phone: '+569 12345678', paymentCostumerList: [], ticketHistoryList: []}
+            {id: 1, name: 'Juan', surname: 'Perez', debt:0, totalDebt: 0, status: PaymentStatus.NULO, account: true, email: 'test@test.com', phone: '+569 12345678', paymentCostumerList: [], ticketHistoryList: []},
+            {id: 2, name: 'Ignacio', surname: 'Lopez', debt:0, totalDebt: 0, status: PaymentStatus.NULO, account: true, email: 'test@test.com', phone: '+569 12345678', paymentCostumerList: [], ticketHistoryList: []}
         ];
 
         service.getCostumer().subscribe( customers => {
-            expect(customers.length).toBe(1);
+            expect(customers.length).toBe(2);
             expect(customers).toEqual(mockCustomers);
         });
 
@@ -44,7 +45,7 @@ describe('CostumerService', () => {
         req.flush(mockCustomers);
     });
 
-    it('Debería actualizar clientes', () => {
+    it('Debería actualizar a un cliente, "updateCostumer(costumer: Costumer): Observable<Costumer>"', () => {
         const mockCustomers: Costumer = {id: 1, name: 'Juan', surname: 'Perez', debt:0, totalDebt: 0, status: PaymentStatus.NULO, account: true, email: 'test@test.com', phone: '+569 12345678', paymentCostumerList: [], ticketHistoryList: []};
 
         service.updateCostumer(mockCustomers).subscribe( customers => {

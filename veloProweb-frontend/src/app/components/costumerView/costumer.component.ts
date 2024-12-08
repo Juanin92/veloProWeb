@@ -79,9 +79,9 @@ export class CostumerComponent implements OnInit{
   editModalCostumer(costumer: Costumer): void{
     if (costumer) {
       this.selectedCostumer = costumer;
-  } else {
-      console.error('No se pudo editar, el cliente es undefined');
-  }
+    } else {
+        console.error('No se pudo editar, el cliente es undefined');
+    }
   }
 
   searchFilterCostumer(): void{
