@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/clientes")
@@ -23,12 +25,15 @@ public class CostumerController {
     }
 
     @PostMapping("/agregar")
-    public ResponseEntity<String> addCostumer(@RequestBody Costumer costumer){
+    public ResponseEntity<Map<String, String>> addCostumer(@RequestBody Costumer costumer){
+        Map<String, String> response = new HashMap<>();
         try {
             costumerService.addNewCostumer(costumer);
-            return ResponseEntity.ok("Cliente agregado correctamente!");
+            response.put("message","Cliente agregado correctamente!");
+            return ResponseEntity.ok(response);
         }catch (IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 
@@ -36,9 +41,9 @@ public class CostumerController {
     public ResponseEntity<String> updateCostumer(@RequestBody Costumer costumer){
         try {
             costumerService.updateCostumer(costumer);
-            return ResponseEntity.ok("Cliente actualizado correctamente!");
+            return ResponseEntity.ok("{\"message\":\"Cliente actualizado correctamente!\"}");
         } catch (IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"" + e.getMessage() + "\"}");
         }
     }
 }
