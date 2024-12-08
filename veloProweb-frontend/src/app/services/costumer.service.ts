@@ -17,6 +17,6 @@ export class CostumerService {
   }
 
   updateCostumer(costumer: Costumer): Observable<Costumer>{
-    return this.httpClient.put<Costumer>(`${this.apiUrl}/update`, costumer);
+    return this.httpClient.put<Costumer>(`${this.apiUrl}/actualizar`, costumer);
   }
 }
