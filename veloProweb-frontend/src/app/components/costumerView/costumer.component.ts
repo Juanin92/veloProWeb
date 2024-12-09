@@ -4,6 +4,7 @@ import { CostumerService } from '../../services/costumer.service';
 import { CommonModule, NgStyle } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -50,12 +51,27 @@ export class CostumerComponent implements OnInit{
         }
         this.selectedCostumer = null;
         console.log('Se actualizo el cliente: ');
-        this.router.navigate(['/clientes']).then(() => {
-          window.location.reload();
+        Swal.fire({
+          position: "top",
+          icon: "success",
+          title: 'Se actualizo el cliente',
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+          this.router.navigate(['/clientes']).then(() => {
+            window.location.reload();
+          });
         });
       },
       (error) => {
         console.log('Error al actualizar cliente: ', error);
+        Swal.fire({
+          position: "top",
+          icon: "error",
+          title: 'Error al actualizar cliente: ' + error,
+          showConfirmButton: false,
+          timer: 1500
+        });
       }
     );
     }
