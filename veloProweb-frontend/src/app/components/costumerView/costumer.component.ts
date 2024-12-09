@@ -3,7 +3,6 @@ import { Costumer } from '../../models/Costumer/costumer.model';
 import { CostumerService } from '../../services/costumer.service';
 import { CommonModule, NgStyle } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 
@@ -22,8 +21,7 @@ export class CostumerComponent implements OnInit{
   totalDebts: number = 0;
 
   constructor(
-    private costumerService: CostumerService, 
-    private router: Router,
+    private costumerService: CostumerService,
   ){}
 
   ngOnInit(): void {
@@ -44,33 +42,33 @@ export class CostumerComponent implements OnInit{
 
   updateCostumer(): void{
     if (this.selectedCostumer) {
+      const updateCostumer = {...this.selectedCostumer};
       this.costumerService.updateCostumer(this.selectedCostumer).subscribe((data) => {
         const id = this.costumers.findIndex(costumer => costumer.id === data.id);
         if (id !== -1) {
           this.costumers[id] = data;
         }
         this.selectedCostumer = null;
-        console.log('Se actualizo el cliente: ');
+        console.log('Se actualizo el cliente: ', data);
         Swal.fire({
           position: "top",
           icon: "success",
-          title: 'Se actualizo el cliente',
+          title: `Se actualizo el cliente ${updateCostumer.name} ${updateCostumer.surname} correctamente`,
           showConfirmButton: false,
           timer: 1500
         }).then(() => {
-          this.router.navigate(['/clientes']).then(() => {
-            window.location.reload();
-          });
+          window.location.reload();
         });
       },
       (error) => {
-        console.log('Error al actualizar cliente: ', error);
+        const message = error.error.error;
+        console.log('Error al actualizar cliente: ', message);
         Swal.fire({
           position: "top",
           icon: "error",
-          title: 'Error al actualizar cliente: ' + error,
+          title: `Error al actualizar cliente \n${message}`,
           showConfirmButton: false,
-          timer: 1500
+          timer: 15500
         });
       }
     );
