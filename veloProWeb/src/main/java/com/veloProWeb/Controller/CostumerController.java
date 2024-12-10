@@ -45,4 +45,14 @@ public class CostumerController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"" + e.getMessage() + "\"}");
         }
     }
+
+    @PutMapping("/eliminar")
+    public ResponseEntity<String> deleteCostumer(@RequestBody Costumer costumer){
+        try {
+            costumerService.delete(costumer);
+            return ResponseEntity.ok("{\"message\":\"Cliente eliminado correctamente!\"}");
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"" + e.getMessage() + "\"}");
+        }
+    }
 }
