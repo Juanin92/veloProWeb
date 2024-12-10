@@ -17,7 +17,9 @@ export class MenuComponent implements OnInit{
   }
 
   initializeTooltip(): void{
+    //Selecciona todos los elementos del DOM que en sus atributos tienen [data-bs-toggle="tooltip"] convirtiendo en un array
     const toolTipElementList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    //Recorre el array de elementos y crea a cada uno su tooltip
     toolTipElementList.forEach((element) => {
       new bootstrap.Tooltip(element);
     });
