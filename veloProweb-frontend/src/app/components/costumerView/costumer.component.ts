@@ -52,12 +52,20 @@ import { CostumerValidator } from '../../validation/costumer-validator';
           }
           this.selectedCostumer = null;
           console.log('Se actualizo el cliente: ', data);
-          Swal.fire({
+          const Toast = Swal.mixin({
+            toast: true,
             position: "top",
-            icon: "success",
-            title: `Se actualizo el cliente ${updateCostumer.name} ${updateCostumer.surname} correctamente`,
             showConfirmButton: false,
-            timer: 1500
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "success",
+            title: `Se actualizo el cliente ${updateCostumer.name} ${updateCostumer.surname} correctamente`
           }).then(() => {
             window.location.reload();
           });
@@ -65,12 +73,20 @@ import { CostumerValidator } from '../../validation/costumer-validator';
         (error) => {
           const message = error.error.error;
           console.log('Error al actualizar cliente: ', message);
-          Swal.fire({
+          const Toast = Swal.mixin({
+            toast: true,
             position: "top",
-            icon: "error",
-            title: `Error al actualizar cliente \n${message}`,
             showConfirmButton: false,
-            timer: 15500
+            timer: 5000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "error",
+            title: `Error al actualizar cliente \n${message}`
           });
         }
       );
