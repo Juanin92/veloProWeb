@@ -1,4 +1,4 @@
-import { Costumer } from "./costumer.model";
+import { Customer } from "./customer.model";
 
 export interface TicketHistory {
     id: number;
@@ -8,5 +8,5 @@ export interface TicketHistory {
     status: boolean;
     date: string;
     notificationsDate: string;
-    costumer: Costumer;
+    customer: Customer;
 }

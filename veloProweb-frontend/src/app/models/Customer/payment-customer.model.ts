@@ -1,11 +1,11 @@
-import { Costumer } from "./costumer.model";
+import { Customer } from "./customer.model";
 import { TicketHistory } from "./ticket-history.model";
 
-export interface PaymentCostumer {
+export interface PaymentCustomer {
     id: number;
     amount: number;
     comment: string;
     date: string;
-    costumer: Costumer;
+    customer: Customer;
     document: TicketHistory;
 }

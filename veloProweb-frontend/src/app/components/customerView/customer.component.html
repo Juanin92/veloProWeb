@@ -5,7 +5,7 @@
             <div class="order-lg-0 order-2 p-2 align-content-start">
                 <p class="fw-bold fs-4 mb-0 m-1">Buscar Cliente:</p>
                 <div class="input-group input-group-md">
-                    <input [(ngModel)]="textFilter" (ngModelChange)="searchFilterCostumer()" type="text" class="form-control" aria-label="buscar cliente filtrado" aria-describedby="inputGroup-sizing-md" placeholder="Ingrese un valor">
+                    <input [(ngModel)]="textFilter" (ngModelChange)="searchFilterCustomer()" type="text" class="form-control" aria-label="buscar cliente filtrado" aria-describedby="inputGroup-sizing-md" placeholder="Ingrese un valor">
                 </div>
             </div>
             <div class="order-lg-1 order-0 d-flex flex-row m-auto mb-4">
@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="order-lg-2 order-1 m-2 mt-0">
-                <button class="btn active m-2 mt-1 " data-bs-toggle="button" aria-pressed="true" data-bs-toggle="modal" data-bs-target="#addCostumer"><img src="/assets/icons/iconAddUser.png" alt="Agregar_cliente"  width="60" height="60" class="d-inline-block img-fluid"></button>
+                <button class="btn active m-2 mt-1 " data-bs-toggle="button" aria-pressed="true" data-bs-toggle="modal" data-bs-target="#addCustomer"><img src="/assets/icons/iconAddUser.png" alt="Agregar_cliente"  width="60" height="60" class="d-inline-block img-fluid"></button>
                 <p class="text-center fs-7 m-0">Agregar</p>
             </div>
         </div>
@@ -52,20 +52,20 @@
                 </tr>
             </thead>
             <tbody class="table-group-divider text-center align-middle">
-                <tr *ngFor="let costumer of filteredCostumers">
-                    <th scope="row">{{costumer.id}}</th>
-                    <td>{{costumer.name}}</td>
-                    <td>{{costumer.surname}}</td>
-                    <td>{{getEmailEmpty(costumer.email)}}</td>
-                    <td>{{costumer.phone}}</td>
-                    <td>{{costumer.debt | currency: 'CLP':'$':'1.0-0'}}</td>
-                    <td [ngStyle]="{'background-color': statusColor(costumer.status)}"></td>
-                    <td>{{getStatusAccount(costumer.account)}}</td>
+                <tr *ngFor="let customer of filteredCustomers">
+                    <th scope="row">{{customer.id}}</th>
+                    <td>{{customer.name}}</td>
+                    <td>{{customer.surname}}</td>
+                    <td>{{getEmailEmpty(customer.email)}}</td>
+                    <td>{{customer.phone}}</td>
+                    <td>{{customer.debt | currency: 'CLP':'$':'1.0-0'}}</td>
+                    <td [ngStyle]="{'background-color': statusColor(customer.status)}"></td>
+                    <td>{{getStatusAccount(customer.account)}}</td>
                     <td>
                         <div>
-                            <button *ngIf="costumer.debt > 0" class="btn btn-sm btn-success m-1" data-bs-toggle="modal" data-bs-target="#paymentCostumer"><img src="/assets/icons/btnPayIcon.png" alt="pago" width="30" height="30" class="img-fluid"></button>
-                            <button class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#updateCostumer" (click)="editModalCostumer(costumer)"><img src="/assets/icons/btnEditIcon.png" alt="editar" width="30" height="30" class="img-fluid"></button>
-                            <button *ngIf="costumer.debt > 0 || costumer.account" class="btn btn-sm btn-danger m-1"><img src="/assets/icons/btnDeleteIcon.png" alt="borrar" width="30" height="30" class="img-fluid"></button>
+                            <button *ngIf="customer.debt > 0" class="btn btn-sm btn-success m-1" data-bs-toggle="modal" data-bs-target="#paymentCustomer"><img src="/assets/icons/btnPayIcon.png" alt="pago" width="30" height="30" class="img-fluid"></button>
+                            <button class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#updateCustomer" (click)="editModalCustomer(customer)"><img src="/assets/icons/btnEditIcon.png" alt="editar" width="30" height="30" class="img-fluid"></button>
+                            <button *ngIf="customer.debt > 0 || customer.account" class="btn btn-sm btn-danger m-1"><img src="/assets/icons/btnDeleteIcon.png" alt="borrar" width="30" height="30" class="img-fluid"></button>
                         </div>
                     </td>
                 </tr>
@@ -73,8 +73,8 @@
         </table>
     </div>
 </div>
-<!-- Modal Add Costumer -->
-<div class="modal fade" id="addCostumer" tabindex="-1" aria-labelledby="addCostumer" aria-hidden="true">
+<!-- Modal Add Customer -->
+<div class="modal fade" id="addCustomer" tabindex="-1" aria-labelledby="addCustomer" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header text-center w-100">
@@ -85,46 +85,46 @@
                 <form>
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="name" placeholder="Ingrese nombre"
-                        name="name" [(ngModel)]="newCostumer.name" [ngClass]="{'is-invalid': !costumerValidator.isFieldValid(newCostumer, 'name')}"  required />
+                        name="name" [(ngModel)]="newCustomer.name" [ngClass]="{'is-invalid': !customerValidator.isFieldValid(newCustomer, 'name')}"  required />
                         <label for="name" class="form-label">Nombre</label>
-                        <div *ngIf="!costumerValidator.isFieldValid(newCostumer, 'name')" cl class="invalid-feedback">
+                        <div *ngIf="!customerValidator.isFieldValid(newCustomer, 'name')" cl class="invalid-feedback">
                             Nombre no válido debe tener al menos 3 letras.
                         </div>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="surname" placeholder="Ingrese apellidos"
-                        name="surname" [(ngModel)]="newCostumer.surname" [ngClass]="{'is-invalid': !costumerValidator.isFieldValid(newCostumer, 'surname')}" required />
+                        name="surname" [(ngModel)]="newCustomer.surname" [ngClass]="{'is-invalid': !customerValidator.isFieldValid(newCustomer, 'surname')}" required />
                         <label for="surname" class="form-label">Apellido</label>
-                        <div *ngIf="!costumerValidator.isFieldValid(newCostumer, 'surname')" class="invalid-feedback">
+                        <div *ngIf="!customerValidator.isFieldValid(newCustomer, 'surname')" class="invalid-feedback">
                             Apellido no válido debe tener al menos 3 letras.
                         </div>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="tel" class="form-control" id="phone" placeholder="Ingrese número de teléfono" value="+569 " name="phone" [(ngModel)]="newCostumer.phone" [ngClass]="{'is-invalid': !costumerValidator.isFieldValid(newCostumer, 'phone')}" required />
+                        <input type="tel" class="form-control" id="phone" placeholder="Ingrese número de teléfono" value="+569 " name="phone" [(ngModel)]="newCustomer.phone" [ngClass]="{'is-invalid': !customerValidator.isFieldValid(newCustomer, 'phone')}" required />
                         <label for="phone" class="form-label">Número de Teléfono</label>
-                        <div *ngIf="!costumerValidator.isFieldValid(newCostumer, 'phone')" class="invalid-feedback">
+                        <div *ngIf="!customerValidator.isFieldValid(newCustomer, 'phone')" class="invalid-feedback">
                             Teléfono no válido (+569 12345678).
                         </div>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="email" class="form-control" id="email" placeholder="Ingrese email" [(ngModel)]="newCostumer.email" [ngClass]="{'is-invalid': !costumerValidator.isFieldValid(newCostumer, 'email')}" />
+                        <input type="email" class="form-control" id="email" placeholder="Ingrese email" [(ngModel)]="newCustomer.email" [ngClass]="{'is-invalid': !customerValidator.isFieldValid(newCustomer, 'email')}" />
                         <label for="email" class="form-label">Correo Electrónico</label>
-                        <div *ngIf="!costumerValidator.isFieldValid(newCostumer, 'email')" class="invalid-feedback">
+                        <div *ngIf="!customerValidator.isFieldValid(newCustomer, 'email')" class="invalid-feedback">
                             Email no válido (example&commat;test.com)
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="submit" class="btn btn-success" (click)="addCostumer()" [disabled]="!validateForm(newCostumer)">Guardar</button>
+                <button type="submit" class="btn btn-success" (click)="addCustomer()" [disabled]="!validateForm(newCustomer)">Guardar</button>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
             </div>
         </div>
     </div>
 </div>
-<!-- Modal Update Costumer -->
-<div class="modal fade" id="updateCostumer" tabindex="-1" aria-labelledby="updateCostumer" aria-hidden="true"
-    *ngIf="selectedCostumer">
+<!-- Modal Update Customer -->
+<div class="modal fade" id="updateCustomer" tabindex="-1" aria-labelledby="updateCustomer" aria-hidden="true"
+    *ngIf="selectedCustomer">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header text-center w-100">
@@ -135,47 +135,47 @@
                 <form #form="ngForm">
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="name" placeholder="Ingrese nombre" name="name"
-                            [(ngModel)]="selectedCostumer.name" [ngClass]="{'is-invalid': !costumerValidator.isFieldValid(selectedCostumer, 'name')}" required />
+                            [(ngModel)]="selectedCustomer.name" [ngClass]="{'is-invalid': !customerValidator.isFieldValid(selectedCustomer, 'name')}" required />
                         <label for="name" class="form-label">Nombre</label>
-                        <div *ngIf="!costumerValidator.isFieldValid(selectedCostumer, 'name')" cl class="invalid-feedback">
+                        <div *ngIf="!customerValidator.isFieldValid(selectedCustomer, 'name')" cl class="invalid-feedback">
                             Nombre no válido debe tener al menos 3 letras.
                         </div>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="surname" placeholder="Ingrese apellidos"
-                            name="surname" [(ngModel)]="selectedCostumer.surname" [ngClass]="{'is-invalid': !costumerValidator.isFieldValid(selectedCostumer, 'surname')}" required />
+                            name="surname" [(ngModel)]="selectedCustomer.surname" [ngClass]="{'is-invalid': !customerValidator.isFieldValid(selectedCustomer, 'surname')}" required />
                         <label for="surname" class="form-label">Apellido</label>
-                        <div *ngIf="!costumerValidator.isFieldValid(selectedCostumer, 'surname')" class="invalid-feedback">
+                        <div *ngIf="!customerValidator.isFieldValid(selectedCustomer, 'surname')" class="invalid-feedback">
                             Apellido no válido debe tener al menos 3 letras.
                         </div>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="tel" class="form-control" id="phone" placeholder="Ingrese número de teléfono"
-                            value="+569 " name="phone" [(ngModel)]="selectedCostumer.phone" [ngClass]="{'is-invalid': !costumerValidator.isFieldValid(selectedCostumer, 'phone')}" required />
+                            value="+569 " name="phone" [(ngModel)]="selectedCustomer.phone" [ngClass]="{'is-invalid': !customerValidator.isFieldValid(selectedCustomer, 'phone')}" required />
                         <label for="phone" class="form-label">Número de Teléfono</label>
-                        <div *ngIf="!costumerValidator.isFieldValid(selectedCostumer, 'phone')" class="invalid-feedback">
+                        <div *ngIf="!customerValidator.isFieldValid(selectedCustomer, 'phone')" class="invalid-feedback">
                             Teléfono no válido (+569 12345678).
                         </div>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="email" class="form-control" id="email" placeholder="Ingrese email" name="email"
-                            [(ngModel)]="selectedCostumer.email" [ngClass]="{'is-invalid': !costumerValidator.isFieldValid(selectedCostumer, 'email')}" />
+                            [(ngModel)]="selectedCustomer.email" [ngClass]="{'is-invalid': !customerValidator.isFieldValid(selectedCustomer, 'email')}" />
                         <label for="email" class="form-label">Correo Electrónico</label>
-                        <div *ngIf="!costumerValidator.isFieldValid(selectedCostumer, 'email')" class="invalid-feedback">
+                        <div *ngIf="!customerValidator.isFieldValid(selectedCustomer, 'email')" class="invalid-feedback">
                             Email no válido (example&commat;test.com)
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-success" (click)="updateCostumer()" [disabled]="!validateForm(selectedCostumer)">Actualizar</button>
+                <button type="button" class="btn btn-success" (click)="updateCustomer()" [disabled]="!validateForm(selectedCustomer)">Actualizar</button>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
             </div>
         </div>
     </div>
 </div>
-<!-- Modal Payment Costumer -->
-<div class="modal fade"id="paymentCostumer" tabindex="-1" aria-labelledby="paymentCostumer" aria-hidden="true">
+<!-- Modal Payment Customer -->
+<div class="modal fade"id="paymentCustomer" tabindex="-1" aria-labelledby="paymentCustomer" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header text-center w-100">

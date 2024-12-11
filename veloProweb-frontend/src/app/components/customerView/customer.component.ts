@@ -1,42 +1,42 @@
   import { Component, OnInit } from '@angular/core';
-  import { Costumer } from '../../models/Costumer/costumer.model';
-  import { CostumerService } from '../../services/costumer.service';
+  import { Customer } from '../../models/Customer/customer.model';
+  import { CustomerService } from '../../services/customer.service';
   import { CommonModule, NgStyle } from '@angular/common';
   import { FormsModule} from '@angular/forms';
   import Swal from 'sweetalert2';
-import { CostumerValidator } from '../../validation/costumer-validator';
+import { CustomerValidator } from '../../validation/customer-validator';
 import { PaymentStatus } from '../../models/enum/payment-status.enum';
 
 
   @Component({
-    selector: 'app-costumer',
+    selector: 'app-customer',
     standalone: true,
     imports: [CommonModule, NgStyle, FormsModule],
-    templateUrl: './costumer.component.html',
-    styleUrl: './costumer.component.css'
+    templateUrl: './customer.component.html',
+    styleUrl: './customer.component.css'
   })
-  export class CostumerComponent implements OnInit{
-    costumers: Costumer[] = [];
-    filteredCostumers: Costumer[] = [];
-    selectedCostumer: Costumer | null = null;
+  export class CustomerComponent implements OnInit{
+    customers: Customer[] = [];
+    filteredCustomers: Customer[] = [];
+    selectedCustomer: Customer | null = null;
     textFilter: string = '';
     totalDebts: number = 0;
-    costumerValidator = CostumerValidator;
-    newCostumer: Costumer = this.createEmptyCostumer();
+    customerValidator = CustomerValidator;
+    newCustomer: Customer = this.createEmptyCustomer();
 
     constructor(
-      private costumerService: CostumerService
+      private customerService: CustomerService
     ){}
 
     ngOnInit(): void {
-      this.getAllCostumer();
+      this.getAllCustomer();
     }
 
-    getAllCostumer(): void{
-      this.costumerService.getCostumer().subscribe(
+    getAllCustomer(): void{
+      this.customerService.getCustomer().subscribe(
         (data) => {
-          this.costumers = data;
-          this.filteredCostumers = data;
+          this.customers = data;
+          this.filteredCustomers = data;
           this.updateTotalDebtLabel();
         }, (error) => {
           console.log('Error no se encontró ningún cliente', error);
@@ -44,18 +44,18 @@ import { PaymentStatus } from '../../models/enum/payment-status.enum';
       );
     }
 
-    addCostumer(): void {
-      if (this.validateForm(this.newCostumer)) {
-        this.costumerService.addCostumer(this.newCostumer).subscribe(
+    addCustomer(): void {
+      if (this.validateForm(this.newCustomer)) {
+        this.customerService.addCustomer(this.newCustomer).subscribe(
           (response) => {
             console.log('Cliente agregado exitosamente:', response);
             Swal.fire({
               icon: 'success',
               title: 'Cliente agregado',
-              text: `¡El cliente ${this.newCostumer.name} ${this.newCostumer.surname} fue agregado exitosamente!`,
+              text: `¡El cliente ${this.newCustomer.name} ${this.newCustomer.surname} fue agregado exitosamente!`,
               confirmButtonText: 'Aceptar',
             }).then(() => {
-              this.createEmptyCostumer();
+              this.createEmptyCustomer();
               window.location.reload();
             });
           },
@@ -79,15 +79,15 @@ import { PaymentStatus } from '../../models/enum/payment-status.enum';
       }
     }
 
-    updateCostumer(): void{
-      if (this.selectedCostumer && this.validateForm(this.selectedCostumer)) {
-        const updateCostumer = {...this.selectedCostumer};
-        this.costumerService.updateCostumer(this.selectedCostumer).subscribe((data) => {
-          const id = this.costumers.findIndex(costumer => costumer.id === data.id);
+    updateCustomer(): void{
+      if (this.selectedCustomer && this.validateForm(this.selectedCustomer)) {
+        const updateCustomer = {...this.selectedCustomer};
+        this.customerService.updateCustomer(this.selectedCustomer).subscribe((data) => {
+          const id = this.customers.findIndex(customer => customer.id === data.id);
           if (id !== -1) {
-            this.costumers[id] = data;
+            this.customers[id] = data;
           }
-          this.selectedCostumer = null;
+          this.selectedCustomer = null;
           console.log('Se actualizo el cliente: ', data);
           const Toast = Swal.mixin({
             toast: true,
@@ -102,7 +102,7 @@ import { PaymentStatus } from '../../models/enum/payment-status.enum';
           });
           Toast.fire({
             icon: "success",
-            title: `Se actualizo el cliente ${updateCostumer.name} ${updateCostumer.surname} correctamente`
+            title: `Se actualizo el cliente ${updateCustomer.name} ${updateCustomer.surname} correctamente`
           }).then(() => {
             window.location.reload();
           });
@@ -130,7 +130,7 @@ import { PaymentStatus } from '../../models/enum/payment-status.enum';
       }
     }
 
-    createEmptyCostumer(): Costumer{
+    createEmptyCustomer(): Customer{
       return {
         id: 0, 
         name: '',
@@ -141,17 +141,17 @@ import { PaymentStatus } from '../../models/enum/payment-status.enum';
         totalDebt: 0, 
         status: PaymentStatus.NULO, 
         account: true, 
-        paymentCostumerList: [], 
+        paymentCustomerList: [], 
         ticketHistoryList: [] 
       };
     }
 
-    validateForm(costumer: Costumer): boolean {
-      return this.costumerValidator.validateForm(costumer);
+    validateForm(customer: Customer): boolean {
+      return this.customerValidator.validateForm(customer);
     }
 
     updateTotalDebtLabel(): void{
-      this.totalDebts = this.costumers.reduce((sum, costumer) => sum + costumer.debt, 0);
+      this.totalDebts = this.customers.reduce((sum, customer) => sum + customer.debt, 0);
     }
 
     statusColor(status: string): string{
@@ -172,24 +172,24 @@ import { PaymentStatus } from '../../models/enum/payment-status.enum';
       return email.includes('x@x.xxx') ? 'Sin Registro': email;
     }
 
-    editModalCostumer(costumer: Costumer): void{
-      if (costumer) {
-        this.selectedCostumer = {...costumer};
+    editModalCustomer(customer: Customer): void{
+      if (customer) {
+        this.selectedCustomer = {...customer};
       } else {
           console.error('No se pudo editar, el cliente es undefined');
       }
     }
 
-    searchFilterCostumer(): void{
+    searchFilterCustomer(): void{
       if (this.textFilter.trim() === '') {
-        this.filteredCostumers = this.costumers;
+        this.filteredCustomers = this.customers;
       } else {
-        this.filteredCostumers = this.costumers.filter(costumer => 
-          costumer.name.toLowerCase().includes(this.textFilter.toLowerCase()) ||
-          costumer.surname.toLowerCase().includes(this.textFilter.toLowerCase()) ||
-          costumer.status.toLowerCase().includes(this.textFilter.toLowerCase()) ||
-          (this.textFilter.toLowerCase() === 'activo' && costumer.account) || 
-          (this.textFilter.toLowerCase() === 'inactivo' && !costumer.account)
+        this.filteredCustomers = this.customers.filter(customer => 
+          customer.name.toLowerCase().includes(this.textFilter.toLowerCase()) ||
+          customer.surname.toLowerCase().includes(this.textFilter.toLowerCase()) ||
+          customer.status.toLowerCase().includes(this.textFilter.toLowerCase()) ||
+          (this.textFilter.toLowerCase() === 'activo' && customer.account) || 
+          (this.textFilter.toLowerCase() === 'inactivo' && !customer.account)
         );
       }
     }

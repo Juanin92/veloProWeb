@@ -1,15 +1,15 @@
-import { Costumer } from "../models/Costumer/costumer.model";
+import { Customer } from "../models/Customer/customer.model";
 
-export class CostumerValidator {
-    static validateForm(selectedCostumer: Costumer): boolean {
-        return this.isFieldValid(selectedCostumer, 'name') &&
-            this.isFieldValid(selectedCostumer, 'surname') &&
-            this.isFieldValid(selectedCostumer, 'phone') &&
-            this.isFieldValid(selectedCostumer, 'email');
+export class CustomerValidator {
+    static validateForm(selectedCustomer: Customer): boolean {
+        return this.isFieldValid(selectedCustomer, 'name') &&
+            this.isFieldValid(selectedCustomer, 'surname') &&
+            this.isFieldValid(selectedCustomer, 'phone') &&
+            this.isFieldValid(selectedCustomer, 'email');
     }
 
-    static isFieldValid(costumer: Costumer, fieldName: keyof Costumer): boolean {
-        const value = costumer[fieldName];
+    static isFieldValid(customer: Customer, fieldName: keyof Customer): boolean {
+        const value = customer[fieldName];
         if (fieldName === 'email') {
             return !value || typeof value === 'string' && /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value);
         }

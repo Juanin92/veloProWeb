@@ -1,8 +1,8 @@
 import { PaymentStatus } from "../enum/payment-status.enum";
-import { PaymentCostumer } from "./payment-costumer.model";
+import { PaymentCustomer } from "./payment-customer.model";
 import { TicketHistory } from "./ticket-history.model";
 
-export interface Costumer {
+export interface Customer {
     id: number;
     name: string;
     surname: string;
@@ -12,6 +12,6 @@ export interface Costumer {
     totalDebt: number;
     status: PaymentStatus;
     account: boolean;
-    paymentCostumerList: PaymentCostumer[];
+    paymentCustomerList: PaymentCustomer[];
     ticketHistoryList: TicketHistory[];
 }

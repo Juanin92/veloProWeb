@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Costumer } from '../../../../models/Costumer/costumer.model';
+import { Costumer } from '../../../../models/Customer/customer.model';
 import { PaymentStatus } from '../../../../models/enum/payment-status.enum';
 
 @Component({
