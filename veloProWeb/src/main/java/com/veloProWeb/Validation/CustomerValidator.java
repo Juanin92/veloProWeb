@@ -3,6 +3,8 @@ package com.veloProWeb.Validation;
 import com.veloProWeb.Model.Entity.Customer.Customer;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+
 @Component
 public class CustomerValidator {
     public void validate(Customer customer){
@@ -28,6 +30,10 @@ public class CustomerValidator {
     private void validateSurname(String surname){
         if (surname == null || surname.trim().isBlank() || surname.trim().length() < 3 || !surname.matches("[a-zA-Z ]+")){
             throw new IllegalArgumentException("Ingrese apellido válido.");
+        }
+        String[] words = surname.trim().split("\\s+");
+        if (words.length != 2) {
+            throw new IllegalArgumentException("Ingrese los 2 apellidos");
         }
     }
     private void validatePhone(String phone){

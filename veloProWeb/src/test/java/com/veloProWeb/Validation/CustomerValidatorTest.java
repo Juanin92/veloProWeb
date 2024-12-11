@@ -22,7 +22,7 @@ public class CustomerValidatorTest {
 
     @BeforeEach
     void setUp(){
-        customer = new Customer(1L,"Juan", "Perez", "+569 12345678", "test@test.com", 0, 0, PaymentStatus.NULO, true, new ArrayList<>(), new ArrayList<>());
+        customer = new Customer(1L,"Juan", "Perez Perez", "+569 12345678", "test@test.com", 0, 0, PaymentStatus.NULO, true, new ArrayList<>(), new ArrayList<>());
     }
 
     //Prueba para validar todos los datos válidos
@@ -61,6 +61,13 @@ public class CustomerValidatorTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validate(customer));
         assertEquals("Ingrese apellido válido.", exception.getMessage());
     }
+    @ParameterizedTest
+    @ValueSource(strings = {"perez", "perez perez perez"})
+    public void validateSurname_invalidNormalSurname(String surname){
+        customer.setSurname(surname);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validate(customer));
+        assertEquals("Ingrese los 2 apellidos", exception.getMessage());
+    }
 
     //Pruebas para validar Teléfono del cliente
     @ParameterizedTest
@@ -73,7 +80,7 @@ public class CustomerValidatorTest {
 
     //Pruebas para validar Email del cliente
     @ParameterizedTest
-    @ValueSource(strings = {"","asdfs"})
+    @ValueSource(strings = {"","asdf"})
     public void validateEmail_invalidEmail(String email){
         customer.setEmail(email);
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validate(customer));
