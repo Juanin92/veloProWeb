@@ -33,14 +33,14 @@ public class CustomerServiceTest {
     //Pruebas de creación de clientes nuevos
     @Test
     public void addNewCustomer_valid(){
-        when(customerRepo.findByNameAndSurname(customer.getName(), customer.getSurname())).thenReturn(Optional.empty());
+        when(customerRepo.findBySimilarNameAndSurname(customer.getName(), customer.getSurname())).thenReturn(Optional.empty());
         customerService.addNewCustomer(customer);
         verify(validator).validate(customer);
         verify(customerRepo).save(customer);
     }
     @Test
     public void addNewCustomer_existingCustomer(){
-        when(customerRepo.findByNameAndSurname(customer.getName(), customer.getSurname())).thenReturn(Optional.of(customer));
+        when(customerRepo.findBySimilarNameAndSurname(customer.getName(), customer.getSurname())).thenReturn(Optional.of(customer));
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> customerService.addNewCustomer(customer));
         assertEquals("Cliente Existente: Hay registro de este cliente.", exception.getMessage());
         verify(validator, never()).validate(any(Customer.class));
@@ -50,7 +50,7 @@ public class CustomerServiceTest {
     //Pruebas de actualización de clientes
     @Test
     public void updateCustomer_valid(){
-        when(customerRepo.findByNameAndSurname(customer.getName(), customer.getSurname())).thenReturn(Optional.empty());
+        when(customerRepo.findBySimilarNameAndSurname(customer.getName(), customer.getSurname())).thenReturn(Optional.empty());
         customerService.updateCustomer(customer);
         verify(validator).validate(customer);
         verify(customerRepo).save(customer);
@@ -58,7 +58,7 @@ public class CustomerServiceTest {
     @Test
     public void updateCustomer_existingCustomer(){
         Customer customerDB = new Customer(2L,"Juan", "Perez", "+569 12345678", "test@test.com", 0, 0, PaymentStatus.NULO, true, new ArrayList<>(), new ArrayList<>());
-        when(customerRepo.findByNameAndSurname(customerDB.getName(), customerDB.getSurname())).thenReturn(Optional.of(customerDB));
+        when(customerRepo.findBySimilarNameAndSurname(customerDB.getName(), customerDB.getSurname())).thenReturn(Optional.of(customerDB));
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> customerService.addNewCustomer(customer));
         assertEquals("Cliente Existente: Hay registro de este cliente.", exception.getMessage());
         verify(validator, never()).validate(any(Customer.class));
