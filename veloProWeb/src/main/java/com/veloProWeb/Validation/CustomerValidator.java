@@ -1,21 +1,21 @@
 package com.veloProWeb.Validation;
 
-import com.veloProWeb.Model.Entity.Costumer.Costumer;
+import com.veloProWeb.Model.Entity.Customer.Customer;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CostumerValidator {
-    public void validate(Costumer costumer){
-        validateName(costumer.getName());
-        validateSurname(costumer.getSurname());
-        validatePhone(costumer.getPhone());
-        validateEmail(costumer.getEmail());
+public class CustomerValidator {
+    public void validate(Customer customer){
+        validateName(customer.getName());
+        validateSurname(customer.getSurname());
+        validatePhone(customer.getPhone());
+        validateEmail(customer.getEmail());
     }
-    public void validateValuePayment(int number, Costumer costumer){
+    public void validateValuePayment(int number, Customer customer){
         if (number <= 0){
             throw new IllegalArgumentException("El monto no puede ser menor a 0.");
         }
-        if (number > costumer.getDebt()){
+        if (number > customer.getDebt()){
             throw new IllegalArgumentException("El monto supera el valor de la deuda.");
         }
     }

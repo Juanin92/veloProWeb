@@ -1,6 +1,6 @@
 package com.veloProWeb.Model.Entity.Sale;
 
-import com.veloProWeb.Model.Entity.Costumer.Costumer;
+import com.veloProWeb.Model.Entity.Customer.Customer;
 import com.veloProWeb.Model.Enum.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -34,8 +34,8 @@ public class Sale {
     private boolean status;
 
     @ManyToOne
-    @JoinColumn(name = "id_costumer", nullable = true)
-    private Costumer costumer;
+    @JoinColumn(name = "id_customer", nullable = true)
+    private Customer customer;
 
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
     private List<SaleDetail> saleDetails = new ArrayList<>();

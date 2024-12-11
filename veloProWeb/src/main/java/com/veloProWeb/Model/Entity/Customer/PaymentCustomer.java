@@ -1,4 +1,4 @@
-package com.veloProWeb.Model.Entity.Costumer;
+package com.veloProWeb.Model.Entity.Customer;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -9,31 +9,25 @@ import java.time.LocalDate;
 
 @Entity
 @Data
-public class TicketHistory {
+@Table(name = "payment_customer")
+public class PaymentCustomer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String document;
-    private int total;
-    private boolean status;
+    private int amount;
+    private String comment;
 
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     @Temporal(TemporalType.DATE)
     @CreatedDate
     private LocalDate date;
 
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
-    @Temporal(TemporalType.DATE)
-    @CreatedDate
-    private LocalDate notificationsDate;
+    @ManyToOne
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
 
     @ManyToOne
-    @JoinColumn(name = "id_costumer")
-    private Costumer costumer;
-
-    @Override
-    public String toString() {
-        return document;
-    }
+    @JoinColumn(name = "ticketHistory_id", nullable = false)
+    private TicketHistory document;
 }

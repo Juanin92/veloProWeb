@@ -1,9 +1,9 @@
 package com.veloProWeb.Controller;
 
 import com.veloProWeb.Exceptions.GlobalExceptionHandler;
-import com.veloProWeb.Model.Entity.Costumer.Costumer;
+import com.veloProWeb.Model.Entity.Customer.Customer;
 import com.veloProWeb.Model.Enum.PaymentStatus;
-import com.veloProWeb.Service.Costumer.ICostumerService;
+import com.veloProWeb.Service.Customer.ICustomerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,111 +27,111 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @ExtendWith(MockitoExtension.class)
-public class CostumerControllerTest {
-    @InjectMocks private CostumerController costumerController;
-    @Mock private ICostumerService costumerService;
+public class CustomerControllerTest {
+    @InjectMocks private CustomerController customerController;
+    @Mock private ICustomerService customerService;
     @Autowired private MockMvc mockMvc;
-    private Costumer costumer;
+    private Customer customer;
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(costumerController).setControllerAdvice(new GlobalExceptionHandler()).build();
-        costumer = new Costumer(1L, "Juan", "Perez", "+56912345678", "juan.perez@test.com", 100, 0, PaymentStatus.NULO, true, new ArrayList<>(), new ArrayList<>());
+        mockMvc = MockMvcBuilders.standaloneSetup(customerController).setControllerAdvice(new GlobalExceptionHandler()).build();
+        customer = new Customer(1L, "Juan", "Perez", "+56912345678", "juan.perez@test.com", 100, 0, PaymentStatus.NULO, true, new ArrayList<>(), new ArrayList<>());
     }
 
     //Pruebas para obtener una lista de todos los clientes
     @Test
-    public void getListCostumerNull_valid() throws Exception {
-        when(costumerService.getAll()).thenReturn(Collections.emptyList());
+    public void getListCustomerNull_valid() throws Exception {
+        when(customerService.getAll()).thenReturn(Collections.emptyList());
         mockMvc.perform(get("/clientes"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$").isEmpty());
-        verify(costumerService, times(1)).getAll();
+        verify(customerService, times(1)).getAll();
     }
     @Test
-    public void getListCostumerData_valid() throws Exception {
-        List<Costumer> costumers = Collections.singletonList(
-                costumer
+    public void getListCustomerData_valid() throws Exception {
+        List<Customer> customers = Collections.singletonList(
+                customer
         );
-        when(costumerService.getAll()).thenReturn(costumers);
+        when(customerService.getAll()).thenReturn(customers);
         mockMvc.perform(get("/clientes"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("[0].name").value("Juan"));
-        verify(costumerService, times(1)).getAll();
+        verify(customerService, times(1)).getAll();
     }
     @Test
-    public void getListCostumer_error() throws Exception {
-        when(costumerService.getAll()).thenThrow(new RuntimeException("Ocurrió un error inesperado. Por favor, intente más tarde."));
+    public void getListCustomer_error() throws Exception {
+        when(customerService.getAll()).thenThrow(new RuntimeException("Ocurrió un error inesperado. Por favor, intente más tarde."));
         mockMvc.perform(get("/clientes"))
                 .andExpect(status().isInternalServerError())
                         .andExpect(content().string("Ocurrió un error inesperado. Por favor, intente más tarde."));
-        verify(costumerService, times(1)).getAll();
+        verify(customerService, times(1)).getAll();
     }
 
     //Pruebas para agregar un nuevo cliente
     @Test
-    public void addCostumer_valid() throws Exception{
+    public void addCustomer_valid() throws Exception{
         mockMvc.perform(post("/clientes/agregar")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\": \"Juan\", \"surname\": \"Perez\"}"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Cliente agregado correctamente!"));
 
-        ArgumentCaptor<Costumer> costumerArgumentCaptor = ArgumentCaptor.forClass(Costumer.class);
-        verify(costumerService, times(1)).addNewCostumer(costumerArgumentCaptor.capture());
-        Costumer capturedCostumer = costumerArgumentCaptor.getValue();
-        assertEquals("Juan", capturedCostumer.getName());
-        assertEquals("Perez", capturedCostumer.getSurname());
+        ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
+        verify(customerService, times(1)).addNewCustomer(customerArgumentCaptor.capture());
+        Customer capturedCustomer = customerArgumentCaptor.getValue();
+        assertEquals("Juan", capturedCustomer.getName());
+        assertEquals("Perez", capturedCustomer.getSurname());
     }
     @Test
-    public void addCostumer_invalidExistingCostumer() throws Exception {
+    public void addCustomer_invalidExistingCustomer() throws Exception {
         doThrow(new IllegalArgumentException("Cliente Existente: Hay registro de este cliente."))
-                .when(costumerService).addNewCostumer(any(Costumer.class));
+                .when(customerService).addNewCustomer(any(Customer.class));
         mockMvc.perform(post("/clientes/agregar")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\": \"Juan\", \"surname\": \"Perez\"}"))
                         .andExpect(status().isBadRequest())
                         .andExpect(content().string("Cliente Existente: Hay registro de este cliente."));
 
-        ArgumentCaptor<Costumer> costumerArgumentCaptor = ArgumentCaptor.forClass(Costumer.class);
-        verify(costumerService, times(1)).addNewCostumer(costumerArgumentCaptor.capture());
-        Costumer capturedCostumer = costumerArgumentCaptor.getValue();
-        assertEquals("Juan", capturedCostumer.getName());
-        assertEquals("Perez", capturedCostumer.getSurname());
+        ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
+        verify(customerService, times(1)).addNewCustomer(customerArgumentCaptor.capture());
+        Customer capturedCustomer = customerArgumentCaptor.getValue();
+        assertEquals("Juan", capturedCustomer.getName());
+        assertEquals("Perez", capturedCustomer.getSurname());
     }
 
     //Pruebas para actualizar un cliente
     @Test
-    public void updateCostumer_valid() throws Exception{
+    public void updateCustomer_valid() throws Exception{
         mockMvc.perform(put("/clientes/actualizar")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\": \"Juan\", \"surname\": \"Perez\"}"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Cliente actualizado correctamente!"));
 
-        ArgumentCaptor<Costumer> costumerArgumentCaptor = ArgumentCaptor.forClass(Costumer.class);
-        verify(costumerService, times(1)).updateCostumer(costumerArgumentCaptor.capture());
-        Costumer capturedCostumer = costumerArgumentCaptor.getValue();
-        assertEquals("Juan", capturedCostumer.getName());
-        assertEquals("Perez", capturedCostumer.getSurname());
+        ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
+        verify(customerService, times(1)).updateCustomer(customerArgumentCaptor.capture());
+        Customer capturedCustomer = customerArgumentCaptor.getValue();
+        assertEquals("Juan", capturedCustomer.getName());
+        assertEquals("Perez", capturedCustomer.getSurname());
     }
     @Test
-    public void updateCostumer_invalidExistingCostumer() throws Exception{
+    public void updateCustomer_invalidExistingCustomer() throws Exception{
         doThrow(new IllegalArgumentException("Cliente Existente: Hay registro de este cliente."))
-                .when(costumerService).updateCostumer(any(Costumer.class));
+                .when(customerService).updateCustomer(any(Customer.class));
         mockMvc.perform(put("/clientes/actualizar")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\": \"Juan\", \"surname\": \"Perez\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Cliente Existente: Hay registro de este cliente."));
 
-        ArgumentCaptor<Costumer> costumerArgumentCaptor = ArgumentCaptor.forClass(Costumer.class);
-        verify(costumerService, times(1)).updateCostumer(costumerArgumentCaptor.capture());
-        Costumer capturedCostumer = costumerArgumentCaptor.getValue();
-        assertEquals("Juan", capturedCostumer.getName());
-        assertEquals("Perez", capturedCostumer.getSurname());
+        ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
+        verify(customerService, times(1)).updateCustomer(customerArgumentCaptor.capture());
+        Customer capturedCustomer = customerArgumentCaptor.getValue();
+        assertEquals("Juan", capturedCustomer.getName());
+        assertEquals("Perez", capturedCustomer.getSurname());
     }
 }

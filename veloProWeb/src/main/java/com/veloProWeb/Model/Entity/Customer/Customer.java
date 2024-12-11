@@ -1,4 +1,4 @@
-package com.veloProWeb.Model.Entity.Costumer;
+package com.veloProWeb.Model.Entity.Customer;
 
 import com.veloProWeb.Model.Enum.PaymentStatus;
 import jakarta.persistence.*;
@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Costumer {
+public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +30,7 @@ public class Costumer {
     private boolean account;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
-    private List<PaymentCostumer> paymentCostumerList = new ArrayList<>();
+    private List<PaymentCustomer> paymentCustomerList = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private List<TicketHistory> ticketHistoryList = new ArrayList<>();
