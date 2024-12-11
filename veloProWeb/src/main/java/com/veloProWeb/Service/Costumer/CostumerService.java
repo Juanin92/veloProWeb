@@ -102,7 +102,7 @@ public class CostumerService implements ICostumerService{
     }
 
     private Costumer getCostumerCreated(String name, String surname) {
-        Optional<Costumer> costumerOptional = costumerRepo.findByNameAndSurname(capitalize(name), capitalize(surname));
+        Optional<Costumer> costumerOptional = costumerRepo.findBySimilarNameAndSurname(capitalize(name), capitalize(surname));
         return costumerOptional.orElse(null);
     }
 
