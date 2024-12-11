@@ -2,9 +2,10 @@
   import { Costumer } from '../../models/Costumer/costumer.model';
   import { CostumerService } from '../../services/costumer.service';
   import { CommonModule, NgStyle } from '@angular/common';
-  import { FormsModule, NgForm} from '@angular/forms';
+  import { FormsModule} from '@angular/forms';
   import Swal from 'sweetalert2';
 import { CostumerValidator } from '../../validation/costumer-validator';
+import { PaymentStatus } from '../../models/enum/payment-status.enum';
 
 
   @Component({
@@ -21,6 +22,7 @@ import { CostumerValidator } from '../../validation/costumer-validator';
     textFilter: string = '';
     totalDebts: number = 0;
     costumerValidator = CostumerValidator;
+    newCostumer: Costumer = this.createEmptyCostumer();
 
     constructor(
       private costumerService: CostumerService
@@ -42,8 +44,43 @@ import { CostumerValidator } from '../../validation/costumer-validator';
       );
     }
 
+    addCostumer(): void {
+      if (this.validateForm(this.newCostumer)) {
+        this.costumerService.addCostumer(this.newCostumer).subscribe(
+          (response) => {
+            console.log('Cliente agregado exitosamente:', response);
+            Swal.fire({
+              icon: 'success',
+              title: 'Cliente agregado',
+              text: `¡El cliente ${this.newCostumer.name} ${this.newCostumer.surname} fue agregado exitosamente!`,
+              confirmButtonText: 'Aceptar',
+            }).then(() => {
+              this.createEmptyCostumer();
+              window.location.reload();
+            });
+          },
+          (error) => {
+            console.error('Error al agregar el cliente:', error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al agregar cliente',
+              text: error.error.message || 'Ocurrió un error inesperado.',
+              confirmButtonText: 'Aceptar',
+            });
+          }
+        );
+      } else {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Formulario incompleto',
+          text: 'Por favor, complete correctamente todos los campos obligatorios.',
+          confirmButtonText: 'Aceptar',
+        });
+      }
+    }
+
     updateCostumer(): void{
-      if (this.selectedCostumer && this.validateForm()) {
+      if (this.selectedCostumer && this.validateForm(this.selectedCostumer)) {
         const updateCostumer = {...this.selectedCostumer};
         this.costumerService.updateCostumer(this.selectedCostumer).subscribe((data) => {
           const id = this.costumers.findIndex(costumer => costumer.id === data.id);
@@ -93,11 +130,24 @@ import { CostumerValidator } from '../../validation/costumer-validator';
       }
     }
 
-    validateForm(): boolean {
-      if (this.selectedCostumer) {
-        return this.costumerValidator.validateForm(this.selectedCostumer);
-      }
-      return false;
+    createEmptyCostumer(): Costumer{
+      return {
+        id: 0, 
+        name: '',
+        surname: '',
+        phone: '+569 ',
+        email: '',
+        debt: 0,
+        totalDebt: 0, 
+        status: PaymentStatus.NULO, 
+        account: true, 
+        paymentCostumerList: [], 
+        ticketHistoryList: [] 
+      };
+    }
+
+    validateForm(costumer: Costumer): boolean {
+      return this.costumerValidator.validateForm(costumer);
     }
 
     updateTotalDebtLabel(): void{
