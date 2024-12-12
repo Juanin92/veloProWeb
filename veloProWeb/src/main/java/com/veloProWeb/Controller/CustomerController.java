@@ -2,6 +2,7 @@ package com.veloProWeb.Controller;
 
 import com.veloProWeb.Model.Entity.Customer.Customer;
 import com.veloProWeb.Service.Customer.ICustomerService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,6 +54,19 @@ public class CustomerController {
             return ResponseEntity.ok("{\"message\":\"Cliente eliminado correctamente!\"}");
         }catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"" + e.getMessage() + "\"}");
+        }
+    }
+
+    @PutMapping("/activar")
+    public ResponseEntity<Map<String, String>> activeCustomer(@RequestBody Customer customer){
+        Map<String, String> response = new HashMap<>();
+        try{
+            customerService.activeCustomer(customer);
+            response.put("message", "Cliente ha sido activado");
+            return ResponseEntity.ok(response);
+        }catch (Exception e){
+            response.put("message", "Ocurrió un error inesperado. " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 }
