@@ -107,7 +107,7 @@
                         </div>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="email" class="form-control" id="email" placeholder="Ingrese email" [(ngModel)]="newCustomer.email" [ngClass]="{'is-invalid': !customerValidator.isFieldValid(newCustomer, 'email')}" />
+                        <input type="email" class="form-control" id="email" placeholder="Ingrese email" name="email" [(ngModel)]="newCustomer.email" [ngClass]="{'is-invalid': !customerValidator.isFieldValid(newCustomer, 'email')}" />
                         <label for="email" class="form-label">Correo Electrónico</label>
                         <div *ngIf="!customerValidator.isFieldValid(newCustomer, 'email')" class="invalid-feedback">
                             Email no válido (example&commat;test.com)

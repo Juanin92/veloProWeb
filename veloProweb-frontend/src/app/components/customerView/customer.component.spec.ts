@@ -66,26 +66,30 @@ describe('CustomerComponent', () => {
       expect(console.log).toHaveBeenCalledWith('Error no se encontró ningún cliente', jasmine.any(Error));
     });
   
-    // it('Debería actualizar a un cliente, "updateCustomer(): void"', () => {
-    //   component.selectedCustomer = mockCustomer;
+    it('Debería actualizar a un cliente, "updateCustomer(): void"', () => {
+      component.selectedCustomer = mockCustomer;
   
-    //   customerService.updateCustomer.and.returnValue(of(mockCustomer));
+      customerService.updateCustomer.and.returnValue(of("Cliente actualizado correctamente!"));
   
-    //   component.updateCustomer();
+      component.updateCustomer();
   
-    //   expect(component.selectedCustomer).toBeNull();
-    // });
+      expect(component.selectedCustomer).toBeNull();
+    });
   
     it('Debería manejar error cuando se actualiza un cliente', () => {
       component.selectedCustomer = mockCustomer;
-  
-      customerService.updateCustomer.and.returnValue(throwError(() => new Error('Error updating customer')));
+      customerService.updateCustomer.and.returnValue(throwError(() => ({
+          error: {
+              error: 'Error updating customer'
+          }
+      })));
       spyOn(console, 'log');
   
       component.updateCustomer();
   
-      expect(console.log).toHaveBeenCalledWith('Error al actualizar cliente: ', jasmine.any(Error));
-    });
+      expect(console.log).toHaveBeenCalledWith('Error al actualizar cliente: ', 'Error updating customer');
+  });
+  
   
     it('Debería actualizar el label de deuda total correctamente, "updateTotalDebtLabel(): void"', () => {
       component.customers = [ {...mockCustomer, debt: 1500, totalDebt: 1500},
