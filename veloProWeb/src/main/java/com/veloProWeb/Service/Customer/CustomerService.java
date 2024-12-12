@@ -64,6 +64,12 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
+    public void activeCustomer(Customer customer) {
+        customer.setAccount(true);
+        customerRepo.save(customer);
+    }
+
+    @Override
     public void paymentDebt(Customer customer, String amount) {
         int number = Integer.parseInt(amount);
         validator.validateValuePayment(number, customer);

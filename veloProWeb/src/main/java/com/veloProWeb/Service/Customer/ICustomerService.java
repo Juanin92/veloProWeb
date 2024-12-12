@@ -8,6 +8,7 @@ public interface ICustomerService {
     void addNewCustomer(Customer customer);
     List<Customer> getAll();
     void delete(Customer customer);
+    void activeCustomer(Customer customer);
     void paymentDebt(Customer customer, String amount);
     void statusAssign(Customer customer);
     void addSaleToCustomer(Customer customer);
