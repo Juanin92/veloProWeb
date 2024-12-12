@@ -65,8 +65,15 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public void activeCustomer(Customer customer) {
-        customer.setAccount(true);
-        customerRepo.save(customer);
+        if (customer == null || customer.getId() == null) {
+            throw new IllegalArgumentException("Cliente no válido, Null");
+        }
+        if (!customer.isAccount()){
+            customer.setAccount(true);
+            customerRepo.save(customer);
+        }else{
+            throw new IllegalArgumentException("El cliente tiene su cuenta activada");
+        }
     }
 
     @Override
@@ -82,15 +89,12 @@ public class CustomerService implements ICustomerService {
     public void statusAssign(Customer customer) {
         if (customer.getTotalDebt() == 0) {
             customer.setStatus(PaymentStatus.NULO);
-        }
-        if (customer.getDebt() > 0 && customer.getTotalDebt() > 0) {
-            customer.setStatus(PaymentStatus.PENDIENTE);
-        }
-        if (customer.getDebt() <= (customer.getTotalDebt() / 2)) {
-            customer.setStatus(PaymentStatus.PARCIAL);
-        }
-        if (customer.getDebt() == 0 && customer.getTotalDebt() > 0){
+        }else if (customer.getDebt() == 0 && customer.getTotalDebt() > 0) {
             customer.setStatus(PaymentStatus.PAGADA);
+        } else if (customer.getDebt() <= (customer.getTotalDebt() / 2) && customer.getDebt() > 0) {
+            customer.setStatus(PaymentStatus.PARCIAL);
+        } else if (customer.getDebt() > 0 && customer.getTotalDebt() > 0) {
+            customer.setStatus(PaymentStatus.PENDIENTE);
         }
         customerRepo.save(customer);
     }

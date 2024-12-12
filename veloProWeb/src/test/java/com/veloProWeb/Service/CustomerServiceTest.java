@@ -78,6 +78,25 @@ public class CustomerServiceTest {
         verify(customerRepo).save(customer);
     }
 
+    //Prueba para activar cliente seleccionado
+    @Test
+    public void active_valid(){
+        customer.setAccount(false);
+        customerService.activeCustomer(customer);
+        verify(customerRepo).save(customer);
+    }
+    @Test
+    public void active_invalid(){
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> customerService.activeCustomer(customer));
+        assertEquals("El cliente tiene su cuenta activada", exception.getMessage());
+    }
+    @Test
+    public void active_invalidNull(){
+        customer.setId(null);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> customerService.activeCustomer(customer));
+        assertEquals("Cliente no válido, Null", exception.getMessage());
+    }
+
     //Prueba validar el pago de la deuda
     @Test
     public void paymentDebt_valid(){
