@@ -130,6 +130,63 @@ import { PaymentStatus } from '../../models/enum/payment-status.enum';
       }
     }
 
+    deleteCustomer(customer: Customer): void {
+      this.selectedCustomer = customer;
+      if (this.selectedCustomer) {
+        Swal.fire({
+          title: "¿Estas seguro?",
+          text: "No podrás revertir la acción!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Si eliminar!",
+          cancelButtonText: "Cancelar",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.customerService.deleteCustomer(this.selectedCustomer!).subscribe((response) => {
+              console.log('Cliente eliminado exitosamente:', response);
+              const Toast = Swal.mixin({
+                toast: true,
+                position: "top",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                }
+              });
+              Toast.fire({
+                icon: "success",
+                title: `Se Elimino el cliente ${this.selectedCustomer!.name} ${this.selectedCustomer!.surname} correctamente`
+              }).then(() => {
+                window.location.reload();
+              });
+            }, (error) => {
+              const message = error.error.error;
+              console.log('Error al eliminar cliente: ', message);
+              const Toast = Swal.mixin({
+                toast: true,
+                position: "top",
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                }
+              });
+              Toast.fire({
+                icon: "error",
+                title: `Error al eliminar cliente \n${message}`
+              });
+            });
+          }
+        });
+      }
+    }
+
     createEmptyCustomer(): Customer{
       return {
         id: 0, 

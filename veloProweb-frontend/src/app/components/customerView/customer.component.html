@@ -64,8 +64,8 @@
                     <td>
                         <div>
                             <button *ngIf="customer.debt > 0" class="btn btn-sm btn-success m-1" data-bs-toggle="modal" data-bs-target="#paymentCustomer"><img src="/assets/icons/btnPayIcon.png" alt="pago" width="30" height="30" class="img-fluid"></button>
-                            <button class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#updateCustomer" (click)="editModalCustomer(customer)"><img src="/assets/icons/btnEditIcon.png" alt="editar" width="30" height="30" class="img-fluid"></button>
-                            <button *ngIf="customer.debt > 0 || customer.account" class="btn btn-sm btn-danger m-1"><img src="/assets/icons/btnDeleteIcon.png" alt="borrar" width="30" height="30" class="img-fluid"></button>
+                            <button  class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#updateCustomer" (click)="editModalCustomer(customer)"><img src="/assets/icons/btnEditIcon.png" alt="editar" width="30" height="30" class="img-fluid"></button>
+                            <button *ngIf="customer.debt === 0 && customer.account" class="btn btn-sm btn-danger m-1" (click)="deleteCustomer(customer)" ><img src="/assets/icons/btnDeleteIcon.png" alt="borrar" width="30" height="30" class="img-fluid"></button>
                         </div>
                     </td>
                 </tr>
@@ -85,7 +85,7 @@
                 <form>
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="name" placeholder="Ingrese nombre"
-                        name="name" [(ngModel)]="newCustomer.name" [ngClass]="{'is-invalid': !customerValidator.isFieldValid(newCustomer, 'name')}"  required />
+                        name="name" [(ngModel)]="newCustomer.name" [ngClass]="{'is-invalid': !customerValidator.isFieldValid(newCustomer, 'name')}" required />
                         <label for="name" class="form-label">Nombre</label>
                         <div *ngIf="!customerValidator.isFieldValid(newCustomer, 'name')" cl class="invalid-feedback">
                             Nombre no válido debe tener al menos 3 letras.
@@ -131,11 +131,11 @@
                 <h1 class="modal-title fs-3 w-100">Actualización de Clientes</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" [hidden]="!selectedCustomer.account">
                 <form #form="ngForm">
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="name" placeholder="Ingrese nombre" name="name"
-                            [(ngModel)]="selectedCustomer.name" [ngClass]="{'is-invalid': !customerValidator.isFieldValid(selectedCustomer, 'name')}" required />
+                            [(ngModel)]="selectedCustomer.name" [ngClass]="{'is-invalid': !customerValidator.isFieldValid(selectedCustomer, 'name')}" [disabled]="selectedCustomer.debt > 0" required />
                         <label for="name" class="form-label">Nombre</label>
                         <div *ngIf="!customerValidator.isFieldValid(selectedCustomer, 'name')" cl class="invalid-feedback">
                             Nombre no válido debe tener al menos 3 letras.
@@ -143,7 +143,7 @@
                     </div>
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="surname" placeholder="Ingrese apellidos"
-                            name="surname" [(ngModel)]="selectedCustomer.surname" [ngClass]="{'is-invalid': !customerValidator.isFieldValid(selectedCustomer, 'surname')}" required />
+                            name="surname" [(ngModel)]="selectedCustomer.surname" [ngClass]="{'is-invalid': !customerValidator.isFieldValid(selectedCustomer, 'surname')}" [disabled]="selectedCustomer.debt > 0" required />
                         <label for="surname" class="form-label">Apellido</label>
                         <div *ngIf="!customerValidator.isFieldValid(selectedCustomer, 'surname')" class="invalid-feedback">
                             Apellido no válido debe tener al menos 3 letras.
@@ -159,7 +159,7 @@
                     </div>
                     <div class="form-floating mb-3">
                         <input type="email" class="form-control" id="email" placeholder="Ingrese email" name="email"
-                            [(ngModel)]="selectedCustomer.email" [ngClass]="{'is-invalid': !customerValidator.isFieldValid(selectedCustomer, 'email')}" />
+                            [(ngModel)]="selectedCustomer.email" [ngClass]="{'is-invalid': !customerValidator.isFieldValid(selectedCustomer, 'email')}"/>
                         <label for="email" class="form-label">Correo Electrónico</label>
                         <div *ngIf="!customerValidator.isFieldValid(selectedCustomer, 'email')" class="invalid-feedback">
                             Email no válido (example&commat;test.com)
@@ -168,7 +168,8 @@
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-success" (click)="updateCustomer()" [disabled]="!validateForm(selectedCustomer)">Actualizar</button>
+                <button type="button" class="btn btn-success" (click)="updateCustomer()" [disabled]="!validateForm(selectedCustomer)" [hidden]="!selectedCustomer.account">Actualizar</button>
+                <button type="button" class="btn btn-warning" [hidden]="selectedCustomer.account">Activar</button>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
             </div>
         </div>
