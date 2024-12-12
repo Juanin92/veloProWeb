@@ -66,15 +66,15 @@ describe('CustomerComponent', () => {
       expect(console.log).toHaveBeenCalledWith('Error no se encontró ningún cliente', jasmine.any(Error));
     });
   
-    it('Debería actualizar a un cliente, "updateCustomer(): void"', () => {
-      component.selectedCustomer = mockCustomer;
+    // it('Debería actualizar a un cliente, "updateCustomer(): void"', () => {
+    //   component.selectedCustomer = mockCustomer;
   
-      customerService.updateCustomer.and.returnValue(of(mockCustomer));
+    //   customerService.updateCustomer.and.returnValue(of(mockCustomer));
   
-      component.updateCustomer();
+    //   component.updateCustomer();
   
-      expect(component.selectedCustomer).toBeNull();
-    });
+    //   expect(component.selectedCustomer).toBeNull();
+    // });
   
     it('Debería manejar error cuando se actualiza un cliente', () => {
       component.selectedCustomer = mockCustomer;

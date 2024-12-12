@@ -16,12 +16,12 @@ export class CustomerService {
     return this.httpClient.get<Customer[]>(this.apiUrl);
   }
 
-  addCustomer(customer: Customer): Observable<string>{
-    return this.httpClient.post<string>(`${this.apiUrl}/agregar`, customer);
+  addCustomer(customer: Customer): Observable<{message: string}>{
+    return this.httpClient.post<{message: string}>(`${this.apiUrl}/agregar`, customer);
   }
 
-  updateCustomer(customer: Customer): Observable<Customer>{
-    return this.httpClient.put<Customer>(`${this.apiUrl}/actualizar`, customer);
+  updateCustomer(customer: Customer): Observable<string>{
+    return this.httpClient.put<string>(`${this.apiUrl}/actualizar`, customer);
   }
 
   deleteCustomer(customer: Customer): Observable<string>{
@@ -29,6 +29,6 @@ export class CustomerService {
   }
 
   activeCustomer(customer: Customer): Observable<string>{
-    return this.httpClient.put<string>(`{this.apiUrl}/activar`, customer);
+    return this.httpClient.put<string>(`${this.apiUrl}/activar`, customer);
   }
 }

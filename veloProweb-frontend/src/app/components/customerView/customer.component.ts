@@ -82,13 +82,13 @@ import { PaymentStatus } from '../../models/enum/payment-status.enum';
     updateCustomer(): void{
       if (this.selectedCustomer && this.validateForm(this.selectedCustomer)) {
         const updateCustomer = {...this.selectedCustomer};
-        this.customerService.updateCustomer(this.selectedCustomer).subscribe((data) => {
-          const id = this.customers.findIndex(customer => customer.id === data.id);
+        this.customerService.updateCustomer(this.selectedCustomer).subscribe(response => {
+          const id = this.customers.findIndex(customer => customer.id === updateCustomer.id);
           if (id !== -1) {
-            this.customers[id] = data;
+            this.customers[id] = updateCustomer;
           }
           this.selectedCustomer = null;
-          console.log('Se actualizo el cliente: ', data);
+          console.log('Se actualizo el cliente: ', updateCustomer);
           const Toast = Swal.mixin({
             toast: true,
             position: "top",
