@@ -166,9 +166,52 @@ public class CustomerControllerTest {
                         .content(customerJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("Cliente ya ha sido eliminado anteriormente."));
-
         verify(customerService, times(1)).delete(any(Customer.class));
     }
 
     //Pruebas para activar un cliente
+    @Test
+    public void activeCustomer_valid() throws Exception {
+        customer.setAccount(false);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String customerJson = objectMapper.writeValueAsString(customer);
+        doAnswer(invocationOnMock -> {
+            Customer capturedCustomer = invocationOnMock.getArgument(0);
+            capturedCustomer.setAccount(true);
+            return null;
+        }).when(customerService).activeCustomer(any(Customer.class));
+        mockMvc.perform(put("/clientes/activar")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(customerJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("Cliente ha sido activado"));
+        ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
+        verify(customerService, times(1)).activeCustomer(customerArgumentCaptor.capture());
+        Customer capturedCustomer = customerArgumentCaptor.getValue();
+        assertTrue(capturedCustomer.isAccount());
+    }
+    @Test void activeCustomer_invalidNull() throws Exception {
+        customer.setId(null);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String customerJson = objectMapper.writeValueAsString(customer);
+        doThrow(new IllegalArgumentException("Cliente no válido, Null")).when(customerService).activeCustomer(any(Customer.class));
+        mockMvc.perform(put("/clientes/activar")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(customerJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Ocurrió un error inesperado. Cliente no válido, Null"));
+        verify(customerService, times(1)).activeCustomer(any(Customer.class));
+    }
+    @Test void activeCustomer_invalid() throws Exception {
+        customer.setAccount(true);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String customerJson = objectMapper.writeValueAsString(customer);
+        doThrow(new IllegalArgumentException("El cliente tiene su cuenta activada")).when(customerService).activeCustomer(any(Customer.class));
+        mockMvc.perform(put("/clientes/activar")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(customerJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Ocurrió un error inesperado. El cliente tiene su cuenta activada"));
+        verify(customerService, times(1)).activeCustomer(any(Customer.class));
+    }
 }
