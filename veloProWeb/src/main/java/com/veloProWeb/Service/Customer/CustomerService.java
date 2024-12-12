@@ -26,6 +26,7 @@ public class CustomerService implements ICustomerService {
                 customer.setEmail("x@x.xxx");
             }
             validator.validate(customer);
+            customer.setId(null);
             customer.setAccount(true);
             customer.setStatus(PaymentStatus.NULO);
             customer.setTotalDebt(0);
