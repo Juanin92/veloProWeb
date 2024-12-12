@@ -187,6 +187,48 @@ import { PaymentStatus } from '../../models/enum/payment-status.enum';
       }
     }
 
+    activeCustomer(customer: Customer): void {
+      this.selectedCustomer = customer;
+      if (this.selectedCustomer) {
+        this.customerService.activeCustomer(this.selectedCustomer).subscribe((response) => {
+          console.log("Cliente Activado");
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "success",
+            title: `Se activo nuevamente a ${this.selectedCustomer!.name} ${this.selectedCustomer!.surname}.`
+          });
+        }, (error) => {
+          const message = error.error.error;
+          console.log('Error al eliminar cliente: ', message);
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top",
+            showConfirmButton: false,
+            timer: 5000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "error",
+            title: `Error al activar al cliente \n${message}`
+          });
+        })
+      }
+    }
+
     createEmptyCustomer(): Customer{
       return {
         id: 0, 

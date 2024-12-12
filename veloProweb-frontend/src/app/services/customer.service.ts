@@ -27,4 +27,8 @@ export class CustomerService {
   deleteCustomer(customer: Customer): Observable<string>{
     return this.httpClient.put<string>(`${this.apiUrl}/eliminar`, customer);
   }
+
+  activeCustomer(customer: Customer): Observable<string>{
+    return this.httpClient.put<string>(`{this.apiUrl}/activar`, customer);
+  }
 }
