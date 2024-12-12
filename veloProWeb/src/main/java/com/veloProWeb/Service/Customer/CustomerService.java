@@ -59,8 +59,12 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public void delete(Customer customer) {
-        customer.setAccount(false);
-        customerRepo.save(customer);
+        if (customer.isAccount()){
+            customer.setAccount(false);
+            customerRepo.save(customer);
+        }else {
+            throw new IllegalArgumentException("Cliente ya ha sido eliminado anteriormente.");
+        }
     }
 
     @Override

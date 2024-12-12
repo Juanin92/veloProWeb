@@ -1,5 +1,7 @@
 package com.veloProWeb.Controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.veloProWeb.Exceptions.GlobalExceptionHandler;
 import com.veloProWeb.Model.Entity.Customer.Customer;
 import com.veloProWeb.Model.Enum.PaymentStatus;
@@ -21,7 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -134,4 +136,39 @@ public class CustomerControllerTest {
         assertEquals("Juan", capturedCustomer.getName());
         assertEquals("Perez", capturedCustomer.getSurname());
     }
+
+    //Pruebas para eliminar un cliente
+    @Test
+    public void deleteCustomer_valid() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String customerJson = objectMapper.writeValueAsString(customer);
+        doAnswer(invocationOnMock -> {
+            Customer capturedCustomer = invocationOnMock.getArgument(0);
+            capturedCustomer.setAccount(false);
+            return null;
+        }).when(customerService).delete(any(Customer.class));
+        mockMvc.perform(put("/clientes/eliminar")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(customerJson))
+                .andExpect(status().isOk());
+        ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
+        verify(customerService, times(1)).delete(customerArgumentCaptor.capture());
+        Customer capturedCustomer = customerArgumentCaptor.getValue();
+        assertFalse(capturedCustomer.isAccount());
+    }
+    @Test void deleteCustomer_invalid() throws Exception {
+        customer.setAccount(false);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String customerJson = objectMapper.writeValueAsString(customer);
+        doThrow(new IllegalArgumentException("Cliente ya ha sido eliminado anteriormente.")).when(customerService).delete(any(Customer.class));
+        mockMvc.perform(put("/clientes/eliminar")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(customerJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Cliente ya ha sido eliminado anteriormente."));
+
+        verify(customerService, times(1)).delete(any(Customer.class));
+    }
+
+    //Pruebas para activar un cliente
 }
