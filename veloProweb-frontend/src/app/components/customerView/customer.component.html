@@ -42,7 +42,7 @@
                 <tr>
                     <th scope="col" class="position-sticky top-0">#</th>
                     <th scope="col" class="position-sticky top-0">Nombre</th>
-                    <th scope="col" class="position-sticky top-0">Apellido</th>
+                    <th scope="col" class="position-sticky top-0">Apellidos</th>
                     <th scope="col" class="position-sticky top-0">Email</th>
                     <th scope="col" class="position-sticky top-0">Teléfono</th>
                     <th scope="col" class="position-sticky top-0">Deuda</th>
@@ -94,7 +94,7 @@
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="surname" placeholder="Ingrese apellidos"
                         name="surname" [(ngModel)]="newCustomer.surname" [ngClass]="{'is-invalid': !customerValidator.isFieldValid(newCustomer, 'surname')}" required />
-                        <label for="surname" class="form-label">Apellido</label>
+                        <label for="surname" class="form-label">Apellidos</label>
                         <div *ngIf="!customerValidator.isFieldValid(newCustomer, 'surname')" class="invalid-feedback">
                             Apellido no válido debe tener al menos 3 letras.
                         </div>
@@ -144,7 +144,7 @@
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="surname" placeholder="Ingrese apellidos"
                             name="surname" [(ngModel)]="selectedCustomer.surname" [ngClass]="{'is-invalid': !customerValidator.isFieldValid(selectedCustomer, 'surname')}" [disabled]="selectedCustomer.debt > 0" required />
-                        <label for="surname" class="form-label">Apellido</label>
+                        <label for="surname" class="form-label">Apellidos</label>
                         <div *ngIf="!customerValidator.isFieldValid(selectedCustomer, 'surname')" class="invalid-feedback">
                             Apellido no válido debe tener al menos 3 letras.
                         </div>
@@ -169,7 +169,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-success" (click)="updateCustomer()" [disabled]="!validateForm(selectedCustomer)" [hidden]="!selectedCustomer.account">Actualizar</button>
-                <button type="button" class="btn btn-warning" [hidden]="selectedCustomer.account">Activar</button>
+                <button type="button" class="btn btn-warning" [hidden]="selectedCustomer.account" (click)="activeCustomer(selectedCustomer)">Activar</button>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
             </div>
         </div>

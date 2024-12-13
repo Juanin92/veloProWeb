@@ -18,15 +18,16 @@ import { PaymentStatus } from '../../models/enum/payment-status.enum';
   export class CustomerComponent implements OnInit{
     customers: Customer[] = [];
     filteredCustomers: Customer[] = [];
-    selectedCustomer: Customer | null = null;
+    selectedCustomer: Customer;
+    
     textFilter: string = '';
     totalDebts: number = 0;
     customerValidator = CustomerValidator;
     newCustomer: Customer = this.createEmptyCustomer();
 
-    constructor(
-      private customerService: CustomerService
-    ){}
+    constructor( private customerService: CustomerService){
+      this.selectedCustomer = this.createEmptyCustomer();
+    }
 
     ngOnInit(): void {
       this.getAllCustomer();
@@ -87,7 +88,8 @@ import { PaymentStatus } from '../../models/enum/payment-status.enum';
           if (id !== -1) {
             this.customers[id] = updateCustomer;
           }
-          this.selectedCustomer = null;
+          this.selectedCustomer = this.createEmptyCustomer();
+          
           console.log('Se actualizo el cliente: ', updateCustomer);
           const Toast = Swal.mixin({
             toast: true,
@@ -206,6 +208,8 @@ import { PaymentStatus } from '../../models/enum/payment-status.enum';
           Toast.fire({
             icon: "success",
             title: `Se activo nuevamente a ${this.selectedCustomer!.name} ${this.selectedCustomer!.surname}.`
+          }).then(() => {
+            window.location.reload();
           });
         }, (error) => {
           const message = error.error.error;
