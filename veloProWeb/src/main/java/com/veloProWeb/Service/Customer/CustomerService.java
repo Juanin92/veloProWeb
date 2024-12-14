@@ -17,6 +17,12 @@ public class CustomerService implements ICustomerService {
     @Autowired private CustomerRepo customerRepo;
     @Autowired private CustomerValidator validator;
 
+    /**
+     * Crea un nuevo cliente
+     * Sé válida que el cliente a crear no haya registro de este en la DB
+     * Se asigna un valor predeterminado a los emails que estén nulo o vacíos
+     * @param customer contiene los detalles del cliente
+     */
     @Override
     public void addNewCustomer(Customer customer) {
         Customer customerDB = getCostumerCreated(customer.getName(), customer.getSurname());
@@ -38,6 +44,12 @@ public class CustomerService implements ICustomerService {
         }
     }
 
+    /**
+     * Actualizar los datos de un cliente seleccionado
+     * Sé válida que los nuevos datos del cliente a modificar no haya registro similar de este en la DB
+     * Se asigna un valor predeterminado a los emails que estén nulo o vacíos
+     * @param customer contiene los nuevos detalles del cliente
+     */
     @Override
     public void updateCustomer(Customer customer) {
         Customer customerDB = getCostumerCreated(customer.getName(), customer.getSurname());
@@ -54,11 +66,20 @@ public class CustomerService implements ICustomerService {
         }
     }
 
+    /**
+     *  Obtiene el registro de todos los clientes en la DB
+     * @return lista de clientes.
+     */
     @Override
     public List<Customer> getAll() {
         return customerRepo.findAll();
     }
 
+    /**
+     * Elimina un cliente desactivando su cuenta
+     * Si la cuenta del cliente esta desactivada lanza una excepción
+     * @param customer cliente seleccionado a eliminar
+     */
     @Override
     public void delete(Customer customer) {
         if (customer.isAccount()){
@@ -69,6 +90,11 @@ public class CustomerService implements ICustomerService {
         }
     }
 
+    /**
+     * Activa la cuenta de un cliente
+     * Válida que cliente o su ID no sea nulo y si su cuenta ya está activa, lanza una excepción
+     * @param customer Cliente a activar cuenta
+     */
     @Override
     public void activeCustomer(Customer customer) {
         if (customer == null || customer.getId() == null) {
@@ -82,6 +108,12 @@ public class CustomerService implements ICustomerService {
         }
     }
 
+    /**
+     *  Realiza un pago a la deuda del cliente
+     *  Válida el monto del pago y actualiza la deuda, luego asignando el estado correspondiente
+     * @param customer Cliente que realiza el pago
+     * @param amount monto a pagar
+     */
     @Override
     public void paymentDebt(Customer customer, String amount) {
         int number = Integer.parseInt(amount);
@@ -91,6 +123,10 @@ public class CustomerService implements ICustomerService {
         statusAssign(customer);
     }
 
+    /**
+     * Asigna el estado correspondiente al cliente dependiendo en su deuda total y actual
+     * @param customer cliente que debe actualizar su estado
+     */
     @Override
     public void statusAssign(Customer customer) {
         if (customer.getTotalDebt() == 0) {
@@ -105,6 +141,11 @@ public class CustomerService implements ICustomerService {
         customerRepo.save(customer);
     }
 
+    /**
+     * Agrega una venta a la deuda del cliente
+     * Actualiza la deuda total a la deuda y se asigna un nuevo estado
+     * @param customer cliente al que se le agrega la venta
+     */
     @Override
     public void addSaleToCustomer(Customer customer) {
         customer.setDebt(customer.getTotalDebt());
@@ -112,16 +153,32 @@ public class CustomerService implements ICustomerService {
         statusAssign(customer);
     }
 
+    /**
+     * Actualiza el total de la deuda del cliente
+     * @param customer cliente que se actualizara la deuda total
+     */
     @Override
     public void updateTotalDebt(Customer customer) {
         customerRepo.save(customer);
     }
 
+    /**
+     * Busca un cliente ya creado por su nombre y apellido dados
+     * Utiliza el repositorio para encontrar un cliente con un nombre y apellido similar, capitalizados correctamente.
+     * @param name nombre del cliente
+     * @param surname apellido del cliente
+     * @return cliente encontrado o null si no encuentra similitud
+     */
     private Customer getCostumerCreated(String name, String surname) {
         Optional<Customer> customerOptional = customerRepo.findBySimilarNameAndSurname(capitalize(name), capitalize(surname));
         return customerOptional.orElse(null);
     }
 
+    /**
+     * Convierte la primera letra de cada palabra en mayúscula
+     * @param value cadena de texto a capitalizar
+     * @return palabra capitalizada
+     */
     private String capitalize(String value) {
         if (value == null || value.isEmpty()) {
             return value;
