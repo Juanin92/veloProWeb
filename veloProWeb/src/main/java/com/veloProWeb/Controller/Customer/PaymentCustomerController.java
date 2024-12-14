@@ -19,20 +19,12 @@ public class PaymentCustomerController {
 
     @GetMapping
     public ResponseEntity<List<PaymentCustomer>> getAllPayment(){
-        try {
-            return ResponseEntity.ok(paymentCustomerService.getAll());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+        return ResponseEntity.ok(paymentCustomerService.getAll());
     }
 
     @GetMapping("/abonos")
     public ResponseEntity<List<PaymentCustomer>> getCustomerSelectedPayment(@RequestParam Long customerId){
-        try {
-            return ResponseEntity.ok(paymentCustomerService.getCustomerSelected(customerId));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+        return ResponseEntity.ok(paymentCustomerService.getCustomerSelected(customerId));
     }
 }
 
