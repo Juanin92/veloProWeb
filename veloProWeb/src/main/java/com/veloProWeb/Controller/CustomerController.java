@@ -1,8 +1,7 @@
 package com.veloProWeb.Controller;
 
 import com.veloProWeb.Model.Entity.Customer.Customer;
-import com.veloProWeb.Service.Customer.ICustomerService;
-import jakarta.persistence.EntityNotFoundException;
+import com.veloProWeb.Service.Customer.Interfaces.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
