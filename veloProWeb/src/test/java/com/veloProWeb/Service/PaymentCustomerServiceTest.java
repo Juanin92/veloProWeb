@@ -1,0 +1,149 @@
+package com.veloProWeb.Service;
+
+import com.veloProWeb.Model.Entity.Customer.Customer;
+import com.veloProWeb.Model.Entity.Customer.PaymentCustomer;
+import com.veloProWeb.Model.Entity.Customer.TicketHistory;
+import com.veloProWeb.Repository.Customer.PaymentCustomerRepo;
+import com.veloProWeb.Service.Customer.PaymentCustomerService;
+import com.veloProWeb.Validation.PaymentCustomerValidator;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+public class PaymentCustomerServiceTest {
+    @InjectMocks private PaymentCustomerService paymentCustomerService;
+    @Mock private PaymentCustomerRepo paymentCustomerRepo;
+    @Mock private PaymentCustomerValidator validator;
+    @Mock private TicketHistory ticketHistory;
+    @Mock private Customer customer;
+    private PaymentCustomer paymentCustomer;
+
+    @BeforeEach
+    void setUp(){
+        paymentCustomer = new PaymentCustomer(1L,1000,"Test Comment", LocalDate.now(), customer, ticketHistory);
+    }
+
+    //Pruebas de creación de registro de abono
+    @Test
+    public void addPayments_valid(){
+        paymentCustomerService.addPayments(paymentCustomer);
+        ArgumentCaptor<PaymentCustomer> paymentCustomerCaptor = ArgumentCaptor.forClass(PaymentCustomer.class);
+        verify(paymentCustomerRepo).save(paymentCustomerCaptor.capture());
+        PaymentCustomer paymentCustomerCaptured = paymentCustomerCaptor.getValue();
+        assertEquals( paymentCustomer.getCustomer(), paymentCustomerCaptured.getCustomer());
+        assertEquals( paymentCustomer.getAmount(), paymentCustomerCaptured.getAmount());
+        assertEquals( paymentCustomer.getComment(), paymentCustomerCaptured.getComment());
+        assertEquals( paymentCustomer.getDate(), paymentCustomerCaptured.getDate());
+        assertEquals( paymentCustomer.getDocument(), paymentCustomerCaptured.getDocument());
+    }
+    @Test
+    public void addPayments_invalidValidator(){
+        doThrow(new IllegalArgumentException("Error en Validación")).when(validator).validatePayment(anyString(),anyString());
+        assertThrows(IllegalArgumentException.class,() -> paymentCustomerService.addPayments(paymentCustomer));
+        verify(paymentCustomerRepo,never()).save(paymentCustomer);
+    }
+
+    //Pruebas de para agregar ajuste de abonos
+    @Test
+    public void addAdjustPayments_valid(){
+        //Se crea un espía para 2 métodos del mismo servicio
+        PaymentCustomerService spyService = spy(paymentCustomerService);
+        spyService.addAdjustPayments(1000, paymentCustomer.getDocument(), paymentCustomer.getCustomer());
+        ArgumentCaptor<PaymentCustomer> paymentCustomerCaptor = ArgumentCaptor.forClass(PaymentCustomer.class);
+        verify(spyService).addPayments(paymentCustomerCaptor.capture());
+
+        PaymentCustomer paymentCustomerCaptured = paymentCustomerCaptor.getValue();
+        assertEquals( 1000, paymentCustomerCaptured.getAmount());
+        assertEquals( "Ajuste", paymentCustomerCaptured.getComment());
+        assertEquals( paymentCustomer.getCustomer(), paymentCustomerCaptured.getCustomer());
+        assertEquals( paymentCustomer.getDocument(), paymentCustomerCaptured.getDocument());
+    }
+    @ParameterizedTest
+    @ValueSource(ints = {0, -10})
+    public void addAdjustPayments_invalidAmount(int value){
+        PaymentCustomerService spyService = spy(paymentCustomerService);
+        spyService.addAdjustPayments(value, paymentCustomer.getDocument(), paymentCustomer.getCustomer());
+        verify(spyService, never()).addPayments(paymentCustomer);
+    }
+
+    //Prueba para obtener una lista de todos los abonos
+    @Test
+    public void getAll_valid(){
+        paymentCustomerService.getAll();
+        verify(paymentCustomerRepo).findAll();
+    }
+    @Test
+    public void getAll_validGetValue(){
+        List<PaymentCustomer> mockPayment = Collections.singletonList(paymentCustomer);
+        when(paymentCustomerRepo.findAll()).thenReturn(mockPayment);
+
+        List<PaymentCustomer> result = paymentCustomerService.getAll();
+        verify(paymentCustomerRepo).findAll();
+        assertEquals(mockPayment, result);
+    }
+
+    //Prueba para obtener una lista de las deudas del cliente seleccionado
+    @Test
+    public void getCustomerSelected_valid(){
+        paymentCustomerService.getCustomerSelected(1L);
+        verify(paymentCustomerRepo).findByCustomerId(1L);
+    }
+    @Test
+    public void getCustomerSelected_validValue(){
+        List<PaymentCustomer> mockPayment = Collections.singletonList(paymentCustomer);
+        when(paymentCustomerRepo.findByCustomerId(1L)).thenReturn(mockPayment);
+
+        List<PaymentCustomer> result = paymentCustomerService.getCustomerSelected(1L);
+        verify(paymentCustomerRepo).findByCustomerId(1L);
+        assertEquals(1, result.size());
+        assertEquals(mockPayment, result);
+    }
+
+    //Prueba para calcular el valor de la deuda por ticket
+    @Test
+    public void calculateDebtTicket_valid(){
+        paymentCustomerService.calculateDebtTicket(ticketHistory);
+        verify(paymentCustomerRepo).findByDocument(ticketHistory);
+    }
+    @Test
+    public void calculateDebtTicket_validOnePayments(){
+        List<PaymentCustomer> mockPayment = Collections.singletonList(paymentCustomer);
+        when(paymentCustomerRepo.findByDocument(ticketHistory)).thenReturn(mockPayment);
+        int result = paymentCustomerService.calculateDebtTicket(ticketHistory);
+
+        verify(paymentCustomerRepo).findByDocument(ticketHistory);
+        assertEquals(paymentCustomer.getAmount(), result);
+    }
+    @Test
+    public void calculateDebtTicket_validMorePayments(){
+        List<PaymentCustomer> mockPayment = Arrays.asList(paymentCustomer,new PaymentCustomer (1L,3000,"Test Comment", LocalDate.now(), customer, ticketHistory));
+        when(paymentCustomerRepo.findByDocument(ticketHistory)).thenReturn(mockPayment);
+        int result = paymentCustomerService.calculateDebtTicket(ticketHistory);
+
+        verify(paymentCustomerRepo).findByDocument(ticketHistory);
+        assertEquals(4000, result);
+    }
+    @Test
+    public void calculateDebtTicket_validNoPayments(){
+        when(paymentCustomerRepo.findByDocument(ticketHistory)).thenReturn(Collections.emptyList());
+        int result = paymentCustomerService.calculateDebtTicket(ticketHistory);
+
+        verify(paymentCustomerRepo).findByDocument(ticketHistory);
+        assertEquals(0, result);
+    }
+}
