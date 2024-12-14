@@ -1,4 +1,4 @@
-package com.veloProWeb.Controller;
+package com.veloProWeb.Controller.Customer;
 
 import com.veloProWeb.Model.Entity.Customer.Customer;
 import com.veloProWeb.Service.Customer.Interfaces.ICustomerService;
