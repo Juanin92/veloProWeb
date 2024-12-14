@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IPaymentCustomerService {
     void addPayments(PaymentCustomer customer);
-    void addAdjustPayments(int amount, TicketHistory ticket, Customer customer);
+    void createAdjustPayments(int amount, TicketHistory ticket, Customer customer);
     List<PaymentCustomer> getAll();
     List<PaymentCustomer> getCustomerSelected(Long id);
     int calculateDebtTicket(TicketHistory ticket);

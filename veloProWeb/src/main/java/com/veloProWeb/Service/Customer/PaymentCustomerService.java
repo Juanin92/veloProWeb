@@ -19,6 +19,11 @@ public class PaymentCustomerService implements IPaymentCustomerService {
     private PaymentCustomerRepo paymentCustomerRepo;
     @Autowired private PaymentCustomerValidator validator;
 
+    /**
+     * Agrega un pago a la deuda de un cliente.
+     * Se encarga de válidar el pago y asignar los detalles antes de registrar el pago
+     * @param paymentCustomer contiene el detalle del pago
+     */
     @Override
     public void addPayments(PaymentCustomer paymentCustomer) {
         validator.validatePayment(String.valueOf(paymentCustomer.getAmount()),paymentCustomer.getComment());
@@ -30,8 +35,14 @@ public class PaymentCustomerService implements IPaymentCustomerService {
         paymentCustomerRepo.save(paymentCustomer);
     }
 
+    /**
+     * agrega un ajuste a la deuda del cliente
+     * @param amount valor abonado
+     * @param ticket ticket al que se asocia el monto abonado
+     * @param customer cliente al cual se le hace el ajuste
+     */
     @Override
-    public void addAdjustPayments(int amount, TicketHistory ticket, Customer customer) {
+    public void createAdjustPayments(int amount, TicketHistory ticket, Customer customer) {
         if (amount > 0) {
             PaymentCustomer paymentCustomer = new PaymentCustomer();
             paymentCustomer.setCustomer(customer);
@@ -42,16 +53,30 @@ public class PaymentCustomerService implements IPaymentCustomerService {
         }
     }
 
+    /**
+     * Obtiene los registro de pagos del cliente
+     * @return una lista con los registros de pagos.
+     */
     @Override
     public List<PaymentCustomer> getAll() {
         return paymentCustomerRepo.findAll();
     }
 
+    /**
+     * Obtiene los pagos realizados de un cliente por su ID
+     * @param idCustomer ID del cliente
+     * @return lista de registro de pagos realizados
+     */
     @Override
-    public List<PaymentCustomer> getCustomerSelected(Long  id) {
-        return paymentCustomerRepo.findByCustomerId(id);
+    public List<PaymentCustomer> getCustomerSelected(Long  idCustomer) {
+        return paymentCustomerRepo.findByCustomerId(idCustomer);
     }
 
+    /**
+     * Calcula el monto a pagar por tickets seleccionados
+     * @param ticket es el seleccionado para obtener el monto a pagar
+     * @return la suma de los monto adeudos por ticket
+     */
     @Override
     public int calculateDebtTicket(TicketHistory ticket) {
         List<PaymentCustomer> paymentTickets = paymentCustomerRepo.findByDocument(ticket);

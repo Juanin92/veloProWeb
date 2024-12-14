@@ -60,10 +60,10 @@ public class PaymentCustomerServiceTest {
 
     //Pruebas de para agregar ajuste de abonos
     @Test
-    public void addAdjustPayments_valid(){
+    public void createAdjustPayments_valid(){
         //Se crea un espía para 2 métodos del mismo servicio
         PaymentCustomerService spyService = spy(paymentCustomerService);
-        spyService.addAdjustPayments(1000, paymentCustomer.getDocument(), paymentCustomer.getCustomer());
+        spyService.createAdjustPayments(1000, paymentCustomer.getDocument(), paymentCustomer.getCustomer());
         ArgumentCaptor<PaymentCustomer> paymentCustomerCaptor = ArgumentCaptor.forClass(PaymentCustomer.class);
         verify(spyService).addPayments(paymentCustomerCaptor.capture());
 
@@ -75,9 +75,9 @@ public class PaymentCustomerServiceTest {
     }
     @ParameterizedTest
     @ValueSource(ints = {0, -10})
-    public void addAdjustPayments_invalidAmount(int value){
+    public void createAdjustPayments_invalidAmount(int value){
         PaymentCustomerService spyService = spy(paymentCustomerService);
-        spyService.addAdjustPayments(value, paymentCustomer.getDocument(), paymentCustomer.getCustomer());
+        spyService.createAdjustPayments(value, paymentCustomer.getDocument(), paymentCustomer.getCustomer());
         verify(spyService, never()).addPayments(paymentCustomer);
     }
 
