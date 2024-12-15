@@ -6,27 +6,27 @@ import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { CustomerValidator } from '../../validation/customer-validator';
 import { PaymentStatus } from '../../models/enum/payment-status.enum';
+import { PaymentCustomerComponent } from "./payment-customer/payment-customer.component";
+import { AddCustomerComponent } from "./add-customer/add-customer.component";
+import { UpdateCustomerComponent } from "./update-customer/update-customer.component";
 
 
 @Component({
   selector: 'app-customer',
   standalone: true,
-  imports: [CommonModule, NgStyle, FormsModule],
+  imports: [CommonModule, NgStyle, FormsModule, PaymentCustomerComponent, AddCustomerComponent, UpdateCustomerComponent],
   templateUrl: './customer.component.html',
   styleUrl: './customer.component.css'
 })
 export class CustomerComponent implements OnInit {
   customers: Customer[] = [];
   filteredCustomers: Customer[] = [];
-  selectedCustomer: Customer;
+  selectedCustomer: Customer = this.createEmptyCustomer();
 
   textFilter: string = '';
   totalDebts: number = 0;
-  customerValidator = CustomerValidator;
-  newCustomer: Customer = this.createEmptyCustomer();
 
   constructor(private customerService: CustomerService) {
-    this.selectedCustomer = this.createEmptyCustomer();
   }
 
   ngOnInit(): void {
@@ -43,93 +43,6 @@ export class CustomerComponent implements OnInit {
         console.log('Error no se encontró ningún cliente', error);
       }
     );
-  }
-
-  addCustomer(): void {
-    if (this.validateForm(this.newCustomer)) {
-      this.customerService.addCustomer(this.newCustomer).subscribe(
-        (response) => {
-          console.log('Cliente agregado exitosamente:', response);
-          Swal.fire({
-            icon: 'success',
-            title: 'Cliente agregado',
-            text: `¡El cliente ${this.newCustomer.name} ${this.newCustomer.surname} fue agregado exitosamente!`,
-            confirmButtonText: 'Aceptar',
-          }).then(() => {
-            this.createEmptyCustomer();
-            window.location.reload();
-          });
-        },
-        (error) => {
-          console.error('Error al agregar el cliente:', error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Error al agregar cliente',
-            text: error.error.message || 'Ocurrió un error inesperado.',
-            confirmButtonText: 'Aceptar',
-          });
-        }
-      );
-    } else {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Formulario incompleto',
-        text: 'Por favor, complete correctamente todos los campos obligatorios.',
-        confirmButtonText: 'Aceptar',
-      });
-    }
-  }
-
-  updateCustomer(): void {
-    if (this.selectedCustomer && this.validateForm(this.selectedCustomer)) {
-      const updateCustomer = { ...this.selectedCustomer };
-      this.customerService.updateCustomer(this.selectedCustomer).subscribe(response => {
-        const id = this.customers.findIndex(customer => customer.id === updateCustomer.id);
-        if (id !== -1) {
-          this.customers[id] = updateCustomer;
-        }
-        this.selectedCustomer = this.createEmptyCustomer();
-
-        console.log('Se actualizo el cliente: ', updateCustomer);
-        const Toast = Swal.mixin({
-          toast: true,
-          position: "top",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          }
-        });
-        Toast.fire({
-          icon: "success",
-          title: `Se actualizo el cliente ${updateCustomer.name} ${updateCustomer.surname} correctamente`
-        }).then(() => {
-          window.location.reload();
-        });
-      },
-        (error) => {
-          const message = error.error.error;
-          console.log('Error al actualizar cliente: ', message);
-          const Toast = Swal.mixin({
-            toast: true,
-            position: "top",
-            showConfirmButton: false,
-            timer: 5000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.onmouseenter = Swal.stopTimer;
-              toast.onmouseleave = Swal.resumeTimer;
-            }
-          });
-          Toast.fire({
-            icon: "error",
-            title: `Error al actualizar cliente \n${message}`
-          });
-        }
-      );
-    }
   }
 
   deleteCustomer(customer: Customer): void {
@@ -189,50 +102,6 @@ export class CustomerComponent implements OnInit {
     }
   }
 
-  activeCustomer(customer: Customer): void {
-    this.selectedCustomer = customer;
-    if (this.selectedCustomer) {
-      this.customerService.activeCustomer(this.selectedCustomer).subscribe((response) => {
-        console.log("Cliente Activado");
-        const Toast = Swal.mixin({
-          toast: true,
-          position: "top",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          }
-        });
-        Toast.fire({
-          icon: "success",
-          title: `Se activo nuevamente a ${this.selectedCustomer!.name} ${this.selectedCustomer!.surname}.`
-        }).then(() => {
-          window.location.reload();
-        });
-      }, (error) => {
-        const message = error.error.error;
-        console.log('Error al eliminar cliente: ', message);
-        const Toast = Swal.mixin({
-          toast: true,
-          position: "top",
-          showConfirmButton: false,
-          timer: 5000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          }
-        });
-        Toast.fire({
-          icon: "error",
-          title: `Error al activar al cliente \n${message}`
-        });
-      })
-    }
-  }
-
   createEmptyCustomer(): Customer {
     return {
       id: 0,
@@ -247,10 +116,6 @@ export class CustomerComponent implements OnInit {
       paymentCustomerList: [],
       ticketHistoryList: []
     };
-  }
-
-  validateForm(customer: Customer): boolean {
-    return this.customerValidator.validateForm(customer);
   }
 
   updateTotalDebtLabel(): void {

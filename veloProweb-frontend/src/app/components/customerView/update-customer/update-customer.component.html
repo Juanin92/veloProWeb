@@ -1,0 +1,66 @@
+<div class="modal fade" id="updateCustomer" tabindex="-1" aria-labelledby="updateCustomer" aria-hidden="true"
+    *ngIf="selectedCustomer">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-center w-100">
+                <h1 class="modal-title fs-3 w-100">Actualización de Clientes</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" [hidden]="!selectedCustomer.account">
+                <form #form="ngForm">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="name" placeholder="Ingrese nombre" name="name"
+                            [(ngModel)]="selectedCustomer.name"
+                            [ngClass]="{'is-invalid': !customerValidator.isFieldValid(selectedCustomer, 'name')}"
+                            [disabled]="selectedCustomer.debt > 0" required />
+                        <label for="name" class="form-label">Nombre</label>
+                        <div *ngIf="!customerValidator.isFieldValid(selectedCustomer, 'name')" cl
+                            class="invalid-feedback">
+                            Nombre no válido debe tener al menos 3 letras.
+                        </div>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="surname" placeholder="Ingrese apellidos"
+                            name="surname" [(ngModel)]="selectedCustomer.surname"
+                            [ngClass]="{'is-invalid': !customerValidator.isFieldValid(selectedCustomer, 'surname')}"
+                            [disabled]="selectedCustomer.debt > 0" required />
+                        <label for="surname" class="form-label">Apellidos</label>
+                        <div *ngIf="!customerValidator.isFieldValid(selectedCustomer, 'surname')"
+                            class="invalid-feedback">
+                            Apellido no válido debe tener al menos 3 letras.
+                        </div>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="tel" class="form-control" id="phone" placeholder="Ingrese número de teléfono"
+                            value="+569 " name="phone" [(ngModel)]="selectedCustomer.phone"
+                            [ngClass]="{'is-invalid': !customerValidator.isFieldValid(selectedCustomer, 'phone')}"
+                            required />
+                        <label for="phone" class="form-label">Número de Teléfono</label>
+                        <div *ngIf="!customerValidator.isFieldValid(selectedCustomer, 'phone')"
+                            class="invalid-feedback">
+                            Teléfono no válido (+569 12345678).
+                        </div>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="email" placeholder="Ingrese email" name="email"
+                            [(ngModel)]="selectedCustomer.email"
+                            [ngClass]="{'is-invalid': !customerValidator.isFieldValid(selectedCustomer, 'email')}" />
+                        <label for="email" class="form-label">Correo Electrónico</label>
+                        <div *ngIf="!customerValidator.isFieldValid(selectedCustomer, 'email')"
+                            class="invalid-feedback">
+                            Email no válido (example&commat;test.com)
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-success" (click)="updateCustomer()"
+                    [disabled]="!customerValidator.validateForm(selectedCustomer)"
+                    [hidden]="!selectedCustomer.account">Actualizar</button>
+                <button type="button" class="btn btn-warning" [hidden]="selectedCustomer.account"
+                    (click)="activeCustomer(selectedCustomer)">Activar</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>

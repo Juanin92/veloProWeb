@@ -7,7 +7,7 @@ import { PaymentCustomer } from '../models/Customer/payment-customer.model';
   providedIn: 'root'
 })
 export class PaymentCustomerService {
-
+  
   private apiUrl = 'http://localhost:8080/pagos';
 
   constructor(private httpClient: HttpClient) { }

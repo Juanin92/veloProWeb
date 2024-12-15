@@ -1,0 +1,118 @@
+<div
+  class="modal fade"
+  id="paymentCustomer"
+  tabindex="-1"
+  aria-labelledby="paymentCustomer"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header text-center w-100">
+        <h5 class="modal-title text-center w-100">Pago de Deuda</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="d-flex flex-row justify-content-between text-center">
+            <div class="m-2">
+              <p class="m-0">Deuda Total</p>
+              <p class="text-danger">$1000</p>
+            </div>
+            <div class="m-2">
+              <p class="m-0">Deuda a Pagar</p>
+              <p>$1000</p>
+            </div>
+            <div class="m-2">
+              <p class="m-0">Abonado</p>
+              <p class="text-success">$1000</p>
+            </div>
+          </div>
+          <div class="d-flex flex-row justify-content-between text-center">
+            <div class="m-3">
+              <div
+                class="btn-group-vertical"
+                role="group"
+                aria-label="Seleccionador de boletas a pagar"
+              >
+                <input
+                  type="checkbox"
+                  class="btn-check"
+                  id="btncheck1"
+                  autocomplete="off"
+                />
+                <label class="btn btn-outline-primary" for="btncheck1"
+                  >B01002</label
+                >
+
+                <input
+                  type="checkbox"
+                  class="btn-check"
+                  id="btncheck2"
+                  autocomplete="off"
+                />
+                <label class="btn btn-outline-primary" for="btncheck2"
+                  >BO3320</label
+                >
+              </div>
+            </div>
+            <div>
+              <form>
+                <div class="input-group mb-3">
+                  <label class="input-group-text" for="inputGroupSelect01"
+                    >Forma Pago</label
+                  >
+                  <select class="form-select" id="inputGroupSelect01">
+                    <option value="1">Tarjeta</option>
+                    <option value="2">Efectivo</option>
+                    <option value="3">Otros</option>
+                  </select>
+                </div>
+                <div class="form-floating mb-1">
+                  <input
+                    type="number"
+                    class="form-control form-control-lg"
+                    id="paymentDebt"
+                    placeholder="Ingrese monto"
+                    name="paymentDebt"
+                    required
+                  />
+                  <label for="paymentDebt" class="form-label"
+                    >Monto a abonar</label
+                  >
+                </div>
+                <button type="submit" class="btn btn-success mb-4">
+                  Ingresar
+                </button>
+              </form>
+            </div>
+          </div>
+          <div class="text-center p-2 pt-0 table-responsive">
+            <table class="table table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th scope="col" class="position-sticky top-0">Fecha</th>
+                  <th scope="col" class="position-sticky top-0">Monto</th>
+                  <th scope="col" class="position-sticky top-0">Documento</th>
+                  <th scope="col" class="position-sticky top-0">Comentario</th>
+                </tr>
+              </thead>
+              <tbody class="table-group-divider text-center align-middle">
+                <tr>
+                  <th scope="row">13-12-2024</th>
+                  <td>$10.000</td>
+                  <td>B0012</td>
+                  <td>Tarjeta</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
