@@ -73,7 +73,9 @@ describe('CustomerComponent', () => {
   
       component.updateCustomer();
   
-      expect(component.selectedCustomer).toBeNull();
+      expect(component.selectedCustomer).toEqual({
+        id: 0, name: '', surname: '', phone: '+569 ', email: '', debt: 0, totalDebt: 0, status: PaymentStatus.NULO, account: true, paymentCustomerList: [], ticketHistoryList: []
+      });
     });
   
     it('Debería manejar error cuando se actualiza un cliente', () => {
