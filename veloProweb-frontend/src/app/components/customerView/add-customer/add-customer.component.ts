@@ -7,6 +7,7 @@ import { CustomerValidator } from '../../../validation/customer-validator';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { CustomerHelperServiceService } from '../../../services/customer-helper-service.service';
+import { NotificationService } from '../../../utils/notification-service.service';
 
 @Component({
   selector: 'app-add-customer',
@@ -22,7 +23,8 @@ export class AddCustomerComponent {
 
   constructor(
     private customerService: CustomerService,
-    private customerHelper: CustomerHelperServiceService) {
+    private customerHelper: CustomerHelperServiceService,
+    private notification: NotificationService) {
     this.newCustomer = customerHelper.createEmptyCustomer();
   }
 
@@ -31,33 +33,20 @@ export class AddCustomerComponent {
       this.customerService.addCustomer(this.newCustomer).subscribe(
         (response) => {
           console.log('Cliente agregado exitosamente:', response);
-          Swal.fire({
-            icon: 'success',
-            title: 'Cliente agregado',
-            text: `¡El cliente ${this.newCustomer.name} ${this.newCustomer.surname} fue agregado exitosamente!`,
-            confirmButtonText: 'Aceptar',
-          }).then(() => {
-            this.customerHelper.createEmptyCustomer();
+          this.notification.showSuccessToast(`¡El cliente ${this.newCustomer.name} ${this.newCustomer.surname} fue agregado exitosamente!`,'top', 3000);
+          this.customerHelper.createEmptyCustomer();
+          setTimeout(() => {
             window.location.reload();
-          });
+          }, 3000);
         },
         (error) => {
+          const message = error.error.error;
           console.error('Error al agregar el cliente:', error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Error al agregar cliente',
-            text: error.error.message || 'Ocurrió un error inesperado.',
-            confirmButtonText: 'Aceptar',
-          });
+          this.notification.showErrorToast(`Error al agregar cliente \n${message}`, 'top', 5000);
         }
       );
     } else {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Formulario incompleto',
-        text: 'Por favor, complete correctamente todos los campos obligatorios.',
-        confirmButtonText: 'Aceptar',
-      });
+      this.notification.showWarning('Formulario incompleto', 'Por favor, complete correctamente todos los campos obligatorios.');
     }
   }
 }

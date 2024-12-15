@@ -10,6 +10,7 @@ import { PaymentCustomerComponent } from "./payment-customer/payment-customer.co
 import { AddCustomerComponent } from "./add-customer/add-customer.component";
 import { UpdateCustomerComponent } from "./update-customer/update-customer.component";
 import { CustomerHelperServiceService } from '../../services/customer-helper-service.service';
+import { NotificationService } from '../../utils/notification-service.service';
 
 
 @Component({
@@ -29,7 +30,8 @@ export class CustomerComponent implements OnInit {
 
   constructor(
     private customerService: CustomerService,
-    private customerHelper: CustomerHelperServiceService) {
+    private customerHelper: CustomerHelperServiceService,
+    private notification: NotificationService) {
     this.selectedCustomer = customerHelper.createEmptyCustomer();
   }
 
@@ -52,54 +54,23 @@ export class CustomerComponent implements OnInit {
   deleteCustomer(customer: Customer): void {
     this.selectedCustomer = customer;
     if (this.selectedCustomer) {
-      Swal.fire({
-        title: "¿Estas seguro?",
-        text: "No podrás revertir la acción!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Si eliminar!",
-        cancelButtonText: "Cancelar",
-      }).then((result) => {
+      this.notification.showConfirmation(
+        "¿Estas seguro?",
+        "No podrás revertir la acción!",
+        "Si eliminar!",
+        "Cancelar"
+      ).then((result) => {
         if (result.isConfirmed) {
           this.customerService.deleteCustomer(this.selectedCustomer!).subscribe((response) => {
             console.log('Cliente eliminado exitosamente:', response);
-            const Toast = Swal.mixin({
-              toast: true,
-              position: "top",
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-              }
-            });
-            Toast.fire({
-              icon: "success",
-              title: `Se Elimino el cliente ${this.selectedCustomer!.name} ${this.selectedCustomer!.surname} correctamente`
-            }).then(() => {
+            this.notification.showSuccessToast(`Se Elimino el cliente ${this.selectedCustomer!.name} ${this.selectedCustomer!.surname} correctamente`,'top',3000);
+            setTimeout(() => {
               window.location.reload();
-            });
+            }, 3000);
           }, (error) => {
             const message = error.error.error;
             console.log('Error al eliminar cliente: ', message);
-            const Toast = Swal.mixin({
-              toast: true,
-              position: "top",
-              showConfirmButton: false,
-              timer: 5000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-              }
-            });
-            Toast.fire({
-              icon: "error",
-              title: `Error al eliminar cliente \n${message}`
-            });
+            this.notification.showErrorToast(`Error al eliminar cliente \n${message}`,'top', 5000);
           });
         }
       });

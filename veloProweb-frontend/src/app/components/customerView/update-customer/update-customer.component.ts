@@ -2,11 +2,11 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Customer } from '../../../models/Customer/customer.model';
-import { PaymentStatus } from '../../../models/enum/payment-status.enum';
 import Swal from 'sweetalert2';
 import { CustomerService } from '../../../services/customer.service';
 import { CustomerValidator } from '../../../validation/customer-validator';
 import { CustomerHelperServiceService } from '../../../services/customer-helper-service.service';
+import { NotificationService } from '../../../utils/notification-service.service';
 
 @Component({
   selector: 'app-update-customer',
@@ -22,7 +22,8 @@ export class UpdateCustomerComponent {
 
   constructor(
     private customerService: CustomerService,
-    private customerHelper: CustomerHelperServiceService) {
+    private customerHelper: CustomerHelperServiceService,
+    private notification: NotificationService) {
     this.selectedCustomer = customerHelper.createEmptyCustomer();
   }
 
@@ -31,42 +32,15 @@ export class UpdateCustomerComponent {
       const updateCustomer = { ...this.selectedCustomer };
       this.customerService.updateCustomer(updateCustomer).subscribe((response) => {
         console.log('Se actualizo el cliente: ', updateCustomer);
-        const Toast = Swal.mixin({
-          toast: true,
-          position: "top",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          }
-        });
-        Toast.fire({
-          icon: "success",
-          title: `Se actualizo el cliente ${updateCustomer.name} ${updateCustomer.surname} correctamente`
-        }).then(() => {
+        this.notification.showSuccessToast(`Se actualizo el cliente ${updateCustomer.name} ${updateCustomer.surname} correctamente`, 'top', 3000);
+        setTimeout(() => {
           window.location.reload();
-        });
+        }, 3000);
       },
         (error) => {
           const message = error.error.error;
+          this.notification.showErrorToast(`Error al actualizar cliente \n${message}`, 'top', 5000);
           console.log('Error al actualizar cliente: ', message);
-          const Toast = Swal.mixin({
-            toast: true,
-            position: "top",
-            showConfirmButton: false,
-            timer: 5000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.onmouseenter = Swal.stopTimer;
-              toast.onmouseleave = Swal.resumeTimer;
-            }
-          });
-          Toast.fire({
-            icon: "error",
-            title: `Error al actualizar cliente \n${message}`
-          });
         }
       );
     }
@@ -77,41 +51,14 @@ export class UpdateCustomerComponent {
     if (this.selectedCustomer) {
       this.customerService.activeCustomer(this.selectedCustomer).subscribe((response) => {
         console.log("Cliente Activado");
-        const Toast = Swal.mixin({
-          toast: true,
-          position: "top",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          }
-        });
-        Toast.fire({
-          icon: "success",
-          title: `Se activo nuevamente a ${this.selectedCustomer!.name} ${this.selectedCustomer!.surname}.`
-        }).then(() => {
+        this.notification.showSuccessToast(`Se activo nuevamente a ${this.selectedCustomer!.name} ${this.selectedCustomer!.surname}.`,'top', 3000);
+        setTimeout(() => {
           window.location.reload();
-        });
+        }, 3000);
       }, (error) => {
         const message = error.error.error;
         console.log('Error al eliminar cliente: ', message);
-        const Toast = Swal.mixin({
-          toast: true,
-          position: "top",
-          showConfirmButton: false,
-          timer: 5000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          }
-        });
-        Toast.fire({
-          icon: "error",
-          title: `Error al activar al cliente \n${message}`
-        });
+        this.notification.showErrorToast(`Error al activar al cliente \n${message}`,'top',5000);
       })
     }
   }

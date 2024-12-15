@@ -4,9 +4,7 @@ import Swal from 'sweetalert2';
 @Injectable({
   providedIn: 'root'
 })
-export class NotificationServiceService {
-
-  constructor() { }
+export class NotificationService {
 
   showSuccess(title: string, text: string): void {
     Swal.fire({
@@ -35,12 +33,12 @@ export class NotificationServiceService {
     });
   }
 
-  showSuccessToast(title: string): void {
+  showSuccessToast(title: string, showPosition: 'top-end' | 'top-start' | 'top' | 'bottom-end' | 'bottom-start' | 'bottom' | 'center' | 'center-start' | 'center-end', time: number): void {
     const Toast = Swal.mixin({
       toast: true,
-      position: 'top-end',
+      position: showPosition,
       showConfirmButton: false,
-      timer: 3000,
+      timer: time,
       timerProgressBar: true,
       didOpen: (toast) => {
         toast.addEventListener('mouseenter', Swal.stopTimer);
@@ -54,12 +52,12 @@ export class NotificationServiceService {
     });
   }
 
-  showErrorToast(title: string): void {
+  showErrorToast(title: string, showPosition: 'top-end' | 'top-start' | 'top' | 'bottom-end' | 'bottom-start' | 'bottom' | 'center' | 'center-start' | 'center-end', time: number): void {
     const Toast = Swal.mixin({
       toast: true,
-      position: 'top-end',
+      position: showPosition,    
       showConfirmButton: false,
-      timer: 3000,
+      timer: time,
       timerProgressBar: true,
       didOpen: (toast) => {
         toast.addEventListener('mouseenter', Swal.stopTimer);
@@ -71,5 +69,18 @@ export class NotificationServiceService {
       icon: 'error',
       title: title
     });
+  }
+
+  showConfirmation(title: string, text: string, confirmButton: string, cancelButton: string): Promise<any>{
+    return Swal.fire({
+            title: title,
+            text: text,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: confirmButton,
+            cancelButtonText: cancelButton,
+          })
   }
 }
