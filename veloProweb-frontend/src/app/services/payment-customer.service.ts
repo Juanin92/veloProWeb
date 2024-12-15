@@ -8,7 +8,7 @@ import { PaymentCustomer } from '../models/Customer/payment-customer.model';
 })
 export class PaymentCustomerService {
 
-  private apiUrl = 'http://localhost:8080/pago';
+  private apiUrl = 'http://localhost:8080/pagos';
 
   constructor(private httpClient: HttpClient) { }
 
@@ -18,6 +18,6 @@ export class PaymentCustomerService {
 
   getCustomerSelectedPayment(customerID: number): Observable<PaymentCustomer[]>{
     let params = new HttpParams().set('customerId', customerID.toString())
-    return this.httpClient.get<PaymentCustomer[]>(`${this.apiUrl}/pagos/abonos`, {params});
+    return this.httpClient.get<PaymentCustomer[]>(`${this.apiUrl}/abonos`, {params});
   }
 }
