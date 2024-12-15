@@ -9,6 +9,7 @@ import { PaymentStatus } from '../../models/enum/payment-status.enum';
 import { PaymentCustomerComponent } from "./payment-customer/payment-customer.component";
 import { AddCustomerComponent } from "./add-customer/add-customer.component";
 import { UpdateCustomerComponent } from "./update-customer/update-customer.component";
+import { CustomerHelperServiceService } from '../../services/customer-helper-service.service';
 
 
 @Component({
@@ -21,12 +22,15 @@ import { UpdateCustomerComponent } from "./update-customer/update-customer.compo
 export class CustomerComponent implements OnInit {
   customers: Customer[] = [];
   filteredCustomers: Customer[] = [];
-  selectedCustomer: Customer = this.createEmptyCustomer();
+  selectedCustomer: Customer;
 
   textFilter: string = '';
   totalDebts: number = 0;
 
-  constructor(private customerService: CustomerService) {
+  constructor(
+    private customerService: CustomerService,
+    private customerHelper: CustomerHelperServiceService) {
+    this.selectedCustomer = customerHelper.createEmptyCustomer();
   }
 
   ngOnInit(): void {
@@ -102,20 +106,12 @@ export class CustomerComponent implements OnInit {
     }
   }
 
-  createEmptyCustomer(): Customer {
-    return {
-      id: 0,
-      name: '',
-      surname: '',
-      phone: '+569 ',
-      email: '',
-      debt: 0,
-      totalDebt: 0,
-      status: PaymentStatus.NULO,
-      account: true,
-      paymentCustomerList: [],
-      ticketHistoryList: []
-    };
+  editModalCustomer(customer: Customer): void {
+    if (customer) {
+      this.selectedCustomer = { ...customer };
+    } else {
+      console.error('No se pudo editar, el cliente es undefined');
+    }
   }
 
   updateTotalDebtLabel(): void {
@@ -138,14 +134,6 @@ export class CustomerComponent implements OnInit {
 
   getEmailEmpty(email: string): string {
     return email.includes('x@x.xxx') ? 'Sin Registro' : email;
-  }
-
-  editModalCustomer(customer: Customer): void {
-    if (customer) {
-      this.selectedCustomer = { ...customer };
-    } else {
-      console.error('No se pudo editar, el cliente es undefined');
-    }
   }
 
   searchFilterCustomer(): void {
