@@ -74,11 +74,11 @@ export class CustomerComponent implements OnInit {
     }
   }
 
-  editModalCustomer(customer: Customer): void {
+  openModalCustomer(customer: Customer): void {
     if (customer) {
       this.selectedCustomer = { ...customer };
     } else {
-      console.error('No se pudo editar, el cliente es undefined');
+      console.error('No se pudo abrir modal, el cliente es undefined');
     }
   }
 

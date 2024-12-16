@@ -10,15 +10,15 @@
           <div class="d-flex flex-row justify-content-between text-center">
             <div class="m-2">
               <p class="m-0">Deuda Total</p>
-              <p class="text-danger">$1000</p>
+              <p class="text-danger">{{totalDebt | currency:'CLP':'$':'1.0-0'}}</p>
             </div>
             <div class="m-2">
               <p class="m-0">Deuda a Pagar</p>
-              <p>$1000</p>
+              <p>{{debtValue | currency:'CLP':'$':'1.0-0'}}</p>
             </div>
             <div class="m-2">
               <p class="m-0">Abonado</p>
-              <p class="text-success">$1000</p>
+              <p class="text-success">{{paymentValue | currency:'CLP':'$':'1.0-0'}}</p>
             </div>
           </div>
           <div class="d-flex flex-row justify-content-between text-center">
@@ -64,9 +64,9 @@
               </thead>
               <tbody class="table-group-divider text-center align-middle">
                 <tr *ngFor="let payment of payments">
-                  <th scope="row">{{payment.date}}</th>
+                  <th scope="row">{{payment.date | date: 'dd-MM-yyyy'}}</th>
                   <td>{{payment.amount | currency: 'CLP':'$':'1.0-0'}}</td>
-                  <td>{{payment.document}}</td>
+                  <td>{{payment.document.document}}</td>
                   <td>{{payment.comment}}</td>
                 </tr>
               </tbody>

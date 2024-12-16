@@ -1,8 +1,7 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Customer } from '../../../models/Customer/customer.model';
-import Swal from 'sweetalert2';
 import { CustomerService } from '../../../services/customer.service';
 import { CustomerValidator } from '../../../validation/customer-validator';
 import { CustomerHelperServiceService } from '../../../services/customer-helper-service.service';
