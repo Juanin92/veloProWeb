@@ -1,12 +1,10 @@
 package com.veloProWeb.Service;
 
 import com.veloProWeb.Model.Entity.Customer.Customer;
-import com.veloProWeb.Model.Entity.Customer.PaymentCustomer;
 import com.veloProWeb.Model.Entity.Customer.TicketHistory;
 import com.veloProWeb.Model.Enum.PaymentStatus;
 import com.veloProWeb.Repository.Customer.TicketHistoryRepo;
 import com.veloProWeb.Service.Customer.CustomerService;
-import com.veloProWeb.Service.Customer.Interfaces.ITicketHistoryService;
 import com.veloProWeb.Service.Customer.TicketHistoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,9 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
