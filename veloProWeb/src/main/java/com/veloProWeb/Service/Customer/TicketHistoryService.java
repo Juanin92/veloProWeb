@@ -33,11 +33,6 @@ public class TicketHistoryService implements ITicketHistoryService {
     }
 
     @Override
-    public List<TicketHistory> getAll() {
-        return ticketHistoryRepo.findAll();
-    }
-
-    @Override
     public List<TicketHistory> getByCustomerId(Long id) {
         return ticketHistoryRepo.findByCustomerId(id);
     }
