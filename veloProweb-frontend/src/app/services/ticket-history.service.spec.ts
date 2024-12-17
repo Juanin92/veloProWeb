@@ -6,6 +6,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { TicketHistory } from '../models/Customer/ticket-history.model';
 import { Customer } from '../models/Customer/customer.model';
 import { TicketRequestDTO } from '../models/DTO/ticket-request-dto';
+import { PaymentStatus } from '../models/enum/payment-status.enum';
 
 describe('TicketHistoryService', () => {
   let service: TicketHistoryService;
@@ -77,4 +78,60 @@ describe('TicketHistoryService', () => {
     expect(request.request.method).toBe('POST');
     request.flush(errorMessage, { status: 400, statusText: 'Bad Request' });
   });
+
+  //Prueba API para validar tickets al cliente
+  it('Debería validar tickets al cliente, "valideTicketByCustomer(customer: Customer): Observable<{message: string}>"', () => {
+   const mockCustomer: Customer = {
+               id: 1, name: 'Juan', surname: 'Perez', debt:0, totalDebt: 0, status: PaymentStatus.NULO, account: true, email: 'test@test.com', phone: '+569 12345678', paymentCustomerList: [], ticketHistoryList: []
+           };
+    const responseMessage = { message: "Ticket validado correctamente!" };
+    service.valideTicketByCustomer(mockCustomer).subscribe(response => {
+      expect(response.message).toEqual("Ticket validado correctamente!");
+    });
+    const request = httpMock.expectOne('http://localhost:8080/Tickets/validar');
+    expect(request.request.method).toBe('PUT');
+    request.flush(responseMessage);
+  });
+  it('Debería manejar error al validar ticket', () => {
+    const mockCustomer: Customer = {
+      id: 1, name: 'Juan', surname: 'Perez', debt:0, totalDebt: 0, status: PaymentStatus.NULO, account: true, email: 'test@test.com', phone: '+569 12345678', paymentCustomerList: [], ticketHistoryList: []
+    };
+    const errorMessage = { error: "Error al validar Ticket!" };
+    service.valideTicketByCustomer(mockCustomer).subscribe(
+      response => fail('debería haber fallado'), error => {
+        expect(error.status).toBe(400);
+        expect(error.error.error).toEqual("Error al validar Ticket!");
+      });
+    const request = httpMock.expectOne('http://localhost:8080/Tickets/validar');
+    expect(request.request.method).toBe('PUT');
+    request.flush(errorMessage, { status: 400, statusText: 'Bad Request' });
+  });
+
+  //Prueba API para actualizar estado del ticket
+  it('Debería actualizar estado del ticket, "updateStatus(ticket: TicketHistory): Observable<{message: string}>"', () => {
+    const mockTicket: TicketHistory = {
+      id: 1, amount: 2000, document: 'BO001', total: 2000, status: false, date: "2024-05-10", notificationsDate: "2024-08-20", customer: { id: 1 } as Customer
+    };
+     const responseMessage = { message: "Ticket actualizado correctamente!" };
+     service.updateStatus(mockTicket).subscribe(response => {
+       expect(response.message).toEqual("Ticket actualizado correctamente!");
+     });
+     const request = httpMock.expectOne('http://localhost:8080/Tickets/actualizar-estado');
+     expect(request.request.method).toBe('PUT');
+     request.flush(responseMessage);
+   });
+   it('Debería manejar error al validar ticket', () => {
+     const mockTicket: TicketHistory = {
+      id: 1, amount: 2000, document: 'BO001', total: 2000, status: false, date: "2024-05-10", notificationsDate: "2024-08-20", customer: { id: 1 } as Customer
+     };
+     const errorMessage = { error: "Error al actualizar Ticket!" };
+     service.updateStatus(mockTicket).subscribe(
+       response => fail('debería haber fallado'), error => {
+         expect(error.status).toBe(400);
+         expect(error.error.error).toEqual("Error al actualizar Ticket!");
+       });
+     const request = httpMock.expectOne('http://localhost:8080/Tickets/actualizar-estado');
+     expect(request.request.method).toBe('PUT');
+     request.flush(errorMessage, { status: 400, statusText: 'Bad Request' });
+   });
 });
