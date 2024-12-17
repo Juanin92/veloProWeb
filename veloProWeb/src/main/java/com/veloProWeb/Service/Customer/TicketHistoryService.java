@@ -20,6 +20,13 @@ public class TicketHistoryService implements ITicketHistoryService {
     @Autowired private ICustomerService customerService;
     private LocalDate lastValidationDate;
 
+    /**
+     * Crea un ticket para un cliente específico
+     * @param customer cliente a quien se le crea el ticket
+     * @param number número del ticket que generará el número del documento
+     * @param total valor del monto del ticket
+     * @param date fecha de creación del ticket
+     */
     @Override
     public void AddTicketToCustomer(Customer customer, Long number, int total, LocalDate date) {
         TicketHistory ticket = new TicketHistory();
@@ -32,11 +39,26 @@ public class TicketHistoryService implements ITicketHistoryService {
         ticketHistoryRepo.save(ticket);
     }
 
+    /**
+     * Obtiene una lista de tickets para un cliente por su ID
+     * @param id ID del cliente
+     * @return lista de tickets del cliente
+     */
     @Override
     public List<TicketHistory> getByCustomerId(Long id) {
         return ticketHistoryRepo.findByCustomerId(id);
     }
 
+    /**
+     * Válida los tickets de un cliente y actualiza el estado de la deuda.
+     *
+     * <p>Se encarga de validar si {@code lastValidationDate} es nulo o si la fecha no es igual al día actual.
+     * Si el estado del ticket es falso y el método {@code validateDate} devuelve verdadero, se actualiza
+     * el estado del cliente a {@code PaymentStatus.VENCIDA}.
+     * Asigna la fecha actual a la variable {@code lastValidationDate} cuando se validan los tickets.</p>
+     *
+     * @param customer el cliente cuyos tickets se deben validar
+     */
     @Override
     public void valideTicketByCustomer(Customer customer) {
         LocalDate today = LocalDate.now();
@@ -52,12 +74,31 @@ public class TicketHistoryService implements ITicketHistoryService {
         }
     }
 
+    /**
+     * Actualiza el estado del ticket seleccionado a verdadero
+     * @param ticket ticket para actualizar su estado
+     */
+    @Override
+    public void updateStatus(TicketHistory ticket) {
+        ticket.setStatus(true);
+        ticketHistoryRepo.save(ticket);
+    }
+
+    /**
+     * Válida la fecha de un ticket y actualiza la fecha de notificación si es necesario.
+     * Verifica si el estado del ticket es falso y si han pasado más de 30 días desde la fecha del ticket.
+     * También verifica si la fecha de notificación es nula o si han pasado más de 15 días desde la fecha de última notificación.
+     * Si se cumplen estas condiciones, actualiza la fecha de notificación del ticket a la fecha actual y guarda el ticket en el repositorio.
+     *
+     * @param ticket ticket que se debe validar
+     * @return verdadero si el ticket fue validado y la fecha de notificación fue actualizada, falso en caso contrario
+     */
     public boolean validateDate(TicketHistory ticket) {
         LocalDate now = LocalDate.now();
         LocalDate ticketDate = ticket.getDate();
         LocalDate notificationDate = ticket.getNotificationsDate();
 
-        if (ticket.isStatus()){
+        if (ticket.isStatus()) {
             return false;
         }
         if (ChronoUnit.DAYS.between(ticketDate, now) > 30 &&
@@ -69,9 +110,4 @@ public class TicketHistoryService implements ITicketHistoryService {
         return false;
     }
 
-    @Override
-    public void updateStatus(TicketHistory ticket) {
-        ticket.setStatus(true);
-        ticketHistoryRepo.save(ticket);
-    }
 }
