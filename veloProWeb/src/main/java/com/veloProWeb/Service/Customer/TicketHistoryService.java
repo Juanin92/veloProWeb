@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -40,13 +41,19 @@ public class TicketHistoryService implements ITicketHistoryService {
     }
 
     /**
-     * Obtiene una lista de tickets para un cliente por su ID
+     * Obtiene una lista de tickets para un cliente por su ID.
+     * Filtra los tickets que estén con su estado false y luego
+     * se ordena de menor a mayor los tickets
      * @param id ID del cliente
-     * @return lista de tickets del cliente
+     * @return lista filtrada de tickets del cliente
      */
     @Override
     public List<TicketHistory> getByCustomerId(Long id) {
-        return ticketHistoryRepo.findByCustomerId(id);
+        return ticketHistoryRepo.findByCustomerId(id)
+                .stream()
+                .filter(ticketHistory -> !ticketHistory.isStatus())
+                .sorted(Comparator.comparing(TicketHistory::getTotal))
+                .toList();
     }
 
     /**
