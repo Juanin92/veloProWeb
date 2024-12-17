@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -63,13 +64,21 @@ public class TicketHistoryServiceTest {
     }
     @Test
     public void getByCustomerId_validValues(){
-        List<TicketHistory> mockTickets = Collections.singletonList(ticketHistory);
+        List<TicketHistory> mockTickets = Arrays.asList(
+                ticketHistory,
+                new TicketHistory(1L, "BO002", 2000, false, LocalDate.now(), LocalDate.now(), customer),
+                new TicketHistory(1L, "BO003", 2000, true, LocalDate.now(), LocalDate.now(), customer),
+                new TicketHistory(1L, "BO004", 3000, false, LocalDate.now(), LocalDate.now(), customer));
         when(ticketHistoryRepo.findByCustomerId(1L)).thenReturn(mockTickets);
-
+        List<TicketHistory> expectedTickets = Arrays.asList(
+                ticketHistory,
+                new TicketHistory(1L, "BO002", 2000, false, LocalDate.now(), LocalDate.now(), customer),
+                new TicketHistory(1L, "BO004", 3000, false, LocalDate.now(), LocalDate.now(), customer));
         List<TicketHistory> result = ticketHistoryService.getByCustomerId(1L);
         verify(ticketHistoryRepo).findByCustomerId(1L);
-        assertEquals(1, result.size());
-        assertEquals(mockTickets, result);
+        assertEquals(3, result.size());
+        assertEquals(expectedTickets, result);
+        assertEquals(7000, result.stream().mapToInt(TicketHistory::getTotal).sum());
     }
 
     //Prueba para validar tiempo del ticket de un cliente
