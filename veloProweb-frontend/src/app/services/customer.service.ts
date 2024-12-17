@@ -28,7 +28,7 @@ export class CustomerService {
   addCustomer(customer: Customer): Observable<{message: string}>{
     return this.httpClient.post<{message: string}>(`${this.apiUrl}/agregar`, customer);
   }
-
+  
   /**
    * Actualiza los datos de un cliente existente
    * @param customer Cliente con la nueva información
