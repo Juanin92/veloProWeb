@@ -8,7 +8,7 @@ import { Customer } from '../models/Customer/customer.model';
 @Injectable({
   providedIn: 'root'
 })
-export class TickethistoryService {
+export class TicketHistoryService {
 
   private apiUrl = 'http://localhost:8080/Tickets';
 
