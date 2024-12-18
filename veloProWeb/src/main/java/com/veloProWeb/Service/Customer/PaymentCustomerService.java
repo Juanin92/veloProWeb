@@ -78,7 +78,7 @@ public class PaymentCustomerService implements IPaymentCustomerService {
         List<TicketHistory> tickets = ticketHistoryService.getByCustomerId(idCustomer);
 
         return payments.stream()
-                .filter(payment -> payments.stream()
+                .filter(payment -> tickets.stream()
                         .anyMatch(ticket -> Objects.equals(ticket.getId(), payment.getDocument().getId())))
                 .sorted(Comparator.comparing(PaymentCustomer::getDate))
                 .collect(Collectors.toList());
