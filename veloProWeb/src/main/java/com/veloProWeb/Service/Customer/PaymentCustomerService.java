@@ -10,14 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class PaymentCustomerService implements IPaymentCustomerService {
 
-    @Autowired
-    private PaymentCustomerRepo paymentCustomerRepo;
+    @Autowired private PaymentCustomerRepo paymentCustomerRepo;
     @Autowired private PaymentCustomerValidator validator;
+    @Autowired private TicketHistoryService ticketHistoryService;
 
     /**
      * Agrega un pago a la deuda de un cliente.
@@ -64,12 +67,21 @@ public class PaymentCustomerService implements IPaymentCustomerService {
 
     /**
      * Obtiene los pagos realizados de un cliente por su ID
+     * filtrando que los pagos sean similares a un ticket y ordenando por fecha menor a mayor
+     * y solo dejar una lista filtrada con los tickets que tenga pagos
      * @param idCustomer ID del cliente
      * @return lista de registro de pagos realizados
      */
     @Override
     public List<PaymentCustomer> getCustomerSelected(Long  idCustomer) {
-        return paymentCustomerRepo.findByCustomerId(idCustomer);
+        List<PaymentCustomer> payments =  paymentCustomerRepo.findByCustomerId(idCustomer);
+        List<TicketHistory> tickets = ticketHistoryService.getByCustomerId(idCustomer);
+
+        return payments.stream()
+                .filter(payment -> payments.stream()
+                        .anyMatch(ticket -> Objects.equals(ticket.getId(), payment.getDocument().getId())))
+                .sorted(Comparator.comparing(PaymentCustomer::getDate))
+                .collect(Collectors.toList());
     }
 
     /**
