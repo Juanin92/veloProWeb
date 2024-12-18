@@ -29,7 +29,7 @@
             <div class="m-3">
               <div *ngFor="let ticket of tickets; let i = index">
                 <div class="btn-group-vertical m-1" role="group" aria-label="Seleccionador de boletas a pagar">
-                  <input type="checkbox" class="btn-check" id="btncheck{{i}}" autocomplete="off" />
+                  <input type="checkbox" class="btn-check" id="btncheck{{i}}" autocomplete="off" (change)="updateDebtValueLabel(ticket, $event)" />
                   <label class="btn btn-outline-primary" for="btncheck{{i}}">{{ticket.document}}</label>
                 </div>
               </div>

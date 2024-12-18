@@ -6,6 +6,7 @@ import { PaymentCustomer } from '../../../models/Customer/payment-customer.model
 import { CommonModule } from '@angular/common';
 import { TicketHistoryService } from '../../../services/ticket-history.service';
 import { TicketHistory } from '../../../models/Customer/ticket-history.model';
+import { tick } from '@angular/core/testing';
 
 @Component({
   selector: 'app-payment-customer',
@@ -14,7 +15,7 @@ import { TicketHistory } from '../../../models/Customer/ticket-history.model';
   templateUrl: './payment-customer.component.html',
   styleUrl: './payment-customer.component.css'
 })
-export class PaymentCustomerComponent implements OnInit, OnChanges {
+export class PaymentCustomerComponent implements OnChanges {
 
   @Input() selectedCustomer: Customer;
   payments: PaymentCustomer[] = [];
@@ -22,6 +23,7 @@ export class PaymentCustomerComponent implements OnInit, OnChanges {
   totalDebt: number = 0;
   debtValue: number = 0;
   paymentValue: number = 0;
+  selectedTickets: number[] = [];
   
 
   constructor(
@@ -31,14 +33,10 @@ export class PaymentCustomerComponent implements OnInit, OnChanges {
     this.selectedCustomer = customerHelper.createEmptyCustomer();
   }
 
-  ngOnInit(): void {
-    this.updateDebtValueLabel();
-    this.updatePaymentValueLabel();
-    this.updateTotalDebtLabel();
-  }
-
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedCustomer'] && changes['selectedCustomer'].currentValue) { 
+      this.debtValue = 0;
+      this.selectedTickets = [];
       this.getPayments(changes['selectedCustomer'].currentValue); 
     }
   }
@@ -46,7 +44,6 @@ export class PaymentCustomerComponent implements OnInit, OnChanges {
   getPayments(customer: Customer): void {
     this.paymentService.getCustomerSelectedPayment(customer.id).subscribe((paymentList) => {
       this.payments = paymentList;
-      this.updateDebtValueLabel();
       this.updatePaymentValueLabel();
       this.updateTotalDebtLabel();
       this.getListTicketByCustomer(customer.id);
@@ -63,12 +60,22 @@ export class PaymentCustomerComponent implements OnInit, OnChanges {
     });
   }
 
-  updatePaymentValueLabel(): void {
-    this.paymentValue = this.payments.reduce((sum, payment) => sum + payment.amount, 0);
+  updateDebtValueLabel(ticket: TicketHistory, event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+
+    if (checkbox.checked) {
+      this.selectedTickets.push(ticket.total);
+    }else{
+      const index = this.selectedTickets.indexOf(ticket.total);
+      if (index > -1) {
+          this.selectedTickets.splice(index, 1);
+      }
+    }
+    this.debtValue = Array.from(this.selectedTickets).reduce((actual, current) => actual + current, 0);
   }
 
-  updateDebtValueLabel(): void {
-    this.debtValue = this.selectedCustomer.debt;
+  updatePaymentValueLabel(): void {
+    this.paymentValue = this.payments.reduce((sum, payment) => sum + payment.amount, 0);
   }
 
   updateTotalDebtLabel(): void {
