@@ -1,4 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { TicketHistoryService } from '../../../services/ticket-history.service';
+import { Customer } from '../../../models/Customer/customer.model';
+import { TicketHistory } from '../../../models/Customer/ticket-history.model';
+import { CustomerHelperServiceService } from '../../../services/customer-helper-service.service';
 
 @Component({
   selector: 'app-ticket-customer',
@@ -9,4 +13,14 @@ import { Component } from '@angular/core';
 })
 export class TicketCustomerComponent {
 
+  @Input() selectedCustomer: Customer;
+  tickets: TicketHistory[] = []; 
+
+  constructor(
+    private ticketService: TicketHistoryService,
+    private customerHelper: CustomerHelperServiceService){
+    this.selectedCustomer = customerHelper.createEmptyCustomer();
+  }
+
+  
 }

@@ -10,25 +10,28 @@
           <div class="d-flex flex-row justify-content-between text-center">
             <div class="m-2">
               <p class="m-0">Deuda Total</p>
-              <p class="text-danger">{{totalDebt | currency:'CLP':'$':'1.0-0'}}</p>
+              <p class="text-danger">
+                {{ totalDebt | currency : "CLP" : "$" : "1.0-0" }}
+              </p>
             </div>
             <div class="m-2">
               <p class="m-0">Deuda a Pagar</p>
-              <p>{{debtValue | currency:'CLP':'$':'1.0-0'}}</p>
+              <p>{{ debtValue | currency : "CLP" : "$" : "1.0-0" }}</p>
             </div>
             <div class="m-2">
               <p class="m-0">Abonado</p>
-              <p class="text-success">{{paymentValue | currency:'CLP':'$':'1.0-0'}}</p>
+              <p class="text-success">
+                {{ paymentValue | currency : "CLP" : "$" : "1.0-0" }}
+              </p>
             </div>
           </div>
           <div class="d-flex flex-row justify-content-between text-center">
             <div class="m-3">
-              <div class="btn-group-vertical" role="group" aria-label="Seleccionador de boletas a pagar">
-                <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off" />
-                <label class="btn btn-outline-primary" for="btncheck1">B01002</label>
-
-                <input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off" />
-                <label class="btn btn-outline-primary" for="btncheck2">BO3320</label>
+              <div *ngFor="let ticket of tickets">
+                <div class="btn-group-vertical m-1" role="group" aria-label="Seleccionador de boletas a pagar">
+                  <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off" />
+                  <label class="btn btn-outline-primary" for="btncheck1">{{ticket.document}}</label>
+                </div>
               </div>
             </div>
             <div>
@@ -64,10 +67,12 @@
               </thead>
               <tbody class="table-group-divider text-center align-middle">
                 <tr *ngFor="let payment of payments">
-                  <th scope="row">{{payment.date | date: 'dd-MM-yyyy'}}</th>
-                  <td>{{payment.amount | currency: 'CLP':'$':'1.0-0'}}</td>
-                  <td>{{payment.document.document}}</td>
-                  <td>{{payment.comment}}</td>
+                  <th scope="row">{{ payment.date | date : "dd-MM-yyyy" }}</th>
+                  <td>
+                    {{ payment.amount | currency : "CLP" : "$" : "1.0-0" }}
+                  </td>
+                  <td>{{ payment.document.document }}</td>
+                  <td>{{ payment.comment }}</td>
                 </tr>
               </tbody>
             </table>

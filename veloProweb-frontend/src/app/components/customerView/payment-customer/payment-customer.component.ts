@@ -4,6 +4,8 @@ import { Customer } from '../../../models/Customer/customer.model';
 import { CustomerHelperServiceService } from '../../../services/customer-helper-service.service';
 import { PaymentCustomer } from '../../../models/Customer/payment-customer.model';
 import { CommonModule } from '@angular/common';
+import { TicketHistoryService } from '../../../services/ticket-history.service';
+import { TicketHistory } from '../../../models/Customer/ticket-history.model';
 
 @Component({
   selector: 'app-payment-customer',
@@ -16,6 +18,7 @@ export class PaymentCustomerComponent implements OnInit, OnChanges {
 
   @Input() selectedCustomer: Customer;
   payments: PaymentCustomer[] = [];
+  tickets: TicketHistory[] = [];
   totalDebt: number = 0;
   debtValue: number = 0;
   paymentValue: number = 0;
@@ -23,7 +26,8 @@ export class PaymentCustomerComponent implements OnInit, OnChanges {
 
   constructor(
     private paymentService: PaymentCustomerService,
-    private customerHelper: CustomerHelperServiceService) {
+    private customerHelper: CustomerHelperServiceService,
+    private ticketService: TicketHistoryService) {
     this.selectedCustomer = customerHelper.createEmptyCustomer();
   }
 
@@ -45,8 +49,17 @@ export class PaymentCustomerComponent implements OnInit, OnChanges {
       this.updateDebtValueLabel();
       this.updatePaymentValueLabel();
       this.updateTotalDebtLabel();
+      this.getListTicketByCustomer(customer.id);
     }, (error) => {
       console.log('Error no se encontró información de pagos ', error);
+    });
+  }
+
+  getListTicketByCustomer(id: number): void{
+    this.ticketService.getListTicketByCustomer(this.selectedCustomer.id).subscribe((ticketList) => {
+      this.tickets = ticketList;
+    }, (error) => {
+      console.log('Error no se encontró información de los tickets ', error);
     });
   }
 
