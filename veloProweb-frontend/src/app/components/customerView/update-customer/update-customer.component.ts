@@ -56,7 +56,7 @@ export class UpdateCustomerComponent {
         }, 3000);
       }, (error) => {
         const message = error.error.error;
-        console.log('Error al eliminar cliente: ', message);
+        console.log('Error al activar cliente: ', message);
         this.notification.showErrorToast(`Error al activar al cliente \n${message}`,'top',5000);
       })
     }
