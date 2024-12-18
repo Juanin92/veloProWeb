@@ -13,7 +13,7 @@ import { NotificationService } from "../../../utils/notification-service.service
 describe('UpdateCustomerComponent', () => {
   let component: UpdateCustomerComponent;
   let fixture: ComponentFixture<UpdateCustomerComponent>;
-  let customerService: jasmine.SpyObj<CustomerService>;
+  let customerService: jasmine.SpyObj<CustomerService>;   
   let mockCustomer: Customer;
 
   beforeEach(async () => {
