@@ -1,9 +1,9 @@
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
-import { CustomerService } from "./customer.service";
+import { CustomerService } from "../customer.service";
 import { TestBed } from "@angular/core/testing";
-import { PaymentStatus } from "../models/enum/payment-status.enum";
+import { PaymentStatus } from "../../../models/enum/payment-status.enum";
 import { provideHttpClient, HttpClient } from "@angular/common/http";
-import { Customer } from "../models/Customer/customer.model";
+import { Customer } from "../../../models/Entity/Customer/customer.model";
 
 describe('CustomerService', () => {
     let service: CustomerService;

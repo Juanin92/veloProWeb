@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { TicketHistoryService } from './ticket-history.service';
+import { TicketHistoryService } from '../ticket-history.service';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { TicketHistory } from '../models/Customer/ticket-history.model';
-import { Customer } from '../models/Customer/customer.model';
-import { TicketRequestDTO } from '../models/DTO/ticket-request-dto';
-import { PaymentStatus } from '../models/enum/payment-status.enum';
+import { TicketHistory } from '../../../models/Entity/Customer/ticket-history.model';
+import { Customer } from '../../../models/Entity/Customer/customer.model';
+import { TicketRequestDTO } from '../../../models/DTO/ticket-request-dto';
+import { PaymentStatus } from '../../../models/enum/payment-status.enum';
 
 describe('TicketHistoryService', () => {
   let service: TicketHistoryService;

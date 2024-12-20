@@ -1,4 +1,4 @@
-import { Customer } from "../models/Customer/customer.model";
+import { Customer } from "../models/Entity/Customer/customer.model";
 
 export class CustomerValidator {
     static validateForm(selectedCustomer: Customer): boolean {

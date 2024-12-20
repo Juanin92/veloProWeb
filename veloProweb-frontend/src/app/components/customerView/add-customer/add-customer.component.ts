@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Customer } from '../../../models/Customer/customer.model';
-import { CustomerService } from '../../../services/customer.service';
+import { Customer } from '../../../models/Entity/Customer/customer.model';
+import { CustomerService } from '../../../services/customer/customer.service';
 import { CustomerValidator } from '../../../validation/customer-validator';
 import { CommonModule } from '@angular/common';
-import { CustomerHelperServiceService } from '../../../services/customer-helper-service.service';
+import { CustomerHelperServiceService } from '../../../services/customer/customer-helper-service.service';
 import { NotificationService } from '../../../utils/notification-service.service';
 
 @Component({

@@ -1,4 +1,4 @@
-import { PaymentStatus } from "../enum/payment-status.enum";
+import { PaymentStatus } from "../../enum/payment-status.enum";
 import { PaymentCustomer } from "./payment-customer.model";
 import { TicketHistory } from "./ticket-history.model";
 

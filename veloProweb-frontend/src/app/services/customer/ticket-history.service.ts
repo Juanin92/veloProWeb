@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TicketHistory } from '../models/Customer/ticket-history.model';
-import { TicketRequestDTO } from '../models/DTO/ticket-request-dto';
-import { Customer } from '../models/Customer/customer.model';
+import { TicketHistory } from '../../models/Entity/Customer/ticket-history.model';
+import { TicketRequestDTO } from '../../models/DTO/ticket-request-dto';
+import { Customer } from '../../models/Entity/Customer/customer.model';
 
 @Injectable({
   providedIn: 'root'

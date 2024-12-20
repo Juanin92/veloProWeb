@@ -1,11 +1,11 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { PaymentCustomerComponent } from './payment-customer.component';
 import { of, throwError } from 'rxjs';
-import { PaymentCustomerService } from '../../../services/payment-customer.service';
-import { CustomerHelperServiceService } from '../../../services/customer-helper-service.service';
+import { PaymentCustomerService } from '../../../services/customer/payment-customer.service';
+import { CustomerHelperServiceService } from '../../../services/customer/customer-helper-service.service';
 import { PaymentStatus } from '../../../models/enum/payment-status.enum';
-import { TicketHistory } from '../../../models/Customer/ticket-history.model';
-import { Customer } from '../../../models/Customer/customer.model';
+import { TicketHistory } from '../../../models/Entity/Customer/ticket-history.model';
+import { Customer } from '../../../models/Entity/Customer/customer.model';
 
 describe('PaymentCustomerComponent', () => {
   let component: PaymentCustomerComponent;

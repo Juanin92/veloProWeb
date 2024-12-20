@@ -1,11 +1,11 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { PaymentCustomerService } from '../../../services/payment-customer.service';
-import { Customer } from '../../../models/Customer/customer.model';
-import { CustomerHelperServiceService } from '../../../services/customer-helper-service.service';
-import { PaymentCustomer } from '../../../models/Customer/payment-customer.model';
+import { PaymentCustomerService } from '../../../services/customer/payment-customer.service';
+import { Customer } from '../../../models/Entity/Customer/customer.model';
+import { CustomerHelperServiceService } from '../../../services/customer/customer-helper-service.service';
+import { PaymentCustomer } from '../../../models/Entity/Customer/payment-customer.model';
 import { CommonModule } from '@angular/common';
-import { TicketHistoryService } from '../../../services/ticket-history.service';
-import { TicketHistory } from '../../../models/Customer/ticket-history.model';
+import { TicketHistoryService } from '../../../services/customer/ticket-history.service';
+import { TicketHistory } from '../../../models/Entity/Customer/ticket-history.model';
 import { tick } from '@angular/core/testing';
 
 @Component({

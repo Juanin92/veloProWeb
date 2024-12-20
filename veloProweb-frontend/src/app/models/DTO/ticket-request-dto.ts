@@ -1,4 +1,4 @@
-import { Customer } from "../Customer/customer.model";
+import { Customer } from "../Entity/Customer/customer.model";
 
 export interface TicketRequestDTO {
     customer: Customer;

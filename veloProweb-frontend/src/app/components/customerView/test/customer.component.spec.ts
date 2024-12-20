@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { CustomerComponent } from "./customer.component";
+import { CustomerComponent } from "../customer.component";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { of, throwError } from "rxjs";
-import { PaymentStatus } from "../../models/enum/payment-status.enum";
-import { Customer } from "../../models/Customer/customer.model";
+import { PaymentStatus } from "../../../models/enum/payment-status.enum";
+import { Customer } from "../../../models/Entity/Customer/customer.model";
 import { provideHttpClient } from "@angular/common/http";
-import { CustomerService } from "../../services/customer.service";
-import { NotificationService } from "../../utils/notification-service.service";
+import { CustomerService } from "../../../services/customer/customer.service";
+import { NotificationService } from "../../../utils/notification-service.service";
 
 describe('CustomerComponent', () => {
     let component: CustomerComponent;

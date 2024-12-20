@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Customer } from '../models/Customer/customer.model';
-import { PaymentStatus } from '../models/enum/payment-status.enum';
+import { Customer } from '../../models/Entity/Customer/customer.model';
+import { PaymentStatus } from '../../models/enum/payment-status.enum';
 
 @Injectable({
   providedIn: 'root'

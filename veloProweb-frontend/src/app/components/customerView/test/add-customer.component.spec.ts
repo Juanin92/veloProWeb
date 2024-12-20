@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AddCustomerComponent } from "./add-customer.component";
-import { CustomerService } from "../../../services/customer.service";
-import { Customer } from "../../../models/Customer/customer.model";
+import { CustomerService } from "../../../services/customer/customer.service";
+import { Customer } from "../../../models/Entity/Customer/customer.model";
 import { of } from "rxjs/internal/observable/of";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
