@@ -58,20 +58,21 @@ export class PaymentCustomerComponent implements OnChanges {
     }, (error) => {
       console.log('Error no se encontró información de los tickets ', error);
     });
-  }
+  } 
 
   updateDebtValueLabel(ticket: TicketHistory, event: Event): void {
     const checkbox = event.target as HTMLInputElement;
-
+    const payment = this.payments.find(payment => payment.document.id === ticket.id);
+    const ticketAmount =  payment ? ticket.total - payment.amount : ticket.total;
     if (checkbox.checked) {
-      this.selectedTickets.push(ticket.total);
+      this.selectedTickets.push(ticketAmount);
     }else{
-      const index = this.selectedTickets.indexOf(ticket.total);
+      const index = this.selectedTickets.indexOf(ticketAmount);
       if (index > -1) {
           this.selectedTickets.splice(index, 1);
       }
     }
-    this.debtValue = Array.from(this.selectedTickets).reduce((actual, current) => actual + current, 0);
+    this.debtValue = Array.from(this.selectedTickets).reduce((collector, current) => collector + current, 0);
   }
 
   updatePaymentValueLabel(): void {
