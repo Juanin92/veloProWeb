@@ -36,6 +36,11 @@ export class CustomerComponent implements OnInit {
     this.getAllCustomer();
   }
 
+  /**
+   * Obtienes todos los clientes desde el servicio
+   * Asigna una lista de cliente a la lista de cliente filtrada y normal
+   * llama al método para calcular el total de las deudas
+   */
   getAllCustomer(): void {
     this.customerService.getCustomer().subscribe(
       (data) => {
@@ -48,6 +53,12 @@ export class CustomerComponent implements OnInit {
     );
   }
 
+  /**
+   * Elimina (Desactivar) la cuenta de un cliente seleccionado 
+   * Valida si el cliente no es valor nulo, si es correcto
+   * lanza una confirmación antes de eliminar al cliente
+   * @param customer - cliente seleccionado
+   */
   deleteCustomer(customer: Customer): void {
     this.selectedCustomer = customer;
     if (this.selectedCustomer) {
@@ -60,20 +71,24 @@ export class CustomerComponent implements OnInit {
         if (result.isConfirmed) {
           this.customerService.deleteCustomer(this.selectedCustomer!).subscribe((response) => {
             console.log('Cliente eliminado exitosamente:', response);
-            this.notification.showSuccessToast(`Se Elimino el cliente ${this.selectedCustomer!.name} ${this.selectedCustomer!.surname} correctamente`,'top',3000);
+            this.notification.showSuccessToast(`Se Elimino el cliente ${this.selectedCustomer!.name} ${this.selectedCustomer!.surname} correctamente`, 'top', 3000);
             setTimeout(() => {
               window.location.reload();
             }, 3000);
           }, (error) => {
             const message = error.error.error;
             console.log('Error al eliminar cliente: ', message);
-            this.notification.showErrorToast(`Error al eliminar cliente \n${message}`,'top', 5000);
+            this.notification.showErrorToast(`Error al eliminar cliente \n${message}`, 'top', 5000);
           });
         }
       });
     }
   }
 
+  /**
+   * Abrir modal con una copia de un cliente seleccionado
+   * @param customer - cliente seleccionado
+   */
   openModalCustomer(customer: Customer): void {
     if (customer) {
       this.selectedCustomer = { ...customer };
@@ -82,10 +97,18 @@ export class CustomerComponent implements OnInit {
     }
   }
 
+  /**
+   * Actualiza la suma de las deudas de los clientes
+   */
   updateTotalDebtLabel(): void {
     this.totalDebts = this.customers.reduce((sum, customer) => sum + customer.debt, 0);
   }
 
+  /**
+   * Asigna un color dependiendo el status de cada cliente 
+   * @param status - status del cliente dependiendo de la deuda
+   * @returns - Retorna el color asociado al status
+   */
   statusColor(status: string): string {
     switch (status) {
       case 'PAGADA': return 'rgb(40, 238, 40)';
@@ -96,14 +119,29 @@ export class CustomerComponent implements OnInit {
     }
   }
 
+  /**
+   * Reasigna el valor en una cadena según el estado de la cuenta
+   * @param account - valor de la cuenta del cliente
+   * @returns - Devuelve un valor 'activo' si es true o si es false sera 'Inactivo'
+   */
   getStatusAccount(account: boolean): string {
     return account ? 'Activo' : 'Inactivo';
   }
 
+  /**
+   * Verifica si email esta vacío para dar un valor más representativo
+   * @param email - email del cliente
+   * @returns - Devuelve 'Sin Registro' si esta vacío si no el valor original del email
+   */
   getEmailEmpty(email: string): string {
     return email.includes('x@x.xxx') ? 'Sin Registro' : email;
   }
 
+  /**
+   * Filtrar lista de cliente según el criterio de búsqueda
+   * Se filtrara por nombre, apellido, estado del cliente donde textFilter
+   * contendrá el valor a filtrar
+   */
   searchFilterCustomer(): void {
     if (this.textFilter.trim() === '') {
       this.filteredCustomers = this.customers;

@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Customer } from '../../../models/Customer/customer.model';
-import { PaymentStatus } from '../../../models/enum/payment-status.enum';
 import { CustomerService } from '../../../services/customer.service';
 import { CustomerValidator } from '../../../validation/customer-validator';
-import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { CustomerHelperServiceService } from '../../../services/customer-helper-service.service';
 import { NotificationService } from '../../../utils/notification-service.service';
@@ -19,22 +17,28 @@ import { NotificationService } from '../../../utils/notification-service.service
 export class AddCustomerComponent {
 
   newCustomer: Customer;
-  customerValidator = CustomerValidator;
+  customerValidator = CustomerValidator; // Validador de para los datos del cliente.
 
   constructor(
     private customerService: CustomerService,
     private customerHelper: CustomerHelperServiceService,
     private notification: NotificationService) {
+    //Se inicializa la variable con valores vacíos mediante el helper
     this.newCustomer = customerHelper.createEmptyCustomer();
   }
 
+  /**
+   * Agregar un nuevo cliente.
+   * Valida el formulario y si es correcto, llama al servicio para agregar cliente.
+   * Muestra notificaciones dependiendo el estado de la acción y refresca la página después de 3 seg.
+   */
   addCustomer(): void {
     if (this.customerValidator.validateForm(this.newCustomer)) {
       this.customerService.addCustomer(this.newCustomer).subscribe(
         (response) => {
           console.log('Cliente agregado exitosamente:', response);
-          this.notification.showSuccessToast(`¡El cliente ${this.newCustomer.name} ${this.newCustomer.surname} fue agregado exitosamente!`,'top', 3000);
-          this.customerHelper.createEmptyCustomer();
+          this.notification.showSuccessToast(`¡El cliente ${this.newCustomer.name} ${this.newCustomer.surname} fue agregado exitosamente!`, 'top', 3000);
+          this.customerHelper.createEmptyCustomer(); // Reinicia la variable del cliente vacío.
           setTimeout(() => {
             window.location.reload();
           }, 3000);

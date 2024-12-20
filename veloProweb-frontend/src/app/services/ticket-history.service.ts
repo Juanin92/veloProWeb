@@ -14,19 +14,39 @@ export class TicketHistoryService {
 
   constructor(private httpClient: HttpClient) { }
 
+  /**
+   * Obtiene los ticket de un cliente seleccionado
+   * @param customerId - Identificador del cliente
+   * @returns - Observable emite una lista de tickets
+   */
   getListTicketByCustomer(customerId: number): Observable<TicketHistory[]>{
     let params = new HttpParams().set('customerId', customerId.toString());
     return this.httpClient.get<TicketHistory[]>(this.apiUrl, {params});
   }
 
+  /**
+   * crea un nuevo ticket para un cliente
+   * @param ticketRequestDTO - Objeto que contiene los detalles del ticket
+   * @returns - Observable emite un mensaje de confirmación
+   */
   createTicketToCustomer(ticketRequestDTO: TicketRequestDTO): Observable<{message: string}>{
     return this.httpClient.post<{message: string}>(this.apiUrl, ticketRequestDTO);
   }
 
+  /**
+   * Valida el ticket de un cliente
+   * @param customer - Cliente seleccionado
+   * @returns - Observable emite un mensaje de confirmación
+   */
   valideTicketByCustomer(customer: Customer): Observable<{message: string}>{
     return this.httpClient.put<{message: string}>(`${this.apiUrl}/validar`, customer);
   }
 
+  /**
+   * Actualiza el estado de un ticket
+   * @param ticket - ticket seleccionado
+   * @returns - Observable emite un mensaje de confirmación
+   */
   updateStatus(ticket: TicketHistory): Observable<{message: string}>{
     return this.httpClient.put<{message: string}>(`${this.apiUrl}/actualizar-estado`, ticket);
   }
