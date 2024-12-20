@@ -14,7 +14,7 @@ public class CategoriesValidator {
         if (name == null || name.trim().isBlank() || name.trim().length() <= 3){
             throw new IllegalArgumentException("Ingrese un nombre válido.");
         }
-        if (name.matches("[0-9 ]+")){
+        if (name.matches("[a-zA-Z0-9 ]+")){
             throw new IllegalArgumentException("El nombre no debe contener dígitos.");
         }
     }
@@ -22,12 +22,12 @@ public class CategoriesValidator {
         if (name == null || name.trim().isBlank() || name.trim().length() <= 3){
             throw new IllegalArgumentException("Ingrese un nombre válido.");
         }
-        if (name.matches("[0-9 ]+")){
+        if (name.matches(".*\\d.*")){
             throw new IllegalArgumentException("El nombre no debe contener dígitos.");
         }
     }
     public void validateUnit(String name){
-        if (name == null || name.trim().isBlank() || name.trim().length() <= 4){
+        if (name == null || name.trim().isBlank() || name.trim().length() <= 3){
             throw new IllegalArgumentException("Ingrese un nombre válido.");
         }
         if (!name.matches("[a-zA-Z0-9 ]+")){
