@@ -13,6 +13,16 @@ public class ProductValidator {
         validateUnit(product.getUnit());
         validateDescription(product.getDescription());
     }
+    public void validateStock(int stock){
+        if (stock <= 0){
+            throw new IllegalArgumentException("Cantidad de ser mayor a 0");
+        }
+    }
+    public void validateSalePrice(int salePrice){
+        if (salePrice <= 0){
+            throw new IllegalArgumentException("Precio de ser mayor a 0");
+        }
+    }
 
     private void validateBrand(BrandProduct brand){
         if (brand == null){
@@ -37,16 +47,6 @@ public class ProductValidator {
     private void validateDescription(String description){
         if (description == null || description.trim().isBlank()){
             throw new IllegalArgumentException("Ingrese una descripción");
-        }
-    }
-    private void validateStock(int stock){
-        if (stock >= 0){
-            throw new IllegalArgumentException("Cantidad de ser mayor a 0");
-        }
-    }
-    private void validateSalePrice(int salePrice){
-        if (salePrice >= 0){
-            throw new IllegalArgumentException("Precio de ser mayor a 0");
         }
     }
 }
