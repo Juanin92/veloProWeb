@@ -1,10 +1,9 @@
-package com.veloProWeb.Service;
+package com.veloProWeb.Service.Customer;
 
 import com.veloProWeb.Model.Entity.Customer.Customer;
 import com.veloProWeb.Model.Entity.Customer.PaymentCustomer;
 import com.veloProWeb.Model.Entity.Customer.TicketHistory;
 import com.veloProWeb.Repository.Customer.PaymentCustomerRepo;
-import com.veloProWeb.Service.Customer.PaymentCustomerService;
 import com.veloProWeb.Validation.PaymentCustomerValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
