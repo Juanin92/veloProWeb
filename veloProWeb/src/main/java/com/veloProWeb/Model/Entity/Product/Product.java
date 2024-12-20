@@ -3,13 +3,17 @@ package com.veloProWeb.Model.Entity.Product;
 import com.veloProWeb.Model.Entity.Kardex;
 import com.veloProWeb.Model.Enum.StatusProduct;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
