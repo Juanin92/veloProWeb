@@ -16,6 +16,13 @@ public class UnitService implements IUnitService {
     @Autowired private UnitProductRepo unitProductRepo;
     @Autowired private CategoriesValidator validator;
 
+    /**
+     * Método para crear un objeto de unidad de medida (nombre)
+     * Válida que el objeto no sea nulo y el parametro de nombre
+     * Se busca si existe ya un registro del objeto, si no lanza una excepción
+     * Separa el nombre por números y letra y válida que sean menor a 2 caracteres
+     * @param unit - Unidad de medida con los detalles
+     */
     @Override
     public void save(UnitProduct unit) {
         validator.validateUnit(unit.getNameUnit());
@@ -34,11 +41,20 @@ public class UnitService implements IUnitService {
         }
     }
 
+    /**
+     * Obtiene una lista de unidades de medidas registradas
+     * @return - devuelve una lista de unidades de medidas
+     */
     @Override
     public List<UnitProduct> getAll() {
         return unitProductRepo.findAll();
     }
 
+    /**
+     * Busca un registro de una unidad de medida existente
+     * @param name - Nombre de la unidad de medida a buscar
+     * @return - Devuelve el objeto encontrado o vacío
+     */
     private UnitProduct getUnitCreated(String name){
         Optional<UnitProduct> unitProduct = unitProductRepo.findByNameUnit(name);
         return unitProduct.orElse(null);

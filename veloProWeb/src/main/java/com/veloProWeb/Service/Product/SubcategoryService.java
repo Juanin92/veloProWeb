@@ -17,6 +17,13 @@ public class SubcategoryService implements ISubcategoryService {
     @Autowired private SubcategoryProductRepo subcategoryProductRepo;
     @Autowired private CategoriesValidator validator;
 
+    /**
+     * Método para crear un objeto de subcategoría (nombre)
+     * Válida que tenga una categoría seleccionada y el parametro de nombre
+     * Se busca si existe ya un registro del objeto, si no lanza una excepción
+     * @param category - Categoría con los detalles
+     * @param subcategory - Subcategoría con los detalles
+     */
     @Override
     public void save(SubcategoryProduct subcategory, CategoryProduct category) {
         if (category != null){
@@ -34,11 +41,21 @@ public class SubcategoryService implements ISubcategoryService {
         }
     }
 
+    /**
+     * Obtiene una lista de subcategorías registradas
+     * @return - devuelve una lista de subcategorías
+     */
     @Override
     public List<SubcategoryProduct> getAll() {
         return subcategoryProductRepo.findAll();
     }
 
+    /**
+     * Busca un registro de una subcategoría existente
+     * @param name - Nombre de la subcategoría a buscar
+     * @param id - Identificador de la categoría asociada a la subcategoría
+     * @return - Devuelve el objeto encontrado o vacío
+     */
     private SubcategoryProduct getSubcategoryCreated(String name, Long id){
         Optional<SubcategoryProduct> subcategoryProduct = subcategoryProductRepo.findByNameAndCategoryId(name, id);
         return subcategoryProduct.orElse(null);
