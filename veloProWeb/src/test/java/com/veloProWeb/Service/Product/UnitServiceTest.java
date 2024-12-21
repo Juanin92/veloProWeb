@@ -1,0 +1,70 @@
+package com.veloProWeb.Service.Product;
+
+import com.veloProWeb.Model.Entity.Product.UnitProduct;
+import com.veloProWeb.Repository.Product.UnitProductRepo;
+import com.veloProWeb.Validation.CategoriesValidator;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+
+@ExtendWith(MockitoExtension.class)
+public class UnitServiceTest {
+
+    @InjectMocks private UnitService unitService;
+    @Mock private UnitProductRepo unitRepo;
+    @Mock private CategoriesValidator validator;
+    private UnitProduct unit;
+    private UnitProduct existingUnit;
+
+    @BeforeEach
+    void setUp(){
+        unit = new UnitProduct();
+        existingUnit = new UnitProduct();
+    }
+
+    //Prueba para crear una nueva unidad de medida
+    @Test
+    public void save_valid(){
+        unit.setNameUnit("1 KG");
+        when(unitRepo.findByNameUnit("1 KG")).thenReturn(Optional.empty());
+        doNothing().when(validator).validateUnit("1 KG");
+        unitService.save(unit);
+
+        verify(validator).validateUnit("1 KG");
+        verify(unitRepo).findByNameUnit("1 KG");
+        verify(unitRepo).save(unit);
+        assertEquals("1 KG", unit.getNameUnit());
+    }
+    @Test
+    public void save_invalidExistingUnit(){
+        unit.setNameUnit("2 Kg");
+        existingUnit.setNameUnit("2 KG");
+        when(unitRepo.findByNameUnit("2 KG")).thenReturn(Optional.of(existingUnit));
+        doNothing().when(validator).validateUnit("2 KG");
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            unitService.save(unit);
+        });
+
+        assertEquals("Nombre Existente: Hay registro de esta unidad de medida.", exception.getMessage());
+        verify(validator).validateUnit("2 KG");
+        verify(unitRepo).findByNameUnit("2 KG");
+        verify(unitRepo, never()).save(unit);
+    }
+
+    //Prueba para obtener todas las unidades de medida
+    @Test
+    public void getAll_valid(){
+        unitService.getAll();
+        verify(unitRepo).findAll();
+    }
+}
