@@ -48,7 +48,7 @@ public class CategoryServiceTest {
         assertEquals("Combustible", category.getName());
     }
     @Test
-    public void save_invalidExistingBrand(){
+    public void save_invalidExistingCategory(){
         category.setName("Comida");
         when(categoryProductRepo.findByName("Comida")).thenReturn(Optional.of(existingCategory));
         doNothing().when(validator).validateCategory("Comida");
