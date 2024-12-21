@@ -18,11 +18,11 @@ public class BrandService implements IBrandService {
 
     @Override
     public void save(BrandProduct brand) {
+        validator.validateBrand(brand.getName());
         BrandProduct brandProduct = getBrandCreated(capitalize(brand.getName()));
         if (brandProduct != null){
             throw new IllegalArgumentException("Nombre Existente: Hay registro de este marca.");
         } else {
-            validator.validateBrand(brand.getName());
             brand.setName(capitalize(brand.getName()));
             brandProductRepo.save(brand);
         }
