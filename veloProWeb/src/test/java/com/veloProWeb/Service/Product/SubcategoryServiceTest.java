@@ -33,8 +33,9 @@ public class SubcategoryServiceTest {
     void setUp(){
         category = new CategoryProduct();
         category.setName("Comida");
-        category.setId(2L);
+        category.setId(1L);
         subcategory = new SubcategoryProduct();
+        subcategory.setName("Leche");
         existingSubcategory = new SubcategoryProduct();
         existingSubcategory.setName("Arroz");
     }
@@ -42,29 +43,36 @@ public class SubcategoryServiceTest {
     //Prueba para crear una nueva marca
     @Test
     public void save_valid(){
-        subcategory.setName("leche");
-        when(subcategoryProductRepo.findByNameAndCategoryId("Accesorios",1L)).thenReturn(Optional.empty());
-        doNothing().when(validator).validateSubcategory("leche");
+        when(subcategoryProductRepo.findByNameAndCategoryId("Leche",1L)).thenReturn(Optional.empty());
+        doNothing().when(validator).validateSubcategory("Leche");
         subcategoryService.save(subcategory, category);
 
-        verify(validator).validateSubcategory("asus");
+        verify(validator).validateSubcategory("Leche");
         verify(subcategoryProductRepo).findByNameAndCategoryId("Leche", 1L);
         verify(subcategoryProductRepo).save(subcategory);
-        assertEquals("Asus", subcategory.getName());
+        assertEquals("Leche", subcategory.getName());
     }
     @Test
-    public void save_invalidExistingBrand(){
+    public void save_invalidExistingSubcategory(){
         subcategory.setName("Arroz");
-        when(subcategoryProductRepo.findByNameAndCategoryId("Comida", 2L)).thenReturn(Optional.of(existingSubcategory));
+        when(subcategoryProductRepo.findByNameAndCategoryId("Arroz", 1L)).thenReturn(Optional.of(existingSubcategory));
         doNothing().when(validator).validateSubcategory("Arroz");
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             subcategoryService.save(subcategory, category);
         });
 
-        assertEquals("Nombre Existente: Hay registro de esta Subcategoría en la Categoría", exception.getMessage());
+        assertEquals("Nombre Existente: Hay registro de esta Subcategoría en la Categoría " + category.getName() + " .", exception.getMessage());
         verify(validator).validateSubcategory("Arroz");
-        verify(subcategoryProductRepo).findByNameAndCategoryId("Comida", 2L);
+        verify(subcategoryProductRepo).findByNameAndCategoryId("Arroz", 1L);
         verify(subcategoryProductRepo, never()).save(subcategory);
+    }
+    @Test
+    public void save_invalidNullCategory(){
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            subcategoryService.save(subcategory, null);
+        });
+
+        assertEquals("Dede seleccionar una categoría.", exception.getMessage());
     }
 
     //Prueba para obtener todas las marcas
