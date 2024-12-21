@@ -47,7 +47,7 @@ public class UnitServiceTest {
     }
     @Test
     public void save_invalidExistingUnit(){
-        unit.setNameUnit("2 Kg");
+        unit.setNameUnit("2 KG");
         existingUnit.setNameUnit("2 KG");
         when(unitRepo.findByNameUnit("2 KG")).thenReturn(Optional.of(existingUnit));
         doNothing().when(validator).validateUnit("2 KG");
@@ -58,6 +58,34 @@ public class UnitServiceTest {
         assertEquals("Nombre Existente: Hay registro de esta unidad de medida.", exception.getMessage());
         verify(validator).validateUnit("2 KG");
         verify(unitRepo).findByNameUnit("2 KG");
+        verify(unitRepo, never()).save(unit);
+    }
+    @Test
+    public void save_invalidNameLong(){
+        unit.setNameUnit("2 KILO");
+        when(unitRepo.findByNameUnit("2 KILO")).thenReturn(Optional.empty());
+        doNothing().when(validator).validateUnit("2 KILO");
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            unitService.save(unit);
+        });
+
+        assertEquals("El nombre debe tener máximo 2 dígitos y 2 letras.", exception.getMessage());
+        verify(validator).validateUnit("2 KILO");
+        verify(unitRepo).findByNameUnit("2 KILO");
+        verify(unitRepo, never()).save(unit);
+    }
+    @Test
+    public void save_invalidNumberLong(){
+        unit.setNameUnit("200 KG");
+        when(unitRepo.findByNameUnit("200 KG")).thenReturn(Optional.empty());
+        doNothing().when(validator).validateUnit("200 KG");
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            unitService.save(unit);
+        });
+
+        assertEquals("El nombre debe tener máximo 2 dígitos y 2 letras.", exception.getMessage());
+        verify(validator).validateUnit("200 KG");
+        verify(unitRepo).findByNameUnit("200 KG");
         verify(unitRepo, never()).save(unit);
     }
 
