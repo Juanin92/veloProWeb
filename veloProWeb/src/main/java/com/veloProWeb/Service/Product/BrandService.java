@@ -23,6 +23,7 @@ public class BrandService implements IBrandService {
         if (brandProduct != null){
             throw new IllegalArgumentException("Nombre Existente: Hay registro de este marca.");
         } else {
+
             brand.setName(capitalize(brand.getName()));
             brandProductRepo.save(brand);
         }
