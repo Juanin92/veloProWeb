@@ -20,11 +20,11 @@ public class SubcategoryService implements ISubcategoryService {
     @Override
     public void save(SubcategoryProduct subcategory, CategoryProduct category) {
         if (category != null){
+            validator.validateSubcategory(subcategory.getName());
             SubcategoryProduct subcategoryProduct = getSubcategoryCreated(capitalize(subcategory.getName()), category.getId());
             if (subcategoryProduct != null){
                 throw new IllegalArgumentException("Nombre Existente: Hay registro de esta Subcategoría en la Categoría " + category.getName() + " .");
             } else {
-                validator.validateSubcategory(subcategory.getName());
                 subcategory.setName(capitalize(subcategory.getName()));
                 subcategory.setCategory(category);
                 subcategoryProductRepo.save(subcategory);
