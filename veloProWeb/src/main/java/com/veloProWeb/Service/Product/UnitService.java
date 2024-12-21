@@ -18,11 +18,11 @@ public class UnitService implements IUnitService {
 
     @Override
     public void save(UnitProduct unit) {
+        validator.validateUnit(unit.getNameUnit());
         UnitProduct unitProduct = getUnitCreated(capitalize(unit.getNameUnit()));
         if (unitProduct != null){
             throw new IllegalArgumentException("Nombre Existente: Hay registro de esta unidad de medida.");
         } else {
-            validator.validateUnit(unit.getNameUnit());
             int digitCount = unit.getNameUnit().replaceAll("[^0-9]", "").length();
             int letterCount = unit.getNameUnit().replaceAll("[^a-zA-Z]", "").length();
             if (digitCount <= 2 && letterCount <= 2) {
