@@ -18,11 +18,11 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public void save(CategoryProduct category) {
+        validator.validateCategory(category.getName());
         CategoryProduct categoryProduct = getCategoryCreated(capitalize(category.getName()));
         if (categoryProduct != null){
             throw new IllegalArgumentException("Nombre Existente: Hay registro de esta categoría.");
         } else {
-            validator.validateCategory(category.getName());
             category.setName(capitalize(category.getName()));
             categoryProductRepo.save(category);
         }
