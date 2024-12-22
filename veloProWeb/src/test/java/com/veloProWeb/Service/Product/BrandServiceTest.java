@@ -2,6 +2,7 @@ package com.veloProWeb.Service.Product;
 
 import com.veloProWeb.Model.Entity.Product.BrandProduct;
 import com.veloProWeb.Repository.Product.BrandProductRepo;
+import com.veloProWeb.Utils.HelperService;
 import com.veloProWeb.Validation.CategoriesValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,7 @@ public class BrandServiceTest {
     @InjectMocks private BrandService brandService;
     @Mock private BrandProductRepo brandRepo;
     @Mock private CategoriesValidator validator;
+    @Mock private HelperService helperService;
     private BrandProduct brand;
     private BrandProduct existingBrand;
 
@@ -36,8 +38,9 @@ public class BrandServiceTest {
     @Test
     public void save_valid(){
         brand.setName("asus");
-        when(brandRepo.findByName("Asus")).thenReturn(Optional.empty());
         doNothing().when(validator).validateBrand("asus");
+        when(brandRepo.findByName("Asus")).thenReturn(Optional.empty());
+        when(helperService.capitalize("asus")).thenReturn("Asus");
         brandService.save(brand);
 
         verify(validator).validateBrand("asus");
@@ -48,8 +51,9 @@ public class BrandServiceTest {
     @Test
     public void save_invalidExistingBrand(){
         brand.setName("Samsung");
-        when(brandRepo.findByName("Samsung")).thenReturn(Optional.of(existingBrand));
         doNothing().when(validator).validateBrand("Samsung");
+        when(brandRepo.findByName("Samsung")).thenReturn(Optional.of(existingBrand));
+        when(helperService.capitalize("Samsung")).thenReturn("Samsung");
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             brandService.save(brand);
         });
