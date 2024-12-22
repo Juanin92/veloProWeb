@@ -60,11 +60,11 @@
             <tbody class="table-group-divider text-center align-middle">
                 <tr *ngFor="let product of filteredProducts">
                     <th scope="row">{{product.id}}</th>
-                    <td>{{product.brand.name}}</td>
-                    <td>{{product.category.name}}</td>
-                    <td>{{product.subcategoryProduct.name}}</td>
+                    <td>{{product.brand}}</td>
+                    <td>{{product.category}}</td>
+                    <td>{{product.subcategoryProduct}}</td>
                     <td>{{product.description}}</td>
-                    <td>{{product.unit.name}}</td>
+                    <td>{{product.unit}}</td>
                     <td>{{product.buyPrice | currency: 'CLP': '$':'1.0-0'}}</td>
                     <td>{{product.salePrice | currency: 'CLP':'$':'1.0-0'}}</td>
                     <td>{{product.statusProduct}}</td>
