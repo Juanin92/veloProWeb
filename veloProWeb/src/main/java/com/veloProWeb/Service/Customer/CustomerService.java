@@ -4,6 +4,7 @@ import com.veloProWeb.Model.Entity.Customer.Customer;
 import com.veloProWeb.Model.Enum.PaymentStatus;
 import com.veloProWeb.Repository.Customer.CustomerRepo;
 import com.veloProWeb.Service.Customer.Interfaces.ICustomerService;
+import com.veloProWeb.Utils.HelperService;
 import com.veloProWeb.Validation.CustomerValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ public class CustomerService implements ICustomerService {
 
     @Autowired private CustomerRepo customerRepo;
     @Autowired private CustomerValidator validator;
+    @Autowired private HelperService helperService;
 
     /**
      * Crea un nuevo cliente
@@ -38,8 +40,8 @@ public class CustomerService implements ICustomerService {
             customer.setStatus(PaymentStatus.NULO);
             customer.setTotalDebt(0);
             customer.setDebt(0);
-            customer.setName(capitalize(customer.getName()));
-            customer.setSurname(capitalize(customer.getSurname()));
+            customer.setName(helperService.capitalize(customer.getName()));
+            customer.setSurname(helperService.capitalize(customer.getSurname()));
             customerRepo.save(customer);
         }
     }
@@ -60,8 +62,8 @@ public class CustomerService implements ICustomerService {
                 customer.setEmail("x@x.xxx");
             }
             validator.validate(customer);
-            customer.setName(capitalize(customer.getName()));
-            customer.setSurname(capitalize(customer.getSurname()));
+            customer.setName(helperService.capitalize(customer.getName()));
+            customer.setSurname(helperService.capitalize(customer.getSurname()));
             customerRepo.save(customer);
         }
     }
@@ -170,29 +172,7 @@ public class CustomerService implements ICustomerService {
      * @return cliente encontrado o null si no encuentra similitud
      */
     private Customer getCostumerCreated(String name, String surname) {
-        Optional<Customer> customerOptional = customerRepo.findBySimilarNameAndSurname(capitalize(name), capitalize(surname));
+        Optional<Customer> customerOptional = customerRepo.findBySimilarNameAndSurname(helperService.capitalize(name), helperService.capitalize(surname));
         return customerOptional.orElse(null);
-    }
-
-    /**
-     * Convierte la primera letra de cada palabra en mayúscula
-     * @param value cadena de texto a capitalizar
-     * @return palabra capitalizada
-     */
-    private String capitalize(String value) {
-        if (value == null || value.isEmpty()) {
-            return value;
-        }
-        String[] words = value.split(" ");
-        StringBuilder capitalized = new StringBuilder();
-
-        for (String word : words) {
-            if (!word.isEmpty()) {
-                capitalized.append(word.substring(0, 1).toUpperCase());
-                capitalized.append(word.substring(1).toLowerCase());
-                capitalized.append(" ");
-            }
-        }
-        return capitalized.toString().trim();
     }
 }

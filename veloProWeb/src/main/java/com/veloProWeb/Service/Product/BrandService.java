@@ -3,6 +3,7 @@ package com.veloProWeb.Service.Product;
 import com.veloProWeb.Model.Entity.Product.BrandProduct;
 import com.veloProWeb.Repository.Product.BrandProductRepo;
 import com.veloProWeb.Service.Product.Interfaces.IBrandService;
+import com.veloProWeb.Utils.HelperService;
 import com.veloProWeb.Validation.CategoriesValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ public class BrandService implements IBrandService {
 
     @Autowired private BrandProductRepo brandProductRepo;
     @Autowired private CategoriesValidator validator;
+    @Autowired private HelperService helperService;
 
     /**
      * Método para crear un objeto de marca (nombre)
@@ -25,11 +27,11 @@ public class BrandService implements IBrandService {
     @Override
     public void save(BrandProduct brand) {
         validator.validateBrand(brand.getName());
-        BrandProduct brandProduct = getBrandCreated(capitalize(brand.getName()));
+        BrandProduct brandProduct = getBrandCreated(helperService.capitalize(brand.getName()));
         if (brandProduct != null){
             throw new IllegalArgumentException("Nombre Existente: Hay registro de este marca.");
         } else {
-            brand.setName(capitalize(brand.getName()));
+            brand.setName(helperService.capitalize(brand.getName()));
             brandProductRepo.save(brand);
         }
     }
@@ -51,27 +53,5 @@ public class BrandService implements IBrandService {
     private BrandProduct getBrandCreated(String name){
         Optional<BrandProduct> optionalBrandProduct = brandProductRepo.findByName(name);
         return optionalBrandProduct.orElse(null);
-    }
-
-    /**
-     * Convierte la primera letra de cada palabra en mayúscula
-     * @param value cadena de texto a capitalizar
-     * @return palabra capitalizada
-     */
-    private String capitalize(String value) {
-        if (value == null || value.isEmpty()) {
-            return value;
-        }
-        String[] words = value.split(" ");
-        StringBuilder capitalized = new StringBuilder();
-
-        for (String word : words) {
-            if (!word.isEmpty()) {
-                capitalized.append(word.substring(0, 1).toUpperCase());
-                capitalized.append(word.substring(1).toLowerCase());
-                capitalized.append(" ");
-            }
-        }
-        return capitalized.toString().trim();
     }
 }
