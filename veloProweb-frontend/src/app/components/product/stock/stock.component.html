@@ -1,1 +1,88 @@
-<p>stock works!</p>
+<div class="container-fluid d-flex flex-column p-1">
+    <div class="p-0 pb-0">
+        <p class="text-center fw-bold fs-2 m-0">Total Dinero:</p>
+        <div class="d-flex flex-lg-row flex-column">
+            <div class="order-lg-0 order-2 p-2 align-content-start">
+                <p class="fw-bold fs-4 mb-0 m-1">Buscar Cliente:</p>
+                <div class="input-group input-group-md">
+                    <input type="text"
+                        class="form-control" aria-label="buscar cliente filtrado"
+                        aria-describedby="inputGroup-sizing-md" placeholder="Ingrese un valor">
+                </div>
+            </div>
+            <div class="order-lg-1 order-0 d-flex flex-row m-auto mb-4">
+                <div class="position-relative">
+                    <div class="position-absolute top-0 start-50 translate-middle"
+                        style="width: 20px; height: 20px; background-color: rgb(40, 238, 40);"></div>
+                    <p class="p-2 fw-semibold">Pagada</p>
+                </div>
+                <div class="position-relative">
+                    <div class="position-absolute top-0 start-50 translate-middle"
+                        style="width: 20px; height: 20px; background-color: red;"></div>
+                    <p class="p-2 fw-semibold">Pendiente</p>
+                </div>
+                <div class="position-relative">
+                    <div class="position-absolute top-0 start-50 translate-middle"
+                        style="width: 20px; height: 20px; background-color: rgb(9, 180, 237);"></div>
+                    <p class="p-2 fw-semibold">Parcial</p>
+                </div>
+                <div class="position-relative">
+                    <div class="position-absolute top-0 start-50 translate-middle"
+                        style="width: 20px; height: 20px; background-color: blue;"></div>
+                    <p class="p-2 fw-semibold">Vencida</p>
+                </div>
+            </div>
+            <div class="order-lg-2 order-1 m-2 mt-0">
+                <button class="btn active m-2 mt-1 " data-bs-toggle="button" aria-pressed="true" data-bs-toggle="modal"
+                    data-bs-target="#addCustomer"><img src="/assets/icons/iconAddUser.png" alt="Agregar_cliente"
+                        width="60" height="60" class="d-inline-block img-fluid"></button>
+                <p class="text-center fs-7 m-0">Agregar</p>
+            </div>
+        </div>
+    </div>
+    <div class="text-center p-2 pt-0 table-responsive" style="max-height: 325px;">
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col" class="position-sticky top-0">#</th>
+                    <th scope="col" class="position-sticky top-0">Nombre</th>
+                    <th scope="col" class="position-sticky top-0">Apellidos</th>
+                    <th scope="col" class="position-sticky top-0">Email</th>
+                    <th scope="col" class="position-sticky top-0">Teléfono</th>
+                    <th scope="col" class="position-sticky top-0">Deuda</th>
+                    <th scope="col" class="position-sticky top-0">Estado</th>
+                    <th scope="col" class="position-sticky top-0">Cuenta</th>
+                    <th scope="col" class="position-sticky top-0">Acción</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider text-center align-middle">
+                TABLA
+                <!-- <tr *ngFor="let customer of filteredCustomers">
+                    <th scope="row">{{customer.id}}</th>
+                    <td>{{customer.name}}</td>
+                    <td>{{customer.surname}}</td>
+                    <td>{{getEmailEmpty(customer.email)}}</td>
+                    <td>{{customer.phone}}</td>
+                    <td>{{customer.debt | currency: 'CLP':'$':'1.0-0'}}</td>
+                    <td [ngStyle]="{'background-color': statusColor(customer.status)}"></td>
+                    <td>{{getStatusAccount(customer.account)}}</td>
+                    <td>
+                        <div>
+                            <button *ngIf="customer.debt > 0" class="btn btn-sm btn-success m-1" data-bs-toggle="modal"
+                                data-bs-target="#paymentCustomer" (click)="openModalCustomer(customer)"><img
+                                    src="/assets/icons/btnPayIcon.png" alt="pago" width="30" height="30"
+                                    class="img-fluid"></button>
+                            <button class="btn btn-sm btn-warning m-1" data-bs-toggle="modal"
+                                data-bs-target="#updateCustomer" (click)="openModalCustomer(customer)"><img
+                                    src="/assets/icons/btnEditIcon.png" alt="editar" width="30" height="30"
+                                    class="img-fluid"></button>
+                            <button *ngIf="customer.debt === 0 && customer.account" class="btn btn-sm btn-danger m-1"
+                                (click)="deleteCustomer(customer)"><img src="/assets/icons/btnDeleteIcon.png"
+                                    alt="borrar" width="30" height="30" class="img-fluid"></button>
+                        </div>
+                    </td>
+                </tr> -->
+            </tbody>
+        </table>
+    </div>
+</div>
