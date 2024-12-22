@@ -1,8 +1,7 @@
-package com.veloProWeb.Controller;
+package com.veloProWeb.Controller.Customer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.veloProWeb.Controller.Customer.TicketHistoryController;
 import com.veloProWeb.Exceptions.GlobalExceptionHandler;
 import com.veloProWeb.Model.DTO.TicketRequestDTO;
 import com.veloProWeb.Model.Entity.Customer.Customer;
