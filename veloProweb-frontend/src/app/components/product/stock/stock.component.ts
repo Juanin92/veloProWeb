@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { StockService } from '../../../services/Product/stock.service';
 import { Product } from '../../../models/Entity/Product/product.model';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgStyle } from '@angular/common';
 import { ProductDTO } from '../../../models/DTO/product-dto';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-stock',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgStyle, FormsModule],
   templateUrl: './stock.component.html',
   styleUrl: './stock.component.css'
 })
@@ -31,6 +32,15 @@ export class StockComponent implements OnInit{
     }, (error) => {
       console.log('Error no se encontró ningún producto', error);
     });
+  }
+
+  statusColor(status: string): string {
+    switch (status) {
+      case 'DISPONIBLE': return 'rgb(40, 238, 40)';
+      case 'DESCONTINUADO': return 'red';
+      case 'NODISPONIBLE': return 'rgb(9, 180, 237)';
+      default: return 'transparent';
+    }
   }
 
   searchFilterCustomer(): void {

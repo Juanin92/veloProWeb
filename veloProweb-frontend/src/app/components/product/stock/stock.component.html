@@ -10,7 +10,7 @@
             <div class="order-lg-0 order-2 p-2 align-content-start d-flex flex-row bg-warning">
                 <p class="fw-bold fs-4 mb-0 m-1">Búsqueda Rápida:</p>
                 <div class="input-group input-group-md">
-                    <input type="text"
+                    <input [(ngModel)]="textFilter" (ngModelChange)="searchFilterCustomer()" type="text"
                         class="form-control" aria-label="buscar producto filtrado"
                         aria-describedby="inputGroup-sizing-md" placeholder="Ingrese un valor">
                 </div>
@@ -62,7 +62,7 @@
                     <td>{{product.buyPrice | currency: 'CLP': '$':'1.0-0'}}</td>
                     <td>{{product.salePrice | currency: 'CLP':'$':'1.0-0'}}</td>
                     <td>{{product.stock}}</td>
-                    <td>{{product.statusProduct}}</td>
+                    <td [ngStyle]="{'background-color': statusColor(product.statusProduct)}"></td>
                     <td>
                         <div>
                            <button class="btn btn-sm btn-warning m-1" data-bs-toggle="modal"
