@@ -3,6 +3,7 @@ package com.veloProWeb.Service.Product;
 import com.veloProWeb.Model.Entity.Product.BrandProduct;
 import com.veloProWeb.Model.Entity.Product.CategoryProduct;
 import com.veloProWeb.Repository.Product.CategoryProductRepo;
+import com.veloProWeb.Utils.HelperService;
 import com.veloProWeb.Validation.CategoriesValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,12 +25,14 @@ public class CategoryServiceTest {
     @InjectMocks private CategoryService categoryService;
     @Mock private CategoryProductRepo categoryProductRepo;
     @Mock private CategoriesValidator validator;
+    @Mock private HelperService helperService;
     private CategoryProduct category;
     private CategoryProduct existingCategory;
 
     @BeforeEach
     void setUp(){
         category = new CategoryProduct();
+        category.setName("combustible");
         existingCategory = new CategoryProduct();
         existingCategory.setName("Comida");
     }
@@ -37,9 +40,9 @@ public class CategoryServiceTest {
     //Prueba para crear una nueva marca
     @Test
     public void save_valid(){
-        category.setName("combustible");
-        when(categoryProductRepo.findByName("Combustible")).thenReturn(Optional.empty());
         doNothing().when(validator).validateCategory("combustible");
+        when(helperService.capitalize("combustible")).thenReturn("Combustible");
+        when(categoryProductRepo.findByName("Combustible")).thenReturn(Optional.empty());
         categoryService.save(category);
 
         verify(validator).validateCategory("combustible");
@@ -50,8 +53,9 @@ public class CategoryServiceTest {
     @Test
     public void save_invalidExistingCategory(){
         category.setName("Comida");
-        when(categoryProductRepo.findByName("Comida")).thenReturn(Optional.of(existingCategory));
         doNothing().when(validator).validateCategory("Comida");
+        when(categoryProductRepo.findByName("Comida")).thenReturn(Optional.of(existingCategory));
+        when(helperService.capitalize("Comida")).thenReturn("Comida");
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             categoryService.save(category);
         });

@@ -3,6 +3,7 @@ package com.veloProWeb.Service.Customer;
 import com.veloProWeb.Model.Entity.Customer.Customer;
 import com.veloProWeb.Model.Enum.PaymentStatus;
 import com.veloProWeb.Repository.Customer.CustomerRepo;
+import com.veloProWeb.Utils.HelperService;
 import com.veloProWeb.Validation.CustomerValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,7 @@ public class CustomerServiceTest {
     @InjectMocks private CustomerService customerService;
     @Mock private CustomerRepo customerRepo;
     @Mock private CustomerValidator validator;
+    @Mock private HelperService helperService;
     private Customer customer;
 
     @BeforeEach
@@ -33,12 +35,16 @@ public class CustomerServiceTest {
     @Test
     public void addNewCustomer_valid(){
         when(customerRepo.findBySimilarNameAndSurname(customer.getName(), customer.getSurname())).thenReturn(Optional.empty());
+        when(helperService.capitalize("Juan")).thenReturn("Juan");
+        when(helperService.capitalize("Perez")).thenReturn("Perez");
         customerService.addNewCustomer(customer);
         verify(validator).validate(customer);
         verify(customerRepo).save(customer);
     }
     @Test
     public void addNewCustomer_existingCustomer(){
+        when(helperService.capitalize("Juan")).thenReturn("Juan");
+        when(helperService.capitalize("Perez")).thenReturn("Perez");
         when(customerRepo.findBySimilarNameAndSurname(customer.getName(), customer.getSurname())).thenReturn(Optional.of(customer));
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> customerService.addNewCustomer(customer));
         assertEquals("Cliente Existente: Hay registro de este cliente.", exception.getMessage());
@@ -50,6 +56,8 @@ public class CustomerServiceTest {
     @Test
     public void updateCustomer_valid(){
         when(customerRepo.findBySimilarNameAndSurname(customer.getName(), customer.getSurname())).thenReturn(Optional.empty());
+        when(helperService.capitalize("Juan")).thenReturn("Juan");
+        when(helperService.capitalize("Perez")).thenReturn("Perez");
         customerService.updateCustomer(customer);
         verify(validator).validate(customer);
         verify(customerRepo).save(customer);
@@ -57,10 +65,13 @@ public class CustomerServiceTest {
     @Test
     public void updateCustomer_existingCustomer(){
         Customer customerDB = new Customer(2L,"Juan", "Perez", "+569 12345678", "test@test.com", 0, 0, PaymentStatus.NULO, true, new ArrayList<>(), new ArrayList<>());
+        when(helperService.capitalize("Juan")).thenReturn("Juan");
+        when(helperService.capitalize("Perez")).thenReturn("Perez");
         when(customerRepo.findBySimilarNameAndSurname(customerDB.getName(), customerDB.getSurname())).thenReturn(Optional.of(customerDB));
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> customerService.addNewCustomer(customer));
         assertEquals("Cliente Existente: Hay registro de este cliente.", exception.getMessage());
         verify(validator, never()).validate(any(Customer.class));
+        verify(customerRepo, never()).save(customer);
     }
 
     //Prueba para obtener todos los clientes de la BD

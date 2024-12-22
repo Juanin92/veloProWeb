@@ -4,6 +4,7 @@ import com.veloProWeb.Model.Entity.Product.BrandProduct;
 import com.veloProWeb.Model.Entity.Product.CategoryProduct;
 import com.veloProWeb.Model.Entity.Product.SubcategoryProduct;
 import com.veloProWeb.Repository.Product.SubcategoryProductRepo;
+import com.veloProWeb.Utils.HelperService;
 import com.veloProWeb.Validation.CategoriesValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,7 @@ public class SubcategoryServiceTest {
     @InjectMocks private SubcategoryService subcategoryService;
     @Mock private SubcategoryProductRepo subcategoryProductRepo;
     @Mock private CategoriesValidator validator;
+    @Mock private HelperService helperService;
     private SubcategoryProduct subcategory;
     private SubcategoryProduct existingSubcategory;
     private CategoryProduct category;
@@ -43,8 +45,9 @@ public class SubcategoryServiceTest {
     //Prueba para crear una nueva marca
     @Test
     public void save_valid(){
-        when(subcategoryProductRepo.findByNameAndCategoryId("Leche",1L)).thenReturn(Optional.empty());
         doNothing().when(validator).validateSubcategory("Leche");
+        when(subcategoryProductRepo.findByNameAndCategoryId("Leche",1L)).thenReturn(Optional.empty());
+        when(helperService.capitalize("Leche")).thenReturn("Leche");
         subcategoryService.save(subcategory, category);
 
         verify(validator).validateSubcategory("Leche");
@@ -55,8 +58,9 @@ public class SubcategoryServiceTest {
     @Test
     public void save_invalidExistingSubcategory(){
         subcategory.setName("Arroz");
-        when(subcategoryProductRepo.findByNameAndCategoryId("Arroz", 1L)).thenReturn(Optional.of(existingSubcategory));
         doNothing().when(validator).validateSubcategory("Arroz");
+        when(subcategoryProductRepo.findByNameAndCategoryId("Arroz", 1L)).thenReturn(Optional.of(existingSubcategory));
+        when(helperService.capitalize("Arroz")).thenReturn("Arroz");
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             subcategoryService.save(subcategory, category);
         });

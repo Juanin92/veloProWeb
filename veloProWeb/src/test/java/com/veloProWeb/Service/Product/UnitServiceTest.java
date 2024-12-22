@@ -2,6 +2,7 @@ package com.veloProWeb.Service.Product;
 
 import com.veloProWeb.Model.Entity.Product.UnitProduct;
 import com.veloProWeb.Repository.Product.UnitProductRepo;
+import com.veloProWeb.Utils.HelperService;
 import com.veloProWeb.Validation.CategoriesValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ public class UnitServiceTest {
     @InjectMocks private UnitService unitService;
     @Mock private UnitProductRepo unitRepo;
     @Mock private CategoriesValidator validator;
+    @Mock private HelperService helperService;
     private UnitProduct unit;
     private UnitProduct existingUnit;
 
@@ -36,8 +38,9 @@ public class UnitServiceTest {
     @Test
     public void save_valid(){
         unit.setNameUnit("1 KG");
-        when(unitRepo.findByNameUnit("1 KG")).thenReturn(Optional.empty());
         doNothing().when(validator).validateUnit("1 KG");
+        when(unitRepo.findByNameUnit("1 KG")).thenReturn(Optional.empty());
+        when(helperService.upperCaseWord("1 KG")).thenReturn("1 KG");
         unitService.save(unit);
 
         verify(validator).validateUnit("1 KG");
@@ -49,8 +52,9 @@ public class UnitServiceTest {
     public void save_invalidExistingUnit(){
         unit.setNameUnit("2 KG");
         existingUnit.setNameUnit("2 KG");
-        when(unitRepo.findByNameUnit("2 KG")).thenReturn(Optional.of(existingUnit));
         doNothing().when(validator).validateUnit("2 KG");
+        when(unitRepo.findByNameUnit("2 KG")).thenReturn(Optional.of(existingUnit));
+        when(helperService.upperCaseWord("2 KG")).thenReturn("2 KG");
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             unitService.save(unit);
         });
@@ -63,8 +67,9 @@ public class UnitServiceTest {
     @Test
     public void save_invalidNameLong(){
         unit.setNameUnit("2 KILO");
-        when(unitRepo.findByNameUnit("2 KILO")).thenReturn(Optional.empty());
         doNothing().when(validator).validateUnit("2 KILO");
+        when(unitRepo.findByNameUnit("2 KILO")).thenReturn(Optional.empty());
+        when(helperService.upperCaseWord("2 KILO")).thenReturn("2 KILO");
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             unitService.save(unit);
         });
@@ -77,8 +82,9 @@ public class UnitServiceTest {
     @Test
     public void save_invalidNumberLong(){
         unit.setNameUnit("200 KG");
-        when(unitRepo.findByNameUnit("200 KG")).thenReturn(Optional.empty());
         doNothing().when(validator).validateUnit("200 KG");
+        when(unitRepo.findByNameUnit("200 KG")).thenReturn(Optional.empty());
+        when(helperService.upperCaseWord("200 KG")).thenReturn("200 KG");
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             unitService.save(unit);
         });
