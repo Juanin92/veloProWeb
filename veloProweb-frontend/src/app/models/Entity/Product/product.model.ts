@@ -1,3 +1,4 @@
+import { StatusProduct } from "../../enum/status-product";
 import { Brand } from "./brand";
 import { Category } from "./category";
 import { Subcategory } from "./subcategory";
@@ -10,7 +11,7 @@ export interface Product {
     buyPrice: number;
     stock: number;
     status: boolean;
-    // statusProduct: StatusProduct;
+    statusProduct: StatusProduct;
     brand: Brand;
     unit: UnitProductModel;
     subcategoryProduct: Subcategory;

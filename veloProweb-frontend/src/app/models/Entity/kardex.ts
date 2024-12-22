@@ -1,0 +1,13 @@
+import { Product } from "./Product/product.model";
+
+export interface Kardex {
+    id: number;
+    date: Date;
+    quantity: number;
+    stock: number;
+    comment: string;
+    price: number;
+    movementsType: MovementsType;
+    product: Product;
+    // user: User;
+}
