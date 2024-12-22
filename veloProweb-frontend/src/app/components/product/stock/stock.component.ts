@@ -1,21 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { StockService } from '../../../services/Product/stock.service';
 import { Product } from '../../../models/Entity/Product/product.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-stock',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './stock.component.html',
   styleUrl: './stock.component.css'
 })
-export class StockComponent {
+export class StockComponent implements OnInit{
 
   products: Product[] = [];
   filteredProducts: Product[] = [];
   textFilter: string = '';
 
   constructor(private stockService: StockService){}
+
+  ngOnInit(): void {
+    this.getProducts();
+    console.log('Producto: ', this.products);
+  }
 
   getProducts(): void{
     this.stockService.getProducts().subscribe((list) =>{

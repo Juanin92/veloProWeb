@@ -8,7 +8,7 @@ import { Product } from '../../models/Entity/Product/product.model';
 })
 export class StockService {
 
-  private apiUrl = 'http://localhost:8080/clientes';
+  private apiUrl = 'http://localhost:8080/stock';
 
   constructor(private httpClient: HttpClient) { }
 
