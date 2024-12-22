@@ -1,4 +1,6 @@
+import { MovementsType } from "../enum/movements-type";
 import { Product } from "./Product/product.model";
+import { User } from "./user";
 
 export interface Kardex {
     id: number;
@@ -9,5 +11,5 @@ export interface Kardex {
     price: number;
     movementsType: MovementsType;
     product: Product;
-    // user: User;
+    user: User;
 }
