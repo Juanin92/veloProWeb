@@ -1,42 +1,36 @@
 <div class="container-fluid d-flex flex-column p-1">
     <div class="p-0 pb-0">
-        <p class="text-center fw-bold fs-2 m-0">Total Dinero:</p>
-        <div class="d-flex flex-lg-row flex-column">
-            <div class="order-lg-0 order-2 p-2 align-content-start">
-                <p class="fw-bold fs-4 mb-0 m-1">Buscar Cliente:</p>
+        <div class="d-flex flex-lg-row flex-column justify-content-between m-2 bg-danger">
+            <button>Producto</button>
+            <button>Categorías</button>
+            <button>Proveedor</button>
+            <button>Compras</button>
+        </div>
+        <div class="d-flex flex-lg-row flex-column m-1">
+            <div class="order-lg-0 order-2 p-2 align-content-start d-flex flex-row bg-warning">
+                <p class="fw-bold fs-4 mb-0 m-1">Búsqueda Rápida:</p>
                 <div class="input-group input-group-md">
                     <input type="text"
-                        class="form-control" aria-label="buscar cliente filtrado"
+                        class="form-control" aria-label="buscar producto filtrado"
                         aria-describedby="inputGroup-sizing-md" placeholder="Ingrese un valor">
                 </div>
             </div>
-            <div class="order-lg-1 order-0 d-flex flex-row m-auto mb-4">
+            <div class="order-lg-1 order-0 d-flex flex-row m-auto mb-0">
                 <div class="position-relative">
                     <div class="position-absolute top-0 start-50 translate-middle"
                         style="width: 20px; height: 20px; background-color: rgb(40, 238, 40);"></div>
-                    <p class="p-2 fw-semibold">Pagada</p>
-                </div>
-                <div class="position-relative">
-                    <div class="position-absolute top-0 start-50 translate-middle"
-                        style="width: 20px; height: 20px; background-color: red;"></div>
-                    <p class="p-2 fw-semibold">Pendiente</p>
+                    <p class="p-2 fw-semibold">Disponible</p>
                 </div>
                 <div class="position-relative">
                     <div class="position-absolute top-0 start-50 translate-middle"
                         style="width: 20px; height: 20px; background-color: rgb(9, 180, 237);"></div>
-                    <p class="p-2 fw-semibold">Parcial</p>
+                    <p class="p-2 fw-semibold">No Disponible</p>
                 </div>
                 <div class="position-relative">
                     <div class="position-absolute top-0 start-50 translate-middle"
-                        style="width: 20px; height: 20px; background-color: blue;"></div>
-                    <p class="p-2 fw-semibold">Vencida</p>
+                        style="width: 20px; height: 20px; background-color: red;"></div>
+                    <p class="p-2 fw-semibold">Descontinuado</p>
                 </div>
-            </div>
-            <div class="order-lg-2 order-1 m-2 mt-0">
-                <button class="btn active m-2 mt-1 " data-bs-toggle="button" aria-pressed="true" data-bs-toggle="modal"
-                    data-bs-target="#addCustomer"><img src="/assets/icons/iconAddUser.png" alt="Agregar_cliente"
-                        width="60" height="60" class="d-inline-block img-fluid"></button>
-                <p class="text-center fs-7 m-0">Agregar</p>
             </div>
         </div>
     </div>
