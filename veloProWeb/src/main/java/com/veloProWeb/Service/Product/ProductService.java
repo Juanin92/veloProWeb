@@ -26,7 +26,7 @@ public class ProductService implements IProductService {
     public void create(Product product) {
         validator.validateNewProduct(product);
         product.setStatus(false);
-        product.setStatusProduct(StatusProduct.UNAVAILABLE);
+        product.setStatusProduct(StatusProduct.NODISPONIBLE);
         product.setBuyPrice(0);
         product.setSalePrice(0);
         product.setStock(0);
@@ -43,11 +43,11 @@ public class ProductService implements IProductService {
     public void update(Product product){
         if (product.getStock() > 0){
             product.setStatus(true);
-            product.setStatusProduct(StatusProduct.AVAILABLE);
+            product.setStatusProduct(StatusProduct.DISPONIBLE);
             productRepo.save(product);
         }else {
             product.setStatus(false);
-            product.setStatusProduct(StatusProduct.UNAVAILABLE);
+            product.setStatusProduct(StatusProduct.NODISPONIBLE);
             productRepo.save(product);
         }
     }
@@ -59,7 +59,7 @@ public class ProductService implements IProductService {
      */
     @Override
     public void active(Product product) {
-        product.setStatusProduct(StatusProduct.UNAVAILABLE);
+        product.setStatusProduct(StatusProduct.NODISPONIBLE);
         productRepo.save(product);
     }
 
@@ -97,7 +97,7 @@ public class ProductService implements IProductService {
     @Override
     public void delete(Product product) {
         product.setStatus(false);
-        product.setStatusProduct(StatusProduct.DISCONTINUED);
+        product.setStatusProduct(StatusProduct.DESCONTINUADO);
         productRepo.save(product);
     }
 
