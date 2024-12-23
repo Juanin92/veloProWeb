@@ -6,6 +6,8 @@ import { Product } from '../../../models/Entity/Product/product.model';
 import { ProductValidator } from '../../../validation/product-validator';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ProductDTO } from '../../../models/DTO/product-dto';
+import { StatusProduct } from '../../../models/enum/status-product';
 
 @Component({
   selector: 'app-update-product',
@@ -24,6 +26,19 @@ export class UpdateProductComponent {
     private helper: ProductHelperService,
     private notification: NotificationService){
       this.selectedProduct = helper.createEmptyProduct();
+      // this.selectedProduct = {
+      //         id: 0,
+      //         description: '',
+      //         salePrice: 0,
+      //         buyPrice: 0,
+      //         stock: 0,
+      //         status: false,
+      //         statusProduct: StatusProduct.UNAVAILABLE,
+      //         brand: '',
+      //         unit: '',
+      //         subcategoryProduct: '',
+      //         category: ''
+      //       }
     }
 
 }

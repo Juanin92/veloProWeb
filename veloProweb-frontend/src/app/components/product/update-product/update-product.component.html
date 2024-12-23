@@ -6,22 +6,22 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="d-flex flex-lg-row flex-column">
+                <div class="d-flex flex-lg-row flex-column justify-content-between">
                     <div class="">
                         <label for="">Marca</label>
-                        <p>XXX</p>
+                        <p>{{selectedProduct.brand}}</p>
                     </div>
-                    <div class="form-floating mb-3 m-2 w-100">
+                    <div class="">
                         <label for="">Categoría</label>
-                        <p>XXX</p>
+                        <p>{{selectedProduct.category.name}}</p>
                     </div>
-                    <div class="form-floating mb-3 m-2 w-100">
+                    <div class="">
                         <label for="">Subcategoría</label>
-                        <p>XXX</p>
+                        <p>{{selectedProduct.subcategoryProduct.name}}</p>
                     </div>
-                    <div class="form-floating mb-3 m-2 w-100">
+                    <div class="">
                         <label for="">Unidad de medida</label>
-                        <p>XXX</p>
+                        <p>{{selectedProduct.unit.name}}</p>
                     </div>
                 </div>
                 <form>

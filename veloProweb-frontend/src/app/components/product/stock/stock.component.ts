@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { AddProductComponent } from "../add-product/add-product.component";
 import { ProductHelperService } from '../../../services/Product/product-helper.service';
 import { UpdateProductComponent } from "../update-product/update-product.component";
+import { StatusProduct } from '../../../models/enum/status-product';
 
 @Component({
   selector: 'app-stock',
@@ -26,6 +27,19 @@ export class StockComponent implements OnInit{
     private stockService: ProductService,
     private helper: ProductHelperService){
       this.selectedProduct = helper.createEmptyProduct();
+      // this.selectedProduct = {
+      //   id: 0,
+      //   description: '',
+      //   salePrice: 0,
+      //   buyPrice: 0,
+      //   stock: 0,
+      //   status: false,
+      //   statusProduct: StatusProduct.UNAVAILABLE,
+      //   brand: '',
+      //   unit: '',
+      //   subcategoryProduct: '',
+      //   category: ''
+      // }
     }
 
   ngOnInit(): void {
