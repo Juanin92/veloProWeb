@@ -17,4 +17,8 @@ export class AddProductComponent {
 
   constructor(private productService: ProductService){}
 
+  addProduct(): void{
+    if(this.validator.)
+  }
+
 }
