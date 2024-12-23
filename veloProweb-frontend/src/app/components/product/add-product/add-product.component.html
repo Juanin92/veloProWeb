@@ -11,9 +11,7 @@
                         <div class="form-floating mb-3 m-2 w-100">
                             <select class="form-select w-auto" aria-label="Default select example">
                                 <option selected disabled>Marca</option>
-                                <option value="1">Dogchow</option>
-                                <option value="2">Catchow</option>
-                                <option value="3">Pedigree</option>
+                                <option *ngFor="let brand of brandList; let i = index" [value]="i">{{brand.name}}</option>
                             </select>
                         </div>
                         <div class="form-floating mb-3 m-2 w-100">

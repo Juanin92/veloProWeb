@@ -50,7 +50,6 @@ export class StockComponent implements OnInit{
     this.stockService.getProducts().subscribe((list) =>{
       this.products = list;
       this.filteredProducts = list;
-      console.log('Producto: ', this.products);
     }, (error) => {
       console.log('Error no se encontró ningún producto', error);
     });

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Product } from '../../../models/Entity/Product/product.model';
 import { ProductValidator } from '../../../validation/product-validator';
 import { ProductService } from '../../../services/Product/product.service';
@@ -6,6 +6,8 @@ import { ProductHelperService } from '../../../services/Product/product-helper.s
 import { NotificationService } from '../../../utils/notification-service.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { BrandService } from '../../../services/Product/brand.service';
+import { Brand } from '../../../models/Entity/Product/brand';
 
 @Component({
   selector: 'app-add-product',
@@ -14,16 +16,31 @@ import { CommonModule } from '@angular/common';
   templateUrl: './add-product.component.html',
   styleUrl: './add-product.component.css'
 })
-export class AddProductComponent {
+export class AddProductComponent implements OnInit{
 
   newProduct: Product;
   validator = ProductValidator;
+  brandList: Brand[] = [];
 
   constructor(
     private productService: ProductService,
+    private brandService: BrandService,
     private helper: ProductHelperService,
     private notification: NotificationService){
     this.newProduct = helper.createEmptyProduct();
+  }
+
+  ngOnInit(): void {
+    this.getAllBrands();
+  }
+
+  getAllBrands(): void{
+    this.brandService.getBrands().subscribe((list) => {
+      this.brandList = list;
+      console.log('marcas: ', this.brandList);
+    }, (error) => {
+      console.log('Error no se encontró ninguna marca', error);
+    })
   }
 
   addProduct(): void{
@@ -33,5 +50,4 @@ export class AddProductComponent {
       this.notification.showWarning('Formulario incompleto', 'Por favor, complete correctamente todos los campos obligatorios.');
     }
   }
-
 }
