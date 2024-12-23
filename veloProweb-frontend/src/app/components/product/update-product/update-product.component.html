@@ -1,1 +1,46 @@
-<p>update-product works!</p>
+<div class="modal fade" id="updateProduct" tabindex="-1" aria-labelledby="updateProduct" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header text-center w-100">
+                <h1 class="modal-title fs-3 w-100">Registro de Productos</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex flex-lg-row flex-column">
+                    <div class="">
+                        <label for="">Marca</label>
+                        <p>XXX</p>
+                    </div>
+                    <div class="form-floating mb-3 m-2 w-100">
+                        <label for="">Categoría</label>
+                        <p>XXX</p>
+                    </div>
+                    <div class="form-floating mb-3 m-2 w-100">
+                        <label for="">Subcategoría</label>
+                        <p>XXX</p>
+                    </div>
+                    <div class="form-floating mb-3 m-2 w-100">
+                        <label for="">Unidad de medida</label>
+                        <p>XXX</p>
+                    </div>
+                </div>
+                <form>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="description"
+                            placeholder="Ingrese una descripción general" name="description"
+                            [(ngModel)]="selectedProduct.description"
+                            [ngClass]="{'is-invalid': !validator.isFieldValid(selectedProduct, 'description')}" required />
+                        <label for="description" class="form-label">Descripción</label>
+                        <div *ngIf="!validator.isFieldValid(selectedProduct,'description')" class="invalid-feedback">
+                            Debe ingresar una descripción del producto
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="submit" class="btn btn-warning">Actualizar</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
