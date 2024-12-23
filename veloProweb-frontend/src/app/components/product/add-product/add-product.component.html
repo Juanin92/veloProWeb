@@ -1,1 +1,59 @@
-<p>add-product works!</p>
+<div class="modal fade" id="addProduct" tabindex="-1" aria-labelledby="addProduct" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-center w-100">
+                <h1 class="modal-title fs-3 w-100">Registro de Productos</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="d-flex flex-lg-row flex-column">
+                        <div class="form-floating mb-3 m-2 w-100">
+                            <select class="form-select" aria-label="Default select example">
+                                <option selected disabled>Seleccione Marca</option>
+                                <option value="1">Dogchow</option>
+                                <option value="2">Catchow</option>
+                                <option value="3">Pedigree</option>
+                            </select>
+                        </div>
+                        <div class="form-floating mb-3 m-2 w-100">
+                            <select class="form-select" aria-label="Default select example">
+                                <option selected disabled>Seleccione Categoría</option>
+                                <option value="1">Comida</option>
+                                <option value="2">Accesorios</option>
+                                <option value="3">Limpieza</option>
+                            </select>
+                        </div>
+                        <div class="form-floating mb-3 m-2 w-100">
+                            <select class="form-select" aria-label="Default select example">
+                                <option selected disabled>Seleccione Subcategoría</option>
+                                <option value="1">Perro</option>
+                                <option value="2">Gato</option>
+                                <option value="3">Granja</option>
+                            </select>
+                        </div>
+                        <div class="form-floating mb-3 m-2 w-100">
+                            <select class="form-select" aria-label="Default select example">
+                                <option selected disabled>Seleccione Unida de medida</option>
+                                <option value="1">1 KG</option>
+                                <option value="2">20 KG</option>
+                                <option value="3">1 UN</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="description" placeholder="Ingrese una descripción general" name="description"/>
+                        <label for="description" class="form-label">Descripción</label>
+                        <!-- <div *ngIf="!customerValidator.isFieldValid(newCustomer,'email')" class="invalid-feedback">
+                            Email no válido (example&commat;test.com)
+                        </div> -->
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="submit" class="btn btn-success">Guardar</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>

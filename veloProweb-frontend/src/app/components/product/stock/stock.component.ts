@@ -4,11 +4,12 @@ import { Product } from '../../../models/Entity/Product/product.model';
 import { CommonModule, NgStyle } from '@angular/common';
 import { ProductDTO } from '../../../models/DTO/product-dto';
 import { FormsModule } from '@angular/forms';
+import { AddProductComponent } from "../add-product/add-product.component";
 
 @Component({
   selector: 'app-stock',
   standalone: true,
-  imports: [CommonModule, NgStyle, FormsModule],
+  imports: [CommonModule, NgStyle, FormsModule, AddProductComponent],
   templateUrl: './stock.component.html',
   styleUrl: './stock.component.css'
 })
