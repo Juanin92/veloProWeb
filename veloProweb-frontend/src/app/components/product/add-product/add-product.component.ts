@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { Product } from '../../../models/Entity/Product/product.model';
+import { ProductValidator } from '../../../validation/product-validator';
+import { ProductService } from '../../../services/Product/product.service';
 
 @Component({
   selector: 'app-add-product',
@@ -8,5 +11,10 @@ import { Component } from '@angular/core';
   styleUrl: './add-product.component.css'
 })
 export class AddProductComponent {
+
+  newProduct: Product;
+  validator: ProductValidator;
+
+  constructor(private productService: ProductService){}
 
 }

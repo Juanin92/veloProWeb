@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { StockService } from '../../../services/Product/stock.service';
+import { ProductService } from '../../../services/Product/product.service';
 import { Product } from '../../../models/Entity/Product/product.model';
 import { CommonModule, NgStyle } from '@angular/common';
 import { ProductDTO } from '../../../models/DTO/product-dto';
@@ -19,7 +19,7 @@ export class StockComponent implements OnInit{
   filteredProducts: ProductDTO[] = [];
   textFilter: string = '';
 
-  constructor(private stockService: StockService){}
+  constructor(private stockService: ProductService){}
 
   ngOnInit(): void {
     this.getProducts();

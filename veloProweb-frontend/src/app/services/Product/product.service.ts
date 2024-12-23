@@ -6,7 +6,7 @@ import { ProductDTO } from '../../models/DTO/product-dto';
 @Injectable({
   providedIn: 'root'
 })
-export class StockService {
+export class ProductService {
 
   private apiUrl = 'http://localhost:8080/stock';
 
