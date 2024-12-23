@@ -9,27 +9,28 @@
                 <form>
                     <div class="d-flex flex-lg-row flex-column">
                         <div class="form-floating mb-3 m-2 w-100">
-                            <select class="form-select w-auto" aria-label="Seleccione marca">
+                            <p *ngIf="brandList.length === 0">Sin marcas disponibles.</p>
+                            <select *ngIf="brandList.length !== 0" class="form-select w-auto" aria-label="Seleccione marca">
                                 <option selected disabled>Marca</option>
                                 <option *ngFor="let brand of brandList; let i = index" [value]="i">{{brand.name}}</option>
                             </select>
                         </div>
                         <div class="form-floating mb-3 m-2 w-100">
-                            <select class="form-select w-auto" aria-label="Seleccione Categoría">
+                            <p *ngIf="categoryList.length === 0">Sin categorías disponibles.</p>
+                            <select *ngIf="categoryList.length !== 0" class="form-select w-auto" aria-label="Seleccione Categoría">
                                 <option selected disabled>Categoría</option>
                                 <option *ngFor="let category of categoryList; let i = index" [value]="i">{{category.name}}</option>
                             </select>
                         </div>
                         <div class="form-floating mb-3 m-2 w-100">
-                            <select class="form-select w-auto" aria-label="Seleccione Subcategoría">
+                            <p *ngIf="subcategoryList.length === 0">Sin subcategorías disponibles.</p>
+                            <select *ngIf="subcategoryList.length !== 0" class="form-select w-auto" aria-label="Seleccione Subcategoría">
                                 <option selected disabled>Subcategoría</option>
-                                <option value="1">Perro</option>
-                                <option value="2">Gato</option>
-                                <option value="3">Granja</option>
                             </select>
                         </div>
                         <div class="form-floating mb-3 m-2 w-100">
-                            <select class="form-select w-auto" aria-label="Seleccione Unidad de medida">
+                            <p *ngIf="unitList.length === 0">Sin unidades disponibles.</p>
+                            <select *ngIf="unitList.length !== 0" class="form-select w-auto" aria-label="Seleccione Unidad de medida">
                                 <option selected disabled>Unidad de medida</option>
                                 <option *ngFor="let unit of unitList; let i = index" [value]="i">{{ unit.nameUnit }}</option>
                             </select>
