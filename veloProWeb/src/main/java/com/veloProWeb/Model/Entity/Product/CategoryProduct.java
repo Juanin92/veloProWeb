@@ -16,9 +16,6 @@ public class CategoryProduct {
     private String name;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
-    private List<Product> products = new ArrayList<>();
-
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
     private List<SubcategoryProduct> subcategories = new ArrayList<>();
 
     @Override

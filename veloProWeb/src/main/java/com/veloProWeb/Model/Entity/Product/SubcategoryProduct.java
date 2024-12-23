@@ -15,9 +15,6 @@ public class SubcategoryProduct {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "subcategoryProduct", cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
-    private List<Product> products = new ArrayList<>();
-
     @ManyToOne
     @JoinColumn(name = "id_category", nullable = false)
     private CategoryProduct category;
