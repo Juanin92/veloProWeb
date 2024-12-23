@@ -4,11 +4,13 @@ import { ProductValidator } from '../../../validation/product-validator';
 import { ProductService } from '../../../services/Product/product.service';
 import { ProductHelperService } from '../../../services/Product/product-helper.service';
 import { NotificationService } from '../../../utils/notification-service.service';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-add-product',
   standalone: true,
-  imports: [],
+  imports: [FormsModule, CommonModule],
   templateUrl: './add-product.component.html',
   styleUrl: './add-product.component.css'
 })

@@ -42,11 +42,13 @@
                         </div>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="description" placeholder="Ingrese una descripción general" name="description"/>
+                        <input type="text" class="form-control" id="description" placeholder="Ingrese una descripción general" name="description"
+                        [(ngModel)]="newProduct.description" 
+                        [ngClass]="{'is-invalid': !validator.isFieldValid(newProduct, 'description')}" required />
                         <label for="description" class="form-label">Descripción</label>
-                        <!-- <div *ngIf="!customerValidator.isFieldValid(newCustomer,'email')" class="invalid-feedback">
-                            Email no válido (example&commat;test.com)
-                        </div> -->
+                        <div *ngIf="!validator.isFieldValid(newProduct,'description')" class="invalid-feedback">
+                            Debe ingresar una descripción del producto
+                        </div>
                     </div>
                 </form>
             </div>
