@@ -15,9 +15,6 @@ public class BrandProduct {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
-    private List<Product> products = new ArrayList<>();
-
     @Override
     public String toString() {
         return name;
