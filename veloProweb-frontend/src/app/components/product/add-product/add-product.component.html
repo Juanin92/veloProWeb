@@ -9,21 +9,19 @@
                 <form>
                     <div class="d-flex flex-lg-row flex-column">
                         <div class="form-floating mb-3 m-2 w-100">
-                            <select class="form-select w-auto" aria-label="Default select example">
+                            <select class="form-select w-auto" aria-label="Seleccione marca">
                                 <option selected disabled>Marca</option>
                                 <option *ngFor="let brand of brandList; let i = index" [value]="i">{{brand.name}}</option>
                             </select>
                         </div>
                         <div class="form-floating mb-3 m-2 w-100">
-                            <select class="form-select w-auto" aria-label="Default select example">
+                            <select class="form-select w-auto" aria-label="Seleccione Categoría">
                                 <option selected disabled>Categoría</option>
-                                <option value="1">Comida</option>
-                                <option value="2">Accesorios</option>
-                                <option value="3">Limpieza</option>
+                                <option *ngFor="let category of categoryList; let i = index" [value]="i">{{category.name}}</option>
                             </select>
                         </div>
                         <div class="form-floating mb-3 m-2 w-100">
-                            <select class="form-select w-auto" aria-label="Default select example">
+                            <select class="form-select w-auto" aria-label="Seleccione Subcategoría">
                                 <option selected disabled>Subcategoría</option>
                                 <option value="1">Perro</option>
                                 <option value="2">Gato</option>
@@ -31,11 +29,9 @@
                             </select>
                         </div>
                         <div class="form-floating mb-3 m-2 w-100">
-                            <select class="form-select w-auto" aria-label="Default select example">
+                            <select class="form-select w-auto" aria-label="Seleccione Unidad de medida">
                                 <option selected disabled>Unidad de medida</option>
-                                <option value="1">1 KG</option>
-                                <option value="2">20 KG</option>
-                                <option value="3">1 UN</option>
+                                <option *ngFor="let unit of unitList; let i = index" [value]="i">{{ unit.nameUnit }}</option>
                             </select>
                         </div>
                     </div>

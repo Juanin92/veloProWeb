@@ -22,7 +22,7 @@ export class ProductHelperService {
         status: false,
         statusProduct: StatusProduct.UNAVAILABLE,
         brand: {id: 0, name: ''},
-        unit: {id: 0, name: ''},
+        unit: {id: 0, nameUnit: ''},
         subcategoryProduct: {id: 0, name: '', category: {id: 0, name: '', subcategory:[]}},
         category: {id: 0, name: '', subcategory:[]}
       };

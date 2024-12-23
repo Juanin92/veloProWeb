@@ -15,7 +15,7 @@ export class UnitService {
     return this.httpClient.get<UnitProductModel[]>(this.apiUrl);
   }
 
-  createBrand(unit: UnitProductModel): Observable<{ message: string }> {
+  createUnit(unit: UnitProductModel): Observable<{ message: string }> {
     return this.httpClient.post<{ message: string }>(`${this.apiUrl}/`, unit);
   }
 }

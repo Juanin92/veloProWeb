@@ -10,6 +10,10 @@ import { BrandService } from '../../../services/Product/brand.service';
 import { Brand } from '../../../models/Entity/Product/brand';
 import { UnitService } from '../../../services/Product/unit.service';
 import { UnitProductModel } from '../../../models/Entity/Product/unit-product';
+import { CategoryService } from '../../../services/Product/category.service';
+import { SubcategoryService } from '../../../services/Product/subcategory.service';
+import { Category } from '../../../models/Entity/Product/category';
+import { Subcategory } from '../../../models/Entity/Product/subcategory';
 
 @Component({
   selector: 'app-add-product',
@@ -24,11 +28,15 @@ export class AddProductComponent implements OnInit{
   validator = ProductValidator;
   brandList: Brand[] = [];
   unitList: UnitProductModel[] = [];
+  categoryList: Category[] = [];
+  subcategoryList: Subcategory[] = [];
 
   constructor(
     private productService: ProductService,
     private brandService: BrandService,
     private unitService: UnitService,
+    private categoryService: CategoryService,
+    private subcategoryService: SubcategoryService,
     private helper: ProductHelperService,
     private notification: NotificationService){
     this.newProduct = helper.createEmptyProduct();
@@ -37,12 +45,12 @@ export class AddProductComponent implements OnInit{
   ngOnInit(): void {
     this.getAllBrands();
     this.getAllUnits();
+    // this.getAllCategories();
   }
 
   getAllBrands(): void{
     this.brandService.getBrands().subscribe((list) => {
       this.brandList = list;
-      console.log('marcas: ', this.brandList);
     }, (error) => {
       console.log('Error no se encontró ninguna marca', error);
     })
@@ -50,12 +58,20 @@ export class AddProductComponent implements OnInit{
 
   getAllUnits(): void{
     this.unitService.getUnits().subscribe((list) => {
-      this.brandList = list;
-      console.log('marcas: ', this.brandList);
+      this.unitList = list;
+      console.log(this.unitList);
     }, (error) => {
-      console.log('Error no se encontró ninguna marca', error);
+      console.log('Error no se encontró ninguna unidad de medida', error);
     })
   }
+
+  // getAllCategories(): void{
+  //   this.categoryService.getCategories().subscribe((list) => {
+  //     this.categoryList = list;
+  //   }, (error) => {
+  //     console.log('Error no se encontró ninguna categoría', error);
+  //   })
+  // }
 
   addProduct(): void{
     if(this.validator.validateForm(this.newProduct)){
