@@ -1,5 +1,6 @@
 package com.veloProWeb.Model.Entity.Product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,6 +16,7 @@ public class SubcategoryProduct {
     private Long id;
     private String name;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "id_category", nullable = false)
     private CategoryProduct category;
