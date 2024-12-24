@@ -25,6 +25,7 @@ import { Subcategory } from '../../../models/Entity/Product/subcategory';
 export class AddProductComponent implements OnInit{
 
   newProduct: Product;
+  brandSelected: Brand | null = null;
   validator = ProductValidator;
   brandList: Brand[] = [];
   unitList: UnitProductModel[] = [];
@@ -41,9 +42,11 @@ export class AddProductComponent implements OnInit{
     private helper: ProductHelperService,
     private notification: NotificationService){
     this.newProduct = helper.createEmptyProduct();
+    this.brandSelected = helper.createEmptyBrand();
   }
 
   ngOnInit(): void {
+    this.resetProductForm();
     this.getAllBrands();
     this.getAllUnits();
     this.getAllCategories();
@@ -97,7 +100,14 @@ export class AddProductComponent implements OnInit{
     }
   }
 
+  addToDescription(value: string | undefined): void {
+    if (value) {
+        this.newProduct.description += value + ' ';
+    }
+}
+
   resetProductForm(): void{
     this.newProduct = this.helper.createEmptyProduct();
+    this.brandSelected = null;
   }
 }

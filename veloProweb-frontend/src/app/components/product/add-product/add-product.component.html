@@ -11,9 +11,10 @@
                     <div class="d-flex flex-lg-row flex-column">
                         <div class="form-floating mb-3 m-2 w-100">
                             <p *ngIf="brandList.length === 0">Sin marcas disponibles.</p>
-                            <select *ngIf="brandList.length !== 0" class="form-select w-auto" aria-label="Seleccione marca">
-                                <option [value]="" selected disabled>Marca</option>
-                                <option *ngFor="let brand of brandList" [value]="brand.name">{{brand.name}}</option>
+                            <select *ngIf="brandList.length !== 0" class="form-select w-auto" name="brand" aria-label="Seleccione marca"
+                            (change)="addToDescription(brandSelected?.name)" [(ngModel)]="brandSelected">
+                                <option [ngValue]="null" selected disabled>Marca</option>
+                                <option *ngFor="let brand of brandList" [ngValue]="brand">{{brand.name}}</option>
                             </select>
                             <div *ngIf="!validator.isFieldValid(newProduct,'brand')" class="invalid-feedback">
                                 Debe seleccionar una marca                            
