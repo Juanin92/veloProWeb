@@ -1,5 +1,6 @@
 package com.veloProWeb.Model.Entity.Product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,6 +16,7 @@ public class CategoryProduct {
     private Long id;
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
     private List<SubcategoryProduct> subcategories = new ArrayList<>();
 
