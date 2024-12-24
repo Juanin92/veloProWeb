@@ -97,4 +97,8 @@ export class AddProductComponent implements OnInit{
       this.notification.showWarning('Formulario incompleto', 'Por favor, complete correctamente todos los campos obligatorios.');
     }
   }
+
+  resetProductForm(): void{
+    this.newProduct = this.helper.createEmptyProduct();
+  }
 }

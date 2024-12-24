@@ -6,6 +6,7 @@ import { CustomerValidator } from '../../../validation/customer-validator';
 import { CommonModule } from '@angular/common';
 import { CustomerHelperServiceService } from '../../../services/customer/customer-helper-service.service';
 import { NotificationService } from '../../../utils/notification-service.service';
+import { ProductHelperService } from '../../../services/Product/product-helper.service';
 
 @Component({
   selector: 'app-add-customer',
@@ -52,5 +53,9 @@ export class AddCustomerComponent {
     } else {
       this.notification.showWarning('Formulario incompleto', 'Por favor, complete correctamente todos los campos obligatorios.');
     }
+  }
+
+  resetCustomerForm(): void{
+    this.newCustomer = this.customerHelper.createEmptyCustomer();
   }
 }
