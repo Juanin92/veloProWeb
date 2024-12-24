@@ -6,8 +6,6 @@ import { Product } from '../../../models/Entity/Product/product.model';
 import { ProductValidator } from '../../../validation/product-validator';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ProductDTO } from '../../../models/DTO/product-dto';
-import { StatusProduct } from '../../../models/enum/status-product';
 
 @Component({
   selector: 'app-update-product',
