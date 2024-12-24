@@ -73,6 +73,15 @@ export class AddProductComponent implements OnInit{
     })
   }
 
+  getAllSubcategories(categoryID: string): void{
+    
+  }
+
+  onCategoryChange(event: Event): void {
+    const selectedCategory = (event.target as HTMLSelectElement).value;
+    this.getAllSubcategories(selectedCategory);
+  }
+
   addProduct(): void{
     if(this.validator.validateForm(this.newProduct)){
       
