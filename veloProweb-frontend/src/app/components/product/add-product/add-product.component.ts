@@ -30,6 +30,7 @@ export class AddProductComponent implements OnInit{
   unitList: UnitProductModel[] = [];
   categoryList: Category[] = [];
   subcategoryList: Subcategory[] = [];
+  selectedCategoryID: number = 0;
 
   constructor(
     private productService: ProductService,
@@ -67,19 +68,26 @@ export class AddProductComponent implements OnInit{
   getAllCategories(): void{
     this.categoryService.getCategories().subscribe((list) => {
       this.categoryList = list;
-      console.log(this.categoryList);
     }, (error) => {
       console.log('Error no se encontró ninguna categoría', error);
     })
   }
 
-  getAllSubcategories(categoryID: string): void{
-    
+  getAllSubcategories(categoryID: number): void{
+    this.subcategoryService.getSubCategoriesByCategory(categoryID).subscribe((list) => {
+      this.subcategoryList = list;
+      console.log(this.subcategoryList);
+    }, (error) => {
+      console.log('Error no se encontró ninguna subcategoría', error);
+    })
   }
 
   onCategoryChange(event: Event): void {
     const selectedCategory = (event.target as HTMLSelectElement).value;
-    this.getAllSubcategories(selectedCategory);
+    console.log('Elemento sel: ',selectedCategory);
+    this.selectedCategoryID = +selectedCategory;
+    console.log('id cate: ',this.selectedCategoryID);
+    this.getAllSubcategories(this.selectedCategoryID);
   }
 
   addProduct(): void{

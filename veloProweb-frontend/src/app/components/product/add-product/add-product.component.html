@@ -19,7 +19,7 @@
                             <p *ngIf="categoryList.length === 0">Sin categorías disponibles.</p>
                             <select *ngIf="categoryList.length !== 0" class="form-select w-auto" aria-label="Seleccione Categoría" (change)="onCategoryChange($event)">
                                 <option selected disabled>Categoría</option>
-                                <option *ngFor="let category of categoryList; let i = index" [value]="i">{{category.name}}</option>
+                                <option *ngFor="let category of categoryList; let i = index" [value]="category.id">{{category.name}}</option>
                             </select>
                         </div>
                         <div class="form-floating mb-3 m-2 w-100">
