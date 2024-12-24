@@ -2,6 +2,7 @@ package com.veloProWeb.Service.Product;
 
 import com.veloProWeb.Model.Entity.Product.CategoryProduct;
 import com.veloProWeb.Model.Entity.Product.SubcategoryProduct;
+import com.veloProWeb.Repository.Product.CategoryProductRepo;
 import com.veloProWeb.Repository.Product.SubcategoryProductRepo;
 import com.veloProWeb.Service.Product.Interfaces.ISubcategoryService;
 import com.veloProWeb.Utils.HelperService;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class SubcategoryService implements ISubcategoryService {
 
     @Autowired private SubcategoryProductRepo subcategoryProductRepo;
+    @Autowired private CategoryProductRepo categoryProductRepo;
     @Autowired private CategoriesValidator validator;
     @Autowired private HelperService helperService;
 
@@ -50,6 +52,12 @@ public class SubcategoryService implements ISubcategoryService {
     @Override
     public List<SubcategoryProduct> getAll() {
         return subcategoryProductRepo.findAll();
+    }
+
+    @Override
+    public List<SubcategoryProduct> getSubcategoryByCategoryID(Long id) {
+        CategoryProduct category = categoryProductRepo.getReferenceById(id);
+        return subcategoryProductRepo.findByCategoryId(category.getId());
     }
 
     /**

@@ -8,4 +8,5 @@ import java.util.List;
 public interface ISubcategoryService {
     void save(SubcategoryProduct subcategory, CategoryProduct category);
     List<SubcategoryProduct> getAll();
+    List<SubcategoryProduct> getSubcategoryByCategoryID(Long id);
 }
