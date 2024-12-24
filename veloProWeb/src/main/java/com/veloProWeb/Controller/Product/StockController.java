@@ -19,7 +19,7 @@ public class StockController {
     @Autowired private IProductService productService;
 
     @GetMapping()
-    public ResponseEntity<List<Product>> getAll(){
+    public ResponseEntity<List<Product>> getListProducts(){
         return ResponseEntity.ok(productService.getAll());
     }
 }

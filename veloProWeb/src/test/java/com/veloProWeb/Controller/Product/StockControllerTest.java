@@ -29,13 +29,11 @@ public class StockControllerTest {
     @Mock private IProductService productService;
     @Autowired private MockMvc mockMvc;
     private Product product;
-    private ProductDTO dto;
 
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(stockController).setControllerAdvice(new GlobalExceptionHandler()).build();
         product = new Product();
-        dto = new ProductDTO(1L, "description", 10000, 5000, 10, true, StatusProduct.DISPONIBLE,"Samsung","1 UN", "Mobile", "Tech");
     }
 
     //Pruebas para obtener una lista de todos los productos
@@ -53,8 +51,8 @@ public class StockControllerTest {
         product = new Product();
         product.setId(1L);
 
-        // Configurar campos adicionales temporalmente para depuración
         BrandProduct brand = new BrandProduct();
+        brand.setId(1L);
         brand.setName("Marca");
         product.setBrand(brand);
 
@@ -78,10 +76,10 @@ public class StockControllerTest {
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("[0].id").value(1L))
-                .andExpect(jsonPath("[0].brand").value("Marca"))
-                .andExpect(jsonPath("[0].unit").value("Unidad"))
-                .andExpect(jsonPath("[0].subcategoryProduct").value("Subcategoría"))
-                .andExpect(jsonPath("[0].category").value("Categoría"));
+                .andExpect(jsonPath("[0].brand.name").value("Marca"))
+                .andExpect(jsonPath("[0].unit.nameUnit").value("Unidad"))
+                .andExpect(jsonPath("[0].subcategoryProduct.name").value("Subcategoría"))
+                .andExpect(jsonPath("[0].category.name").value("Categoría"));
 
         verify(productService, times(1)).getAll();
     }
