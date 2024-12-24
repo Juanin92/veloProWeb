@@ -1,10 +1,7 @@
 package com.veloProWeb.Controller.Product;
 
 import com.veloProWeb.Exceptions.GlobalExceptionHandler;
-import com.veloProWeb.Model.DTO.ProductDTO;
-import com.veloProWeb.Model.Entity.Customer.Customer;
 import com.veloProWeb.Model.Entity.Product.*;
-import com.veloProWeb.Model.Enum.StatusProduct;
 import com.veloProWeb.Service.Product.Interfaces.IUnitService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

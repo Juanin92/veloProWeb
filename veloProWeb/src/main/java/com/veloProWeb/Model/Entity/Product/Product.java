@@ -1,5 +1,6 @@
 package com.veloProWeb.Model.Entity.Product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.veloProWeb.Model.Entity.Kardex;
 import com.veloProWeb.Model.Enum.StatusProduct;
 import jakarta.persistence.*;
@@ -42,6 +43,7 @@ public class Product {
     @JoinColumn(name = "id_category", nullable = false)
     private CategoryProduct category;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Kardex> kardexList = new ArrayList<>();
 }
