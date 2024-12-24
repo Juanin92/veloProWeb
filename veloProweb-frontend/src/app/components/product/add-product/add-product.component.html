@@ -12,36 +12,44 @@
                         <div class="form-floating mb-3 m-2 w-100">
                             <p *ngIf="brandList.length === 0">Sin marcas disponibles.</p>
                             <select *ngIf="brandList.length !== 0" class="form-select w-auto" aria-label="Seleccione marca">
-                                <option selected disabled>Marca</option>
-                                <option *ngFor="let brand of brandList; let i = index" [value]="i">{{brand.name}}</option>
+                                <option [value]="" selected disabled>Marca</option>
+                                <option *ngFor="let brand of brandList" [value]="brand.name">{{brand.name}}</option>
                             </select>
+                            <div *ngIf="!validator.isFieldValid(newProduct,'brand')" class="invalid-feedback">
+                                Debe seleccionar una marca                            
+                            </div>
                         </div>
                         <div class="form-floating mb-3 m-2 w-100">
                             <p *ngIf="categoryList.length === 0">Sin categorías disponibles.</p>
-                            <select *ngIf="categoryList.length !== 0" class="form-select w-auto" aria-label="Seleccione Categoría" (change)="onCategoryChange($event)">
-                                <option selected disabled>Categoría</option>
-                                <option *ngFor="let category of categoryList; let i = index" [value]="category.id">{{category.name}}</option>
+                            <select class="form-select w-auto" aria-label="Seleccione Categoría" (change)="onCategoryChange($event)"
+                                *ngIf="categoryList.length !== 0" >
+                                <option [value]="" selected disabled>Categoría</option>
+                                <option *ngFor="let category of categoryList" [value]="category.id">{{category.name}}</option>
                             </select>
                         </div>
                         <div class="form-floating mb-3 m-2 w-100">
                             <p *ngIf="subcategoryList.length === 0">Sin subcategorías disponibles.</p>
                             <select *ngIf="subcategoryList.length !== 0" class="form-select w-auto" aria-label="Seleccione Subcategoría">
-                                <option selected disabled>Subcategoría</option>
-                                <option *ngFor="let subcategory of subcategoryList; let i = index" [value]="subcategory.id">{{subcategory.name}}</option>
+                                <option [value]="" disabled>Subcategoría</option>
+                                <option *ngFor="let subcategory of subcategoryList" [value]="subcategory.name">{{subcategory.name}}</option>
                             </select>
                         </div>
                         <div class="form-floating mb-3 m-2 w-100">
                             <p *ngIf="unitList.length === 0">Sin unidades disponibles.</p>
-                            <select *ngIf="unitList.length !== 0" class="form-select w-auto" aria-label="Seleccione Unidad de medida">
-                                <option selected disabled>Unidad de medida</option>
-                                <option *ngFor="let unit of unitList; let i = index" [value]="i">{{ unit.nameUnit }}</option>
+                            <select class="form-select w-auto" aria-label="Seleccione Unidad de medida"
+                                *ngIf="unitList.length !== 0">
+                                <option selected disabled>*Unidad de medida*</option>
+                                <option *ngFor="let unit of unitList" [value]="unit.nameUnit">{{ unit.nameUnit }}</option>
                             </select>
+                            <div *ngIf="!validator.isFieldValid(newProduct,'unit')" class="invalid-feedback">
+                                Debe seleccionar una unidad de medida
+                            </div>
                         </div>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="description" placeholder="Ingrese una descripción general" name="description"
                         [(ngModel)]="newProduct.description" 
-                        [ngClass]="{'is-invalid': !validator.isFieldValid(newProduct, 'description')}" required />
+                        [ngClass]="{'is-invalid': !validator.isFieldValid(newProduct, 'description'), 'is-valid': validator.isFieldValid(newProduct, 'description')}" required />
                         <label for="description" class="form-label">Descripción</label>
                         <div *ngIf="!validator.isFieldValid(newProduct,'description')" class="invalid-feedback">
                             Debe ingresar una descripción del producto
@@ -50,7 +58,7 @@
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="submit" class="btn btn-success">Guardar</button>
+                <button type="submit" class="btn btn-success" [disabled]="!validator.validateForm(newProduct)">Guardar</button>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
             </div>
         </div>

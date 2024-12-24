@@ -2,12 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../../../services/Product/product.service';
 import { Product } from '../../../models/Entity/Product/product.model';
 import { CommonModule, NgStyle } from '@angular/common';
-import { ProductDTO } from '../../../models/DTO/product-dto';
 import { FormsModule } from '@angular/forms';
 import { AddProductComponent } from "../add-product/add-product.component";
 import { ProductHelperService } from '../../../services/Product/product-helper.service';
 import { UpdateProductComponent } from "../update-product/update-product.component";
-import { StatusProduct } from '../../../models/enum/status-product';
 
 @Component({
   selector: 'app-stock',
@@ -18,8 +16,8 @@ import { StatusProduct } from '../../../models/enum/status-product';
 })
 export class StockComponent implements OnInit{
 
-  products: ProductDTO[] = [];
-  filteredProducts: ProductDTO[] = [];
+  products: Product[] = [];
+  filteredProducts: Product[] = [];
   selectedProduct: Product;
   textFilter: string = '';
 
@@ -27,19 +25,6 @@ export class StockComponent implements OnInit{
     private stockService: ProductService,
     private helper: ProductHelperService){
       this.selectedProduct = helper.createEmptyProduct();
-      // this.selectedProduct = {
-      //   id: 0,
-      //   description: '',
-      //   salePrice: 0,
-      //   buyPrice: 0,
-      //   stock: 0,
-      //   status: false,
-      //   statusProduct: StatusProduct.UNAVAILABLE,
-      //   brand: '',
-      //   unit: '',
-      //   subcategoryProduct: '',
-      //   category: ''
-      // }
     }
 
   ngOnInit(): void {
@@ -77,9 +62,9 @@ export class StockComponent implements OnInit{
       this.filteredProducts = this.products;
     } else {
       this.filteredProducts = this.products.filter(product =>
-        product.brand.toLowerCase().includes(this.textFilter.toLowerCase()) ||
-        product.category.toLowerCase().includes(this.textFilter.toLowerCase()) ||
-        product.subcategoryProduct.toLowerCase().includes(this.textFilter.toLowerCase()) ||
+        product.brand.name.toLowerCase().includes(this.textFilter.toLowerCase()) ||
+        product.category.name.toLowerCase().includes(this.textFilter.toLowerCase()) ||
+        product.subcategoryProduct.name.toLowerCase().includes(this.textFilter.toLowerCase()) ||
         product.description.toLowerCase().includes(this.textFilter.toLowerCase())
       );
     }

@@ -76,6 +76,7 @@ export class AddProductComponent implements OnInit{
   getAllSubcategories(categoryID: number): void{
     this.subcategoryService.getSubCategoriesByCategory(categoryID).subscribe((list) => {
       this.subcategoryList = list;
+      console.log("sub: ", this.subcategoryList);
       console.log(this.subcategoryList);
     }, (error) => {
       console.log('Error no se encontró ninguna subcategoría', error);
@@ -84,9 +85,7 @@ export class AddProductComponent implements OnInit{
 
   onCategoryChange(event: Event): void {
     const selectedCategory = (event.target as HTMLSelectElement).value;
-    console.log('Elemento sel: ',selectedCategory);
     this.selectedCategoryID = +selectedCategory;
-    console.log('id cate: ',this.selectedCategoryID);
     this.getAllSubcategories(this.selectedCategoryID);
   }
 

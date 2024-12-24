@@ -16,5 +16,4 @@ export interface Product {
     unit: UnitProductModel;
     subcategoryProduct: Subcategory;
     category: Category;
-    // kardexList: Kardex[];
 }

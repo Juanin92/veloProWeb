@@ -1,4 +1,3 @@
-import { ProductDTO } from "../models/DTO/product-dto";
 import { Product } from "../models/Entity/Product/product.model";
 
 export class ProductValidator {
@@ -13,10 +12,10 @@ export class ProductValidator {
         static isFieldValid(product: Product, fieldName: keyof Product): boolean {
             const value = product[fieldName];
             if (fieldName === 'description') {
-                return value !== null && typeof value === 'string' && value.trim().length < 0;
+                return value !== null && typeof value === 'string' && value.trim().length > 0;
             }
             if (fieldName === 'brand' || fieldName === 'category' || fieldName === 'subcategoryProduct' || fieldName === 'unit') {
-                return value !== null;
+                return value !== null && typeof value === 'string' && value.trim().length > 0;  
             }
             return true;
         }
