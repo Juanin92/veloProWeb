@@ -3,6 +3,7 @@ package com.veloProWeb.Service.Product;
 import com.veloProWeb.Model.Entity.Product.BrandProduct;
 import com.veloProWeb.Model.Entity.Product.CategoryProduct;
 import com.veloProWeb.Model.Entity.Product.SubcategoryProduct;
+import com.veloProWeb.Repository.Product.CategoryProductRepo;
 import com.veloProWeb.Repository.Product.SubcategoryProductRepo;
 import com.veloProWeb.Utils.HelperService;
 import com.veloProWeb.Validation.CategoriesValidator;
@@ -13,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,10 +28,12 @@ public class SubcategoryServiceTest {
 
     @InjectMocks private SubcategoryService subcategoryService;
     @Mock private SubcategoryProductRepo subcategoryProductRepo;
+    @Mock private CategoryProductRepo categoryProductRepo;
     @Mock private CategoriesValidator validator;
     @Mock private HelperService helperService;
     private SubcategoryProduct subcategory;
     private SubcategoryProduct existingSubcategory;
+    private SubcategoryProduct existingSubcategory2;
     private CategoryProduct category;
 
     @BeforeEach
@@ -39,10 +44,16 @@ public class SubcategoryServiceTest {
         subcategory = new SubcategoryProduct();
         subcategory.setName("Leche");
         existingSubcategory = new SubcategoryProduct();
+        existingSubcategory.setId(1L);
         existingSubcategory.setName("Arroz");
+        existingSubcategory.setCategory(category);
+        existingSubcategory2 = new SubcategoryProduct();
+        existingSubcategory2.setId(2L);
+        existingSubcategory2.setName("Arroz");
+        existingSubcategory2.setCategory(category);
     }
 
-    //Prueba para crear una nueva marca
+    //Prueba para crear una nueva subcategoría
     @Test
     public void save_valid(){
         doNothing().when(validator).validateSubcategory("Leche");
@@ -79,10 +90,29 @@ public class SubcategoryServiceTest {
         assertEquals("Dede seleccionar una categoría.", exception.getMessage());
     }
 
-    //Prueba para obtener todas las marcas
+    //Prueba para obtener todas las subcategorías
     @Test
     public void getAll_valid(){
         subcategoryService.getAll();
         verify(subcategoryProductRepo).findAll();
+    }
+
+    //Prueba para obtener una lista de subcategoría por ID de categoría
+    @Test
+    public void getSubcategoryByCategoryID_valid(){
+        when(categoryProductRepo.getReferenceById(1L)).thenReturn(category);
+        List<SubcategoryProduct> expectedSubcategories = new ArrayList<>();
+        expectedSubcategories.add(existingSubcategory);
+        expectedSubcategories.add(existingSubcategory2);
+
+        when(subcategoryProductRepo.findByCategoryId(category.getId())).thenReturn(expectedSubcategories);
+        List<SubcategoryProduct> actualSubcategories = subcategoryService.getSubcategoryByCategoryID(1L);
+
+        assertEquals(expectedSubcategories.size(), actualSubcategories.size());
+        assertEquals(expectedSubcategories.get(0).getName(), actualSubcategories.get(0).getName());
+        assertEquals(expectedSubcategories.get(1).getName(), actualSubcategories.get(1).getName());
+
+        verify(categoryProductRepo).getReferenceById(1L);
+        verify(subcategoryProductRepo).findByCategoryId(category.getId());
     }
 }
