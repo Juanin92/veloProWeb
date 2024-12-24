@@ -12,7 +12,8 @@
                         <div class="form-floating mb-3 m-2 w-100">
                             <p *ngIf="brandList.length === 0">Sin marcas disponibles.</p>
                             <select *ngIf="brandList.length !== 0" class="form-select w-auto" name="brand" aria-label="Seleccione marca"
-                            (change)="addToDescription(brandSelected?.name)" [(ngModel)]="brandSelected">
+                            (change)="addToDescription(brandSelected?.name)" [(ngModel)]="brandSelected" 
+                            [ngClass]="{'is-invalid': !validator.isFieldValid(newProduct, 'brand'), 'is-valid': validator.isFieldValid(newProduct, 'brand')}">
                                 <option [ngValue]="null" selected disabled>Marca</option>
                                 <option *ngFor="let brand of brandList" [ngValue]="brand">{{brand.name}}</option>
                             </select>
@@ -22,25 +23,29 @@
                         </div>
                         <div class="form-floating mb-3 m-2 w-100">
                             <p *ngIf="categoryList.length === 0">Sin categorías disponibles.</p>
-                            <select class="form-select w-auto" aria-label="Seleccione Categoría" (change)="onCategoryChange($event)"
-                                *ngIf="categoryList.length !== 0" >
-                                <option [value]="" selected disabled>Categoría</option>
-                                <option *ngFor="let category of categoryList" [value]="category.id">{{category.name}}</option>
+                            <select class="form-select w-auto" aria-label="Seleccione Categoría" name="category"
+                                *ngIf="categoryList.length !== 0" (change)="addToDescription(categorySelected?.name)" [(ngModel)]="categorySelected" 
+                            [ngClass]="{'is-invalid': !validator.isFieldValid(newProduct, 'category'), 'is-valid': validator.isFieldValid(newProduct, 'category')}">
+                                <option [ngValue]="null" selected disabled>Categoría</option>
+                                <option *ngFor="let category of categoryList" [ngValue]="category">{{category.name}}</option>
                             </select>
                         </div>
                         <div class="form-floating mb-3 m-2 w-100">
                             <p *ngIf="subcategoryList.length === 0">Sin subcategorías disponibles.</p>
-                            <select *ngIf="subcategoryList.length !== 0" class="form-select w-auto" aria-label="Seleccione Subcategoría">
-                                <option [value]="" disabled>Subcategoría</option>
-                                <option *ngFor="let subcategory of subcategoryList" [value]="subcategory.name">{{subcategory.name}}</option>
+                            <select *ngIf="subcategoryList.length !== 0" class="form-select w-auto" aria-label="Seleccione Subcategoría" name="subcategory"
+                            (change)="addToDescription(subcategorySelected?.name)" [(ngModel)]="subcategorySelected" 
+                            [ngClass]="{'is-invalid': !validator.isFieldValid(newProduct, 'subcategoryProduct'), 'is-valid': validator.isFieldValid(newProduct, 'subcategoryProduct')}">
+                                <option [ngValue]="null" disabled>Subcategoría</option>
+                                <option *ngFor="let subcategory of subcategoryList" [ngValue]="subcategory">{{subcategory.name}}</option>
                             </select>
                         </div>
                         <div class="form-floating mb-3 m-2 w-100">
                             <p *ngIf="unitList.length === 0">Sin unidades disponibles.</p>
-                            <select class="form-select w-auto" aria-label="Seleccione Unidad de medida"
-                                *ngIf="unitList.length !== 0">
-                                <option selected disabled>*Unidad de medida*</option>
-                                <option *ngFor="let unit of unitList" [value]="unit.nameUnit">{{ unit.nameUnit }}</option>
+                            <select class="form-select w-auto" aria-label="Seleccione Unidad de medida" name="unit"
+                                *ngIf="unitList.length !== 0" (change)="addToDescription(unitSelected?.nameUnit)" [(ngModel)]="unitSelected" 
+                            [ngClass]="{'is-invalid': !validator.isFieldValid(newProduct, 'unit'), 'is-valid': validator.isFieldValid(newProduct, 'unit')}">
+                                <option [ngValue]="null" selected disabled>Unidad de medida</option>
+                                <option *ngFor="let unit of unitList" [ngValue]="unit">{{ unit.nameUnit }}</option>
                             </select>
                             <div *ngIf="!validator.isFieldValid(newProduct,'unit')" class="invalid-feedback">
                                 Debe seleccionar una unidad de medida

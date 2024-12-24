@@ -26,12 +26,14 @@ export class AddProductComponent implements OnInit{
 
   newProduct: Product;
   brandSelected: Brand | null = null;
+  unitSelected: UnitProductModel | null = null;
+  categorySelected: Category | null = null;
+  subcategorySelected: Subcategory | null = null;
   validator = ProductValidator;
   brandList: Brand[] = [];
   unitList: UnitProductModel[] = [];
   categoryList: Category[] = [];
   subcategoryList: Subcategory[] = [];
-  selectedCategoryID: number = 0;
 
   constructor(
     private productService: ProductService,
@@ -88,8 +90,8 @@ export class AddProductComponent implements OnInit{
 
   onCategoryChange(event: Event): void {
     const selectedCategory = (event.target as HTMLSelectElement).value;
-    this.selectedCategoryID = +selectedCategory;
-    this.getAllSubcategories(this.selectedCategoryID);
+    this.categorySelected = selectedCategory;
+    this.getAllSubcategories(this.categorySelected?.id);
   }
 
   addProduct(): void{
@@ -109,5 +111,8 @@ export class AddProductComponent implements OnInit{
   resetProductForm(): void{
     this.newProduct = this.helper.createEmptyProduct();
     this.brandSelected = null;
+    this.categorySelected = null;
+    this.subcategorySelected = null;
+    this.unitSelected = null;
   }
 }
