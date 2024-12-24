@@ -26,6 +26,7 @@
                             <p *ngIf="subcategoryList.length === 0">Sin subcategorías disponibles.</p>
                             <select *ngIf="subcategoryList.length !== 0" class="form-select w-auto" aria-label="Seleccione Subcategoría">
                                 <option selected disabled>Subcategoría</option>
+                                <option *ngFor="let subcategory of subcategoryList; let i = index" [value]="subcategory.id">{{subcategory.name}}</option>
                             </select>
                         </div>
                         <div class="form-floating mb-3 m-2 w-100">
