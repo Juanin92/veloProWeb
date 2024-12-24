@@ -26,6 +26,11 @@ public class SubcategoryController {
         return ResponseEntity.ok(subcategoryService.getAll());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<List<SubcategoryProduct>> getAllSubcategoriesByCategory(@PathVariable Long id){
+        return ResponseEntity.ok(subcategoryService.getSubcategoryByCategoryID(id));
+    }
+
     @PostMapping
     public ResponseEntity<Map<String, String>> createSubcategories(@RequestBody SubcategoryProduct subcategory, @RequestParam CategoryProduct category){
         Map<String, String> response = new HashMap<>();

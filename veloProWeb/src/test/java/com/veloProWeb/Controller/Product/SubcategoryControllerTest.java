@@ -70,6 +70,41 @@ public class SubcategoryControllerTest {
         verify(service, times(1)).getAll();
     }
 
+    //Prueba para obtener lista de subcategorías registradas por ID categoría
+    @Test
+    public void getAllSubcategoriesByCategoryNull_valid() throws Exception {
+        Long id = 1L;
+        when(service.getSubcategoryByCategoryID(id)).thenReturn(Collections.emptyList());
+        mockMvc.perform(get("/subcategoria/{id}", id))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty());
+        verify(service, times(1)).getSubcategoryByCategoryID(id);
+    }
+    @Test
+    public void getAllSubcategoriesByCategoryData_valid() throws Exception {
+        Long id = 1L;
+        List<SubcategoryProduct> subcategories = Collections.singletonList(subcategory);
+        when(service.getSubcategoryByCategoryID(id)).thenReturn(subcategories);
+
+        mockMvc.perform(get("/subcategoria/{id}", id))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("[0].id").value(1L))
+                .andExpect(jsonPath("[0].name").value("Tech"));
+        verify(service, times(1)).getSubcategoryByCategoryID(id);
+    }
+    @Test
+    public void getAllSubcategoriesByCategory_error() throws Exception {
+        Long id = 1L;
+        when(service.getSubcategoryByCategoryID(id)).thenThrow(new RuntimeException("Ocurrió un error inesperado. Por favor, intente más tarde."));
+        mockMvc.perform(get("/subcategoria/{id}", id))  // Corregido aquí
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string("Ocurrió un error inesperado. Por favor, intente más tarde."));
+        verify(service, times(1)).getSubcategoryByCategoryID(id);
+    }
+
     //Prueba para crear una nueva subcategoría
 //    @Test
 //    public void createBrand_valid() throws Exception {
