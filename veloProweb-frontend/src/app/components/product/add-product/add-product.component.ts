@@ -45,7 +45,7 @@ export class AddProductComponent implements OnInit{
   ngOnInit(): void {
     this.getAllBrands();
     this.getAllUnits();
-    // this.getAllCategories();
+    this.getAllCategories();
   }
 
   getAllBrands(): void{
@@ -59,19 +59,19 @@ export class AddProductComponent implements OnInit{
   getAllUnits(): void{
     this.unitService.getUnits().subscribe((list) => {
       this.unitList = list;
-      console.log(this.unitList);
     }, (error) => {
       console.log('Error no se encontró ninguna unidad de medida', error);
     })
   }
 
-  // getAllCategories(): void{
-  //   this.categoryService.getCategories().subscribe((list) => {
-  //     this.categoryList = list;
-  //   }, (error) => {
-  //     console.log('Error no se encontró ninguna categoría', error);
-  //   })
-  // }
+  getAllCategories(): void{
+    this.categoryService.getCategories().subscribe((list) => {
+      this.categoryList = list;
+      console.log(this.categoryList);
+    }, (error) => {
+      console.log('Error no se encontró ninguna categoría', error);
+    })
+  }
 
   addProduct(): void{
     if(this.validator.validateForm(this.newProduct)){
