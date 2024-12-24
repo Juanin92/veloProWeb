@@ -11,16 +11,16 @@
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="name" placeholder="Ingrese nombre" name="name"
                             [(ngModel)]="newCustomer.name"
-                            [ngClass]="{'is-invalid': !customerValidator.isFieldValid(newCustomer, 'name')}" required />
+                            [ngClass]="{'is-invalid': !customerValidator.isFieldValid(newCustomer, 'name'), 'is-valid': customerValidator.isFieldValid(newCustomer, 'name')}" required />
                         <label for="name" class="form-label">Nombre</label>
-                        <div *ngIf="!customerValidator.isFieldValid(newCustomer,'name')" cl class="invalid-feedback">
+                        <div *ngIf="!customerValidator.isFieldValid(newCustomer,'name')" class="invalid-feedback">
                             Nombre no válido debe tener al menos 3 letras.
                         </div>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="surname" placeholder="Ingrese apellidos"
                             name="surname" [(ngModel)]="newCustomer.surname"
-                            [ngClass]="{'is-invalid': !customerValidator.isFieldValid(newCustomer,'surname')}"
+                            [ngClass]="{'is-invalid': !customerValidator.isFieldValid(newCustomer,'surname'), 'is-valid': customerValidator.isFieldValid(newCustomer, 'surname')}"
                             required />
                         <label for="surname" class="form-label">Apellidos</label>
                         <div *ngIf="!customerValidator.isFieldValid(newCustomer,'surname')" class="invalid-feedback">
@@ -30,7 +30,7 @@
                     <div class="form-floating mb-3">
                         <input type="tel" class="form-control" id="phone" placeholder="Ingrese número de teléfono"
                             value="+569 " name="phone" [(ngModel)]="newCustomer.phone"
-                            [ngClass]="{'is-invalid': !customerValidator.isFieldValid(newCustomer,'phone')}"
+                            [ngClass]="{'is-invalid': !customerValidator.isFieldValid(newCustomer,'phone'), 'is-valid': customerValidator.isFieldValid(newCustomer, 'phone')}"
                             required />
                         <label for="phone" class="form-label">Número de Teléfono</label>
                         <div *ngIf="!customerValidator.isFieldValid(newCustomer,'phone')" class="invalid-feedback">
@@ -40,7 +40,7 @@
                     <div class="form-floating mb-3">
                         <input type="email" class="form-control" id="email" placeholder="Ingrese email" name="email"
                             [(ngModel)]="newCustomer.email"
-                            [ngClass]="{'is-invalid': !customerValidator.isFieldValid(newCustomer,'email')}" />
+                            [ngClass]="{'is-invalid': !customerValidator.isFieldValid(newCustomer,'email'), 'is-valid': customerValidator.isFieldValid(newCustomer, 'email')}" />
                         <label for="email" class="form-label">Correo Electrónico</label>
                         <div *ngIf="!customerValidator.isFieldValid(newCustomer,'email')" class="invalid-feedback">
                             Email no válido (example&commat;test.com)
