@@ -24,7 +24,7 @@
                         <div class="form-floating mb-3 m-2 w-100">
                             <p *ngIf="categoryList.length === 0">Sin categorías disponibles.</p>
                             <select class="form-select w-auto" aria-label="Seleccione Categoría" name="category"
-                                *ngIf="categoryList.length !== 0" (change)="addToDescription(categorySelected?.name)" [(ngModel)]="categorySelected" 
+                                *ngIf="categoryList.length !== 0" (change)="onCategoryChange($event)" (change)="addToDescription(categorySelected?.name)" [(ngModel)]="categorySelected" 
                             [ngClass]="{'is-invalid': !validator.isFieldValid(newProduct, 'category'), 'is-valid': validator.isFieldValid(newProduct, 'category')}">
                                 <option [ngValue]="null" selected disabled>Categoría</option>
                                 <option *ngFor="let category of categoryList" [ngValue]="category">{{category.name}}</option>

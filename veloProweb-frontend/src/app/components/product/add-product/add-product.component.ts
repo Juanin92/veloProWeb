@@ -89,9 +89,9 @@ export class AddProductComponent implements OnInit{
   }
 
   onCategoryChange(event: Event): void {
-    const selectedCategory = (event.target as HTMLSelectElement).value;
-    this.categorySelected = selectedCategory;
-    this.getAllSubcategories(this.categorySelected?.id);
+    if (this.categorySelected) {
+      this.getAllSubcategories(this.categorySelected.id);
+    }
   }
 
   addProduct(): void{
@@ -114,5 +114,6 @@ export class AddProductComponent implements OnInit{
     this.categorySelected = null;
     this.subcategorySelected = null;
     this.unitSelected = null;
+    this.subcategoryList = [];
   }
 }
