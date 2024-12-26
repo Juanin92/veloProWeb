@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { Product } from '../../../models/Entity/Product/product.model';
 import { ProductValidator } from '../../../validation/product-validator';
 import { ProductService } from '../../../services/Product/product.service';

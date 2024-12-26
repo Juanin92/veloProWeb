@@ -24,7 +24,7 @@
                         <div class="form-floating mb-3 m-2 w-100">
                             <p *ngIf="categoryList.length === 0">Sin categorías disponibles.</p>
                             <select class="form-select w-auto" aria-label="Seleccione Categoría" name="category"
-                                *ngIf="categoryList.length !== 0" (change)="onCategoryChange($event)" (change)="addToDescription(categorySelected?.name); updateNewProductFields()" 
+                                *ngIf="categoryList.length !== 0" (change)="onCategoryChange($event); addToDescription(categorySelected?.name); updateNewProductFields()" 
                                 [(ngModel)]="categorySelected" 
                             [ngClass]="{'is-invalid': !validator.isFieldValid(newProduct, 'category'), 'is-valid': validator.isFieldValid(newProduct, 'category')}">
                                 <option [ngValue]="null" selected disabled>Categoría</option>
@@ -61,7 +61,7 @@
                     </div>
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="description" placeholder="Ingrese una descripción general" name="description"
-                        [(ngModel)]="newProduct.description" 
+                        [(ngModel)]="newProduct.description"
                         [ngClass]="{'is-invalid': !validator.isFieldValid(newProduct, 'description'), 'is-valid': validator.isFieldValid(newProduct, 'description')}" required />
                         <label for="description" class="form-label">Descripción</label>
                         <div *ngIf="!validator.isFieldValid(newProduct,'description')" class="invalid-feedback">
