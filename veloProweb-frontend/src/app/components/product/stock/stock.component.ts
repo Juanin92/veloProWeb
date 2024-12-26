@@ -6,11 +6,12 @@ import { FormsModule } from '@angular/forms';
 import { AddProductComponent } from "../add-product/add-product.component";
 import { ProductHelperService } from '../../../services/Product/product-helper.service';
 import { UpdateProductComponent } from "../update-product/update-product.component";
+import { AddCategoriesComponent } from "../add-categories/add-categories.component";
 
 @Component({
   selector: 'app-stock',
   standalone: true,
-  imports: [CommonModule, NgStyle, FormsModule, AddProductComponent, UpdateProductComponent],
+  imports: [CommonModule, NgStyle, FormsModule, AddProductComponent, UpdateProductComponent, AddCategoriesComponent],
   templateUrl: './stock.component.html',
   styleUrl: './stock.component.css'
 })

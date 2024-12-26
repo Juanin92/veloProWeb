@@ -1,1 +1,56 @@
-<p>add-categories works!</p>
+<div class="modal fade" id="categoriesModal" tabindex="-1" aria-labelledby="categoriesModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header text-center w-100">
+                <h1 class="modal-title fs-3 w-100">Crear datos adicionales</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="d-flex flex-column ">
+                        <div class="form-floating mb-3 m-2 w-100 d-flex flex-row">
+                            <input type="text" class="form-control" id="brand" placeholder="Ingrese una marca"
+                                name="brand" required />
+                            <label for="description" class="form-label">Marca</label>
+                            <button class="btn btn-success m-1">OK</button>
+                            <!-- <div *ngIf="!validator.isFieldValid(newProduct,'description')" class="invalid-feedback">
+                                Debe ingresar una descripción del producto
+                            </div> -->
+                        </div>
+                        <div class="form-floating mb-3 m-2 w-100 d-flex flex-row">
+                            <input type="text" class="form-control" id="category" placeholder="Ingrese una categoría" name="category" required />
+                            <label for="description" class="form-label">Categoría</label>
+                            <button class="btn btn-success m-1">OK</button>
+                            <!-- <div *ngIf="!validator.isFieldValid(newProduct,'description')" class="invalid-feedback">
+                                                        Debe ingresar una descripción del producto
+                                                    </div> -->
+                        </div>
+                        <div class="form-floating mb-3 m-2 w-100 d-flex flex-row">
+                            <input type="text" class="form-control" id="subcategory" placeholder="Ingrese una subcategoría" name="subcategory"
+                                required />
+                            <label for="description" class="form-label">Subcategoría</label>
+                            <button class="btn btn-success m-1">OK</button>
+                            <!-- <div *ngIf="!validator.isFieldValid(newProduct,'description')" class="invalid-feedback">
+                                                                                Debe ingresar una descripción del producto
+                                                                            </div> -->
+                        </div>
+                        <div class="form-floating mb-3 m-2 w-100 d-flex flex-row">
+                            <input type="text" class="form-control" id="unit" placeholder="Ingrese una unidad de medida" name="unit"
+                                required />
+                            <label for="description" class="form-label">Unidad de medida</label>
+                            <button class="btn btn-success m-1">OK</button>
+                            <!-- <div *ngIf="!validator.isFieldValid(newProduct,'description')" class="invalid-feedback">
+                                                                                Debe ingresar una descripción del producto
+                                                                            </div> -->
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <!-- <button type="submit" class="btn btn-success"
+                    [disabled]="!validator.validateForm(newProduct)">Guardar</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button> -->
+            </div>
+        </div>
+    </div>
+</div>
