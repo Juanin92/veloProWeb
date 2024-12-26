@@ -11,13 +11,14 @@ export class ProductValidator {
     
         static isFieldValid(product: Product, fieldName: keyof Product): boolean {
             const value = product[fieldName];
-            console.log('campo: ', fieldName);
-            console.log('Valor: ', value);
             if (fieldName === 'description') {
                 return value !== null && typeof value === 'string' && value.trim().length > 0;
             }
             if (fieldName === 'brand' || fieldName === 'category' || fieldName === 'subcategoryProduct' || fieldName === 'unit') {
-                return value !== null;  
+                if (value === null) {
+                    return false;
+                }
+                return typeof value === 'object' && value !== null && 'id' in value && value.id !== null && value.id !== 0;
             }
             return true;
         }

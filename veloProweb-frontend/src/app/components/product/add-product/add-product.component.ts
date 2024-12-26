@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Product } from '../../../models/Entity/Product/product.model';
 import { ProductValidator } from '../../../validation/product-validator';
 import { ProductService } from '../../../services/Product/product.service';
@@ -22,7 +22,7 @@ import { Subcategory } from '../../../models/Entity/Product/subcategory';
   templateUrl: './add-product.component.html',
   styleUrl: './add-product.component.css'
 })
-export class AddProductComponent implements OnInit{
+export class AddProductComponent implements OnInit {
 
   newProduct: Product;
   brandSelected: Brand | null = null;
@@ -42,19 +42,17 @@ export class AddProductComponent implements OnInit{
     private categoryService: CategoryService,
     private subcategoryService: SubcategoryService,
     private helper: ProductHelperService,
-    private notification: NotificationService){
+    private notification: NotificationService) {
     this.newProduct = helper.createEmptyProduct();
-    this.brandSelected = helper.createEmptyBrand();
   }
 
   ngOnInit(): void {
-    this.resetProductForm();
     this.getAllBrands();
     this.getAllUnits();
     this.getAllCategories();
   }
 
-  getAllBrands(): void{
+  getAllBrands(): void {
     this.brandService.getBrands().subscribe((list) => {
       this.brandList = list;
     }, (error) => {
@@ -62,7 +60,7 @@ export class AddProductComponent implements OnInit{
     })
   }
 
-  getAllUnits(): void{
+  getAllUnits(): void {
     this.unitService.getUnits().subscribe((list) => {
       this.unitList = list;
     }, (error) => {
@@ -70,7 +68,7 @@ export class AddProductComponent implements OnInit{
     })
   }
 
-  getAllCategories(): void{
+  getAllCategories(): void {
     this.categoryService.getCategories().subscribe((list) => {
       this.categoryList = list;
     }, (error) => {
@@ -78,7 +76,7 @@ export class AddProductComponent implements OnInit{
     })
   }
 
-  getAllSubcategories(categoryID: number): void{
+  getAllSubcategories(categoryID: number): void {
     this.subcategoryService.getSubCategoriesByCategory(categoryID).subscribe((list) => {
       this.subcategoryList = list;
       console.log("sub: ", this.subcategoryList);
@@ -94,21 +92,36 @@ export class AddProductComponent implements OnInit{
     }
   }
 
-  addProduct(): void{
-    if(this.validator.validateForm(this.newProduct)){
-      
-    }else{
+  addProduct(): void {
+    if (this.validator.validateForm(this.newProduct)) {
+
+    } else {
       this.notification.showWarning('Formulario incompleto', 'Por favor, complete correctamente todos los campos obligatorios.');
+    }
+  }
+
+  updateNewProductFields(): void {
+    if (this.brandSelected) {
+      this.newProduct.brand = this.brandSelected;
+    }
+    if (this.categorySelected) {
+      this.newProduct.category = this.categorySelected;
+    }
+    if (this.subcategorySelected) {
+      this.newProduct.subcategoryProduct = this.subcategorySelected;
+    }
+    if (this.unitSelected) {
+      this.newProduct.unit = this.unitSelected;
     }
   }
 
   addToDescription(value: string | undefined): void {
     if (value) {
-        this.newProduct.description += value + ' ';
+      this.newProduct.description += value + ' ';
     }
-}
+  }
 
-  resetProductForm(): void{
+  resetProductForm(): void {
     this.newProduct = this.helper.createEmptyProduct();
     this.brandSelected = null;
     this.categorySelected = null;
