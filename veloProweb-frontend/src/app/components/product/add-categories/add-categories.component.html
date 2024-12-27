@@ -9,47 +9,61 @@
                 <form>
                     <div class="d-flex flex-column ">
                         <div class="form-floating mb-3 m-2 w-100 d-flex flex-row">
-                            <input type="text" class="form-control" id="brand" placeholder="Ingrese una marca"
-                                name="brand" required />
-                            <label for="description" class="form-label">Marca</label>
-                            <button class="btn btn-success m-1">OK</button>
-                            <!-- <div *ngIf="!validator.isFieldValid(newProduct,'description')" class="invalid-feedback">
-                                Debe ingresar una descripción del producto
-                            </div> -->
+                            <div class="input-group mb-3  ms-5 me-5">
+                                <input type="text" class="form-control  ms-5" id="brand" name="brand" placeholder="Ingrese una marca" aria-label="Ingrese una marca"
+                                    aria-describedby="addBrand" [(ngModel)]="newBrand.name" (ngModelChange)="onBrandNameChange()"
+                                    [ngClass]="{'is-invalid': !validator.validateBrand(newBrand), 'is-valid': validator.validateBrand(newBrand)}" required>
+                                <button class="btn btn-outline-success" type="button" id="addBrand">Ingresar</button>
+                            </div>
+                            <div *ngIf="!validator.validateBrand(newBrand)" class="invalid-feedback">
+                                Debe ingresar un valor válido
+                            </div>
                         </div>
                         <div class="form-floating mb-3 m-2 w-100 d-flex flex-row">
-                            <input type="text" class="form-control" id="category" placeholder="Ingrese una categoría" name="category" required />
-                            <label for="description" class="form-label">Categoría</label>
-                            <button class="btn btn-success m-1">OK</button>
-                            <!-- <div *ngIf="!validator.isFieldValid(newProduct,'description')" class="invalid-feedback">
-                                                        Debe ingresar una descripción del producto
-                                                    </div> -->
+                            <div class="input-group mb-3  ms-5 me-5">
+                                <input type="text" class="form-control  ms-5" id="category" placeholder="Ingrese una categoría" aria-label="Ingrese una categoría"
+                                    aria-describedby="addCategory" [(ngModel)]="newCategory.name"
+                                    [ngClass]="{'is-invalid': !validator.validateCategory(newCategory), 'is-valid': validator.validateCategory(newCategory)}"
+                                    required>
+                                <button class="btn btn-outline-success" type="button" id="addCategory">Ingresar</button>
+                            </div>
+                            <div *ngIf="!validator.validateCategory(newCategory)" class="invalid-feedback">
+                                Debe ingresar un valor válido (no dígitos)
+                            </div>
                         </div>
                         <div class="form-floating mb-3 m-2 w-100 d-flex flex-row">
-                            <input type="text" class="form-control" id="subcategory" placeholder="Ingrese una subcategoría" name="subcategory"
-                                required />
-                            <label for="description" class="form-label">Subcategoría</label>
-                            <button class="btn btn-success m-1">OK</button>
-                            <!-- <div *ngIf="!validator.isFieldValid(newProduct,'description')" class="invalid-feedback">
-                                                                                Debe ingresar una descripción del producto
-                                                                            </div> -->
+                            <div class="input-group mb-3 ms-5 me-5">
+                                <button class="btn btn-outline-secondary dropdown-toggle ms-5" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">Categoría</button>
+                                <ul class="dropdown-menu">
+                                    <li>Prueba</li>
+                                    <li>Prueba1</li>
+                                    <li>Prueba2</li>
+                                </ul>
+                                <input type="text" class="form-control" id="subcategory" placeholder="Ingrese una subcategoría"
+                                    aria-label="Ingrese una subcategoría" aria-describedby="addSubcategory" [(ngModel)]="newSubcategory.name"
+                                    [ngClass]="{'is-invalid': !validator.validateSubcategory(newSubcategory), 'is-valid': validator.validateSubcategory(newSubcategory)}"
+                                    required>
+                                <button class="btn btn-outline-success" type="button" id="addSubcategory">Ingresar</button>
+                            </div>
+                            <div *ngIf="!validator.validateSubcategory(newSubcategory)" class="invalid-feedback">
+                                Debe ingresar un valor válido (no dígitos)
+                            </div>
                         </div>
                         <div class="form-floating mb-3 m-2 w-100 d-flex flex-row">
-                            <input type="text" class="form-control" id="unit" placeholder="Ingrese una unidad de medida" name="unit"
-                                required />
-                            <label for="description" class="form-label">Unidad de medida</label>
-                            <button class="btn btn-success m-1">OK</button>
-                            <!-- <div *ngIf="!validator.isFieldValid(newProduct,'description')" class="invalid-feedback">
-                                                                                Debe ingresar una descripción del producto
-                                                                            </div> -->
+                            <div class="input-group mb-3 ms-5 me-5">
+                                <input type="text" class="form-control ms-5" id="unit" placeholder="Ingrese una Unidad de medida"
+                                    aria-label="Ingrese una Unidad de medida" aria-describedby="addUnit" [(ngModel)]="newUnit.nameUnit"
+                                    [ngClass]="{'is-invalid': !validator.validateUnit(newUnit), 'is-valid': validator.validateUnit(newUnit)}"
+                                    required>
+                                <button class="btn btn-outline-success" type="button" id="addUnit">Ingresar</button>
+                            </div>
+                            <div *ngIf="!validator.validateUnit(newUnit)" class="invalid-feedback">
+                                Debe ingresar un valor válido (ej: 0 KG)
+                            </div>
                         </div>
                     </div>
                 </form>
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-                <!-- <button type="submit" class="btn btn-success"
-                    [disabled]="!validator.validateForm(newProduct)">Guardar</button>
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button> -->
             </div>
         </div>
     </div>

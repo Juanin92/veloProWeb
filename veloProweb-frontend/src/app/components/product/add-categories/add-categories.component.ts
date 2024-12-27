@@ -8,11 +8,14 @@ import { Category } from '../../../models/Entity/Product/category';
 import { Subcategory } from '../../../models/Entity/Product/subcategory';
 import { UnitProductModel } from '../../../models/Entity/Product/unit-product';
 import { ProductHelperService } from '../../../services/Product/product-helper.service';
+import { ProductValidator } from '../../../validation/product-validator';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-add-categories',
   standalone: true,
-  imports: [],
+  imports: [FormsModule, CommonModule],
   templateUrl: './add-categories.component.html',
   styleUrl: './add-categories.component.css'
 })
@@ -22,6 +25,7 @@ export class AddCategoriesComponent {
   newCategory: Category;
   newSubcategory: Subcategory;
   newUnit: UnitProductModel;
+  validator = ProductValidator;
 
   constructor(
     private brandService: BrandService,
@@ -34,9 +38,10 @@ export class AddCategoriesComponent {
     this.newCategory = helper.createEmptyCategory();
     this.newSubcategory = helper.createEmptySubcategory();
     this.newUnit = helper.createEmptyUnit();
+    console.log('Inicializando newBrand:', this.newBrand);
   }
 
-  addBrand(): void{
-    
+  onBrandNameChange(): void {
+    console.log('Valor actualizado de newBrand.name:', this.newBrand.name);
   }
 }

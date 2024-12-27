@@ -42,7 +42,10 @@ export class ProductValidator {
     }
 
     static validateBrand(newBrand: Brand):  boolean {
-        return newBrand.name !== null && newBrand.name.trim().length >= 2;
+        // console.log('valor marca -> ', newBrand);
+        // console.log('valor marca id -> ', newBrand.id);
+        // console.log('valor marca nombre -> ', newBrand?.name);
+        return !!newBrand && typeof newBrand.name === 'string' && newBrand.name.trim().length >= 2;
     }
 
     static validateCategory(newCategory: Category):  boolean {
@@ -52,7 +55,7 @@ export class ProductValidator {
     static validateSubcategory(newSubcategory: Subcategory):  boolean {
         return newSubcategory.name !== null && newSubcategory.name.trim().length >= 3 && !/\d/.test(newSubcategory.name);
     }
-    
+
     static validateUnit(newUnit: UnitProductModel):  boolean {
         return newUnit.nameUnit !== null && newUnit.nameUnit.trim().length >= 3 && /^[0-9]+ [a-zA-Z]+$/.test(newUnit.nameUnit);
     }
