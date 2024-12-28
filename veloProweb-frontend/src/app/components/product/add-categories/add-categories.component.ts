@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BrandService } from '../../../services/Product/brand.service';
 import { CategoryService } from '../../../services/Product/category.service';
 import { SubcategoryService } from '../../../services/Product/subcategory.service';
@@ -19,13 +19,15 @@ import { CommonModule } from '@angular/common';
   templateUrl: './add-categories.component.html',
   styleUrl: './add-categories.component.css'
 })
-export class AddCategoriesComponent {
+export class AddCategoriesComponent implements OnInit{
 
   newBrand: Brand;
   newCategory: Category;
+  category: Category | null = null;
   newSubcategory: Subcategory;
   newUnit: UnitProductModel;
   validator = ProductValidator;
+  categoryList: Category[] = [];
 
   constructor(
     private brandService: BrandService,
@@ -38,10 +40,24 @@ export class AddCategoriesComponent {
     this.newCategory = helper.createEmptyCategory();
     this.newSubcategory = helper.createEmptySubcategory();
     this.newUnit = helper.createEmptyUnit();
-    console.log('Inicializando newBrand:', this.newBrand);
+  }
+  ngOnInit(): void {
+    this.getAllCategories();
   }
 
-  onBrandNameChange(): void {
-    console.log('Valor actualizado de newBrand.name:', this.newBrand.name);
+  getAllCategories(): void {
+    this.categoryService.getCategories().subscribe((list) => {
+      this.categoryList = list;
+    }, (error) => {
+      console.log('Error no se encontró ninguna categoría', error);
+    })
+  }
+  
+  resetForms(): void{
+    this.newBrand = this.helper.createEmptyBrand();
+    this.newCategory = this.helper.createEmptyCategory();
+    this.newSubcategory = this.helper.createEmptySubcategory();
+    this.newUnit = this.helper.createEmptyUnit();
+    this.category = null;
   }
 }
