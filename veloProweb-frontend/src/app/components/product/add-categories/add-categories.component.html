@@ -15,7 +15,8 @@
                                         aria-label="Ingrese una marca" aria-describedby="addBrand" [(ngModel)]="newBrand.name"
                                         [ngClass]="{'is-invalid': !validator.validateBrand(newBrand), 'is-valid': validator.validateBrand(newBrand)}"
                                         required>
-                                    <button [disabled]="!validator.validateBrand(newBrand)" class="btn btn-outline-success ms-1" type="button" id="addBrand">Ingresar</button>
+                                    <button [disabled]="!validator.validateBrand(newBrand)" class="btn btn-outline-success ms-1" type="button" id="addBrand"
+                                        (click)="createBrand()">Ingresar</button>
                                     <div *ngIf="!validator.validateBrand(newBrand)" class="invalid-feedback ms-5">
                                         Debe ingresar un valor válido
                                     </div>

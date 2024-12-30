@@ -17,6 +17,6 @@ export class BrandService {
   }
 
   createBrand(brand: Brand): Observable<{message: string}>{
-    return this.httpClient.post<{message: string}>(`${this.apiUrl}/`, brand);
+    return this.httpClient.post<{message: string}>(`${this.apiUrl}`, brand);
   }
 }

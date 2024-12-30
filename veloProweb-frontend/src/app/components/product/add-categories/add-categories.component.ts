@@ -11,6 +11,7 @@ import { ProductHelperService } from '../../../services/Product/product-helper.s
 import { ProductValidator } from '../../../validation/product-validator';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { NotificationService } from '../../../utils/notification-service.service';
 
 @Component({
   selector: 'app-add-categories',
@@ -34,7 +35,8 @@ export class AddCategoriesComponent implements OnInit{
     private categoryService: CategoryService,
     private subcategoryService: SubcategoryService,
     private unitService: UnitService,
-    private helper: ProductHelperService
+    private helper: ProductHelperService,
+    private notification: NotificationService
   ){
     this.newBrand = helper.createEmptyBrand();
     this.newCategory = helper.createEmptyCategory();
@@ -51,6 +53,21 @@ export class AddCategoriesComponent implements OnInit{
     }, (error) => {
       console.log('Error no se encontró ninguna categoría', error);
     })
+  }
+
+  createBrand(): void{
+    console.log('Marca: ', this.newBrand);
+    if(this.validator.validateBrand(this.newBrand)){
+      this.brandService.createBrand(this.newBrand).subscribe((response) => {
+        console.log('Nueva marca registrada', response);
+        this.notification.showSuccessToast(`${this.newBrand.name} ha sido registrada`,'top', 3000);
+        this.newBrand = this.helper.createEmptyBrand();
+      }, (error) => {
+        const message = error.error.error;
+        console.error('Error:', error);
+        this.notification.showErrorToast(`Error: \n${message}`, 'top', 5000);
+      });
+    }
   }
   
   resetForms(): void{
