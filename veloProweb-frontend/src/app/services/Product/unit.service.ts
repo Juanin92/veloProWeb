@@ -16,6 +16,6 @@ export class UnitService {
   }
 
   createUnit(unit: UnitProductModel): Observable<{ message: string }> {
-    return this.httpClient.post<{ message: string }>(`${this.apiUrl}/`, unit);
+    return this.httpClient.post<{ message: string }>(`${this.apiUrl}`, unit);
   }
 }

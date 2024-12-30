@@ -65,7 +65,8 @@
                                         aria-label="Ingrese una Unidad de medida" aria-describedby="addUnit" [(ngModel)]="newUnit.nameUnit"
                                         [ngClass]="{'is-invalid': !validator.validateUnit(newUnit), 'is-valid': validator.validateUnit(newUnit)}"
                                         required>
-                                    <button [disabled]="!validator.validateUnit(newUnit)" class="btn btn-outline-success ms-1" type="button" id="addUnit">Ingresar</button>
+                                    <button [disabled]="!validator.validateUnit(newUnit)" class="btn btn-outline-success ms-1" type="button" id="addUnit" 
+                                        (click)="createUnit()">Ingresar</button>
                                     <div *ngIf="!validator.validateUnit(newUnit)" class="invalid-feedback ms-5">
                                         Debe ingresar un valor válido (ej: 0 KG)
                                     </div>

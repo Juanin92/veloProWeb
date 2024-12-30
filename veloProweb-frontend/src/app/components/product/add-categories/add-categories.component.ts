@@ -82,6 +82,20 @@ export class AddCategoriesComponent implements OnInit{
       });
     }
   }
+
+  createUnit(): void{
+    if(this.validator.validateUnit(this.newUnit)){
+      this.unitService.createUnit(this.newUnit).subscribe((response) => {
+        console.log('Nueva categoría registrada', response);
+        this.notification.showSuccessToast(`${this.newUnit.nameUnit} ha sido registrada`,'top', 3000);
+        this.newUnit = this.helper.createEmptyUnit();
+      }, (error) => {
+        const message = error.error.message;
+        console.error('Error:', error);
+        this.notification.showErrorToast(`${message}`, 'top', 5000);
+      });
+    }
+  }
   
   resetForms(): void{
     this.newBrand = this.helper.createEmptyBrand();
