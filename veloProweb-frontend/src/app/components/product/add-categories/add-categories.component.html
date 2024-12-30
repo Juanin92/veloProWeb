@@ -15,7 +15,7 @@
                                         aria-label="Ingrese una marca" aria-describedby="addBrand" [(ngModel)]="newBrand.name"
                                         [ngClass]="{'is-invalid': !validator.validateBrand(newBrand), 'is-valid': validator.validateBrand(newBrand)}"
                                         required>
-                                    <button class="btn btn-outline-success" type="button" id="addBrand">Ingresar</button>
+                                    <button [disabled]="!validator.validateBrand(newBrand)" class="btn btn-outline-success ms-1" type="button" id="addBrand">Ingresar</button>
                                     <div *ngIf="!validator.validateBrand(newBrand)" class="invalid-feedback ms-5">
                                         Debe ingresar un valor válido
                                     </div>
@@ -29,7 +29,7 @@
                                         aria-label="Ingrese una categoría" aria-describedby="addCategory" [(ngModel)]="newCategory.name"
                                         [ngClass]="{'is-invalid': !validator.validateCategory(newCategory), 'is-valid': validator.validateCategory(newCategory)}"
                                         required>
-                                    <button class="btn btn-outline-success" type="button" id="addCategory">Ingresar</button>
+                                    <button [disabled]="!validator.validateCategory(newCategory)" class="btn btn-outline-success ms-1" type="button" id="addCategory">Ingresar</button>
                                     <div *ngIf="!validator.validateCategory(newCategory)" class="invalid-feedback ms-5">
                                         Debe ingresar un valor válido (no dígitos)
                                     </div>
@@ -49,7 +49,7 @@
                                         aria-describedby="addSubcategory" [(ngModel)]="newSubcategory.name"
                                         [ngClass]="{'is-invalid': !validator.validateSubcategory(newSubcategory), 'is-valid': validator.validateSubcategory(newSubcategory)}"
                                         required>
-                                    <button [disabled]="!category" class="btn btn-outline-success" type="button" id="addSubcategory">Ingresar</button>
+                                    <button [disabled]="!validator.validateSubcategory(newSubcategory)" class="btn btn-outline-success ms-1" type="button" id="addSubcategory">Ingresar</button>
                                     <div *ngIf="!validator.validateSubcategory(newSubcategory)" class="invalid-feedback ms-5">
                                         Debe ingresar un valor válido (no dígitos)
                                     </div>
@@ -63,7 +63,7 @@
                                         aria-label="Ingrese una Unidad de medida" aria-describedby="addUnit" [(ngModel)]="newUnit.nameUnit"
                                         [ngClass]="{'is-invalid': !validator.validateUnit(newUnit), 'is-valid': validator.validateUnit(newUnit)}"
                                         required>
-                                    <button class="btn btn-outline-success" type="button" id="addUnit">Ingresar</button>
+                                    <button [disabled]="!validator.validateUnit(newUnit)" class="btn btn-outline-success ms-1" type="button" id="addUnit">Ingresar</button>
                                     <div *ngIf="!validator.validateUnit(newUnit)" class="invalid-feedback ms-5">
                                         Debe ingresar un valor válido (ej: 0 KG)
                                     </div>
