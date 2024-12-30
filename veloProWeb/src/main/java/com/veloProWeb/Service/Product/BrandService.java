@@ -29,7 +29,7 @@ public class BrandService implements IBrandService {
         validator.validateBrand(brand.getName());
         BrandProduct brandProduct = getBrandCreated(helperService.capitalize(brand.getName()));
         if (brandProduct != null){
-            throw new IllegalArgumentException("Nombre Existente: Hay registro de este marca.");
+            throw new IllegalArgumentException("Nombre Existente: Hay registro de esta marca.");
         } else {
             brand.setId(null);
             brand.setName(helperService.capitalize(brand.getName()));
