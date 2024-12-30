@@ -11,10 +11,10 @@ public class CategoriesValidator {
         }
     }
     public void validateCategory(String name){
-        if (name == null || name.trim().isBlank() || name.trim().length() <= 3){
+        if (name == null || name.trim().isBlank() || name.trim().length() < 3){
             throw new IllegalArgumentException("Ingrese un nombre válido.");
         }
-        if (name.matches("[a-zA-Z0-9 ]+")){
+        if (name.matches(".*\\d.*")){
             throw new IllegalArgumentException("El nombre no debe contener dígitos.");
         }
     }
