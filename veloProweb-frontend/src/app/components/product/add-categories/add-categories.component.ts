@@ -56,16 +56,15 @@ export class AddCategoriesComponent implements OnInit{
   }
 
   createBrand(): void{
-    console.log('Marca: ', this.newBrand);
     if(this.validator.validateBrand(this.newBrand)){
       this.brandService.createBrand(this.newBrand).subscribe((response) => {
         console.log('Nueva marca registrada', response);
         this.notification.showSuccessToast(`${this.newBrand.name} ha sido registrada`,'top', 3000);
         this.newBrand = this.helper.createEmptyBrand();
       }, (error) => {
-        const message = error.error.error;
+        const message = error.error.message;
         console.error('Error:', error);
-        this.notification.showErrorToast(`Error: \n${message}`, 'top', 5000);
+        this.notification.showErrorToast(`${message}`, 'top', 5000);
       });
     }
   }
