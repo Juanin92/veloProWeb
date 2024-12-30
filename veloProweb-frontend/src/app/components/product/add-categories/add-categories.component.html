@@ -30,7 +30,8 @@
                                         aria-label="Ingrese una categoría" aria-describedby="addCategory" [(ngModel)]="newCategory.name"
                                         [ngClass]="{'is-invalid': !validator.validateCategory(newCategory), 'is-valid': validator.validateCategory(newCategory)}"
                                         required>
-                                    <button [disabled]="!validator.validateCategory(newCategory)" class="btn btn-outline-success ms-1" type="button" id="addCategory">Ingresar</button>
+                                    <button [disabled]="!validator.validateCategory(newCategory)" class="btn btn-outline-success ms-1" type="button" id="addCategory"
+                                        (click)="createCategory()">Ingresar</button>
                                     <div *ngIf="!validator.validateCategory(newCategory)" class="invalid-feedback ms-5">
                                         Debe ingresar un valor válido (no dígitos)
                                     </div>

@@ -16,6 +16,6 @@ export class CategoryService {
   }
 
   createCategory(category: Category): Observable<{ message: string }> {
-    return this.httpClient.post<{ message: string }>(`${this.apiUrl}/`, category);
+    return this.httpClient.post<{ message: string }>(`${this.apiUrl}`, category);
   }
 }

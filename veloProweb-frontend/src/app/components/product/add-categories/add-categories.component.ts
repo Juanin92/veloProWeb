@@ -68,6 +68,20 @@ export class AddCategoriesComponent implements OnInit{
       });
     }
   }
+
+  createCategory(): void{
+    if(this.validator.validateCategory(this.newCategory)){
+      this.categoryService.createCategory(this.newCategory).subscribe((response) => {
+        console.log('Nueva categoría registrada', response);
+        this.notification.showSuccessToast(`${this.newCategory.name} ha sido registrada`,'top', 3000);
+        this.newCategory = this.helper.createEmptyCategory();
+      }, (error) => {
+        const message = error.error.message;
+        console.error('Error:', error);
+        this.notification.showErrorToast(`${message}`, 'top', 5000);
+      });
+    }
+  }
   
   resetForms(): void{
     this.newBrand = this.helper.createEmptyBrand();
