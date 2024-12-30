@@ -31,6 +31,7 @@ public class CategoryService implements ICategoryService {
         if (categoryProduct != null){
             throw new IllegalArgumentException("Nombre Existente: Hay registro de esta categoría.");
         } else {
+            category.setId(null);
             category.setName(helperService.capitalize(category.getName()));
             categoryProductRepo.save(category);
         }
