@@ -11,10 +11,19 @@ export class CategoryService {
 
   constructor(private httpClient: HttpClient) { }
 
+  /**
+   * Obtiene una lista de todas las categorías desde el endpoint
+   * @returns observable que emite una lista de categorías
+   */
   getCategories(): Observable<Category[]> {
     return this.httpClient.get<Category[]>(this.apiUrl);
   }
 
+  /**
+   * Crea una nueva categoría
+   * @param category - categoría para agregar
+   * @returns - Observable que emite un mensaje de confirmación o error
+   */
   createCategory(category: Category): Observable<{ message: string }> {
     return this.httpClient.post<{ message: string }>(`${this.apiUrl}`, category);
   }

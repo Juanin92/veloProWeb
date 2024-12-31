@@ -12,10 +12,20 @@ export class SubcategoryService {
 
   constructor(private httpClient: HttpClient) { }
 
+  /**
+   * Obtiene una lista de todas las subcategorías dependiendo de la categoría seleccionada desde el endpoint
+   * @param id - Identificador de la categoría
+   * @returns - observable que emite una lista de subcategorías
+   */
   getSubCategoriesByCategory(id: number): Observable<Subcategory[]> {
     return this.httpClient.get<Subcategory[]>(`${this.apiUrl}/${id}`);
   }
 
+  /**
+   * Crea una nueva subcategoría
+   * @param subcategory - subcategoría para agregar
+   * @returns - Observable que emite un mensaje de confirmación o error
+   */
   createSubcategory(subcategory: Subcategory): Observable<{message: string}>{
     return this.httpClient.post<{message: string}>(`${this.apiUrl}`,subcategory);
   }
