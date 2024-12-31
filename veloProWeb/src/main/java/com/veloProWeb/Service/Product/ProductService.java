@@ -25,6 +25,7 @@ public class ProductService implements IProductService {
     @Override
     public void create(Product product) {
         validator.validateNewProduct(product);
+        product.setId(null);
         product.setStatus(false);
         product.setStatusProduct(StatusProduct.NODISPONIBLE);
         product.setBuyPrice(0);
