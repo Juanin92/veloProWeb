@@ -43,9 +43,10 @@ public class SubcategoryServiceTest {
         category.setId(1L);
         subcategory = new SubcategoryProduct();
         subcategory.setName("Leche");
+        subcategory.setCategory(category);
         existingSubcategory = new SubcategoryProduct();
         existingSubcategory.setId(1L);
-        existingSubcategory.setName("Arroz");
+        existingSubcategory.setName("Leche");
         existingSubcategory.setCategory(category);
         existingSubcategory2 = new SubcategoryProduct();
         existingSubcategory2.setId(2L);
@@ -59,7 +60,7 @@ public class SubcategoryServiceTest {
         doNothing().when(validator).validateSubcategory("Leche");
         when(subcategoryProductRepo.findByNameAndCategoryId("Leche",1L)).thenReturn(Optional.empty());
         when(helperService.capitalize("Leche")).thenReturn("Leche");
-        subcategoryService.save(subcategory, category);
+        subcategoryService.save(subcategory);
 
         verify(validator).validateSubcategory("Leche");
         verify(subcategoryProductRepo).findByNameAndCategoryId("Leche", 1L);
@@ -73,7 +74,7 @@ public class SubcategoryServiceTest {
         when(subcategoryProductRepo.findByNameAndCategoryId("Arroz", 1L)).thenReturn(Optional.of(existingSubcategory));
         when(helperService.capitalize("Arroz")).thenReturn("Arroz");
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            subcategoryService.save(subcategory, category);
+            subcategoryService.save(subcategory);
         });
 
         assertEquals("Nombre Existente: Hay registro de esta Subcategoría en la Categoría " + category.getName() + " .", exception.getMessage());
@@ -83,8 +84,9 @@ public class SubcategoryServiceTest {
     }
     @Test
     public void save_invalidNullCategory(){
+        subcategory.setCategory(null);
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            subcategoryService.save(subcategory, null);
+            subcategoryService.save(subcategory);
         });
 
         assertEquals("Dede seleccionar una categoría.", exception.getMessage());
