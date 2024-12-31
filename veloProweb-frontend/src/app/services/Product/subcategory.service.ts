@@ -15,4 +15,8 @@ export class SubcategoryService {
   getSubCategoriesByCategory(id: number): Observable<Subcategory[]> {
     return this.httpClient.get<Subcategory[]>(`${this.apiUrl}/${id}`);
   }
+
+  createSubcategory(subcategory: Subcategory): Observable<{message: string}>{
+    return this.httpClient.post<{message: string}>(`${this.apiUrl}`,subcategory);
+  }
 }

@@ -51,7 +51,8 @@
                                         aria-describedby="addSubcategory" [(ngModel)]="newSubcategory.name"
                                         [ngClass]="{'is-invalid': !validator.validateSubcategory(newSubcategory), 'is-valid': validator.validateSubcategory(newSubcategory)}"
                                         required>
-                                    <button [disabled]="!validator.validateSubcategory(newSubcategory)" class="btn btn-outline-success ms-1" type="button" id="addSubcategory">Ingresar</button>
+                                    <button [disabled]="!validator.validateSubcategory(newSubcategory)" class="btn btn-outline-success ms-1" type="button" id="addSubcategory" 
+                                        (click)="createSubcategory()">Ingresar</button>
                                     <div *ngIf="!validator.validateSubcategory(newSubcategory)" class="invalid-feedback ms-5">
                                         Debe ingresar un valor válido (no dígitos)
                                     </div>

@@ -83,6 +83,20 @@ export class AddCategoriesComponent implements OnInit{
     }
   }
 
+  createSubcategory(): void{
+    if(this.validator.validateSubcategory(this.newSubcategory)){
+      this.subcategoryService.createSubcategory(this.newSubcategory).subscribe((response) => {
+        console.log('Nueva subcategoría registrada', response);
+        this.notification.showSuccessToast(`${this.newSubcategory.name} ha sido registrada`,'top', 3000);
+        this.newSubcategory = this.helper.createEmptyCategory();
+      }, (error) => {
+        const message = error.error.message;
+        console.error('Error:', error);
+        this.notification.showErrorToast(`${message}`, 'top', 5000);
+      });
+    }
+  }
+
   createUnit(): void{
     if(this.validator.validateUnit(this.newUnit)){
       this.unitService.createUnit(this.newUnit).subscribe((response) => {
