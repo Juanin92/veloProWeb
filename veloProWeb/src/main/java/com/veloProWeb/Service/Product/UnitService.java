@@ -35,6 +35,7 @@ public class UnitService implements IUnitService {
             int digitCount = unit.getNameUnit().replaceAll("[^0-9]", "").length();
             int letterCount = unit.getNameUnit().replaceAll("[^a-zA-Z]", "").length();
             if (digitCount <= 2 && letterCount <= 2) {
+                unit.setId(null);
                 unit.setNameUnit(helperService.upperCaseWord(unit.getNameUnit()));
                 unitProductRepo.save(unit);
             } else {
