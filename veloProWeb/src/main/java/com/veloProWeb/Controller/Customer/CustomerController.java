@@ -11,6 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Controlador REST para gestionar operaciones relacionadas con clientes.
+ * Este controlador proporciona endpoints para listar, agregar, actualizar, eliminar y activar clientes.
+ */
 @RestController
 @RequestMapping("/clientes")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -18,11 +22,20 @@ public class CustomerController {
 
     @Autowired private ICustomerService customerService;
 
+    /**
+     * Obtiene una lista de clientes.
+     * @return - ResponseEntity con una lista de clientes
+     */
     @GetMapping
     public List<Customer> getListCustomer(){
         return customerService.getAll();
     }
 
+    /**
+     * Agrega un nuevo cliente
+     * @param customer - Cliente con los datos que se desea agregar
+     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
+     */
     @PostMapping("/agregar")
     public ResponseEntity<Map<String, String>> addCustomer(@RequestBody Customer customer){
         Map<String, String> response = new HashMap<>();
@@ -36,6 +49,11 @@ public class CustomerController {
         }
     }
 
+    /**
+     * Actualiza los datos un cliente existente
+     * @param customer - cliente con los datos actualizados
+     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
+     */
     @PutMapping("/actualizar")
     public ResponseEntity<String> updateCustomer(@RequestBody Customer customer){
         try {
@@ -46,6 +64,11 @@ public class CustomerController {
         }
     }
 
+    /**
+     *Elimina un cliente
+     * @param customer - Cliente que se desea eliminar
+     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
+     */
     @PutMapping("/eliminar")
     public ResponseEntity<String> deleteCustomer(@RequestBody Customer customer){
         try {
@@ -56,6 +79,11 @@ public class CustomerController {
         }
     }
 
+    /**
+     * Activa un cliente
+     * @param customer - Cliente que se desea activar
+     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
+     */
     @PutMapping("/activar")
     public ResponseEntity<Map<String, String>> activeCustomer(@RequestBody Customer customer){
         Map<String, String> response = new HashMap<>();

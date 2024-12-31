@@ -13,6 +13,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Controlador REST para gestionar operaciones relacionadas con el historial de tickets de los clientes.
+ * Este controlador proporciona endpoints para obtener tickets por cliente, crear tickets para un cliente,
+ * validar tickets y actualizar el estado de los tickets.
+ */
 @RestController
 @RequestMapping("/Tickets")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -20,11 +25,21 @@ public class TicketHistoryController {
 
     @Autowired private ITicketHistoryService ticketHistoryService;
 
+    /**
+     * Obtiene una lista de tickets de un cliente.
+     * @param customerId - Identificador del cliente cuyos tickets desea obtener
+     * @return - ResponseEntity con una lista de los tickets del cliente
+     */
     @GetMapping
     public ResponseEntity<List<TicketHistory>> getListTicketByCustomer(@RequestParam Long customerId){
         return ResponseEntity.ok(ticketHistoryService.getByCustomerId(customerId));
     }
 
+    /**
+     * Crea un ticket para un cliente
+     * @param ticketDto - DTO que contiene los datos del ticket
+     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
+     */
     @PostMapping
     public ResponseEntity<Map<String, String>> createTicketToCustomer(@RequestBody TicketRequestDTO ticketDto){
         Map<String, String> response = new HashMap<>();
@@ -38,6 +53,11 @@ public class TicketHistoryController {
         }
     }
 
+    /**
+     * Válida los tickets de un cliente
+     * @param customer - Cliente cuyo tickets se desea validar.
+     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
+     */
     @PutMapping("/validar")
     public ResponseEntity<Map<String, String>> valideTicketByCustomer(@RequestBody Customer customer){
         Map<String, String> response = new HashMap<>();
@@ -51,6 +71,11 @@ public class TicketHistoryController {
         }
     }
 
+    /**
+     * Actualiza el estado de un ticket
+     * @param ticket - Ticket que se desea actualizar el estado.
+     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
+     */
     @PutMapping("/actualizar-estado")
     public ResponseEntity<Map<String, String>> updateStatus(@RequestBody TicketHistory ticket){
         Map<String, String> response = new HashMap<>();
