@@ -2,24 +2,33 @@ package com.veloProWeb.Controller.Product;
 
 import com.veloProWeb.Exceptions.GlobalExceptionHandler;
 import com.veloProWeb.Model.Entity.Product.*;
-import com.veloProWeb.Model.Enum.StatusProduct;
 import com.veloProWeb.Service.Product.Interfaces.IProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -91,5 +100,39 @@ public class StockControllerTest {
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().string("Ocurrió un error inesperado. Por favor, intente más tarde."));
         verify(productService, times(1)).getAll();
+    }
+
+    //Prueba para crear un nuevo producto
+    @Test
+    public void createBrand_valid() throws Exception {
+        mockMvc.perform(post("/stock")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\": \"1\", \"description\": \"Samsung\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value( "Producto creado exitosamente!"));
+
+        ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
+        verify(productService, times(1)).create(productArgumentCaptor.capture());
+        Product product = productArgumentCaptor.getValue();
+        assertEquals(1L, product.getId());
+        assertEquals("Samsung", product.getDescription());
+    }
+    @Test
+    public void createBrand_invalidExistingUnit() throws Exception {
+        product.setId(1L);
+        product.setDescription("Samsung");
+        doThrow(new IllegalArgumentException("Producto ya existe registro"))
+                .when(productService).create(product);
+        mockMvc.perform(post("/stock")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\": \"1\", \"description\": \"Samsung\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Producto ya existe registro"));
+
+        ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
+        verify(productService, times(1)).create(productArgumentCaptor.capture());
+        Product product = productArgumentCaptor.getValue();
+        assertEquals(1L, product.getId());
+        assertEquals("Samsung", product.getDescription());
     }
 }
