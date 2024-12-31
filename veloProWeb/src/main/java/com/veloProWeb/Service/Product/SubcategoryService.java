@@ -54,6 +54,12 @@ public class SubcategoryService implements ISubcategoryService {
         return subcategoryProductRepo.findAll();
     }
 
+    /**
+     * Obtiene una lista de subcategorías asociadas una categoría por su ID.
+     * assert comprueba en tiempo de ejecución que no sea un valor nulo si no detiene la ejecución
+     * @param id - Identificador de la categoría
+     * @return - lista de subcategorías asociada a la categoría
+     */
     @Override
     public List<SubcategoryProduct> getSubcategoryByCategoryID(Long id) {
         CategoryProduct category = categoryProductRepo.findById(id).orElse(null);
