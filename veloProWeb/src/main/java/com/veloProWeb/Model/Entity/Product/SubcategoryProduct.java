@@ -16,7 +16,6 @@ public class SubcategoryProduct {
     private Long id;
     private String name;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "id_category", nullable = false)
     private CategoryProduct category;

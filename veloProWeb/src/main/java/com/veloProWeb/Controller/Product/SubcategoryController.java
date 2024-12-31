@@ -32,10 +32,10 @@ public class SubcategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> createSubcategories(@RequestBody SubcategoryProduct subcategory, @RequestParam CategoryProduct category){
+    public ResponseEntity<Map<String, String>> createSubcategories(@RequestBody SubcategoryProduct subcategory){
         Map<String, String> response = new HashMap<>();
         try {
-            subcategoryService.save(subcategory, category);
+            subcategoryService.save(subcategory);
             response.put("message", "Subcategoría registrada correctamente");
             return ResponseEntity.ok(response);
         }catch (IllegalArgumentException e){

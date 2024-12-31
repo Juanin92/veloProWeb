@@ -25,20 +25,19 @@ public class SubcategoryService implements ISubcategoryService {
      * Método para crear un objeto de subcategoría (nombre)
      * Válida que tenga una categoría seleccionada y el parametro de nombre
      * Se busca si existe ya un registro del objeto, si no lanza una excepción
-     * @param category - Categoría con los detalles
+//     * @param category - Categoría con los detalles
      * @param subcategory - Subcategoría con los detalles
      */
     @Override
-    public void save(SubcategoryProduct subcategory, CategoryProduct category) {
-        if (category != null){
+    public void save(SubcategoryProduct subcategory) {
+        if (subcategory.getCategory() != null){
             validator.validateSubcategory(subcategory.getName());
-            SubcategoryProduct subcategoryProduct = getSubcategoryCreated(helperService.capitalize(subcategory.getName()), category.getId());
+            SubcategoryProduct subcategoryProduct = getSubcategoryCreated(helperService.capitalize(subcategory.getName()), subcategory.getCategory().getId());
             if (subcategoryProduct != null){
-                throw new IllegalArgumentException("Nombre Existente: Hay registro de esta Subcategoría en la Categoría " + category.getName() + " .");
+                throw new IllegalArgumentException("Nombre Existente: Hay registro de esta Subcategoría en la Categoría " + subcategory.getCategory().getName() + " .");
             } else {
                 subcategory.setId(null);
                 subcategory.setName(helperService.capitalize(subcategory.getName()));
-                subcategory.setCategory(category);
                 subcategoryProductRepo.save(subcategory);
             }
         }else {
