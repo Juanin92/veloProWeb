@@ -91,8 +91,20 @@ export class AddProductComponent implements OnInit {
   }
 
   addProduct(): void {
+    console.log('Producto -> ', this.newProduct);
     if (this.validator.validateForm(this.newProduct)) {
-      
+      this.productService.createProduct(this.newProduct).subscribe((response) => {
+        console.log("Producto creado exitosamente! -> ", this.newProduct);
+        this.notification.showSuccessToast("Producto creado exitosamente!", 'top', 3000);
+        this.resetProductForm();
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+      }, (error) => {
+        const message = error.error.message;
+          console.error('Error:', error);
+          this.notification.showErrorToast(`Error --> ${message}`, 'top', 5000);
+      });
     } else {
       this.notification.showWarning('Formulario incompleto', 'Por favor, complete correctamente todos los campos obligatorios.');
     }

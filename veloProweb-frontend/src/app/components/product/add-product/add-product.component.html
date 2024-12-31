@@ -71,7 +71,7 @@
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="submit" class="btn btn-success" [disabled]="!validator.validateForm(newProduct)">Guardar</button>
+                <button type="submit" class="btn btn-success" [disabled]="!validator.validateForm(newProduct)" (click)="addProduct()">Guardar</button>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
             </div>
         </div>
