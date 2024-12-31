@@ -56,7 +56,8 @@ public class SubcategoryService implements ISubcategoryService {
 
     @Override
     public List<SubcategoryProduct> getSubcategoryByCategoryID(Long id) {
-        CategoryProduct category = categoryProductRepo.getReferenceById(id);
+        CategoryProduct category = categoryProductRepo.findById(id).orElse(null);
+        assert category != null;
         return subcategoryProductRepo.findByCategoryId(category.getId());
     }
 
