@@ -55,6 +55,9 @@ export class AddCustomerComponent {
     }
   }
 
+  /**
+   * Reset el valor de todos los atributo del cliente 
+   */
   resetCustomerForm(): void{
     this.newCustomer = this.customerHelper.createEmptyCustomer();
   }

@@ -28,10 +28,17 @@ export class StockComponent implements OnInit{
       this.selectedProduct = helper.createEmptyProduct();
     }
 
+  /**
+   * Inicializa el componente cargando la lista de productos
+   */
   ngOnInit(): void {
     this.getProducts();
   }
 
+  /**
+   * Obtiene una lista de todos los productos.
+   * asigna una lista con productos a la lista products y filteredProducts
+   */
   getProducts(): void{
     this.stockService.getProducts().subscribe((list) =>{
       this.products = list;
@@ -41,6 +48,10 @@ export class StockComponent implements OnInit{
     });
   }
 
+  /**
+   * Abrir modal con una copia de un producto seleccionado
+   * @param product - producto seleccionado
+   */
   openModalCustomer(product: Product): void {
       if (product) {
         this.selectedProduct = { ...product };
@@ -49,6 +60,11 @@ export class StockComponent implements OnInit{
       }
     }
 
+  /**
+   * Retorna el color asociado con el estado del producto.
+   * @param status - El estado del producto.
+   * @returns - El color correspondiente al estado del producto.
+   */  
   statusColor(status: string): string {
     switch (status) {
       case 'DISPONIBLE': return 'rgb(40, 238, 40)';
@@ -58,6 +74,11 @@ export class StockComponent implements OnInit{
     }
   }
 
+  /**
+   * Filtrar lista de productos según el criterio de búsqueda
+   * Se filtrara por nombre de marca, categoría, subcategoría y descripción donde textFilter
+   * contendrá el valor a filtrar
+   */
   searchFilterCustomer(): void {
     if (this.textFilter.trim() === '') {
       this.filteredProducts = this.products;

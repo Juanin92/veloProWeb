@@ -43,10 +43,18 @@ export class AddCategoriesComponent implements OnInit{
     this.newSubcategory = helper.createEmptySubcategory();
     this.newUnit = helper.createEmptyUnit();
   }
+
+  /**
+   * Inicializa el componente cargando las lista de categorías
+   */
   ngOnInit(): void {
     this.getAllCategories();
   }
 
+  /**
+   * Obtiene una lista de todas las categorías.
+   * asigna una lista con categorías a la lista categoryList
+   */
   getAllCategories(): void {
     this.categoryService.getCategories().subscribe((list) => {
       this.categoryList = list;
@@ -55,6 +63,11 @@ export class AddCategoriesComponent implements OnInit{
     })
   }
 
+  /**
+   * Agregar un nueva marca.
+   * Valida el formulario y si es correcto, llama al servicio para agregar la marca.
+   * Muestra notificaciones dependiendo el estado de la acción y reset los valores del objeto marca.
+   */
   createBrand(): void{
     if(this.validator.validateBrand(this.newBrand)){
       this.brandService.createBrand(this.newBrand).subscribe((response) => {
@@ -69,6 +82,11 @@ export class AddCategoriesComponent implements OnInit{
     }
   }
 
+  /**
+   * Agregar un nueva categoría.
+   * Valida el formulario y si es correcto, llama al servicio para agregar la categoría.
+   * Muestra notificaciones dependiendo el estado de la acción y reset los valores del objeto categoría.
+   */
   createCategory(): void{
     if(this.validator.validateCategory(this.newCategory)){
       this.categoryService.createCategory(this.newCategory).subscribe((response) => {
@@ -83,6 +101,12 @@ export class AddCategoriesComponent implements OnInit{
     }
   }
 
+  /**
+   * Agregar un nueva subcategoría.
+   * Valida si categoría no esta nula y asigna el valor a la variable category
+   * Valida el formulario y si es correcto, llama al servicio para agregar la subcategoría.
+   * Muestra notificaciones dependiendo el estado de la acción y reset los valores del objeto subcategoría.
+   */
   createSubcategory(): void{
     this.category && (this.newSubcategory.category = this.category);
     if(this.validator.validateSubcategory(this.newSubcategory)){
@@ -98,6 +122,11 @@ export class AddCategoriesComponent implements OnInit{
     }
   }
 
+  /**
+   * Agregar un nueva unidad de medida.
+   * Valida el formulario y si es correcto, llama al servicio para agregar la unidad de medida.
+   * Muestra notificaciones dependiendo el estado de la acción y reset los valores del objeto unidad de medida.
+   */
   createUnit(): void{
     if(this.validator.validateUnit(this.newUnit)){
       this.unitService.createUnit(this.newUnit).subscribe((response) => {
@@ -112,6 +141,9 @@ export class AddCategoriesComponent implements OnInit{
     }
   }
   
+  /**
+   * Reset todos los valores sus atributos de los objetos 
+   */
   resetForms(): void{
     this.newBrand = this.helper.createEmptyBrand();
     this.newCategory = this.helper.createEmptyCategory();
