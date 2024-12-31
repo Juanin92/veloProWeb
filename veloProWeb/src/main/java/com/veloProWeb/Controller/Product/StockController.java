@@ -11,6 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Controlador REST para gestionar operaciones relacionadas con los productos.
+ * Este controlador proporciona endpoints para obtener todos los productos y crear nuevos productos.
+ */
 @RestController
 @RequestMapping("/stock")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -18,11 +22,20 @@ public class StockController {
 
     @Autowired private IProductService productService;
 
+    /**
+     * Obtiene una lista de todas los productos
+     * @return - ResponseEntity con una lista de los productos
+     */
     @GetMapping()
     public ResponseEntity<List<Product>> getListProducts(){
         return ResponseEntity.ok(productService.getAll());
     }
 
+    /**
+     * Crea un nuevo producto
+     * @param product - Producto con los datos a crear
+     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
+     */
     @PostMapping()
     public ResponseEntity<Map<String, String>> createProduct(@RequestBody Product product){
         Map<String, String> response =  new HashMap<>();
