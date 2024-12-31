@@ -84,6 +84,7 @@ export class AddCategoriesComponent implements OnInit{
   }
 
   createSubcategory(): void{
+    this.category && (this.newSubcategory.category = this.category);
     if(this.validator.validateSubcategory(this.newSubcategory)){
       this.subcategoryService.createSubcategory(this.newSubcategory).subscribe((response) => {
         console.log('Nueva subcategoría registrada', response);
