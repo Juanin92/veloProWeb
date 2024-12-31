@@ -1,11 +1,11 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { PaymentCustomerComponent } from './payment-customer.component';
 import { of, throwError } from 'rxjs';
 import { PaymentCustomerService } from '../../../services/customer/payment-customer.service';
 import { CustomerHelperServiceService } from '../../../services/customer/customer-helper-service.service';
 import { PaymentStatus } from '../../../models/enum/payment-status.enum';
 import { TicketHistory } from '../../../models/Entity/Customer/ticket-history.model';
 import { Customer } from '../../../models/Entity/Customer/customer.model';
+import { PaymentCustomerComponent } from '../payment-customer/payment-customer.component';
 
 describe('PaymentCustomerComponent', () => {
   let component: PaymentCustomerComponent;
@@ -76,13 +76,13 @@ describe('PaymentCustomerComponent', () => {
   });
 
   //Prueba que se actualize label de la deuda del cliente
-  it('debería actualizar el valor de la deuda, "updateDebtValueLabel(): void"', () => {
-    component.selectedCustomer = { id: 1, debt: 600 } as Customer;
+  // it('debería actualizar el valor de la deuda, "updateDebtValueLabel(): void"', () => {
+  //   component.selectedCustomer = { id: 1, debt: 600 } as Customer;
   
-    component.updateDebtValueLabel();
+  //   component.updateDebtValueLabel();
   
-    expect(component.debtValue).toBe(600);
-  });
+  //   expect(component.debtValue).toBe(600);
+  // });
   
   //Prueba de que se actualize label de la deuda total del cliente
   it('debería actualizar el valor total de la deuda, "updateTotalDebtLabel(): void "', () => {

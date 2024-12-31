@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { AddCustomerComponent } from "./add-customer.component";
 import { CustomerService } from "../../../services/customer/customer.service";
 import { Customer } from "../../../models/Entity/Customer/customer.model";
 import { of } from "rxjs/internal/observable/of";
@@ -8,6 +7,7 @@ import { FormsModule } from "@angular/forms";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { PaymentStatus } from "../../../models/enum/payment-status.enum";
 import { throwError } from "rxjs";
+import { AddCustomerComponent } from "../add-customer/add-customer.component";
 
 describe('AddCustomerComponent', () => {
   let component: AddCustomerComponent;

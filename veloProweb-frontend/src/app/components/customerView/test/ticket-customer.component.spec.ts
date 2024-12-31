@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TicketCustomerComponent } from '../ticket-customer/ticket-customer.component';
 
-import { TicketCustomerComponent } from './ticket-customer.component';
 
 describe('TicketCustomerComponent', () => {
   let component: TicketCustomerComponent;

@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { UpdateCustomerComponent } from "./update-customer.component";
 import { Customer } from "../../../models/Entity/Customer/customer.model";
 import { CustomerService } from "../../../services/customer/customer.service";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
@@ -9,6 +8,7 @@ import { of } from "rxjs/internal/observable/of";
 import { throwError } from "rxjs/internal/observable/throwError";
 import { PaymentStatus } from "../../../models/enum/payment-status.enum";
 import { NotificationService } from "../../../utils/notification-service.service";
+import { UpdateCustomerComponent } from "../update-customer/update-customer.component";
 
 describe('UpdateCustomerComponent', () => {
   let component: UpdateCustomerComponent;
