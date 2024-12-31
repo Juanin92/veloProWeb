@@ -88,7 +88,7 @@ export class AddCategoriesComponent implements OnInit{
       this.subcategoryService.createSubcategory(this.newSubcategory).subscribe((response) => {
         console.log('Nueva subcategoría registrada', response);
         this.notification.showSuccessToast(`${this.newSubcategory.name} ha sido registrada`,'top', 3000);
-        this.newSubcategory = this.helper.createEmptyCategory();
+        this.newSubcategory = this.helper.createEmptySubcategory();
       }, (error) => {
         const message = error.error.message;
         console.error('Error:', error);

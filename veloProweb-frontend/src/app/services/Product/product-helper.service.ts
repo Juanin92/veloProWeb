@@ -64,7 +64,8 @@ export class ProductHelperService {
   createEmptySubcategory(): Subcategory {
     return {
       id: 0,
-      name: ''
+      name: '',
+      category: this.createEmptyCategory()
     }
   }
 
