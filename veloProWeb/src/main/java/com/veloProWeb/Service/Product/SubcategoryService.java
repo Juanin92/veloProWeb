@@ -36,6 +36,7 @@ public class SubcategoryService implements ISubcategoryService {
             if (subcategoryProduct != null){
                 throw new IllegalArgumentException("Nombre Existente: Hay registro de esta Subcategoría en la Categoría " + category.getName() + " .");
             } else {
+                subcategory.setId(null);
                 subcategory.setName(helperService.capitalize(subcategory.getName()));
                 subcategory.setCategory(category);
                 subcategoryProductRepo.save(subcategory);
