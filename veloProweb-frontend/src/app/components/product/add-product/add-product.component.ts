@@ -92,7 +92,7 @@ export class AddProductComponent implements OnInit {
 
   addProduct(): void {
     if (this.validator.validateForm(this.newProduct)) {
-
+      
     } else {
       this.notification.showWarning('Formulario incompleto', 'Por favor, complete correctamente todos los campos obligatorios.');
     }
