@@ -6,22 +6,26 @@ import { PaymentStatus } from '../../../models/enum/payment-status.enum';
 import { TicketHistory } from '../../../models/Entity/Customer/ticket-history.model';
 import { Customer } from '../../../models/Entity/Customer/customer.model';
 import { PaymentCustomerComponent } from '../payment-customer/payment-customer.component';
+import { TicketHistoryService } from '../../../services/customer/ticket-history.service';
 
 describe('PaymentCustomerComponent', () => {
   let component: PaymentCustomerComponent;
   let fixture: ComponentFixture<PaymentCustomerComponent>;
   let paymentService: jasmine.SpyObj<PaymentCustomerService>;
   let customerHelper: jasmine.SpyObj<CustomerHelperServiceService>;
+  let ticketService: jasmine.SpyObj<TicketHistoryService>;
 
   beforeEach(async () => {
     const paymentServiceSpy = jasmine.createSpyObj('PaymentCustomerService', ['getCustomerSelectedPayment']);
     const customerHelperSpy = jasmine.createSpyObj('CustomerHelperServiceService', ['createEmptyCustomer']);
+    const ticketServiceSpy = jasmine.createSpyObj('TicketHistoryService', ['getListTicketByCustomer']);
 
     await TestBed.configureTestingModule({
       imports: [PaymentCustomerComponent],
       providers: [
         { provide: PaymentCustomerService, useValue: paymentServiceSpy },
-        { provide: CustomerHelperServiceService, useValue: customerHelperSpy }
+        { provide: CustomerHelperServiceService, useValue: customerHelperSpy },
+        { provide: TicketHistoryService, useValue: ticketServiceSpy}
       ]
     }).compileComponents();
 
@@ -29,7 +33,7 @@ describe('PaymentCustomerComponent', () => {
     component = fixture.componentInstance;
     paymentService = TestBed.inject(PaymentCustomerService) as jasmine.SpyObj<PaymentCustomerService>;
     customerHelper = TestBed.inject(CustomerHelperServiceService) as jasmine.SpyObj<CustomerHelperServiceService>;
-
+    ticketService = TestBed.inject(TicketHistoryService) as jasmine.SpyObj<TicketHistoryService>;
 
     customerHelper.createEmptyCustomer.and.returnValue({ id: 0, name: '', surname: '', debt: 0, totalDebt: 0, status: PaymentStatus.NULO, account: true, email: 'test@test.com', phone: '+569 12345678', paymentCustomerList: [], ticketHistoryList: [] });
     component.selectedCustomer = customerHelper.createEmptyCustomer();
