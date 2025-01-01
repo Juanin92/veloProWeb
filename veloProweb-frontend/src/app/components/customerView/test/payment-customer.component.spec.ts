@@ -7,6 +7,7 @@ import { TicketHistory } from '../../../models/Entity/Customer/ticket-history.mo
 import { Customer } from '../../../models/Entity/Customer/customer.model';
 import { PaymentCustomerComponent } from '../payment-customer/payment-customer.component';
 import { TicketHistoryService } from '../../../services/customer/ticket-history.service';
+import { PaymentCustomer } from '../../../models/Entity/Customer/payment-customer.model';
 
 describe('PaymentCustomerComponent', () => {
   let component: PaymentCustomerComponent;
@@ -19,6 +20,7 @@ describe('PaymentCustomerComponent', () => {
     const paymentServiceSpy = jasmine.createSpyObj('PaymentCustomerService', ['getCustomerSelectedPayment']);
     const customerHelperSpy = jasmine.createSpyObj('CustomerHelperServiceService', ['createEmptyCustomer']);
     const ticketServiceSpy = jasmine.createSpyObj('TicketHistoryService', ['getListTicketByCustomer']);
+    ticketServiceSpy.getListTicketByCustomer.and.returnValue(of([]));
 
     await TestBed.configureTestingModule({
       imports: [PaymentCustomerComponent],
@@ -66,6 +68,21 @@ describe('PaymentCustomerComponent', () => {
   
     expect(console.log).toHaveBeenCalledWith('Error no se encontró información de pagos ', errorResponse);
   });
+
+  //Prueba para obtener una lista de tickets de un cliente
+  it('Debería listar los tickets de un cliente, "getListTicketByCustomer(id: number): void"', () => {
+    const mockCustomer = { id: 1, debt: 1000 } as Customer;
+    component.selectedCustomer = mockCustomer;
+    const mockTickets = [
+      {id: 1, amount: 500, document: 'BO0020', total: 2000, status: true, date: '2025-01-01', notificationsDate: 'null', customer: mockCustomer},
+      {id: 2, amount: 5000, document: 'BO0015', total: 20000, status: true, date: '2024-12-01', notificationsDate: 'null', customer: mockCustomer}
+    ];
+    ticketService.getListTicketByCustomer.and.returnValue(of(mockTickets));
+    component.getListTicketByCustomer(mockCustomer.id);
+
+    expect(ticketService.getListTicketByCustomer).toHaveBeenCalledWith(mockCustomer.id);
+    expect(component.tickets).toEqual(mockTickets);
+  });
   
   //Prueba que la suma de los pagos sea calculada
   it('debería actualizar el valor de los pagos, "updatePaymentValueLabel(): void"', () => {
@@ -80,13 +97,20 @@ describe('PaymentCustomerComponent', () => {
   });
 
   //Prueba que se actualize label de la deuda del cliente
-  // it('debería actualizar el valor de la deuda, "updateDebtValueLabel(): void"', () => {
-  //   component.selectedCustomer = { id: 1, debt: 600 } as Customer;
+  it('debería actualizar el valor de la deuda, "updateDebtValueLabel(): void"', () => {
+    const mockTicket = {id:1, total: 10000} as TicketHistory;
+    const mockPayment = { document: { id: 1 }, amount: 200 } as PaymentCustomer;
+    const mockEvent = { target: { checked: true } } as unknown as Event;
+
+    component.payments = [mockPayment];
+    component.selectedTicketsAmount = [];
+    component.debtValue = 0;
   
-  //   component.updateDebtValueLabel();
+    component.updateDebtValueLabel(mockTicket, mockEvent);
   
-  //   expect(component.debtValue).toBe(600);
-  // });
+    expect(component.selectedTicketsAmount).toEqual([9800]);
+    expect(component.debtValue).toBe(9800);
+  });
   
   //Prueba de que se actualize label de la deuda total del cliente
   it('debería actualizar el valor total de la deuda, "updateTotalDebtLabel(): void "', () => {
