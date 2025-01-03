@@ -52,7 +52,7 @@ public class SupplierService implements ISupplierService {
     }
 
     /**
-     * Busca un proveedor ya creado por su rut
+     * Busca un proveedor ya creado por su RUT
      * @param rut - rut del proveedor
      * @return - proveedor encontrado o null si no encuentra similitud
      */
