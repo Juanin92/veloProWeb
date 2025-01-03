@@ -5,10 +5,12 @@ import com.veloProWeb.Repository.Purchase.SupplierRepo;
 import com.veloProWeb.Service.Purchase.Interfaces.ISupplierService;
 import com.veloProWeb.Validation.SupplierValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class SupplierService implements ISupplierService {
 
     @Autowired private SupplierRepo supplierRepo;
