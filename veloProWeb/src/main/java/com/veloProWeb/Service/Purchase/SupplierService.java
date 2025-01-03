@@ -14,6 +14,13 @@ public class SupplierService implements ISupplierService {
     @Autowired private SupplierRepo supplierRepo;
     @Autowired private SupplierValidator validator;
 
+    /**
+     * Crea un nuevo proveedor
+     * Se válida que el proveedor no exista un registro de él, si no lanzara excepción
+     * Se válida que el email siempre un valor predeterminado si es nulo o está vacío
+     * Se válida todos los datos del proveedor sean correctos
+     * @param supplier - Objeto que contiene los valores necesarios
+     */
     @Override
     public void createSupplier(Supplier supplier) {
         Supplier supplierDB = getSupplierCreated(supplier.getRut());
@@ -33,11 +40,20 @@ public class SupplierService implements ISupplierService {
         }
     }
 
+    /**
+     * Obtiene el registro de todos los proveedores
+     * @return - Lista con los proveedores encontrados
+     */
     @Override
     public List<Supplier> getAll() {
         return supplierRepo.findAll();
     }
 
+    /**
+     * Busca un proveedor ya creado por su rut
+     * @param rut - rut del proveedor
+     * @return - proveedor encontrado o null si no encuentra similitud
+     */
     private Supplier getSupplierCreated(String rut){
         Optional<Supplier> supplier = supplierRepo.findByRut(rut);
         return supplier.orElse(null);
