@@ -41,22 +41,19 @@ export class ProductValidator {
         return true;
     }
 
-    static validateBrand(newBrand: Brand):  boolean {
-        // console.log('valor marca -> ', newBrand);
-        // console.log('valor marca id -> ', newBrand.id);
-        // console.log('valor marca nombre -> ', newBrand?.name);
+    static validateBrand(newBrand: Brand): boolean {
         return !!newBrand && typeof newBrand.name === 'string' && newBrand.name.trim().length >= 2;
     }
 
-    static validateCategory(newCategory: Category):  boolean {
+    static validateCategory(newCategory: Category): boolean {
         return newCategory.name !== null && newCategory.name.trim().length >= 3 && !/\d/.test(newCategory.name);
     }
 
-    static validateSubcategory(newSubcategory: Subcategory):  boolean {
+    static validateSubcategory(newSubcategory: Subcategory): boolean {
         return newSubcategory.name !== null && newSubcategory.name.trim().length >= 3 && !/\d/.test(newSubcategory.name);
     }
 
-    static validateUnit(newUnit: UnitProductModel):  boolean {
+    static validateUnit(newUnit: UnitProductModel): boolean {
         return newUnit.nameUnit !== null && newUnit.nameUnit.trim().length >= 3 && /^[0-9]+ [a-zA-Z]+$/.test(newUnit.nameUnit);
     }
 }
