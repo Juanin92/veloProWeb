@@ -7,6 +7,7 @@ import { AddProductComponent } from "../add-product/add-product.component";
 import { ProductHelperService } from '../../../services/Product/product-helper.service';
 import { UpdateProductComponent } from "../update-product/update-product.component";
 import { AddCategoriesComponent } from "../add-categories/add-categories.component";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-stock',
@@ -24,7 +25,8 @@ export class StockComponent implements OnInit{
 
   constructor(
     private stockService: ProductService,
-    private helper: ProductHelperService){
+    private helper: ProductHelperService,
+    private router: Router){
       this.selectedProduct = helper.createEmptyProduct();
     }
 
@@ -72,6 +74,10 @@ export class StockComponent implements OnInit{
       case 'NODISPONIBLE': return 'rgb(9, 180, 237)';
       default: return 'transparent';
     }
+  }
+
+  navigateToSupplier(): void{
+    this.router.navigate(['/proveedores']);
   }
 
   /**
