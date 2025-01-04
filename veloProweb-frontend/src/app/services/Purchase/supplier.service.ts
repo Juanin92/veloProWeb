@@ -12,10 +12,19 @@ export class SupplierService {
 
   constructor(private http: HttpClient) { }
 
+  /**
+   * Obtiene una lista de proveedores desde la API
+   * @returns - Observable que emite una lista de proveedores
+   */
   getSuppliers(): Observable<Supplier[]>{
     return this.http.get<Supplier[]>(this.apiUrl);
   }
 
+  /**
+   * Creación de un nuevo proveedor llamando a la API
+   * @param supplier - Proveedor por agregar
+   * @returns - Observable emite un mensaje de confirmación o error
+   */
   createSupplier(supplier: Supplier): Observable<{message: string}>{
     return this.http.post<{message: string}>(`${this.apiUrl}`, supplier);
   }
