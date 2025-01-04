@@ -9,10 +9,10 @@
                 </tr>
             </thead>
             <tbody class="table-group-divider text-center align-middle">
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Samsung</td>
-                    <td>121231923-2</td>
+                <tr *ngFor="let supplier of suppliers">
+                    <th scope="row">{{supplier.id}}</th>
+                    <td>{{supplier.name}}</td>
+                    <td>{{supplier.rut}}</td>
                 </tr>
             </tbody>
         </table>

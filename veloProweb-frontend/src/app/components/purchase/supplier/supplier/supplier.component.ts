@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { SupplierService } from '../../../../services/Purchase/supplier.service';
 import { Supplier } from '../../../../models/Entity/Purchase/supplier';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-supplier',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './supplier.component.html',
   styleUrl: './supplier.component.css'
 })
