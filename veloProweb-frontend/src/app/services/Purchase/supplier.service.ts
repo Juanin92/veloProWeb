@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Supplier } from '../../models/Entity/Purchase/supplier';
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +12,11 @@ export class SupplierService {
 
   constructor(private http: HttpClient) { }
 
-  getSuppliers(): Observable<>{
-    return this.http.get<>(this.apiUrl);
+  getSuppliers(): Observable<Supplier[]>{
+    return this.http.get<Supplier[]>(this.apiUrl);
   }
 
-  createSupplier(supplier:): Observable<{message: string}>{
+  createSupplier(supplier: Supplier): Observable<{message: string}>{
     return this.http.post<{message: string}>(`${this.apiUrl}`, supplier);
   }
 }
