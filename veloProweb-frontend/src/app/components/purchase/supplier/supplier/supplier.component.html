@@ -1,5 +1,5 @@
 <div class="contianer-fluid d-flex flex-lg-row flex-column p-1">
-    <div class="table-responsive text-center p-5 pt-0 bg-danger h-100 w-50">
+    <div class="table-responsive text-center p-5 pt-4 bg-danger h-100 w-50">
         <table class="table table-hover">
             <thead class="table-warning">
                 <tr>
@@ -9,7 +9,8 @@
                 </tr>
             </thead>
             <tbody class="table-group-divider text-center align-middle">
-                <tr *ngFor="let supplier of suppliers">
+                <tr *ngFor="let supplier of suppliers" (click)="getSelectedSupplier(supplier)" 
+                [class.table-active]="supplier === selectedSupplier">
                     <th scope="row">{{supplier.id}}</th>
                     <td>{{supplier.name}}</td>
                     <td>{{supplier.rut}}</td>
@@ -19,10 +20,16 @@
     </div>
     <div class="ps-5 w-50 bg-info">
         <div class="d-flex justify-content-center">
-            <button class="btn btn-primary m-2">Agregar</button>
-            <button class="btn btn-warning m-2">Actualizar</button>
+            <button class="btn btn-primary m-2" (click)="openFormat(true)">Agregar</button>
+            <button *ngIf="selectedSupplier" class="btn btn-warning m-2">Actualizar</button>
         </div>
-        <div class="form-floating mb-3 m-2 d-flex flex-column">
+        <div *ngIf="selectedSupplier" class="d-flex flex-column mb-3 m-2 text-center">
+            <label class="fs-1">{{selectedSupplier.name}}</label>
+            <label class="fs-2">{{selectedSupplier.rut}}</label>
+            <label class="fs-2">{{selectedSupplier.email}}</label>
+            <label class="fs-2">{{selectedSupplier.phone}}</label>
+        </div>
+        <div *ngIf="status === true" class="form-floating mb-3 m-2 d-flex flex-column">
             <form>
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="name" name="name" placeholder="Ingrese nombre de la empresa" required />
@@ -44,18 +51,19 @@
                         <!-- <div *ngIf="!customerValidator.isFieldValid(newCustomer,'email')" class="invalid-feedback">
                             Email no válido (example&commat;test.com)
                         </div> -->
+                    </div>
                     <div class="form-floating mb-3">
-                        <input type="tel" class="form-control" id="phone" name="phone" placeholder="Ingrese número de teléfono" value="+569 " required />
+                        <input type="tel" class="form-control" id="phone" name="phone" 
+                        placeholder="Ingrese número de teléfono" value="+569 " required/>
                         <label for="phone" class="form-label">Número de Teléfono</label>
                         <!-- <div *ngIf="!customerValidator.isFieldValid(newCustomer,'phone')" class="invalid-feedback">
                             Teléfono no válido (+569 12345678).
                         </div> -->
                     </div>
-                    </div>
             </form>
             <div class="d-flex justify-content-center">
                 <button class="btn btn-success m-2">Registrar</button>
-                <button class="btn btn-danger m-2">Cancelar</button>
+                <button class="btn btn-danger m-2" (click)="openFormat(false)">Cancelar</button>
             </div>
         </div>
     </div>

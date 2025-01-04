@@ -13,6 +13,8 @@ import { CommonModule } from '@angular/common';
 export class SupplierComponent implements OnInit{
 
   suppliers: Supplier[] = [];
+  selectedSupplier: Supplier | null = null;
+  status: boolean = false;
 
   constructor(
     private supplierService: SupplierService,
@@ -28,5 +30,14 @@ export class SupplierComponent implements OnInit{
     }, (error) =>{
       console.log('Error no se encontró ningún proveedor', error);
     });
+  }
+
+  getSelectedSupplier(supplier: Supplier): void{
+    this.selectedSupplier = supplier;
+  }
+
+  openFormat(statusClick: boolean): void{
+    this.status = statusClick;
+    this.selectedSupplier = null;
   }
 }
