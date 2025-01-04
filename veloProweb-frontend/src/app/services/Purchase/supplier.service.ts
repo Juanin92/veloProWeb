@@ -21,7 +21,7 @@ export class SupplierService {
   }
 
   /**
-   * Creación de un nuevo proveedor llamando a la API
+   * Crea un nuevo proveedor realizando una petición POST a la API
    * @param supplier - Proveedor por agregar
    * @returns - Observable emite un mensaje de confirmación o error
    */
