@@ -50,6 +50,14 @@ export class SupplierComponent implements OnInit{
     }
   }
 
+  updateSupplier(): void{
+    if(this.selectedSupplier){
+      this.newSupplier = {...this.selectedSupplier};
+      this.status = true;
+      this.selectedSupplier = null;
+    }
+  }
+
   getSuppliers(): void{
     this.supplierService.getSuppliers().subscribe( (supplierList) =>{
       this.suppliers = supplierList;
