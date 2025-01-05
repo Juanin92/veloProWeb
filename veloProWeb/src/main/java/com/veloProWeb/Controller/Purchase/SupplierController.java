@@ -35,4 +35,17 @@ public class SupplierController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
+
+    @PutMapping
+    public ResponseEntity<Map<String, String>> updateSupplier(@RequestBody Supplier supplier){
+        Map<String, String> response = new HashMap<>();
+        try{
+            supplierService.updateSupplier(supplier);
+            response.put("message","Datos actualizado exitosamente!");
+            return ResponseEntity.ok(response);
+        }catch (IllegalArgumentException e){
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
 }
