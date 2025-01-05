@@ -65,12 +65,14 @@
                     <td [ngStyle]="{'background-color': statusColor(product.statusProduct)}"></td>
                     <td>
                         <div>
-                           <button class="btn btn-sm btn-warning m-1" data-bs-toggle="modal"
+                           <button *ngIf="product.statusProduct === statusProduct.AVAILABLE || product.statusProduct === statusProduct.UNAVAILABLE" class="btn btn-sm btn-warning m-1" data-bs-toggle="modal"
                                 data-bs-target="#updateProduct" ><img
                                     src="/assets/icons/btnEditIcon.png" alt="editar" width="30" height="30"
                                     class="img-fluid"></button>
-                            <button class="btn btn-sm btn-danger m-1"><img src="/assets/icons/btnDeleteIcon.png"
+                            <button *ngIf="product.statusProduct === statusProduct.UNAVAILABLE"  class="btn btn-sm btn-danger m-1"><img src="/assets/icons/btnDeleteIcon.png"
                                     alt="borrar" width="30" height="30" class="img-fluid"></button>
+                            <button *ngIf="product.statusProduct === statusProduct.DISCONTINUED" class="btn btn-sm m-1"><img src="/assets/icons/iconOn.png"
+                                    alt="activar" width="30" height="30" class="img-fluid"></button>
                         </div>
                     </td>
                 </tr>

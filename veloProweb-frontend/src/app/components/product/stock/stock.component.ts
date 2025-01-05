@@ -8,6 +8,7 @@ import { ProductHelperService } from '../../../services/Product/product-helper.s
 import { UpdateProductComponent } from "../update-product/update-product.component";
 import { AddCategoriesComponent } from "../add-categories/add-categories.component";
 import { Router } from '@angular/router';
+import { StatusProduct } from '../../../models/enum/status-product';
 
 @Component({
   selector: 'app-stock',
@@ -22,6 +23,7 @@ export class StockComponent implements OnInit{
   filteredProducts: Product[] = [];
   selectedProduct: Product;
   textFilter: string = '';
+  statusProduct = StatusProduct;
 
   constructor(
     private stockService: ProductService,
