@@ -21,8 +21,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -107,5 +106,34 @@ public class SupplierControllerTest {
         Supplier supplier = supplierArgumentCaptor.getValue();
         assertEquals(1L, supplier.getId());
         assertEquals("Samsung", supplier.getName());
+    }
+
+    //Prueba para actualizar datos de un proveedor
+    @Test
+    public void updateSupplier_valid() throws Exception {
+        mockMvc.perform(put("/proveedores")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\": 1, \"email\": \"example@gmail.com\", \"phone\": \"+569 12345777\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value( "Datos actualizado exitosamente!"));
+
+        ArgumentCaptor<Supplier> supplierArgumentCaptor = ArgumentCaptor.forClass(Supplier.class);
+        verify(supplierService, times(1)).updateSupplier(supplierArgumentCaptor.capture());
+        Supplier supplier = supplierArgumentCaptor.getValue();
+        assertEquals(1L, supplier.getId());
+        assertEquals("example@gmail.com", supplier.getEmail());
+        assertEquals("+569 12345777", supplier.getPhone());
+    }
+    @Test
+    public void updateSupplier_invalidNull() throws Exception {
+        doThrow(new IllegalArgumentException("Debe seleccionar un proveedor para actualizar sus datos"))
+                .when(supplierService).updateSupplier(any(Supplier.class));
+        mockMvc.perform(put("/proveedores")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Debe seleccionar un proveedor para actualizar sus datos"));
+
+        verify(supplierService, times(1)).updateSupplier(any(Supplier.class));
     }
 }
