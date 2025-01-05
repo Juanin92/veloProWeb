@@ -43,6 +43,31 @@ public class SupplierService implements ISupplierService {
     }
 
     /**
+     * Actualiza los datos de un proveedor
+     * Se válida que el proveedor no sea nulo, si no lanzara una excepción
+     * Se válida que el email siempre un valor predeterminado si es nulo o está vacío
+     * Se válida todos los datos del proveedor sean correctos
+     * @param supplier - Objeto que contiene los valores necesarios
+     */
+    @Override
+    public void updateSupplier(Supplier supplier) {
+        if (supplier == null) {
+            throw new IllegalArgumentException("Debe seleccionar un proveedor para actualizar sus datos");
+        } else{
+            if (supplier.getEmail() == null || supplier.getEmail().isEmpty()) {
+                supplier.setEmail("x@x.xxx");
+            }
+            validator.validate(supplier);
+            supplier.setId(supplier.getId());
+            supplier.setEmail(supplier.getEmail());
+            supplier.setName(supplier.getName());
+            supplier.setRut(supplier.getRut());
+            supplier.setPhone(supplier.getPhone());
+            supplierRepo.save(supplier);
+        }
+    }
+
+    /**
      * Obtiene el registro de todos los proveedores
      * @return - Lista con los proveedores encontrados
      */

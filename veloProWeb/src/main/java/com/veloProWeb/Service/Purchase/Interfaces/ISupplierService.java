@@ -7,5 +7,6 @@ import java.util.List;
 public interface ISupplierService {
 
     void createSupplier(Supplier supplier);
+    void updateSupplier(Supplier supplier);
     List<Supplier> getAll();
 }
