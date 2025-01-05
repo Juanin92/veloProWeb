@@ -52,6 +52,27 @@ public class SupplierServiceTest {
         verify(repo, never()).save(supplier);
     }
 
+    //Prueba para actualizar un proveedor
+    @Test
+    public void updateSupplier_valid(){
+        supplier.setEmail("example@gmail.com");
+        supplier.setPhone("+569 12345777");
+        service.updateSupplier(supplier);
+
+        assertEquals("example@gmail.com", supplier.getEmail());
+        assertEquals("+569 12345777", supplier.getPhone());
+        verify(validator).validate(supplier);
+        verify(repo).save(supplier);
+    }
+    @Test
+    public void updateSupplier_invalidNull(){
+        supplier = null;
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> service.updateSupplier(supplier));
+        assertEquals("Debe seleccionar un proveedor para actualizar sus datos", exception.getMessage());
+        verify(validator, never()).validate(supplier);
+        verify(repo, never()).save(supplier);
+    }
+
     //Prueba para obtener todos los proveedores
     @Test
     public void getAll_valid(){
