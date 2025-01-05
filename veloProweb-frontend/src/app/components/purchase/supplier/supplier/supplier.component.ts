@@ -19,6 +19,7 @@ export class SupplierComponent implements OnInit{
   newSupplier: Supplier;
   selectedSupplier: Supplier | null = null;
   status: boolean = false;
+  updateStatus: boolean = false;
   validator = SupplierValidator;
 
   constructor(
@@ -44,17 +45,27 @@ export class SupplierComponent implements OnInit{
         const message = error.error.error;
         console.error('Error al agregar el proveedor:', error);
         this.notification.showErrorToast(`Error al agregar proveedor \n${message}`, 'top', 5000);
-      })
+      });
     }else {
       this.notification.showWarning('Formulario incompleto', 'Por favor, complete correctamente todos los campos obligatorios.');
     }
   }
 
   updateSupplier(): void{
-    if(this.selectedSupplier){
-      this.newSupplier = {...this.selectedSupplier};
-      this.status = true;
-      this.selectedSupplier = null;
+    if (this.validator.validateForm(this.newSupplier)) {
+      this.supplierService.updateSupplier(this.newSupplier).subscribe((response) => {
+        console.log('Datos actualizados exitosamente:', response);
+        this.notification.showSuccessToast(`¡${this.newSupplier.name} fue actualizado exitosamente!`, 'top', 3000);
+          this.initializeSupplier();
+          this.status = false;
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
+      }, (error) =>{
+        const message = error.error.error;
+        console.error('Error al actualizar el proveedor:', error);
+        this.notification.showErrorToast(`Error al actualizar proveedor \n${message}`, 'top', 5000);
+      });
     }
   }
 
@@ -73,8 +84,18 @@ export class SupplierComponent implements OnInit{
 
   openFormat(statusClick: boolean): void{
     this.status = statusClick;
+    this.updateStatus = false;
     this.selectedSupplier = null;
     this.newSupplier = this.initializeSupplier();
+  }
+
+  openUpdateForm(): void{
+    if(this.selectedSupplier){
+      this.newSupplier = {...this.selectedSupplier};
+      this.status = true;
+      this.updateStatus = true;
+      this.selectedSupplier = null;
+    }
   }
 
   initializeSupplier(): Supplier{

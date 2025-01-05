@@ -11,7 +11,7 @@ export class SupplierValidator {
     static isFieldValid(supplier: Supplier, fieldName: keyof Supplier): boolean{
         const value = supplier[fieldName];
         if (fieldName === 'name') {
-            return value !== null && typeof value === 'string' && value.trim().length > 3;
+            return value !== null && typeof value === 'string' && value.trim().length > 2;
         }
         if (fieldName === 'rut') {
             return value !== null && typeof value === 'string' && /^\d{7,8}-\d|[kK]$$/.test(value);
