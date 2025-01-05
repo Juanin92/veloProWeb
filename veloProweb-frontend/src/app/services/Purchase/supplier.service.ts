@@ -28,4 +28,13 @@ export class SupplierService {
   createSupplier(supplier: Supplier): Observable<{message: string}>{
     return this.http.post<{message: string}>(`${this.apiUrl}`, supplier);
   }
+
+  /**
+   * Actualizar un proveedor realizando una petición PUT a la API
+   * @param supplier - Proveedor por actualizar
+   * @returns - Observable emite un mensaje de confirmación o error
+   */
+  updateSupplier(supplier: Supplier): Observable<{message: string}>{
+    return this.http.put<{message: string}>(`${this.apiUrl}`, supplier);
+  }
 }
