@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, EventEmitter, OnInit, output, Output} from '@angular/core';
 import { Product } from '../../../models/Entity/Product/product.model';
 import { ProductValidator } from '../../../validation/product-validator';
 import { ProductService } from '../../../services/Product/product.service';
@@ -34,6 +34,7 @@ export class AddProductComponent implements OnInit {
   unitList: UnitProductModel[] = [];
   categoryList: Category[] = [];
   subcategoryList: Subcategory[] = [];
+  @Output() productAdded = new EventEmitter<void>(); 
 
   constructor(
     private productService: ProductService,
@@ -127,9 +128,7 @@ export class AddProductComponent implements OnInit {
         console.log("Producto creado exitosamente! ", this.newProduct);
         this.notification.showSuccessToast("Producto creado exitosamente!", 'top', 3000);
         this.resetProductForm();
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
+        this.productAdded.emit();
       }, (error) => {
         const message = error.error.message;
           console.error('Error:', error);
