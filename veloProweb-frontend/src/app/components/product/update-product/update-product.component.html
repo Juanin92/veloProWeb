@@ -1,70 +1,147 @@
-<div class="modal fade" id="updateProduct" tabindex="-1" aria-labelledby="updateProduct" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header text-center w-100">
-                <h1 class="modal-title fs-3 w-100">Registro de Productos</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div
+  class="modal fade"
+  id="updateProduct"
+  tabindex="-1"
+  aria-labelledby="updateProduct"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header text-center w-100">
+        <h1 class="modal-title fs-3 w-100">Registro de Productos</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div>
+            <div class="d-flex flex-lg-row flex-column justify-content-between">
+              <div class="text-center">
+                <label class="fw-bold fs-5">Marca</label>
+                <p>{{ selectedProduct.brand.name }}</p>
+              </div>
+              <div class="text-center">
+                <label class="fw-bold fs-5">Categoría</label>
+                <p>{{ selectedProduct.category.name }}</p>
+              </div>
+              <div class="text-center">
+                <label class="fw-bold fs-5">Subcategoría</label>
+                <p>{{ selectedProduct.subcategoryProduct.name }}</p>
+              </div>
+              <div class="text-center">
+                <label class="fw-bold fs-5">Unidad de medida</label>
+                <p>{{ selectedProduct.unit.nameUnit }}</p>
+              </div>
             </div>
-            <div class="modal-body">
-                <div class="d-flex flex-lg-row flex-column justify-content-between">
-                    <div class="text-center">
-                        <label class="fw-bold fs-5">Marca</label>
-                        <p>{{selectedProduct.brand.name}}</p>
-                    </div>
-                    <div class="text-center">
-                        <label class="fw-bold fs-5">Categoría</label>
-                        <p>{{selectedProduct.category.name}}</p>
-                    </div>
-                    <div class="text-center">
-                        <label class="fw-bold fs-5">Subcategoría</label>
-                        <p>{{selectedProduct.subcategoryProduct.name}}</p>
-                    </div>
-                    <div class="text-center">
-                        <label class="fw-bold fs-5">Unidad de medida</label>
-                        <p>{{selectedProduct.unit.nameUnit}}</p>
-                    </div>
+            <form>
+              <div class="form-floating mb-3">
+                <input
+                  type="text"
+                  class="form-control w-75"
+                  id="description"
+                  placeholder="Ingrese una descripción general"
+                  name="description"
+                  [(ngModel)]="selectedProduct.description"
+                  [ngClass]="{
+                    'is-invalid': !validator.isFieldValid(
+                      selectedProduct,
+                      'description'
+                    )
+                  }"
+                  required
+                />
+                <label for="description" class="form-label">Descripción</label>
+                <div
+                  *ngIf="!validator.isFieldValid(selectedProduct, 'description')"
+                  class="invalid-feedback"
+                >
+                  Debe ingresar una descripción del producto
                 </div>
-                <form>
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control w-75" id="description"
-                            placeholder="Ingrese una descripción general" name="description"
-                            [(ngModel)]="selectedProduct.description"
-                            [ngClass]="{'is-invalid': !validator.isFieldValid(selectedProduct, 'description')}" required />
-                        <label for="description" class="form-label">Descripción</label>
-                        <div *ngIf="!validator.isFieldValid(selectedProduct,'description')" class="invalid-feedback">
-                            Debe ingresar una descripción del producto
-                        </div>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input type="number" class="form-control w-50" id="stock" name="stock" placeholder="Ingrese el stock"
-                            [(ngModel)]="selectedProduct.stock"
-                            [ngClass]="{'is-invalid': !validator.validateStock(selectedProduct.stock)}" required />
-                        <label for="stock" class="form-label">Stock</label>
-                        <div *ngIf="!validator.validateStock(selectedProduct.stock)" class="invalid-feedback">
-                            Debe ingresar una cantidad de productos
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-start">
-                        <div class="form-floating mb-3 w-50">
-                            <input type="number" class="form-control" id="salePrice" name="salePrice" placeholder="Ingrese el precio de venta"
-                                [(ngModel)]="selectedProduct.salePrice"
-                                [ngClass]="{'is-invalid': !validator.validateSalePrice(selectedProduct.salePrice)}" required/>
-                            <label for="salePrice" class="form-label">Precio de Venta</label>
-                            <div *ngIf="!validator.validateSalePrice(selectedProduct.salePrice)" class="invalid-feedback">
-                                Debe ingresar monto para venta del producto
-                            </div>
-                        </div>
-                        <div class="ms-3">
-                            <label class="fw-bold">Precio de Compra</label>
-                            <p class="text-muted mb-0">{{selectedProduct.buyPrice | currency: 'CLP': '$':'1.0-0':'es-CL'}}</p>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-                <button type="submit" class="btn btn-warning">Actualizar</button>
+              </div>
+              <div class="form-floating mb-3">
+                <input
+                  type="number"
+                  class="form-control w-50"
+                  id="stock"
+                  name="stock"
+                  placeholder="Ingrese el stock"
+                  [(ngModel)]="selectedProduct.stock"
+                  [ngClass]="{
+                    'is-invalid': !validator.validateStock(selectedProduct.stock)
+                  }"
+                  required
+                />
+                <label for="stock" class="form-label">Stock</label>
+                <div
+                  *ngIf="!validator.validateStock(selectedProduct.stock)"
+                  class="invalid-feedback"
+                >
+                  Debe ingresar una cantidad de productos
+                </div>
+              </div>
+              <div class="d-flex align-items-start">
+                <div class="form-floating mb-3 w-50">
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="salePrice"
+                    name="salePrice"
+                    placeholder="Ingrese el precio de venta"
+                    [(ngModel)]="selectedProduct.salePrice"
+                    [ngClass]="{
+                      'is-invalid': !validator.validateSalePrice(
+                        selectedProduct.salePrice
+                      )
+                    }"
+                    required
+                  />
+                  <label for="salePrice" class="form-label">Precio de Venta</label>
+                  <div
+                    *ngIf="!validator.validateSalePrice(selectedProduct.salePrice)"
+                    class="invalid-feedback"
+                  >
+                    Debe ingresar monto para venta del producto
+                  </div>
+                </div>
+                <div class="ms-3">
+                  <label class="fw-bold">Precio de Compra</label>
+                  <p class="text-muted mb-0">
+                    {{
+                      selectedProduct.buyPrice
+                        | currency : "CLP" : "$" : "1.0-0" : "es-CL"
+                    }}
+                  </p>
+                </div>
+              </div>
+            </form>
+        </div>
+        <div *ngIf="selectedProduct.stock < 0" class="confirmation-container">
+            <h2>Haz cambiado el stock del producto?</h2>
+            <p>Cantidad Anterior: {{selectedProduct.stock}}</p>
+            <p>Cantidad Actual: 23</p>
+            <form>
+                <label class="fw-bolder mb-2">Ingrese un comentario por el cambio realizado en el stock</label>
+                <div class="form-floating mb-3 ms-4">
+                    <input type="text" class="form-control w-75" id="comment" placeholder="Ingrese comentario por el cambio"
+                        name="comment" required />
+                    <label for="comment" class="form-label">Comentario</label>
+                </div>
+            </form>
+            <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success">Confirmar</button>
             </div>
         </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button type="submit" class="btn btn-warning">Actualizar</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+          Cancelar
+        </button>
+      </div>
     </div>
+  </div>
 </div>
