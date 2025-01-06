@@ -72,9 +72,7 @@ export class CustomerComponent implements OnInit {
           this.customerService.deleteCustomer(this.selectedCustomer!).subscribe((response) => {
             console.log('Cliente eliminado exitosamente:', response);
             this.notification.showSuccessToast(`Se Elimino el cliente ${this.selectedCustomer!.name} ${this.selectedCustomer!.surname} correctamente`, 'top', 3000);
-            setTimeout(() => {
-              window.location.reload();
-            }, 3000);
+            this.getAllCustomer();
           }, (error) => {
             const message = error.error.error;
             console.log('Error al eliminar cliente: ', message);

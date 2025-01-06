@@ -73,9 +73,7 @@ export class StockComponent implements OnInit {
           this.stockService.deleteProduct(this.selectedProduct).subscribe((response) => {
             console.log('Producto eliminado exitosamente:', response);
             this.notification.showSuccessToast(`Se Elimino el producto ${this.selectedProduct.description} correctamente`, 'top', 3000);
-            setTimeout(() => {
-              window.location.reload();
-            }, 3000);
+            this.getProducts();
           }, (error) => {
             const message = error.error.error;
             console.log('Error al eliminar producto: ', message);
@@ -97,9 +95,7 @@ export class StockComponent implements OnInit {
       this.stockService.activeProduct(this.selectedProduct).subscribe((response) => {
         console.log("Producto Activado");
         this.notification.showSuccessToast(`Se activo nuevamente ${this.selectedProduct.description}.`, 'top', 3000);
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
+        this.getProducts();
       }, (error) => {
         const message = error.error.error;
         console.log('Error al activar producto: ', message);
