@@ -9,6 +9,7 @@ import { UpdateProductComponent } from "../update-product/update-product.compone
 import { AddCategoriesComponent } from "../add-categories/add-categories.component";
 import { Router } from '@angular/router';
 import { StatusProduct } from '../../../models/enum/status-product';
+import { NotificationService } from '../../../utils/notification-service.service';
 
 @Component({
   selector: 'app-stock',
@@ -17,7 +18,7 @@ import { StatusProduct } from '../../../models/enum/status-product';
   templateUrl: './stock.component.html',
   styleUrl: './stock.component.css'
 })
-export class StockComponent implements OnInit{
+export class StockComponent implements OnInit {
 
   products: Product[] = [];
   filteredProducts: Product[] = [];
@@ -28,9 +29,10 @@ export class StockComponent implements OnInit{
   constructor(
     private stockService: ProductService,
     private helper: ProductHelperService,
-    private router: Router){
-      this.selectedProduct = helper.createEmptyProduct();
-    }
+    private router: Router,
+    private notification: NotificationService) {
+    this.selectedProduct = helper.createEmptyProduct();
+  }
 
   /**
    * Inicializa el componente cargando la lista de productos
@@ -43,8 +45,8 @@ export class StockComponent implements OnInit{
    * Obtiene una lista de todos los productos.
    * asigna una lista con productos a la lista products y filteredProducts
    */
-  getProducts(): void{
-    this.stockService.getProducts().subscribe((list) =>{
+  getProducts(): void {
+    this.stockService.getProducts().subscribe((list) => {
       this.products = list;
       this.filteredProducts = list;
     }, (error) => {
@@ -53,22 +55,76 @@ export class StockComponent implements OnInit{
   }
 
   /**
+   * Elimina (Desactivar) un producto seleccionado 
+   * Valida si el producto no es valor nulo, si es correcto
+   * lanza una confirmación antes de eliminar al cliente
+   * @param product - Producto seleccionado
+   */
+  deleteProduct(product: Product): void {
+    this.selectedProduct = product;
+    if (this.selectedProduct) {
+      this.notification.showConfirmation(
+        "¿Estas seguro?",
+        "No podrás revertir la acción!",
+        "Si eliminar!",
+        "Cancelar"
+      ).then((result) => {
+        if (result.isConfirmed) {
+          this.stockService.deleteProduct(this.selectedProduct).subscribe((response) => {
+            console.log('Producto eliminado exitosamente:', response);
+            this.notification.showSuccessToast(`Se Elimino el producto ${this.selectedProduct.description} correctamente`, 'top', 3000);
+            setTimeout(() => {
+              window.location.reload();
+            }, 3000);
+          }, (error) => {
+            const message = error.error.error;
+            console.log('Error al eliminar producto: ', message);
+            this.notification.showErrorToast(`Error al eliminar producto \n${message}`, 'top', 5000);
+          });
+        }
+      })
+    }
+  }
+
+  /**
+   * Activa el estado de un producto seleccionado
+   * Valida si producto no es nulo y si es correcto, llama al servicio para activar al producto
+   * @param product - Producto seleccionado
+   */
+  activateProduct(product: Product): void {
+    this.selectedProduct = product;
+    if (this.selectedProduct) {
+      this.stockService.activeProduct(this.selectedProduct).subscribe((response) => {
+        console.log("Producto Activado");
+        this.notification.showSuccessToast(`Se activo nuevamente ${this.selectedProduct.description}.`, 'top', 3000);
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+      }, (error) => {
+        const message = error.error.error;
+        console.log('Error al activar producto: ', message);
+        this.notification.showErrorToast(`Error al activar el producto \n${message}`, 'top', 5000);
+      });
+    }
+  }
+
+  /**
    * Abrir modal con una copia de un producto seleccionado
    * @param product - producto seleccionado
    */
   openModalProduct(product: Product): void {
-      if (product) {
-        this.selectedProduct = { ...product };
-      } else {
-        console.error('No se pudo abrir modal, el producto no esta definido');
-      }
+    if (product) {
+      this.selectedProduct = { ...product };
+    } else {
+      console.error('No se pudo abrir modal, el producto no esta definido');
     }
+  }
 
   /**
    * Retorna el color asociado con el estado del producto.
    * @param status - El estado del producto.
    * @returns - El color correspondiente al estado del producto.
-   */  
+   */
   statusColor(status: string): string {
     switch (status) {
       case 'DISPONIBLE': return 'rgb(40, 238, 40)';
@@ -78,7 +134,7 @@ export class StockComponent implements OnInit{
     }
   }
 
-  navigateToSupplier(): void{
+  navigateToSupplier(): void {
     this.router.navigate(['/proveedores']);
   }
 
