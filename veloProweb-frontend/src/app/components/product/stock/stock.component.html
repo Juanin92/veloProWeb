@@ -116,7 +116,8 @@
               <button
                 *ngIf="
                   product.statusProduct === statusProduct.AVAILABLE ||
-                  product.statusProduct === statusProduct.UNAVAILABLE
+                  product.statusProduct === statusProduct.UNAVAILABLE && 
+                  product.buyPrice !== 0
                 "
                 class="btn btn-sm btn-warning m-1"
                 data-bs-toggle="modal"
