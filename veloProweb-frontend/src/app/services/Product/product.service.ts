@@ -28,4 +28,31 @@ export class ProductService {
   createProduct(product: Product): Observable<{message: string}>{
     return this.httpClient.post<{message: string}>(`${this.apiUrl}`,product);
   }
+
+  /**
+   * Actualiza un producto realizando una petición PUT a la API
+   * @param product - Producto a actualizar
+   * @returns - Observable emite un mensaje de confirmación o error
+   */
+  updateProduct(product: Product): Observable<{message: string}>{
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}`, product);
+  }
+
+  /**
+   * Eliminar un producto realizando una petición PUT a la API
+   * @param product - Producto a eliminar
+   * @returns - Observable emite un mensaje de confirmación o error
+   */
+  deleteProduct(product: Product): Observable<{message: string}>{
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/eliminar_producto`, product);
+  }
+
+  /**
+   * Activa un producto realizando una petición PUT a la API
+   * @param product - Producto a activar
+   * @returns - Observable emite un mensaje de confirmación o error
+   */
+  activeProduct(product: Product): Observable<{message: string}>{
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/activar_producto`, product);
+  }
 }
