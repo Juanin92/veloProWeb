@@ -2,6 +2,7 @@ package com.veloProWeb.Controller.Product;
 
 import com.veloProWeb.Exceptions.GlobalExceptionHandler;
 import com.veloProWeb.Model.Entity.Product.*;
+import com.veloProWeb.Model.Enum.StatusProduct;
 import com.veloProWeb.Service.Product.Interfaces.IProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,9 +27,9 @@ import java.util.Map;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -43,22 +44,8 @@ public class StockControllerTest {
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(stockController).setControllerAdvice(new GlobalExceptionHandler()).build();
         product = new Product();
-    }
-
-    //Pruebas para obtener una lista de todos los productos
-    @Test
-    public void getListProductsNull_valid() throws Exception {
-        when(productService.getAll()).thenReturn(Collections.emptyList());
-        mockMvc.perform(get("/stock"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$").isEmpty());
-        verify(productService, times(1)).getAll();
-    }
-    @Test
-    public void getListProductsData_valid() throws Exception {
-        product = new Product();
         product.setId(1L);
+        product.setStatusProduct(StatusProduct.NODISPONIBLE);
 
         BrandProduct brand = new BrandProduct();
         brand.setId(1L);
@@ -76,7 +63,20 @@ public class StockControllerTest {
         CategoryProduct category = new CategoryProduct();
         category.setName("Categoría");
         product.setCategory(category);
+    }
 
+    //Pruebas para obtener una lista de todos los productos
+    @Test
+    public void getListProductsNull_valid() throws Exception {
+        when(productService.getAll()).thenReturn(Collections.emptyList());
+        mockMvc.perform(get("/stock"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty());
+        verify(productService, times(1)).getAll();
+    }
+    @Test
+    public void getListProductsData_valid() throws Exception {
         List<Product> products = Collections.singletonList(product);
         when(productService.getAll()).thenReturn(products);
 
@@ -104,7 +104,7 @@ public class StockControllerTest {
 
     //Prueba para crear un nuevo producto
     @Test
-    public void createBrand_valid() throws Exception {
+    public void createProduct_valid() throws Exception {
         mockMvc.perform(post("/stock")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"id\": \"1\", \"description\": \"Samsung\"}"))
@@ -118,11 +118,10 @@ public class StockControllerTest {
         assertEquals("Samsung", product.getDescription());
     }
     @Test
-    public void createBrand_invalidExistingUnit() throws Exception {
-        product.setId(1L);
+    public void createProduct_invalidExisting() throws Exception {
         product.setDescription("Samsung");
         doThrow(new IllegalArgumentException("Producto ya existe registro"))
-                .when(productService).create(product);
+                .when(productService).create(any(Product.class));
         mockMvc.perform(post("/stock")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"id\": \"1\", \"description\": \"Samsung\"}"))
@@ -134,5 +133,67 @@ public class StockControllerTest {
         Product product = productArgumentCaptor.getValue();
         assertEquals(1L, product.getId());
         assertEquals("Samsung", product.getDescription());
+    }
+
+    //Prueba para actualizar un producto
+    @Test
+    public void updateProduct_validWithStockValue() throws Exception {
+        mockMvc.perform(put("/stock")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\": \"1\", \"description\": \"Asus\", \"stock\": \"10\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value( "Producto actualizado exitosamente!"));
+
+        ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
+        verify(productService, times(1)).update(productArgumentCaptor.capture());
+        Product product = productArgumentCaptor.getValue();
+        assertEquals(1L, product.getId());
+        assertEquals("Asus", product.getDescription());
+        assertEquals(10, product.getStock());
+    }
+    @Test
+    public void updateProduct_validNonStockValue() throws Exception {
+        mockMvc.perform(put("/stock")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\": \"1\", \"description\": \"Asus\"}, \"stock\": \"0\""))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value( "Producto actualizado exitosamente!"));
+
+        ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
+        verify(productService, times(1)).update(productArgumentCaptor.capture());
+        Product product = productArgumentCaptor.getValue();
+        assertEquals(1L, product.getId());
+        assertEquals("Asus", product.getDescription());
+        assertEquals(0, product.getStock());
+    }
+
+    //Prueba para eliminar un producto
+    @Test
+    public void deleteProduct_valid() throws Exception {
+        mockMvc.perform(put("/stock/eliminar_producto")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\": \"1\", \"description\": \"Asus\", \"status\": \"true\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value( "Producto eliminado exitosamente!"));
+
+        ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
+        verify(productService, times(1)).delete(productArgumentCaptor.capture());
+        Product product = productArgumentCaptor.getValue();
+        assertEquals(1L, product.getId());
+    }
+
+    //Prueba para activar un producto
+    @Test
+    public void activeProduct_valid() throws Exception {
+        mockMvc.perform(put("/stock/activar_producto")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\": \"1\", \"description\": \"Asus\", \"status\": \"false\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value( "Producto activado exitosamente!"));
+
+        ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
+        verify(productService, times(1)).active(productArgumentCaptor.capture());
+        Product product = productArgumentCaptor.getValue();
+        assertEquals(1L, product.getId());
     }
 }
