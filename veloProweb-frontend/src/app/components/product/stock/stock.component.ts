@@ -56,7 +56,7 @@ export class StockComponent implements OnInit{
    * Abrir modal con una copia de un producto seleccionado
    * @param product - producto seleccionado
    */
-  openModalCustomer(product: Product): void {
+  openModalProduct(product: Product): void {
       if (product) {
         this.selectedProduct = { ...product };
       } else {

@@ -22,21 +22,9 @@ export class UpdateProductComponent {
   constructor(
     private productService: ProductService,
     private helper: ProductHelperService,
-    private notification: NotificationService){
-      this.selectedProduct = helper.createEmptyProduct();
-      // this.selectedProduct = {
-      //         id: 0,
-      //         description: '',
-      //         salePrice: 0,
-      //         buyPrice: 0,
-      //         stock: 0,
-      //         status: false,
-      //         statusProduct: StatusProduct.UNAVAILABLE,
-      //         brand: '',
-      //         unit: '',
-      //         subcategoryProduct: '',
-      //         category: ''
-      //       }
-    }
+    private notification: NotificationService) {
+    this.selectedProduct = helper.createEmptyProduct();
+  }
 
+  
 }

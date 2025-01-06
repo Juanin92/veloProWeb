@@ -68,7 +68,7 @@
                            <button *ngIf="product.statusProduct === statusProduct.AVAILABLE || product.statusProduct === statusProduct.UNAVAILABLE" class="btn btn-sm btn-warning m-1" data-bs-toggle="modal"
                                 data-bs-target="#updateProduct" ><img
                                     src="/assets/icons/btnEditIcon.png" alt="editar" width="30" height="30"
-                                    class="img-fluid"></button>
+                                    class="img-fluid" (click)="openModalProduct(product)"></button>
                             <button *ngIf="product.statusProduct === statusProduct.UNAVAILABLE"  class="btn btn-sm btn-danger m-1"><img src="/assets/icons/btnDeleteIcon.png"
                                     alt="borrar" width="30" height="30" class="img-fluid"></button>
                             <button *ngIf="product.statusProduct === statusProduct.DISCONTINUED" class="btn btn-sm m-1"><img src="/assets/icons/iconOn.png"
@@ -83,6 +83,6 @@
 <!-- Modal Add Product -->
 <app-add-product></app-add-product>
 <!-- Modal Update Product -->
-<!-- <app-update-product [selectedProduct]="selectedProduct"></app-update-product> -->
+<app-update-product [selectedProduct]="selectedProduct"></app-update-product>
 <!-- Modal Add Categories and Extras -->
 <app-add-categories></app-add-categories>
