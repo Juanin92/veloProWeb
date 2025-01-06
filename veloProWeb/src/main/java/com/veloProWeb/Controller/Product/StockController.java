@@ -13,7 +13,8 @@ import java.util.Map;
 
 /**
  * Controlador REST para gestionar operaciones relacionadas con los productos.
- * Este controlador proporciona endpoints para obtener todos los productos y crear nuevos productos.
+ * Este controlador proporciona endpoints para obtener todos los productos, crear, actualizar,
+ * eliminar y activar nuevos productos.
  */
 @RestController
 @RequestMapping("/stock")
@@ -45,6 +46,60 @@ public class StockController {
             return ResponseEntity.ok(response);
         }catch (IllegalArgumentException e){
             response.put("message",e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    /**
+     * Actualizar un producto seleccionado
+     * @param product - Producto con los valores actualizar
+     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
+     */
+    @PutMapping()
+    public ResponseEntity<Map<String, String>> updateProduct(@RequestBody Product product){
+        Map<String, String> response = new HashMap<>();
+        try{
+            productService.update(product);
+            response.put("message", "Producto actualizado exitosamente!");
+            return ResponseEntity.ok(response);
+        }catch (IllegalArgumentException e){
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    /**
+     * Eliminar un producto seleccionado
+     * @param product - Producto seleccionado para eliminar
+     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
+     */
+    @PutMapping("/eliminar_producto")
+    public ResponseEntity<Map<String, String>> deleteProduct(@RequestBody Product product){
+        Map<String, String> response = new HashMap<>();
+        try{
+            productService.delete(product);
+            response.put("message", "Producto eliminado exitosamente!");
+            return ResponseEntity.ok(response);
+        }catch (IllegalArgumentException e){
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    /**
+     * Activar un producto seleccionado
+     * @param product - Producto seleccionado para activar
+     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
+     */
+    @PutMapping("/activar_producto")
+    public ResponseEntity<Map<String, String>> activeProduct(@RequestBody Product product){
+        Map<String, String> response = new HashMap<>();
+        try{
+            productService.active(product);
+            response.put("message", "Producto activado exitosamente!");
+            return ResponseEntity.ok(response);
+        }catch (IllegalArgumentException e){
+            response.put("message", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
