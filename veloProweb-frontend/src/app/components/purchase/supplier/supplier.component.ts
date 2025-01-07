@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { SupplierService } from '../../../../services/Purchase/supplier.service';
-import { Supplier } from '../../../../models/Entity/Purchase/supplier';
 import { CommonModule } from '@angular/common';
-import { SupplierValidator } from '../../../../validation/supplier-validator';
 import { FormsModule } from '@angular/forms';
-import { NotificationService } from '../../../../utils/notification-service.service';
+import { Supplier } from '../../../models/Entity/Purchase/supplier';
+import { SupplierValidator } from '../../../validation/supplier-validator';
+import { SupplierService } from '../../../services/Purchase/supplier.service';
+import { NotificationService } from '../../../utils/notification-service.service';
 
 @Component({
   selector: 'app-supplier',
