@@ -22,11 +22,14 @@
       <button
         type="button"
         class="btn btn-outline-light btn-lg"
-        (click)="navigateToSupplier()"
+        (click)="navigateToRoute('proveedor')"
       >
         <p class="fw-bold fs-3 m-0">Proveedor</p>
       </button>
-      <button type="button" class="btn btn-outline-light btn-lg me-2">
+      <button 
+        type="button" 
+        class="btn btn-outline-light btn-lg me-2"
+        (click)="navigateToRoute('compra')">
         <p class="fw-bold fs-3 m-0">Compras</p>
       </button>
     </div>

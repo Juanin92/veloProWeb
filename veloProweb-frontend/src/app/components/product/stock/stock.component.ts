@@ -130,8 +130,11 @@ export class StockComponent implements OnInit {
     }
   }
 
-  navigateToSupplier(): void {
-    this.router.navigate(['/proveedores']);
+  navigateToRoute(route: string): void {
+    switch(route){
+      case 'proveedor': this.router.navigate(['/proveedores']); break;
+      case 'compra': this.router.navigate(['/compras']); break;
+    }
   }
 
   /**
