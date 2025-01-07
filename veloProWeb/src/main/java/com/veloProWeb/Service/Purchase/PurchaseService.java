@@ -1,5 +1,6 @@
 package com.veloProWeb.Service.Purchase;
 
+import com.veloProWeb.Model.DTO.DetailPurchaseDTO;
 import com.veloProWeb.Model.Entity.Purchase.Purchase;
 import com.veloProWeb.Model.Entity.Purchase.Supplier;
 import com.veloProWeb.Repository.Purchase.PurchaseRepo;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class PurchaseService implements IPurchaseService {
@@ -34,5 +36,12 @@ public class PurchaseService implements IPurchaseService {
     @Override
     public Long totalPurchase() {
         return purchaseRepo.count();
+    }
+
+    @Override
+    public int totalPricePurchase(List<DetailPurchaseDTO> dto) {
+        return dto.stream()
+                .mapToInt(DetailPurchaseDTO::getTotal)
+                .sum();
     }
 }
