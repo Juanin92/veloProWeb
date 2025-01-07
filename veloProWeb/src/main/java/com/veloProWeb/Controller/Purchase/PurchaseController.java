@@ -35,12 +35,12 @@ public class PurchaseController {
         }
     }
 
-    @GetMapping("/total_Precio_Compras")
-    public ResponseEntity<Long> getTotalPricePurchase(){
-        try{
-            return ResponseEntity.ok(purchaseService.totalPricePurchase());
-        }catch (IllegalArgumentException e){
-            return ResponseEntity.badRequest().build();
-        }
-    }
+//    @GetMapping("/total_Precio_Compras")
+//    public ResponseEntity<Long> getTotalPricePurchase(){
+//        try{
+//            return ResponseEntity.ok(purchaseService.totalPricePurchase());
+//        }catch (IllegalArgumentException e){
+//            return ResponseEntity.badRequest().build();
+//        }
+//    }
 }
