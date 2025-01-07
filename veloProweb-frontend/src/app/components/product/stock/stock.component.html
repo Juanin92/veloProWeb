@@ -168,6 +168,6 @@
 <!-- Modal Add Product -->
 <app-add-product (productAdded)="getProducts()"></app-add-product>
 <!-- Modal Update Product -->
-<app-update-product [selectedProduct]="selectedProduct"></app-update-product>
+<app-update-product [selectedProduct]="selectedProduct" (productUpdated)="getProducts()"></app-update-product>
 <!-- Modal Add Categories and Extras -->
 <app-add-categories></app-add-categories>

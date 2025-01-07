@@ -17,7 +17,7 @@
         ></button>
       </div>
       <div class="modal-body">
-        <div>
+        <div *ngIf="!stockChanged">
             <div class="d-flex flex-lg-row flex-column justify-content-between">
               <div class="text-center">
                 <label class="fw-bold fs-5">Marca</label>
@@ -68,7 +68,7 @@
                   id="stock"
                   name="stock"
                   placeholder="Ingrese el stock"
-                  [(ngModel)]="selectedProduct.stock"
+                  [(ngModel)]="originalStock"
                   [ngClass]="{
                     'is-invalid': !validator.validateStock(selectedProduct.stock)
                   }"
@@ -118,27 +118,30 @@
               </div>
             </form>
         </div>
-        <div *ngIf="selectedProduct.stock < 0" class="confirmation-container">
-            <h2>Haz cambiado el stock del producto?</h2>
-            <p>Cantidad Anterior: {{selectedProduct.stock}}</p>
-            <p>Cantidad Actual: 23</p>
+        <div *ngIf="stockChanged" class="confirmation-container text-center">
+            <h2>¿Ha cambiado el stock del producto?</h2>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <p class="border border-danger p-2">Cantidad Anterior: {{originalStock}} unidades</p>
+                </div>
+                <div class="col-6">
+                    <p class="border border-danger p-2">Cantidad Actual: {{selectedProduct.stock}} unidades</p>
+                </div>
+            </div>
             <form>
-                <label class="fw-bolder mb-2">Ingrese un comentario por el cambio realizado en el stock</label>
+                <label class="fw-bolder mb-2">Por favor, describa brevemente el motivo de la actualización del stock.</label>
                 <div class="form-floating mb-3 ms-4">
-                    <input type="text" class="form-control w-75" id="comment" placeholder="Ingrese comentario por el cambio"
+                    <input type="text" class="form-control w-100" id="comment" placeholder="Ingrese comentario por el cambio"
                         name="comment" required />
                     <label for="comment" class="form-label">Comentario</label>
                 </div>
             </form>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success">Confirmar</button>
-            </div>
         </div>
       </div>
       <div class="modal-footer d-flex justify-content-center">
-        <button type="submit" class="btn btn-warning">Actualizar</button>
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+        <button *ngIf="!stockChanged" type="submit" class="btn btn-warning" (click)="stockChangeValidation(true)">Actualizar</button>
+        <button *ngIf="stockChanged" type="submit" class="btn btn-warning" (click)="updateProduct()">Confirmar</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="stockChangeValidation(false)">
           Cancelar
         </button>
       </div>
