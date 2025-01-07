@@ -1,5 +1,6 @@
 package com.veloProWeb.Service.Purchase;
 
+import com.veloProWeb.Model.DTO.DetailPurchaseDTO;
 import com.veloProWeb.Model.Entity.Purchase.Purchase;
 import com.veloProWeb.Model.Entity.Purchase.Supplier;
 import com.veloProWeb.Repository.Purchase.PurchaseRepo;
@@ -13,6 +14,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -44,7 +47,7 @@ public class PurchaseServiceTest {
     @Test
     public void save_valid(){
         purchase.setId(null);
-        purchaseService.save(LocalDate.now(),supplier,"Boleta","A001",1500, 20000);
+        purchaseService.createPurchase(LocalDate.now(),supplier,"Boleta","A001",1500, 20000);
         verify(validator).validate(purchase);
         verify(purchaseRepo).save(purchase);
     }
@@ -56,5 +59,30 @@ public class PurchaseServiceTest {
         Long totalPurchase =  purchaseService.totalPurchase();
         verify(purchaseRepo).count();
         assertEquals(1L, totalPurchase);
+    }
+
+    //Prueba para obtener el total monetario de una lista de DTO
+    @Test
+    public void totalPricePurchase_valid(){
+        DetailPurchaseDTO dto = new DetailPurchaseDTO();
+        dto.setIdProduct(1L);
+        dto.setBrand("Samsung");
+        dto.setDescription("phone");
+        dto.setPrice(25000);
+        dto.setTax(2500);
+        dto.setQuantity(1);
+        dto.setTotal(27500);
+
+        DetailPurchaseDTO dto2 = new DetailPurchaseDTO();
+        dto2.setIdProduct(1L);
+        dto2.setBrand("Samsung");
+        dto2.setDescription("tv");
+        dto2.setPrice(250000);
+        dto2.setTax(25000);
+        dto2.setQuantity(1);
+        dto2.setTotal(275000);
+        List<DetailPurchaseDTO> dtoList = Arrays.asList(dto,dto2);
+        int total = purchaseService.totalPricePurchase(dtoList);
+        assertEquals(302500, total);
     }
 }
