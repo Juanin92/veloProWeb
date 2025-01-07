@@ -57,7 +57,6 @@ export class UpdateProductComponent implements OnChanges{
         console.log('Se actualizo el producto: ', updatedProduct);
         this.notification.showSuccessToast(`Se actualizo el producto ${updatedProduct.description} correctamente`, 'top', 3000);
         this.productUpdated.emit();
-        this.selectedProduct = this.helper.createEmptyProduct();
         this.originalStock = this.selectedProduct.stock;
         this.stockChanged = false;
       }, (error) => {
