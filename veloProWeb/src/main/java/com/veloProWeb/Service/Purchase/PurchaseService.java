@@ -19,6 +19,7 @@ public class PurchaseService implements IPurchaseService {
     @Override
     public Purchase save(LocalDate date, Supplier supplier, String documentType, String document, int tax, int total) {
         Purchase purchase =  new Purchase();
+        purchase.setId(null);
         purchase.setDate(date);
         purchase.setSupplier(supplier);
         purchase.setDocumentType(documentType);
