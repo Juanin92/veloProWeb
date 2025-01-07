@@ -17,7 +17,7 @@ public class PurchaseService implements IPurchaseService {
     @Autowired private PurchaseValidator validator;
 
     @Override
-    public Purchase save(LocalDate date, Supplier supplier, String documentType, String document, int tax, int total) {
+    public Purchase createPurchase(LocalDate date, Supplier supplier, String documentType, String document, int tax, int total) {
         Purchase purchase =  new Purchase();
         purchase.setId(null);
         purchase.setDate(date);
