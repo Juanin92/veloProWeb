@@ -18,6 +18,13 @@ public class PurchaseDetailService implements IPurchaseDetailService {
 
     @Autowired private PurchaseDetailRepo purchaseDetailRepo;
 
+    /**
+     * Crea un nuevo detalle de compra.
+     * Inicializa y registra el detalle de compra en la BD
+     * @param dto - DTO que contiene los detalles de la compra
+     * @param purchase - Compra relacionada con el detalle
+     * @param product - Producto relacionado con la compra
+     */
     @Override
     public void createDetailPurchase(DetailPurchaseDTO dto, Purchase purchase, Product product) {
         PurchaseDetail purchaseDetail =  new PurchaseDetail();
@@ -30,11 +37,20 @@ public class PurchaseDetailService implements IPurchaseDetailService {
         purchaseDetailRepo.save(purchaseDetail);
     }
 
+    /**
+     * Obtiene el registro de todos los detalles de compras
+     * @return - Lista con los detalles de compras
+     */
     @Override
     public List<PurchaseDetail> getAll() {
         return purchaseDetailRepo.findAll();
     }
 
+    /**
+     * Crear un DTO con los detalles necesarios de un producto
+     * @param product - Producto relacionado con el detalle de compra
+     * @return - Retorna un objeto DTO con valores de producto o nulo sea el caso
+     */
     @Override
     public DetailPurchaseDTO createDTO(Product product) {
         if (product != null) {
@@ -51,6 +67,13 @@ public class PurchaseDetailService implements IPurchaseDetailService {
         return null;
     }
 
+    /**
+     * Elimina un producto de la lista de detalles de compras
+     * Busca un producto en la lista de detalles de compra por su ID y lo elimina si lo encuentra.
+     * @param id - Identificador del producto a borrar
+     * @param dtoList - lista de detalle de compra donde buscar
+     * @return - True si el producto fue encontrado y eliminado, false en caso contrario.
+     */
     @Override
     public boolean deleteProduct(Long id, List<DetailPurchaseDTO> dtoList) {
         Optional<DetailPurchaseDTO> optionalDto = dtoList.stream()
