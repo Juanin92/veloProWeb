@@ -37,16 +37,15 @@ export class UpdateProductComponent implements OnChanges{
   }
 
   stockChangeValidation(status: boolean): void{
-    console.log('Stock original: ', this.selectedProduct.stock);
-    console.log('Stock actual: ', this.originalStock);
+    if (!status) {
+      this.stockChanged = false;
+      return;
+    }
     if (this.selectedProduct.stock !== this.originalStock) {
       this.stockChanged = true;
     }
     if (!this.stockChanged) {
       this.updateProduct(); 
-    }
-    if (!status) {
-      this.stockChanged = false;
     }
   }
 
