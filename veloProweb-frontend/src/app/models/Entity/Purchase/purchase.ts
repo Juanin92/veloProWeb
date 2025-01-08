@@ -7,5 +7,5 @@ export interface Purchase {
     tax: number;
     purchaseTotal: number;
     date: string;
-    supplier: Supplier;
+    supplier: Supplier | null;
 }
