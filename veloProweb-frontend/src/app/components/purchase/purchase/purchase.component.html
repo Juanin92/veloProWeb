@@ -61,8 +61,8 @@
               'is-valid': validator.isFieldValid(purchase, 'supplier')
             }"
           >
-            <option selected disabled>Proveedor</option>
-            <option>Comercial Norte</option>
+            <option [ngValue]="null" selected disabled>Proveedor</option>
+            <option *ngFor="let supplier of supplierList" [ngValue]="supplier">{{supplier.name}}</option>
           </select>
           <div
             *ngIf="!validator.isFieldValid(purchase, 'supplier')"
@@ -138,7 +138,9 @@
   </div>
   <div class="d-flex flex-column text-center w-75">
     <div class="d-flex flex-row justify-content-around">
-      <button class="btn btn-info m-3">Buscar</button>
+        <button class="btn btn-outline-light m-2 mt-1 " data-bs-toggle="modal" data-bs-target="#selectProduct"><img
+            src="/assets/icons/iconFind.png" alt="Agregar_producto" width="40" height="40"
+            class="d-inline-block img-fluid"></button>
       <div class="row m-3 w-75 justify-content-between">
         <div class="col-6">
           <p class="fw-bold fs-4">Cantidad Producto: 1</p>
@@ -175,4 +177,45 @@
       </table>
     </div>
   </div>
+</div>
+<!-- MODAL SELECTING PRODUCTS -->
+<div class="modal fade" id="selectProduct" tabindex="-1" aria-labelledby="selectProduct" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body d-flex flex-column">
+             <div class="d-flex flex-row justify-content-around">
+                <p>busqueda rapida</p>
+                <p>boton 1</p>
+                <p>boton 2</p>
+                <p>Leyenda datos</p>
+             </div>
+            <div class="table-responsive text-center p-2 pt-4">
+                <table class="table table-hover">
+                    <thead class="table-info">
+                        <tr>
+                            <th scope="col" class="position-sticky top-0">#</th>
+                            <th scope="col" class="position-sticky top-0">Marca</th>
+                            <th scope="col" class="position-sticky top-0">Categoría</th>
+                            <th scope="col" class="position-sticky top-0">SubCategoría</th>
+                            <th scope="col" class="position-sticky top-0">Descripción</th>
+                            <th scope="col" class="position-sticky top-0">Un</th>
+                            <th scope="col" class="position-sticky top-0">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider text-center align-middle">
+                        <tr *ngFor="let product of productList">
+                            <th scope="row">{{product.id}}</th>
+                            <td>{{product.brand.name}}</td>
+                            <td>{{product.category.name}}</td>
+                            <td>{{product.subcategoryProduct.name}}</td>
+                            <td>{{product.description}}</td>
+                            <td>{{product.unit.nameUnit}}</td>
+                            <td>X</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            </div>
+        </div>
+    </div>
 </div>

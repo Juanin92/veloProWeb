@@ -14,13 +14,13 @@ export class PurchaseValidator {
             return value !== null && typeof value === 'string' && value.trim().length > 0;
         }
         if (fieldName === 'date') {
-            return value !== null;
+            return value !== null && typeof value === 'string' && value.trim().length > 0 ;
         }
         if (fieldName === 'supplier') {
             return value !== null;
         }
         if (fieldName === 'purchaseTotal') {
-            return value !== null && typeof value === 'number';
+            return value !== null && typeof value === 'number' && value !== 0;
         }
         return true;
     }
