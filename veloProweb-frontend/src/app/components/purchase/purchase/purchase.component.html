@@ -5,16 +5,16 @@
         <form>
             <div class="form-floating mb-3 m-2">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control ms-5" id="document" name="document" placeholder="Ingrese un n° documento"
+                    <input type="text" class="form-control" id="document" name="document" placeholder="Ingrese un n° documento"
                         aria-label="Ingrese un número de documento" aria-describedby="addDocument" required>
-                    <div class="invalid-feedback ms-5">
+                    <div class="invalid-feedback">
                         Debe ingresar un valor válido
                     </div>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="date" class="form-control ms-5" id="date" name="date" placeholder="Ingrese fecha"
+                    <input type="date" class="form-control" id="date" name="date" placeholder="Ingrese fecha"
                         aria-label="Ingrese fecha de compra" aria-describedby="addDate" required>
-                    <div class="invalid-feedback ms-5">
+                    <div class="invalid-feedback">
                         Debe ingresar una fecha
                     </div>
                 </div>
@@ -42,14 +42,14 @@
                     </div>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="number" class="form-control ms-5" id="total" name="total" placeholder="Ingrese valor"
+                    <input type="number" class="form-control" id="total" name="total" placeholder="Ingrese valor"
                         aria-label="Ingrese total" aria-describedby="addTotal" required>
-                    <div class="invalid-feedback ms-5">
+                    <div class="invalid-feedback">
                         Debe ingresar un valor válido
                     </div>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="number" class="form-control ms-5" id="tax" name="tax" placeholder="IVA"
+                    <input type="number" class="form-control" id="tax" name="tax" placeholder="IVA"
                         aria-label="Ingrese un IVA" aria-describedby="addTax" required>
                 </div>
                 <button class="btn btn-success m-1">Guardar</button>
@@ -79,6 +79,7 @@
                         <th scope="col" class="position-sticky top-0">IVA</th>
                         <th scope="col" class="position-sticky top-0">Unidad</th>
                         <th scope="col" class="position-sticky top-0">Total</th>
+                        <th scope="col" class="position-sticky top-0">Acción</th>
                     </tr>
                 </thead>
                 <tbody class="table-group-divider text-center align-middle">
@@ -89,6 +90,7 @@
                         <td>$500</td>
                         <td>1</td>
                         <td>$5500</td>
+                        <td>X</td>
                     </tr>
                 </tbody>
             </table>
