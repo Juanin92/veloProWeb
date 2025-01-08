@@ -1,1 +1,97 @@
-<p>purchase works!</p>
+<div class="contianer-fluid d-flex flex-lg-row flex-column p-1">
+    <div class="flex-column text-center w-25 border border-start-0 border-top-0 border-bottom-0 border-3 border-white">
+        <p class="fw-bold fs-1">Compra</p>
+        <p class="fw-bolder">N°1</p>
+        <form>
+            <div class="form-floating mb-3 m-2">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control ms-5" id="document" name="document" placeholder="Ingrese un n° documento"
+                        aria-label="Ingrese un número de documento" aria-describedby="addDocument" required>
+                    <div class="invalid-feedback ms-5">
+                        Debe ingresar un valor válido
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="date" class="form-control ms-5" id="date" name="date" placeholder="Ingrese fecha"
+                        aria-label="Ingrese fecha de compra" aria-describedby="addDate" required>
+                    <div class="invalid-feedback ms-5">
+                        Debe ingresar una fecha
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+                    <select class="form-select" name="supplier" id="supplier" aria-label="Seleccione un proveedor">
+                        <option selected disabled>Proveedor</option>
+                        <option>Comercial Norte</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        Debe seleccionar un proveedor
+                    </div>
+                </div>
+                <div class="input-group mb-3 justify-content-center">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="radioDocumentType" id="radioDocumentTypeTicket">
+                        <label class="form-check-label" for="radioDocumentTypeTicket">
+                            Boleta
+                        </label>
+                    </div>
+                    <div class="form-check ms-2">
+                        <input class="form-check-input" type="radio" name="radioDocumentType" id="radioDocumentTypeReceipt" checked>
+                        <label class="form-check-label" for="radioDocumentTypeReceipt">
+                            Factura
+                        </label>
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="number" class="form-control ms-5" id="total" name="total" placeholder="Ingrese valor"
+                        aria-label="Ingrese total" aria-describedby="addTotal" required>
+                    <div class="invalid-feedback ms-5">
+                        Debe ingresar un valor válido
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="number" class="form-control ms-5" id="tax" name="tax" placeholder="IVA"
+                        aria-label="Ingrese un IVA" aria-describedby="addTax" required>
+                </div>
+                <button class="btn btn-success m-1">Guardar</button>
+                <button class="btn btn-info m-1">Limpiar</button>
+            </div>
+        </form>
+    </div>
+    <div class="d-flex flex-column text-center w-75">
+        <div class="d-flex flex-row justify-content-around">
+            <button class="btn btn-info m-3">Buscar</button>
+            <div class="row m-3 w-75 justify-content-between">
+                <div class="col-6">
+                    <p class="fw-bold fs-4">Cantidad Producto: 1</p>
+                </div>
+                <div class="col-6">
+                    <p class="fw-bold fs-4">Total Compra: $5500</p>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive text-center p-5 pt-4 h-100">
+            <table class="table table-hover">
+                <thead class="table-warning">
+                    <tr>
+                        <th scope="col" class="position-sticky top-0">#</th>
+                        <th scope="col" class="position-sticky top-0">Marca</th>
+                        <th scope="col" class="position-sticky top-0">Unitario</th>
+                        <th scope="col" class="position-sticky top-0">IVA</th>
+                        <th scope="col" class="position-sticky top-0">Unidad</th>
+                        <th scope="col" class="position-sticky top-0">Total</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider text-center align-middle">
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>Samsung</td>
+                        <td>$5000</td>
+                        <td>$500</td>
+                        <td>1</td>
+                        <td>$5500</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
