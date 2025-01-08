@@ -46,6 +46,20 @@ export class PurchaseComponent implements OnInit{
     });
   }
 
+  /**
+   * Retorna el color asociado con el estado del producto.
+   * @param status - El estado del producto.
+   * @returns - El color correspondiente al estado del producto.
+   */
+  statusColor(status: string): string {
+    switch (status) {
+      case 'DISPONIBLE': return 'rgb(40, 238, 40)';
+      case 'DESCONTINUADO': return 'red';
+      case 'NODISPONIBLE': return 'rgb(9, 180, 237)';
+      default: return 'transparent';
+    }
+  }
+
   createEmptyPurchase(): Purchase{
     return this.purchase ={ 
       id: 0,
