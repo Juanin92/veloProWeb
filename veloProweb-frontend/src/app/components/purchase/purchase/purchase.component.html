@@ -184,10 +184,18 @@
         <div class="modal-content">
             <div class="modal-body d-flex flex-column">
              <div class="d-flex flex-row justify-content-around">
-                <p>busqueda rapida</p>
-                <p>boton 1</p>
-                <p>boton 2</p>
-                <p>Leyenda datos</p>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="searchProduct" name="searchProduct" placeholder="Búsqueda Rápida"
+                        aria-label="Búsqueda Rápida de productos" aria-describedby="searchProduct" />
+                        <label for="searchProduct" class="form-label">Búsqueda Rápida</label>
+                </div>
+                <button class="btn btn-warning"></button>
+                <button class="btn btn-danger"></button>
+                <div class="border border-1 border-white">
+                    <p class="m-1 mb-0 mt-1">&#129001; Disponible</p>
+                    <p class="m-1 mb-0">&#x1F7E6; No Disponible</p>
+                    <p class="m-1 mt-0 mb-1">&#128997; Descontinuado</p>
+                </div>
              </div>
             <div class="table-responsive text-center p-2 pt-4">
                 <table class="table table-hover">
