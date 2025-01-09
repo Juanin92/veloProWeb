@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Purchase } from '../../../models/Entity/Purchase/purchase';
 import { PurchaseValidator } from '../../../validation/purchase-validator';
 import { CommonModule } from '@angular/common';
@@ -7,6 +7,7 @@ import { Supplier } from '../../../models/Entity/Purchase/supplier';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../../services/Product/product.service';
 import { Product } from '../../../models/Entity/Product/product.model';
+import { TooltipService } from '../../../utils/tooltip.service';
 
 @Component({
   selector: 'app-purchase',
@@ -15,7 +16,7 @@ import { Product } from '../../../models/Entity/Product/product.model';
   templateUrl: './purchase.component.html',
   styleUrl: './purchase.component.css'
 })
-export class PurchaseComponent implements OnInit{
+export class PurchaseComponent implements OnInit, AfterViewInit{
   
   purchase: Purchase;
   supplierList: Supplier[] = [];
@@ -24,9 +25,14 @@ export class PurchaseComponent implements OnInit{
 
   constructor(
     private supplierService: SupplierService,
-    private productService: ProductService
+    private productService: ProductService,
+    private tooltipService: TooltipService
   ){
     this.purchase = this.createEmptyPurchase();
+  }
+
+  ngAfterViewInit(): void {
+    this.tooltipService.initializeTooltips();
   }
 
   ngOnInit(): void {

@@ -217,13 +217,65 @@
             >
           </div>
           <div>
-            <button class="btn btn-outline-success border-0 m-2 mt-5"><img src="/assets/icons/iconAdd.png" alt="Agregar_producto" width="40" height="40" class="d-inline-block img-fluid"/></button>
-            <button class="btn btn-outline-success border-0 m-2 mt-5"><img src="/assets/icons/iconCategories.png" alt="Agregar_categoría" width="40" height="40" class="d-inline-block img-fluid"/></button>
+            <button
+              class="btn btn-outline-success border-0 m-2 mt-5"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              data-bs-title="Crear nuevo producto"
+            >
+              <img
+                src="/assets/icons/iconAdd.png"
+                alt="Agregar_producto"
+                width="40"
+                height="40"
+                class="d-inline-block img-fluid"
+              />
+            </button>
+            <button
+              class="btn btn-outline-success border-0 m-2 mt-5"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              data-bs-title="Crear nuevas categorías"
+            >
+              <img
+                src="/assets/icons/iconCategories.png"
+                alt="Agregar_categoría"
+                width="40"
+                height="40"
+                class="d-inline-block img-fluid"
+              />
+            </button>
           </div>
           <div class="border border-1 border-white p-1 mt-5 h-100">
-            <p class="ms-1 mb-0"><span class="mt-1 d-inline-block" style="width: 15px; height: 15px; background-color: rgb(40, 238, 40);"></span> Disponible</p>
-            <p class="ms-1 mb-0"><span class="mt-1 d-inline-block"  style="width: 15px; height: 15px; background-color: rgb(9, 180, 237);"></span> No Disponible</p>
-            <p class="ms-1 mb-0"><span class="mt-1 d-inline-block"  style="width: 15px; height: 15px; background-color: red"></span> Descontinuado</p>
+            <p class="ms-1 mb-0">
+              <span
+                class="mt-1 d-inline-block"
+                style="
+                  width: 15px;
+                  height: 15px;
+                  background-color: rgb(40, 238, 40);
+                "
+              ></span>
+              Disponible
+            </p>
+            <p class="ms-1 mb-0">
+              <span
+                class="mt-1 d-inline-block"
+                style="
+                  width: 15px;
+                  height: 15px;
+                  background-color: rgb(9, 180, 237);
+                "
+              ></span>
+              No Disponible
+            </p>
+            <p class="ms-1 mb-0">
+              <span
+                class="mt-1 d-inline-block"
+                style="width: 15px; height: 15px; background-color: red"
+              ></span>
+              Descontinuado
+            </p>
           </div>
         </div>
         <div
@@ -250,9 +302,11 @@
                 <td>{{ product.subcategoryProduct.name }}</td>
                 <td>{{ product.description }}</td>
                 <td>{{ product.unit.nameUnit }}</td>
-                <td [ngStyle]="{
-                'background-color': statusColor(product.statusProduct)
-                }"></td>
+                <td
+                  [ngStyle]="{
+                    'background-color': statusColor(product.statusProduct)
+                  }"
+                ></td>
               </tr>
             </tbody>
           </table>
