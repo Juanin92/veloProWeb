@@ -158,10 +158,10 @@
       </button>
       <div class="row m-3 w-75 justify-content-between">
         <div class="col-6">
-          <p class="fw-bold fs-4">Cantidad Producto: {{selectedProductsList.length}}</p>
+          <p class="fw-bold fs-4">Cantidad Producto: {{purchaseDetailList.length}}</p>
         </div>
         <div class="col-6">
-          <p class="fw-bold fs-4">Total Compra: $5500</p>
+          <p class="fw-bold fs-4">Total Compra: {{total | currency: "CLP":"$":"1.0-0"}}</p>
         </div>
       </div>
     </div>
@@ -180,16 +180,30 @@
           </tr>
         </thead>
         <tbody class="table-group-divider text-center align-middle">
-          <tr *ngFor="let selectedProduct of selectedProductsList">
-            <th scope="row">{{selectedProduct.id}}</th>
-            <td>{{selectedProduct.brand.name}}</td>
-            <td>{{selectedProduct.description}}</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
+          <tr *ngFor="let purchaseDetail of purchaseDetailList; let i = index">
+            <th scope="row">{{i +1}}</th>
+            <td>{{purchaseDetail.product.brand.name}}</td>
+            <td>{{purchaseDetail.product.description}}</td>
             <td>
-              <button (click)="deleteSelectedProductToList(selectedProduct)"
+              <div *ngIf="!isEditing(purchaseDetail, 'price')" (click)="enableEdit(purchaseDetail, 'price')">
+                {{ purchaseDetail.price | currency : "CLP" : "$" : "1.0-0"}}
+              </div>
+              <input *ngIf="isEditing(purchaseDetail, 'price')"  type="number" [(ngModel)]="purchaseDetail.price"
+                (blur)="disableEdit(purchaseDetail, 'price')" (keydown.enter)="disableEdit(purchaseDetail, 'price')"
+                class="form-control form-control-sm" style="width: 60px;" />
+            </td>
+            <td>{{purchaseDetail.tax | currency : "CLP" : "$" : "1.0-0"}}</td>
+            <td>
+              <div *ngIf="!isEditing(purchaseDetail, 'quantity')" (click)="enableEdit(purchaseDetail, 'quantity')">
+                {{ purchaseDetail.quantity }}
+              </div>
+              <input *ngIf="isEditing(purchaseDetail, 'quantity')" type="number" [(ngModel)]="purchaseDetail.quantity"
+                (blur)="disableEdit(purchaseDetail, 'quantity')" (keydown.enter)="disableEdit(purchaseDetail, 'quantity')"
+                class="form-control form-control-sm" style="width: 60px;" />
+            </td>
+            <td>{{purchaseDetail.total | currency : "CLP" : "$" : "1.0-0"}}</td>
+            <td>
+              <button (click)="removeDetail(i)"
                 class="btn btn-sm m-1">
                 <img src="/assets/icons/iconCancel.png" alt="activar" width="30" height="30" class="img-fluid" />
               </button>
@@ -197,7 +211,7 @@
           </tr>
         </tbody>
       </table>
-      <p *ngIf="selectedProductsList.length === 0" class="fw-bold fs-2">Agregue un producto</p>
+      <p *ngIf="purchaseDetailList.length === 0" class="fw-bold fs-2">Agregue un producto</p>
     </div>
   </div>
 </div>
@@ -306,7 +320,7 @@
               </tr>
             </thead>
             <tbody class="table-group-divider text-center align-middle">
-              <tr *ngFor="let product of productList" (click)="addSelectedProductToList(product)">
+              <tr *ngFor="let product of productList" (click)="addSelectedProductToPurchaseDetailList(product)">
                 <th scope="row">{{ product.id }}</th>
                 <td>{{ product.brand.name }}</td>
                 <td>{{ product.category.name }}</td>

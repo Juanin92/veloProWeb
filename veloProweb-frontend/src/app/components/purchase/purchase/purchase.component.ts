@@ -8,6 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../../services/Product/product.service';
 import { Product } from '../../../models/Entity/Product/product.model';
 import { TooltipService } from '../../../utils/tooltip.service';
+import { PurchaseDetails } from '../../../models/Entity/Purchase/purchase-details';
+import { NotificationService } from '../../../utils/notification-service.service';
 
 @Component({
   selector: 'app-purchase',
@@ -21,13 +23,16 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
   purchase: Purchase;
   supplierList: Supplier[] = [];
   productList: Product[] = [];
-  selectedProductsList: Product[] = [];
+  purchaseDetailList: PurchaseDetails[] = [];
   validator = PurchaseValidator;
+  total: number = 0;
+  editingFields: { [key: string]: { quantity?: boolean; price?: boolean } } = {};
 
   constructor(
     private supplierService: SupplierService,
     private productService: ProductService,
-    private tooltipService: TooltipService
+    private tooltipService: TooltipService,
+    private notification: NotificationService
   ){
     this.purchase = this.createEmptyPurchase();
   }
@@ -53,18 +58,68 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     });
   }
 
-  addSelectedProductToList(product: Product): void{
-    if(!this.selectedProductsList.some((productAdded) => productAdded.id === product.id)){
-      this.selectedProductsList.push(product);
-    }else{
+  addSelectedProductToPurchaseDetailList(product: Product): void{
+    const isProductAdded = this.purchaseDetailList.some((detail) => detail.product.id === product.id);
+    if (!isProductAdded) {
+      const newPurchaseDetail: PurchaseDetails = {
+        id: 0,
+        quantity: 0,
+        price: 0,
+        tax: 0,
+        total: 0,
+        purchase: this.purchase,
+        product: product
+      }
+  
+      newPurchaseDetail.tax = newPurchaseDetail.price * 0.19;
+      newPurchaseDetail.total = newPurchaseDetail.price + newPurchaseDetail.tax;
+      this.purchaseDetailList.push(newPurchaseDetail);
+    } else {
+      this.notification.showErrorToast('Producto ya agregado!','center',1500);
     }
   }
 
-  deleteSelectedProductToList(product: Product): void{
-    const index = this.selectedProductsList.findIndex(item => item === product);
-    if (index !== -1) {
-      this.selectedProductsList.splice(index, 1);
+  removeDetail(index: number): void {
+    this.purchaseDetailList.splice(index, 1);
+    this.sumTotalList();
+  }
+
+  updateTotal(purchaseDetail: PurchaseDetails): void {
+    purchaseDetail.tax = purchaseDetail.price * 0.19;
+    if(purchaseDetail.quantity <= 0){
+      purchaseDetail.total = 0;
+    }else{
+      purchaseDetail.total = purchaseDetail.price * purchaseDetail.quantity + purchaseDetail.tax;
     }
+    this.sumTotalList();
+  }
+
+  sumTotalList(): void{
+    this.total = 0;
+    this.purchaseDetailList.forEach((purchaseDetail) =>{
+      this.total += purchaseDetail.total;
+    })
+  }
+
+  enableEdit(detail: PurchaseDetails, field: 'quantity' | 'price'): void {
+    const key = detail.id.toString(); // Usa el ID del detalle como clave
+    if (!this.editingFields[key]) {
+      this.editingFields[key] = {};
+    }
+    this.editingFields[key][field] = true;
+  }
+  
+  disableEdit(detail: PurchaseDetails, field: 'quantity' | 'price'): void {
+    const key = detail.id.toString();
+    if (this.editingFields[key]) {
+      this.editingFields[key][field] = false;
+    }
+    this.updateTotal(detail); // Actualiza el total cuando se desactiva la edición
+  }
+  
+  isEditing(detail: PurchaseDetails, field: 'quantity' | 'price'): boolean {
+    const key = detail.id.toString();
+    return !!this.editingFields[key]?.[field];
   }
 
   /**
