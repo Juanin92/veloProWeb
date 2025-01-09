@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import * as bootstrap from 'bootstrap';
+import { TooltipService } from '../../utils/tooltip.service';
 
 @Component({
   selector: 'app-menu',
@@ -9,19 +10,12 @@ import * as bootstrap from 'bootstrap';
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css'
 })
-export class MenuComponent implements OnInit{
+export class MenuComponent implements AfterViewInit{
   @Input() isActive: boolean = false;
 
-  ngOnInit(): void {
-    this.initializeTooltip();
-  }
+  constructor(private tooltipService: TooltipService){}
 
-  initializeTooltip(): void{
-    //Selecciona todos los elementos del DOM que en sus atributos tienen [data-bs-toggle="tooltip"] convirtiendo en un array
-    const toolTipElementList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    //Recorre el array de elementos y crea a cada uno su tooltip
-    toolTipElementList.forEach((element) => {
-      new bootstrap.Tooltip(element);
-    });
+  ngAfterViewInit(): void {
+    this.tooltipService.initializeTooltips();
   }
 }
