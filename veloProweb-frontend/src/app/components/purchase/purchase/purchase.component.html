@@ -201,8 +201,8 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-body d-flex flex-column">
-        <div class="d-flex flex-row justify-content-around mb-4">
-          <div class="form-floating mb-3">
+        <div class="d-flex flex-row justify-content-around mb-1">
+          <div class="form-floating mb-0 mt-5 bg-warning">
             <input
               type="text"
               class="form-control"
@@ -216,12 +216,14 @@
               >Búsqueda Rápida</label
             >
           </div>
-          <button class="btn btn-warning"></button>
-          <button class="btn btn-danger"></button>
-          <div class="border border-1 border-white">
-            <p class="m-1 mb-0 mt-1">&#129001; Disponible</p>
-            <p class="m-1 mb-0">&#x1F7E6; No Disponible</p>
-            <p class="m-1 mt-0 mb-1">&#128997; Descontinuado</p>
+          <div>
+            <button class="btn btn-outline-success border-0 m-2 mt-5"><img src="/assets/icons/iconAdd.png" alt="Agregar_producto" width="40" height="40" class="d-inline-block img-fluid"/></button>
+            <button class="btn btn-outline-success border-0 m-2 mt-5"><img src="/assets/icons/iconCategories.png" alt="Agregar_categoría" width="40" height="40" class="d-inline-block img-fluid"/></button>
+          </div>
+          <div class="border border-1 border-white p-1 mt-5 h-100">
+            <p class="ms-1 mb-0"><span class="mt-1 d-inline-block" style="width: 15px; height: 15px; background-color: rgb(40, 238, 40);"></span> Disponible</p>
+            <p class="ms-1 mb-0"><span class="mt-1 d-inline-block"  style="width: 15px; height: 15px; background-color: rgb(9, 180, 237);"></span> No Disponible</p>
+            <p class="ms-1 mb-0"><span class="mt-1 d-inline-block"  style="width: 15px; height: 15px; background-color: red"></span> Descontinuado</p>
           </div>
         </div>
         <div
