@@ -10,6 +10,7 @@ import { Product } from '../../../models/Entity/Product/product.model';
 import { TooltipService } from '../../../utils/tooltip.service';
 import { PurchaseDetails } from '../../../models/Entity/Purchase/purchase-details';
 import { NotificationService } from '../../../utils/notification-service.service';
+import { PurchaseService } from '../../../services/Purchase/purchase.service';
 
 @Component({
   selector: 'app-purchase',
@@ -28,9 +29,11 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
   validator = PurchaseValidator;
   total: number = 0;
   textFilter: string = '';
+  TotalPurchaseDB: number = 0;
   editingFields: { [key: string]: { quantity?: boolean; price?: boolean } } = {};
 
   constructor(
+    private purchaseService: PurchaseService,
     private supplierService: SupplierService,
     private productService: ProductService,
     private tooltipService: TooltipService,
@@ -46,6 +49,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
   ngOnInit(): void {
     this.getSuppliers();
     this.getProducts();
+    this.getTotalPurchase();
   }
 
   getSuppliers(): void{
@@ -58,6 +62,12 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     this.productService.getProducts().subscribe((list) => {
       this.productList = list;
       this.filteredProductsList = list;
+    });
+  }
+
+  getTotalPurchase(): void{
+    this.purchaseService.getTotalPurchase().subscribe((totalPurchases)=>{
+      this.TotalPurchaseDB = totalPurchases;
     });
   }
 
