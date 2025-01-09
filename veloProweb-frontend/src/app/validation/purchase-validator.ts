@@ -24,4 +24,8 @@ export class PurchaseValidator {
         }
         return true;
     }
+
+    static validateTotals(purchase: Purchase, total: number): boolean{
+        return purchase.purchaseTotal !== total;
+    }
 }

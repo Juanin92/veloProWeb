@@ -1,12 +1,12 @@
 <div class="contianer-fluid d-flex flex-lg-row flex-column p-1 min-vh-100">
   <div
-    class="flex-column text-center w-25 border border-start-0 border-top-0 border-bottom-0 border-3 border-white"
-  >
-    <p class="fw-bold fs-1">Compra</p>
+    class="flex-column text-center w-25 border border-start-0 border-top-0 border-bottom-0 border-3 border-white vh-100 overflow-y-auto"
+    >
+    <p class="fw-bold fs-1 mb-0">Compra</p>
     <p class="fw-bolder">N°{{TotalPurchaseDB}}</p>
     <form>
-      <div class="form-floating mb-3 m-2">
-        <div class="input-group mb-3">
+      <div >
+        <div class="form-floating mb-2 ms-4 w-75">
           <input
             type="text"
             class="form-control"
@@ -15,20 +15,16 @@
             placeholder="Ingrese un n° documento"
             aria-label="Ingrese un número de documento"
             aria-describedby="addDocument"
+            [(ngModel)]="purchase.document"
             [ngClass]="{
               'is-invalid': !validator.isFieldValid(purchase, 'document'),
               'is-valid': validator.isFieldValid(purchase, 'document')
             }"
             required
           />
-          <!-- <div
-            *ngIf="!validator.isFieldValid(purchase, 'document')"
-            class="invalid-feedback"
-          >
-            Debe ingresar un valor válido
-          </div> -->
+          <label for="document" class="form-label">N° Documento</label>
         </div>
-        <div class="input-group mb-3">
+        <div class="form-floating mb-2 ms-4 w-75">
           <input
             type="date"
             class="form-control"
@@ -37,25 +33,22 @@
             placeholder="Ingrese fecha"
             aria-label="Ingrese fecha de compra"
             aria-describedby="addDate"
+            [(ngModel)]="purchase.date"
             [ngClass]="{
               'is-invalid': !validator.isFieldValid(purchase, 'date'),
               'is-valid': validator.isFieldValid(purchase, 'date')
             }"
             required
           />
-          <!-- <div
-            *ngIf="!validator.isFieldValid(purchase, 'date')"
-            class="invalid-feedback"
-          >
-            Debe ingresar una fecha
-          </div> -->
+          <label for="date" class="form-label">Fecha</label>
         </div>
-        <div class="input-group mb-3">
+        <div class="input-group mb-3 w-75 ms-4">
           <select
             class="form-select"
             name="supplier"
             id="supplier"
             aria-label="Seleccione un proveedor"
+            [(ngModel)]="purchase.supplier"
             [ngClass]="{
               'is-invalid': !validator.isFieldValid(purchase, 'supplier'),
               'is-valid': validator.isFieldValid(purchase, 'supplier')
@@ -66,14 +59,8 @@
               {{ supplier.name }}
             </option>
           </select>
-          <!-- <div
-            *ngIf="!validator.isFieldValid(purchase, 'supplier')"
-            class="invalid-feedback"
-          >
-            Debe seleccionar un proveedor
-          </div> -->
         </div>
-        <div class="input-group mb-3 justify-content-center">
+        <div class="input-group mb-2 ms-0 justify-content-center">
           <div class="form-check">
             <input
               class="form-check-input"
@@ -98,41 +85,26 @@
             </label>
           </div>
         </div>
-        <div class="input-group mb-3">
+        <div class="form-floating mb-2 ms-4 w-75">
           <input
             type="number"
             class="form-control"
-            id="total"
-            name="total"
+            id="purchaseTotal"
+            name="purchaseTotal"
             placeholder="Ingrese valor"
             aria-label="Ingrese total"
             aria-describedby="addTotal"
+            [(ngModel)]="purchase.purchaseTotal"
             [ngClass]="{
               'is-invalid': !validator.isFieldValid(purchase, 'purchaseTotal'),
               'is-valid': validator.isFieldValid(purchase, 'purchaseTotal')
             }"
             required
           />
-          <!-- <div
-            *ngIf="!validator.isFieldValid(purchase, 'purchaseTotal')"
-            class="invalid-feedback"
-          >
-            Debe ingresar un valor válido
-          </div> -->
+          <label for="purchaseTotal" class="form-label">Valor total</label>
         </div>
-        <div class="input-group mb-3">
-          <input
-            type="number"
-            class="form-control"
-            id="tax"
-            name="tax"
-            placeholder="IVA"
-            aria-label="Ingrese un IVA"
-            aria-describedby="addTax"
-            disabled
-            required
-          />
-        </div>
+        <p *ngIf="validator.validateTotals(purchase, total)"  class="text-danger fw-light">Verifique total de la factura</p>
+        <p >IVA: {{purchase.tax | currency: 'CLP':'$':'1.0-0'}}</p>
         <button class="btn btn-success m-1">Guardar</button>
         <button class="btn btn-info m-1">Limpiar</button>
       </div>
