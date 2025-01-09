@@ -188,7 +188,12 @@
             <td>$500</td>
             <td>1</td>
             <td>$5500</td>
-            <td>X</td>
+            <td>
+              <button (click)="deleteSelectedProductToList(selectedProduct)"
+                class="btn btn-sm m-1">
+                <img src="/assets/icons/iconCancel.png" alt="activar" width="30" height="30" class="img-fluid" />
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -301,7 +306,7 @@
               </tr>
             </thead>
             <tbody class="table-group-divider text-center align-middle">
-              <tr *ngFor="let product of productList">
+              <tr *ngFor="let product of productList" (click)="addSelectedProductToList(product)">
                 <th scope="row">{{ product.id }}</th>
                 <td>{{ product.brand.name }}</td>
                 <td>{{ product.category.name }}</td>

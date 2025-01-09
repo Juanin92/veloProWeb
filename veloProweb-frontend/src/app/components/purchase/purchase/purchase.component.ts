@@ -53,6 +53,20 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     });
   }
 
+  addSelectedProductToList(product: Product): void{
+    if(!this.selectedProductsList.some((productAdded) => productAdded.id === product.id)){
+      this.selectedProductsList.push(product);
+    }else{
+    }
+  }
+
+  deleteSelectedProductToList(product: Product): void{
+    const index = this.selectedProductsList.findIndex(item => item === product);
+    if (index !== -1) {
+      this.selectedProductsList.splice(index, 1);
+    }
+  }
+
   /**
    * Retorna el color asociado con el estado del producto.
    * @param status - El estado del producto.
