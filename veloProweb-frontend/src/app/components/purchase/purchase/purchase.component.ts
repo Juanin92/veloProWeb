@@ -23,9 +23,11 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
   purchase: Purchase;
   supplierList: Supplier[] = [];
   productList: Product[] = [];
+  filteredProductsList: Product[] = [];
   purchaseDetailList: PurchaseDetails[] = [];
   validator = PurchaseValidator;
   total: number = 0;
+  textFilter: string = '';
   editingFields: { [key: string]: { quantity?: boolean; price?: boolean } } = {};
 
   constructor(
@@ -55,6 +57,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
   getProducts(): void{
     this.productService.getProducts().subscribe((list) => {
       this.productList = list;
+      this.filteredProductsList = list;
     });
   }
 
@@ -86,7 +89,9 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
 
   updateTotal(purchaseDetail: PurchaseDetails): void {
     purchaseDetail.tax = purchaseDetail.price * 0.19;
-    if(purchaseDetail.quantity <= 0){
+    if(purchaseDetail.quantity < 0 || purchaseDetail.price < 0){
+      purchaseDetail.quantity = 0;
+      purchaseDetail.price = 0;
       purchaseDetail.total = 0;
     }else{
       purchaseDetail.total = purchaseDetail.price * purchaseDetail.quantity + purchaseDetail.tax;
@@ -145,6 +150,24 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
       purchaseTotal: 0,
       date: '',
       supplier: null
+    }
+  }
+
+  /**
+   * Filtrar lista de productos según el criterio de búsqueda
+   * Se filtrara por nombre de marca, categoría, subcategoría y descripción donde textFilter
+   * contendrá el valor a filtrar
+   */
+  searchFilterCustomer(): void {
+    if (this.textFilter.trim() === '') {
+      this.filteredProductsList = this.productList;
+    } else {
+      this.filteredProductsList = this.productList.filter(product =>
+        product.brand.name.toLowerCase().includes(this.textFilter.toLowerCase()) ||
+        product.category.name.toLowerCase().includes(this.textFilter.toLowerCase()) ||
+        product.subcategoryProduct.name.toLowerCase().includes(this.textFilter.toLowerCase()) ||
+        product.description.toLowerCase().includes(this.textFilter.toLowerCase())
+      );
     }
   }
 }

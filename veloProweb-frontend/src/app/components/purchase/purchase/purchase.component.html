@@ -152,20 +152,27 @@
           height="40"
           class="d-inline-block img-fluid"
           data-bs-toggle="tooltip"
-            data-bs-placement="right"
-            data-bs-title="Seleccionar Productos"
+          data-bs-placement="right"
+          data-bs-title="Seleccionar Productos"
         />
       </button>
       <div class="row m-3 w-75 justify-content-between">
         <div class="col-6">
-          <p class="fw-bold fs-4">Cantidad Producto: {{purchaseDetailList.length}}</p>
+          <p class="fw-bold fs-4">
+            Cantidad Producto: {{ purchaseDetailList.length }}
+          </p>
         </div>
         <div class="col-6">
-          <p class="fw-bold fs-4">Total Compra: {{total | currency: "CLP":"$":"1.0-0"}}</p>
+          <p class="fw-bold fs-4">
+            Total Compra: {{ total | currency : "CLP" : "$" : "1.0-0" }}
+          </p>
         </div>
       </div>
     </div>
-    <div class="table-responsive text-center p-5 pt-0 h-100 overflow-auto" style="max-height: 350px">
+    <div
+      class="table-responsive text-center p-5 pt-0 h-100 overflow-auto"
+      style="max-height: 350px"
+    >
       <table class="table table-hover">
         <thead class="table-warning">
           <tr>
@@ -181,37 +188,64 @@
         </thead>
         <tbody class="table-group-divider text-center align-middle">
           <tr *ngFor="let purchaseDetail of purchaseDetailList; let i = index">
-            <th scope="row">{{i +1}}</th>
-            <td>{{purchaseDetail.product.brand.name}}</td>
-            <td>{{purchaseDetail.product.description}}</td>
+            <th scope="row">{{ i + 1 }}</th>
+            <td>{{ purchaseDetail.product.brand.name }}</td>
+            <td>{{ purchaseDetail.product.description }}</td>
             <td>
-              <div *ngIf="!isEditing(purchaseDetail, 'price')" (click)="enableEdit(purchaseDetail, 'price')">
-                {{ purchaseDetail.price | currency : "CLP" : "$" : "1.0-0"}}
+              <div
+                *ngIf="!isEditing(purchaseDetail, 'price')"
+                (click)="enableEdit(purchaseDetail, 'price')"
+              >
+                {{ purchaseDetail.price | currency : "CLP" : "$" : "1.0-0" }}
               </div>
-              <input *ngIf="isEditing(purchaseDetail, 'price')"  type="number" [(ngModel)]="purchaseDetail.price"
-                (blur)="disableEdit(purchaseDetail, 'price')" (keydown.enter)="disableEdit(purchaseDetail, 'price')"
-                class="form-control form-control-sm" style="width: 60px;" />
+              <input
+                *ngIf="isEditing(purchaseDetail, 'price')"
+                type="number"
+                [(ngModel)]="purchaseDetail.price"
+                (blur)="disableEdit(purchaseDetail, 'price')"
+                (keydown.enter)="disableEdit(purchaseDetail, 'price')"
+                class="form-control form-control-sm"
+                style="width: 60px"
+              />
             </td>
-            <td>{{purchaseDetail.tax | currency : "CLP" : "$" : "1.0-0"}}</td>
+            <td>{{ purchaseDetail.tax | currency : "CLP" : "$" : "1.0-0" }}</td>
             <td>
-              <div *ngIf="!isEditing(purchaseDetail, 'quantity')" (click)="enableEdit(purchaseDetail, 'quantity')">
+              <div
+                *ngIf="!isEditing(purchaseDetail, 'quantity')"
+                (click)="enableEdit(purchaseDetail, 'quantity')"
+              >
                 {{ purchaseDetail.quantity }}
               </div>
-              <input *ngIf="isEditing(purchaseDetail, 'quantity')" type="number" [(ngModel)]="purchaseDetail.quantity"
-                (blur)="disableEdit(purchaseDetail, 'quantity')" (keydown.enter)="disableEdit(purchaseDetail, 'quantity')"
-                class="form-control form-control-sm" style="width: 60px;" />
+              <input
+                *ngIf="isEditing(purchaseDetail, 'quantity')"
+                type="number"
+                [(ngModel)]="purchaseDetail.quantity"
+                (blur)="disableEdit(purchaseDetail, 'quantity')"
+                (keydown.enter)="disableEdit(purchaseDetail, 'quantity')"
+                class="form-control form-control-sm"
+                style="width: 60px"
+              />
             </td>
-            <td>{{purchaseDetail.total | currency : "CLP" : "$" : "1.0-0"}}</td>
             <td>
-              <button (click)="removeDetail(i)"
-                class="btn btn-sm m-1">
-                <img src="/assets/icons/iconCancel.png" alt="activar" width="30" height="30" class="img-fluid" />
+              {{ purchaseDetail.total | currency : "CLP" : "$" : "1.0-0" }}
+            </td>
+            <td>
+              <button (click)="removeDetail(i)" class="btn btn-sm m-1">
+                <img
+                  src="/assets/icons/iconCancel.png"
+                  alt="activar"
+                  width="30"
+                  height="30"
+                  class="img-fluid"
+                />
               </button>
             </td>
           </tr>
         </tbody>
       </table>
-      <p *ngIf="purchaseDetailList.length === 0" class="fw-bold fs-2">Agregue un producto</p>
+      <p *ngIf="purchaseDetailList.length === 0" class="fw-bold fs-2">
+        Agregue un producto
+      </p>
     </div>
   </div>
 </div>
@@ -229,6 +263,8 @@
         <div class="d-flex flex-row justify-content-around mb-1">
           <div class="form-floating mb-0 mt-5">
             <input
+              [(ngModel)]="textFilter"
+              (ngModelChange)="searchFilterCustomer()"
               type="text"
               class="form-control"
               id="searchProduct"
@@ -320,7 +356,10 @@
               </tr>
             </thead>
             <tbody class="table-group-divider text-center align-middle">
-              <tr *ngFor="let product of productList" (click)="addSelectedProductToPurchaseDetailList(product)">
+              <tr
+                *ngFor="let product of filteredProductsList"
+                (click)="addSelectedProductToPurchaseDetailList(product)"
+              >
                 <th scope="row">{{ product.id }}</th>
                 <td>{{ product.brand.name }}</td>
                 <td>{{ product.category.name }}</td>
