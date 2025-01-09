@@ -21,6 +21,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
   purchase: Purchase;
   supplierList: Supplier[] = [];
   productList: Product[] = [];
+  selectedProductsList: Product[] = [];
   validator = PurchaseValidator;
 
   constructor(

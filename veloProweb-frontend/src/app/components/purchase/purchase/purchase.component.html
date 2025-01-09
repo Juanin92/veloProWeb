@@ -141,7 +141,7 @@
   <div class="d-flex flex-column text-center w-75">
     <div class="d-flex flex-row justify-content-around">
       <button
-        class="btn btn-outline-light m-2 mt-1"
+        class="btn btn-sm btn-outline-primary border-0 m-2 mt-1"
         data-bs-toggle="modal"
         data-bs-target="#selectProduct"
       >
@@ -158,7 +158,7 @@
       </button>
       <div class="row m-3 w-75 justify-content-between">
         <div class="col-6">
-          <p class="fw-bold fs-4">Cantidad Producto: 1</p>
+          <p class="fw-bold fs-4">Cantidad Producto: {{selectedProductsList.length}}</p>
         </div>
         <div class="col-6">
           <p class="fw-bold fs-4">Total Compra: $5500</p>
@@ -171,6 +171,7 @@
           <tr>
             <th scope="col" class="position-sticky top-0">#</th>
             <th scope="col" class="position-sticky top-0">Marca</th>
+            <th scope="col" class="position-sticky top-0">Descripción</th>
             <th scope="col" class="position-sticky top-0">Unitario</th>
             <th scope="col" class="position-sticky top-0">IVA</th>
             <th scope="col" class="position-sticky top-0">Unidad</th>
@@ -179,9 +180,10 @@
           </tr>
         </thead>
         <tbody class="table-group-divider text-center align-middle">
-          <tr>
-            <th scope="row">1</th>
-            <td>Samsung</td>
+          <tr *ngFor="let selectedProduct of selectedProductsList">
+            <th scope="row">{{selectedProduct.id}}</th>
+            <td>{{selectedProduct.brand.name}}</td>
+            <td>{{selectedProduct.description}}</td>
             <td>$5000</td>
             <td>$500</td>
             <td>1</td>
@@ -190,6 +192,7 @@
           </tr>
         </tbody>
       </table>
+      <p *ngIf="selectedProductsList" class="fw-bold fs-2">Agregue un producto</p>
     </div>
   </div>
 </div>
@@ -205,7 +208,7 @@
     <div class="modal-content">
       <div class="modal-body d-flex flex-column">
         <div class="d-flex flex-row justify-content-around mb-1">
-          <div class="form-floating mb-0 mt-5 bg-warning">
+          <div class="form-floating mb-0 mt-5">
             <input
               type="text"
               class="form-control"
