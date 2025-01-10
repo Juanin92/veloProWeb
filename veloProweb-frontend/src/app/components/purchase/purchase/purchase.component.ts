@@ -122,7 +122,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
   }
 
   resetData(): void{
-    this.purchase = this.createEmptyPurchase();
+    this.purchase = this.helper.createEmptyPurchase();
     this.purchaseDetailList = [];
     this.total = 0;
   }
