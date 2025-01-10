@@ -4,5 +4,6 @@ export interface PurchaseDetailDTO {
     price: number;
     tax: number;
     total: number;
+    purchase: number;
     productId: number;
 }

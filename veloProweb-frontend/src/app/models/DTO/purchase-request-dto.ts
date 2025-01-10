@@ -1,4 +1,5 @@
 import { Supplier } from "../Entity/Purchase/supplier";
+import { PurchaseDetailDTO } from "./purchase-detail-dto";
 
 export interface PurchaseRequestDTO {
     id: number;
@@ -8,5 +9,5 @@ export interface PurchaseRequestDTO {
     document: string;
     tax: number;
     total: number;
-    detailList: PurchaseRequestDTO[];
+    detailList: PurchaseDetailDTO[];
 }
