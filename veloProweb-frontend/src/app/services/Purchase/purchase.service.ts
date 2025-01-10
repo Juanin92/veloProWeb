@@ -11,6 +11,10 @@ export class PurchaseService {
   
   constructor(private http: HttpClient) { }
 
+  createPurchase(): Observable<{message: string}>{
+    return this.http.post<{message: string}>(`${this.apiUrl}/crear`);
+  }
+
   getTotalPurchase(): Observable<number>{
     return this.http.get<number>(`${this.apiUrl}/total_compras`);
   }
