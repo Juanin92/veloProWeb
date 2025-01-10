@@ -1,11 +1,11 @@
 <div class="contianer-fluid d-flex flex-lg-row flex-column p-1 min-vh-100">
   <div
     class="flex-column text-center w-25 border border-start-0 border-top-0 border-bottom-0 border-3 border-white vh-100 overflow-y-auto"
-    >
+  >
     <p class="fw-bold fs-1 mb-0">Compra</p>
-    <p class="fw-bolder">N°{{TotalPurchaseDB}}</p>
+    <p class="fw-bolder">N°{{ TotalPurchaseDB }}</p>
     <form>
-      <div >
+      <div>
         <div class="form-floating mb-2 ms-4 w-75">
           <input
             type="text"
@@ -107,9 +107,20 @@
           />
           <label for="purchaseTotal" class="form-label">Valor total</label>
         </div>
-        <p *ngIf="validator.validateTotals(purchase, total)"  class="text-danger fw-light">Verifique total de la {{purchase.documentType}}</p>
-        <p >IVA: {{purchase.tax | currency: 'CLP':'$':'1.0-0'}}</p>
-        <button [disabled]="!validator.validateForm(purchase)" class="btn btn-success m-1">Guardar</button>
+        <p
+          *ngIf="validator.validateTotals(purchase, total)"
+          class="text-danger fw-light"
+        >
+          Verifique total de la {{ purchase.documentType }}
+        </p>
+        <p>IVA: {{ purchase.tax | currency : "CLP" : "$" : "1.0-0" }}</p>
+        <button
+          [disabled]="!validator.validateForm(purchase)"
+          class="btn btn-success m-1"
+          (click)="createNewPurchaseProcess()"
+        >
+          Guardar
+        </button>
         <button class="btn btn-info m-1" (click)="resetData()">Limpiar</button>
       </div>
     </form>

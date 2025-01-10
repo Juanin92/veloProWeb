@@ -12,6 +12,7 @@ import { PurchaseDetails } from '../../../models/Entity/Purchase/purchase-detail
 import { NotificationService } from '../../../utils/notification-service.service';
 import { PurchaseService } from '../../../services/Purchase/purchase.service';
 import { PurchaseHelperService } from '../../../services/Purchase/purchase-helper.service';
+import { PurchaseRequestDTO } from '../../../models/DTO/purchase-request-dto';
 
 @Component({
   selector: 'app-purchase',
@@ -27,6 +28,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
   productList: Product[] = [];
   filteredProductsList: Product[] = [];
   purchaseDetailList: PurchaseDetails[] = [];
+  requestDTO: PurchaseRequestDTO | null = null;
   validator = PurchaseValidator;
   total: number = 0;
   textFilter: string = '';
@@ -52,6 +54,22 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     this.getSuppliers();
     this.getProducts();
     this.getTotalPurchase();
+  }
+
+  createNewPurchaseProcess(): void{
+    if (this.validator.validateForm(this.purchase)|| this.purchaseDetailList) {
+      this.requestDTO = this.helper.createDto(this.purchase, this.purchaseDetailList);
+      this.purchaseService.createPurchase(this.requestDTO).subscribe((response) => {
+        console.log('Compra agregada exitosamente: ', response);
+        this.notification.showSuccessToast(`¡Compra N°${this.TotalPurchaseDB} fue agregada exitosamente!`, 'top', 3000);
+      }, (error) =>{
+        const message = error.error.error;
+        console.error('Error al agregar la compra: ', error);
+        this.notification.showErrorToast(`Error al agregar la compra \n${message}`, 'top', 5000);
+      });
+    } else {
+      this.notification.showWarning('Formulario incompleto', 'Por favor, complete correctamente todos los campos obligatorios.');
+    }
   }
 
   getSuppliers(): void{
