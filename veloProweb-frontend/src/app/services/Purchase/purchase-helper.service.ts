@@ -9,6 +9,18 @@ import { PurchaseDetailDTO } from '../../models/DTO/purchase-detail-dto';
 })
 export class PurchaseHelperService {
 
+  createEmptyPurchase(): Purchase{
+    return { 
+      id: 0,
+      document: '',
+      documentType: 'Factura',
+      tax: 0,
+      purchaseTotal: 0,
+      date: '',
+      supplier: null
+    }
+  }
+
   createDto(purchase: Purchase, details: PurchaseDetails[]): PurchaseRequestDTO {
     return {
       id: purchase.id,

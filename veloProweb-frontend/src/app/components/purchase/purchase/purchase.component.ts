@@ -11,6 +11,7 @@ import { TooltipService } from '../../../utils/tooltip.service';
 import { PurchaseDetails } from '../../../models/Entity/Purchase/purchase-details';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { PurchaseService } from '../../../services/Purchase/purchase.service';
+import { PurchaseHelperService } from '../../../services/Purchase/purchase-helper.service';
 
 @Component({
   selector: 'app-purchase',
@@ -36,10 +37,11 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     private purchaseService: PurchaseService,
     private supplierService: SupplierService,
     private productService: ProductService,
+    private helper: PurchaseHelperService,
     private tooltipService: TooltipService,
     private notification: NotificationService
   ){
-    this.purchase = this.createEmptyPurchase();
+    this.purchase = helper.createEmptyPurchase();
   }
 
   ngAfterViewInit(): void {
@@ -157,18 +159,6 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
       case 'DESCONTINUADO': return 'red';
       case 'NODISPONIBLE': return 'rgb(9, 180, 237)';
       default: return 'transparent';
-    }
-  }
-
-  createEmptyPurchase(): Purchase{
-    return this.purchase ={ 
-      id: 0,
-      document: '',
-      documentType: 'Factura',
-      tax: 0,
-      purchaseTotal: 0,
-      date: '',
-      supplier: null
     }
   }
 
