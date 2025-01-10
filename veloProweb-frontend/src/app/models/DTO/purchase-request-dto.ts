@@ -4,7 +4,7 @@ import { PurchaseDetailDTO } from "./purchase-detail-dto";
 export interface PurchaseRequestDTO {
     id: number;
     date: string;
-    supplier: Supplier | null;
+    supplierId: number;
     documentType: string;
     document: string;
     tax: number;
