@@ -11,10 +11,10 @@ import java.util.List;
 public class PurchaseRequestDTO {
     private Long id;
     private LocalDate date;
-    private Supplier supplier;
+    private Long idSupplier;
     private String documentType;
     private String document;
     private int tax;
     private int total;
-    private List<PurchaseDetail> detailList;
+    private List<DetailPurchaseDTO> detailList;
 }

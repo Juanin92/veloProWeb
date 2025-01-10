@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class DetailPurchaseDTO {
+    private Long id;
     private Long idProduct;
-    private String brand;
-    private String description;
+    private Long idPurchase;
     private int price;
     private int tax;
     private int quantity;
