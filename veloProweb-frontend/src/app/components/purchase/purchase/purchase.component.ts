@@ -117,6 +117,12 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     })
   }
 
+  resetData(): void{
+    this.purchase = this.createEmptyPurchase();
+    this.purchaseDetailList = [];
+    this.total = 0;
+  }
+
   enableEdit(detail: PurchaseDetails, field: 'quantity' | 'price'): void {
     const key = detail.id.toString(); // Usa el ID del detalle como clave
     if (!this.editingFields[key]) {
