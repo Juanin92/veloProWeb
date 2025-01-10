@@ -87,7 +87,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
       newPurchaseDetail.tax = newPurchaseDetail.price * 0.19;
       newPurchaseDetail.total = newPurchaseDetail.price + newPurchaseDetail.tax;
       this.purchaseDetailList.push(newPurchaseDetail);
-      this.sumTotalList();
+      this.sumTotalAndTaxList();
     } else {
       this.notification.showErrorToast('Producto ya agregado!','center',1500);
     }
@@ -95,7 +95,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
 
   removeDetail(index: number): void {
     this.purchaseDetailList.splice(index, 1);
-    this.sumTotalList();
+    this.sumTotalAndTaxList();
   }
 
   updateTotal(purchaseDetail: PurchaseDetails): void {
@@ -107,13 +107,15 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     }else{
       purchaseDetail.total = purchaseDetail.price * purchaseDetail.quantity + purchaseDetail.tax;
     }
-    this.sumTotalList();
+    this.sumTotalAndTaxList();
   }
 
-  sumTotalList(): void{
+  sumTotalAndTaxList(): void{
     this.total = 0;
+    this.purchase.tax = 0;
     this.purchaseDetailList.forEach((purchaseDetail) =>{
       this.total += purchaseDetail.total;
+      this.purchase.tax += purchaseDetail.tax;
     })
   }
 
