@@ -5,8 +5,12 @@ import com.veloProWeb.Model.Entity.Purchase.Purchase;
 import com.veloProWeb.Service.Purchase.Interfaces.IPurchaseDetailService;
 import com.veloProWeb.Service.Purchase.Interfaces.IPurchaseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/compras")
@@ -17,12 +21,14 @@ public class PurchaseController {
     @Autowired private IPurchaseDetailService purchaseDetailService;
 
     @PostMapping("/crear")
-    public ResponseEntity<Purchase> createPurchase(@RequestBody PurchaseRequestDTO dto){
+    public ResponseEntity<Map<String, String>> createPurchase(@RequestBody PurchaseRequestDTO dto){
+        Map<String, String> response = new HashMap<>();
         try {
-            Purchase purchase = purchaseService.createPurchase(dto.getDate(),dto.getSupplier(), dto.getDocumentType(), dto.getDocument(), dto.getTax(), dto.getTotal());
-            return ResponseEntity.ok(purchase);
+            response.put("message", "Todo ok");
+            return ResponseEntity.ok(response);
         }catch (IllegalArgumentException e){
-            return ResponseEntity.badRequest().build();
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 
@@ -34,13 +40,4 @@ public class PurchaseController {
             return ResponseEntity.badRequest().build();
         }
     }
-
-//    @GetMapping("/total_Precio_Compras")
-//    public ResponseEntity<Long> getTotalPricePurchase(){
-//        try{
-//            return ResponseEntity.ok(purchaseService.totalPricePurchase());
-//        }catch (IllegalArgumentException e){
-//            return ResponseEntity.badRequest().build();
-//        }
-//    }
 }
