@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { PurchaseRequestDTO } from '../../models/DTO/purchase-request-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,8 @@ export class PurchaseService {
   
   constructor(private http: HttpClient) { }
 
-  createPurchase(): Observable<{message: string}>{
-    return this.http.post<{message: string}>(`${this.apiUrl}/crear`);
+  createPurchase(purchaseRequest: PurchaseRequestDTO): Observable<{message: string}>{
+    return this.http.post<{message: string}>(`${this.apiUrl}/crear`, purchaseRequest);
   }
 
   getTotalPurchase(): Observable<number>{
