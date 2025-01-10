@@ -67,6 +67,8 @@
               type="radio"
               name="radioDocumentType"
               id="radioDocumentTypeTicket"
+              [(ngModel)]="purchase.documentType"
+              value="Boleta"
             />
             <label class="form-check-label" for="radioDocumentTypeTicket">
               Boleta
@@ -78,6 +80,8 @@
               type="radio"
               name="radioDocumentType"
               id="radioDocumentTypeReceipt"
+              [(ngModel)]="purchase.documentType"
+              value="Factura"
               checked
             />
             <label class="form-check-label" for="radioDocumentTypeReceipt">
@@ -103,7 +107,7 @@
           />
           <label for="purchaseTotal" class="form-label">Valor total</label>
         </div>
-        <p *ngIf="validator.validateTotals(purchase, total)"  class="text-danger fw-light">Verifique total de la factura</p>
+        <p *ngIf="validator.validateTotals(purchase, total)"  class="text-danger fw-light">Verifique total de la {{purchase.documentType}}</p>
         <p >IVA: {{purchase.tax | currency: 'CLP':'$':'1.0-0'}}</p>
         <button class="btn btn-success m-1">Guardar</button>
         <button class="btn btn-info m-1">Limpiar</button>

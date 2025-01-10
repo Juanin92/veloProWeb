@@ -156,7 +156,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     return this.purchase ={ 
       id: 0,
       document: '',
-      documentType: '',
+      documentType: 'Factura',
       tax: 0,
       purchaseTotal: 0,
       date: '',
