@@ -63,7 +63,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
         console.log('Compra agregada exitosamente: ', response);
         this.notification.showSuccessToast(`¡Compra N°${this.TotalPurchaseDB} fue agregada exitosamente!`, 'top', 3000);
       }, (error) =>{
-        const message = error.error.error;
+        const message = error.error || error.message || 'Ocurrió un error inesperado.';
         console.error('Error al agregar la compra: ', error);
         this.notification.showErrorToast(`Error al agregar la compra \n${message}`, 'top', 5000);
       });
