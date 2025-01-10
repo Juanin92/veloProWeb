@@ -109,7 +109,7 @@
         </div>
         <p *ngIf="validator.validateTotals(purchase, total)"  class="text-danger fw-light">Verifique total de la {{purchase.documentType}}</p>
         <p >IVA: {{purchase.tax | currency: 'CLP':'$':'1.0-0'}}</p>
-        <button class="btn btn-success m-1">Guardar</button>
+        <button [disabled]="!validator.validateForm(purchase)" class="btn btn-success m-1">Guardar</button>
         <button class="btn btn-info m-1" (click)="resetData()">Limpiar</button>
       </div>
     </form>
