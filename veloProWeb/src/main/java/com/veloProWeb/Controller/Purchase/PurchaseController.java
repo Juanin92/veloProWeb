@@ -24,7 +24,9 @@ public class PurchaseController {
     public ResponseEntity<Map<String, String>> createPurchase(@RequestBody PurchaseRequestDTO dto){
         Map<String, String> response = new HashMap<>();
         try {
-            response.put("message", "Todo ok");
+            Purchase purchase = purchaseService.createPurchase(dto);
+            purchaseDetailService.createDetailPurchase(dto.getDetailList(),purchase);
+            response.put("message", "Compra registrada correctamente!");
             return ResponseEntity.ok(response);
         }catch (IllegalArgumentException e){
             response.put("message", e.getMessage());
