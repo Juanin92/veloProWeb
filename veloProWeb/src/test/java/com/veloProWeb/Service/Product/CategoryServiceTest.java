@@ -1,6 +1,5 @@
 package com.veloProWeb.Service.Product;
 
-import com.veloProWeb.Model.Entity.Product.BrandProduct;
 import com.veloProWeb.Model.Entity.Product.CategoryProduct;
 import com.veloProWeb.Repository.Product.CategoryProductRepo;
 import com.veloProWeb.Utils.HelperService;

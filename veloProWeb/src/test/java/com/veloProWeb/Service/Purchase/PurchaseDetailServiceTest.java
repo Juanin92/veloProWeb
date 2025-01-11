@@ -1,7 +1,6 @@
 package com.veloProWeb.Service.Purchase;
 
 import com.veloProWeb.Model.DTO.DetailPurchaseDTO;
-import com.veloProWeb.Model.Entity.Product.BrandProduct;
 import com.veloProWeb.Model.Entity.Product.Product;
 import com.veloProWeb.Model.Entity.Purchase.Purchase;
 import com.veloProWeb.Model.Entity.Purchase.PurchaseDetail;
