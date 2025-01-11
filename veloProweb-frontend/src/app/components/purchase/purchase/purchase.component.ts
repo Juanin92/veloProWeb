@@ -31,10 +31,10 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
   purchaseDetailList: PurchaseDetails[] = [];
   requestDTO: PurchaseRequestDTO | null = null;
   validator = PurchaseValidator;
-  total: number = 0;
+  total: number = 0; //Total acumulado de la compra
   textFilter: string = '';
-  TotalPurchaseDB: number = 0;
-  editingFields: { [key: string]: { quantity?: boolean; price?: boolean } } = {};
+  TotalPurchaseDB: number = 0; //Total de compras registradas en la BD
+  editingFields: { [key: string]: { quantity?: boolean; price?: boolean } } = {}; //Campos de edición activa para cantidades o precios en detalles de compra
 
   constructor(
     private purchaseService: PurchaseService,
@@ -48,6 +48,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     this.purchase = helper.createEmptyPurchase();
   }
 
+  /** Inicializa tooltips al renderizar el componente */
   ngAfterViewInit(): void {
     this.tooltipService.initializeTooltips();
   }
@@ -58,6 +59,10 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     this.getTotalPurchase();
   }
 
+  /** 
+   * Crear un nuevo proceso de compra
+   * Redirige a la ruta de stock 
+   * */
   createNewPurchaseProcess(): void{
     if (this.validator.validateForm(this.purchase)|| this.purchaseDetailList) {
       this.requestDTO = this.helper.createDto(this.purchase, this.purchaseDetailList);
@@ -75,12 +80,14 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     }
   }
 
+  /** Obtiene una lista de proveedores */
   getSuppliers(): void{
     this.supplierService.getSuppliers().subscribe((list) => {
       this.supplierList = list;
     })
   }
 
+  /** Obtiene una lista de productos */
   getProducts(): void{
     this.productService.getProducts().subscribe((list) => {
       this.productList = list;
@@ -88,12 +95,19 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     });
   }
 
+  /** Obtiene el numero total de compras realizadas */
   getTotalPurchase(): void{
     this.purchaseService.getTotalPurchase().subscribe((totalPurchases)=>{
       this.TotalPurchaseDB = totalPurchases;
     });
   }
 
+  /**
+   * Agrega un producto seleccionado a la lista de detalles de compra
+   * valida si el producto ya fue agregado antes a la lista
+   * calcula los valores de impuesto y precio total del detalle
+   * @param product - Producto seleccionado para agregar a la lista
+   */
   addSelectedProductToPurchaseDetailList(product: Product): void{
     const isProductAdded = this.purchaseDetailList.some((detail) => detail.product.id === product.id);
     if (!isProductAdded) {
@@ -116,11 +130,19 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     }
   }
 
+  /**
+   * Elimina un producto de la lista de detalle
+   * @param index - Identificador del detalle en la lista
+   */
   removeDetail(index: number): void {
     this.purchaseDetailList.splice(index, 1);
     this.sumTotalAndTaxList();
   }
 
+  /**
+   * Actualiza los totales de un detalle de compra
+   * @param purchaseDetail - Detalle al cual debe actualizar
+   */
   updateTotal(purchaseDetail: PurchaseDetails): void {
     purchaseDetail.tax = purchaseDetail.price * 0.19;
     if(purchaseDetail.quantity < 0 || purchaseDetail.price < 0){
@@ -133,6 +155,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     this.sumTotalAndTaxList();
   }
 
+  /** Calcula el total y los impuestos acumulados de la lista de detalles */
   sumTotalAndTaxList(): void{
     this.total = 0;
     this.purchase.tax = 0;
@@ -142,12 +165,14 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     })
   }
 
+  /** Reinicia los datos de la compra */
   resetData(): void{
     this.purchase = this.helper.createEmptyPurchase();
     this.purchaseDetailList = [];
     this.total = 0;
   }
 
+  /** Habilita la edición de un campo en un detalle específico */
   enableEdit(detail: PurchaseDetails, field: 'quantity' | 'price'): void {
     const key = detail.id.toString(); // Usa el ID del detalle como clave
     if (!this.editingFields[key]) {
@@ -156,6 +181,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     this.editingFields[key][field] = true;
   }
   
+  /** Deshabilita la edición de un campo en un detalle específico */
   disableEdit(detail: PurchaseDetails, field: 'quantity' | 'price'): void {
     const key = detail.id.toString();
     if (this.editingFields[key]) {
@@ -164,6 +190,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     this.updateTotal(detail); // Actualiza el total cuando se desactiva la edición
   }
   
+  /** Verifica si un campo específico está en edición */
   isEditing(detail: PurchaseDetails, field: 'quantity' | 'price'): boolean {
     const key = detail.id.toString();
     return !!this.editingFields[key]?.[field];
