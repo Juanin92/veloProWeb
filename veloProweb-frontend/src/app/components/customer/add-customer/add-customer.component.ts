@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Customer } from '../../../models/Entity/Customer/customer.model';
 import { CustomerService } from '../../../services/customer/customer.service';
@@ -19,6 +19,7 @@ export class AddCustomerComponent {
 
   newCustomer: Customer;
   customerValidator = CustomerValidator; // Validador de para los datos del cliente.
+  @Output() customerAdded = new EventEmitter<void>();
 
   constructor(
     private customerService: CustomerService,
@@ -31,7 +32,7 @@ export class AddCustomerComponent {
   /**
    * Agregar un nuevo cliente.
    * Valida el formulario y si es correcto, llama al servicio para agregar cliente.
-   * Muestra notificaciones dependiendo el estado de la acción y refresca la página después de 3 seg.
+   * Muestra notificaciones dependiendo el estado de la acción y refresca la lista de clientes.
    */
   addCustomer(): void {
     if (this.customerValidator.validateForm(this.newCustomer)) {
@@ -40,9 +41,7 @@ export class AddCustomerComponent {
           console.log('Cliente agregado exitosamente:', response);
           this.notification.showSuccessToast(`¡El cliente ${this.newCustomer.name} ${this.newCustomer.surname} fue agregado exitosamente!`, 'top', 3000);
           this.customerHelper.createEmptyCustomer(); // Reinicia la variable del cliente vacío.
-          setTimeout(() => {
-            window.location.reload();
-          }, 3000);
+          this.customerAdded.emit();
         },
         (error) => {
           const message = error.error.error;
