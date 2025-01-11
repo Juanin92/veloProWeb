@@ -34,7 +34,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
   total: number = 0; //Total acumulado de la compra
   textFilter: string = '';
   TotalPurchaseDB: number = 0; //Total de compras registradas en la BD
-  editingFields: { [key: string]: { quantity?: boolean; price?: boolean } } = {}; //Campos de edición activa para cantidades o precios en detalles de compra
+  editingFields: { [key: string]: { quantity?: boolean; price?: boolean } } = {}; // (Map) Campos de edición activa para cantidades o precios en detalles de compra
 
   constructor(
     private purchaseService: PurchaseService,
