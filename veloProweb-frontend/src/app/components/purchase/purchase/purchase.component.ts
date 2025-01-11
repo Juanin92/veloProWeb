@@ -13,6 +13,7 @@ import { NotificationService } from '../../../utils/notification-service.service
 import { PurchaseService } from '../../../services/Purchase/purchase.service';
 import { PurchaseHelperService } from '../../../services/Purchase/purchase-helper.service';
 import { PurchaseRequestDTO } from '../../../models/DTO/purchase-request-dto';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-purchase',
@@ -41,7 +42,8 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     private productService: ProductService,
     private helper: PurchaseHelperService,
     private tooltipService: TooltipService,
-    private notification: NotificationService
+    private notification: NotificationService,
+    private route: Router
   ){
     this.purchase = helper.createEmptyPurchase();
   }
@@ -62,6 +64,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
       this.purchaseService.createPurchase(this.requestDTO).subscribe((response) => {
         console.log('Compra agregada exitosamente: ', response);
         this.notification.showSuccessToast(`¡Compra N°${this.TotalPurchaseDB} fue agregada exitosamente!`, 'top', 3000);
+        this.route.navigate(['/stock']);
       }, (error) =>{
         const message = error.error || error.message || 'Ocurrió un error inesperado.';
         console.error('Error al agregar la compra: ', error);
