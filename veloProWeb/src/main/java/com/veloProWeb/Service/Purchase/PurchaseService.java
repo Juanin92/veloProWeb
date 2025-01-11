@@ -19,7 +19,12 @@ public class PurchaseService implements IPurchaseService {
     @Autowired private SupplierRepo supplierRepo;
     @Autowired private PurchaseValidator validator;
 
-
+    /**
+     * Crea una nueva compra.
+     * @param dto - contiene los datos necesarios para crear la compra.
+     * @return - objeto Compra que representa la compra creada y persistida en la BD.
+     * @throws IllegalArgumentException si el proveedor especificado no existe en la BD
+     */
     @Override
     public Purchase createPurchase(PurchaseRequestDTO dto) {
         Purchase purchase =  new Purchase();
