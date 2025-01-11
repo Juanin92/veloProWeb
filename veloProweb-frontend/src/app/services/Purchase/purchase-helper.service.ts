@@ -23,9 +23,9 @@ export class PurchaseHelperService {
 
   createDto(purchase: Purchase, details: PurchaseDetails[]): PurchaseRequestDTO {
     return {
-      id: purchase.id,
+      id: 0,
       date: purchase.date,
-      supplierId: purchase.supplier?.id ?? 0,
+      idSupplier: purchase.supplier?.id ?? 0,
       documentType: purchase.documentType,
       document: purchase.document,
       tax: purchase.tax,
@@ -41,8 +41,8 @@ export class PurchaseHelperService {
       price: detail.price,
       tax: detail.tax,
       total: detail.total,
-      purchase: detail.purchase.id,
-      productId: detail.product.id,
+      idPurchase: 0,
+      idProduct: detail.product.id,
     };
   }
 }
