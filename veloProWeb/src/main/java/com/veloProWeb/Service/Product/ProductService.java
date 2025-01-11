@@ -118,6 +118,6 @@ public class ProductService implements IProductService {
      */
     @Override
     public Product getProductById(Long id) {
-        return productRepo.findById(id).orElse(null);
+        return productRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("No ha seleccionado un producto registrado"));
     }
 }
