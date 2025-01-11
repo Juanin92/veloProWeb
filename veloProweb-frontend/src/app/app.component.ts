@@ -12,7 +12,7 @@ import { MenuComponent } from "./components/menu/menu.component";
 export class AppComponent{
   title = 'veloProweb-frontend';
 
-  isMenuActive: boolean = false;
+  isMenuActive: boolean = true;
 
   toggleMenu(): void {
     this.isMenuActive = !this.isMenuActive;

@@ -11,7 +11,7 @@ import { TooltipService } from '../../utils/tooltip.service';
   styleUrl: './menu.component.css'
 })
 export class MenuComponent implements AfterViewInit{
-  @Input() isActive: boolean = false;
+  @Input() isActive: boolean = true;
 
   constructor(private tooltipService: TooltipService){}
 
