@@ -76,6 +76,6 @@
 <!-- Modal Add Customer -->
 <app-add-customer></app-add-customer>
 <!-- Modal Update Customer -->
-<app-update-customer [selectedCustomer]="selectedCustomer"></app-update-customer>
+<app-update-customer [selectedCustomer]="selectedCustomer" (customerUpdated)="getAllCustomer()"></app-update-customer>
 <!-- Modal Payment Customer -->
 <app-payment-customer [selectedCustomer]="selectedCustomer"></app-payment-customer>

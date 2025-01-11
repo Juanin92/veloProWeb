@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Customer } from '../../../models/Entity/Customer/customer.model';
@@ -17,6 +17,7 @@ import { NotificationService } from '../../../utils/notification-service.service
 export class UpdateCustomerComponent {
 
   @Input() selectedCustomer: Customer; //Cliente seleccionado desde un componente padre
+  @Output() customerUpdated = new EventEmitter<void>();
   customerValidator = CustomerValidator; //Validador de los datos del cliente
 
   constructor(
@@ -39,9 +40,7 @@ export class UpdateCustomerComponent {
       this.customerService.updateCustomer(updateCustomer).subscribe((response) => {
         console.log('Se actualizo el cliente: ', updateCustomer);
         this.notification.showSuccessToast(`Se actualizo el cliente ${updateCustomer.name} ${updateCustomer.surname} correctamente`, 'top', 3000);
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
+        this.customerUpdated.emit();
       },
         (error) => {
           const message = error.error.error;
@@ -62,9 +61,7 @@ export class UpdateCustomerComponent {
       this.customerService.activeCustomer(customer).subscribe((response) => {
         console.log("Cliente Activado");
         this.notification.showSuccessToast(`Se activo nuevamente a ${customer!.name} ${customer!.surname}.`, 'top', 3000);
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
+        this.customerUpdated.emit();
       }, (error) => {
         const message = error.error.error;
         console.log('Error al activar cliente: ', message);
