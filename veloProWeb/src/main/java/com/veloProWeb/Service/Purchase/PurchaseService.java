@@ -1,6 +1,5 @@
 package com.veloProWeb.Service.Purchase;
 
-import com.veloProWeb.Model.DTO.DetailPurchaseDTO;
 import com.veloProWeb.Model.DTO.PurchaseRequestDTO;
 import com.veloProWeb.Model.Entity.Purchase.Purchase;
 import com.veloProWeb.Model.Entity.Purchase.Supplier;
@@ -11,8 +10,6 @@ import com.veloProWeb.Validation.PurchaseValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,12 +19,7 @@ public class PurchaseService implements IPurchaseService {
     @Autowired private SupplierRepo supplierRepo;
     @Autowired private PurchaseValidator validator;
 
-    /**
-     * Crea una nueva compra.
-     * Inicializa y registra la compra en la BD
-     * @param dto -
-     * @return - Compra creada con todos sus valores registrados
-     */
+
     @Override
     public Purchase createPurchase(PurchaseRequestDTO dto) {
         Purchase purchase =  new Purchase();
@@ -51,18 +43,5 @@ public class PurchaseService implements IPurchaseService {
     @Override
     public Long totalPurchase() {
         return purchaseRepo.count();
-    }
-
-    /**
-     * Calcula la suma total de los montos en los detalles de compra proporcionados en la lista.
-     * Recorre la lista y mapea cada detalle de compra obteniendo el total y sumándolos.
-     * @param dto - Lista que contiene los detalles de la compra
-     * @return - La suma de los totales de cada detalle en la lista.
-     */
-    @Override
-    public int totalPricePurchase(List<DetailPurchaseDTO> dto) {
-        return dto.stream()
-                .mapToInt(DetailPurchaseDTO::getTotal)
-                .sum();
     }
 }
