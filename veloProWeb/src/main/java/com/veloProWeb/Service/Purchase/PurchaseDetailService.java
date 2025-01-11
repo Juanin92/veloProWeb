@@ -18,6 +18,14 @@ public class PurchaseDetailService implements IPurchaseDetailService {
     @Autowired private PurchaseDetailRepo purchaseDetailRepo;
     @Autowired private IProductService productService;
 
+    /**
+     * Crear detalle de compras proporcionadas
+     * Busca el producto correspondiente en el sistema utilizando por ID.
+     * Actualiza el stock del producto mediante el servicio de Producto
+     * @param dtoList - Lista de objetos DTO que contienen los detalles de la compra.
+     * @param purchase - Objeto que representa la compra asociada a los detalles.
+     * @throws IllegalArgumentException Si no se encuentra un producto con el ID proporcionado en alguno de los detalles.
+     */
     @Override
     public void createDetailPurchase(List<DetailPurchaseDTO> dtoList, Purchase purchase) {
         for (DetailPurchaseDTO dto : dtoList){
