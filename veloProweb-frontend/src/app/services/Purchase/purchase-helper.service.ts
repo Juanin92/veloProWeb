@@ -9,8 +9,12 @@ import { PurchaseDetailDTO } from '../../models/DTO/purchase-detail-dto';
 })
 export class PurchaseHelperService {
 
-  createEmptyPurchase(): Purchase{
-    return { 
+  /**
+   * Crea una Compra con valores predeterminados
+   * @returns - Compra con valores predeterminados
+   */
+  createEmptyPurchase(): Purchase {
+    return {
       id: 0,
       document: '',
       documentType: 'Factura',
@@ -21,6 +25,12 @@ export class PurchaseHelperService {
     }
   }
 
+  /**
+   * Crea un DTO de compras para unir la información de una compra y sus detalles, 
+   * @param purchase - Objeto compra con los valores necesarios
+   * @param details - lista de detalle de compra con valores
+   * @returns - DTO con los valores necesarios para realizar una solicitud.
+   */
   createDto(purchase: Purchase, details: PurchaseDetails[]): PurchaseRequestDTO {
     return {
       id: 0,
@@ -34,6 +44,11 @@ export class PurchaseHelperService {
     };
   }
 
+  /**
+   * Crea un DTO de detalle de compras
+   * @param detail - Objeto detalle de compra a utilizar sus valores
+   * @returns - DTO con valores necesarios
+   */
   private createDetailDto(detail: PurchaseDetails): PurchaseDetailDTO {
     return {
       id: detail.id,

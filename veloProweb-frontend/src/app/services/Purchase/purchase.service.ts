@@ -12,10 +12,19 @@ export class PurchaseService {
   
   constructor(private http: HttpClient) { }
 
+  /**
+   * Crea un nueva compra realizando una petición POST a la API
+   * @param purchaseRequest - DTO con los valores de Compra a agregar
+   * @returns - Observable emite un mensaje de confirmación o error
+   */
   createPurchase(purchaseRequest: PurchaseRequestDTO): Observable<{message: string}>{
     return this.http.post<{message: string}>(`${this.apiUrl}/crear`, purchaseRequest);
   }
 
+  /**
+   * Obtiene cantidad total de compras realizadas haciendo una petición GET a la API
+   * @returns - Observable emite un valor numérico
+   */
   getTotalPurchase(): Observable<number>{
     return this.http.get<number>(`${this.apiUrl}/total_compras`);
   }
