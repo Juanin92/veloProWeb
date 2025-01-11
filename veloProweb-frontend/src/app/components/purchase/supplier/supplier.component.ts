@@ -35,7 +35,7 @@ export class SupplierComponent implements OnInit {
   /**
    * Agregar un nuevo proveedor.
    * Valida el formulario y si es correcto, llama al servicio para agregar el proveedor.
-   * Muestra notificaciones dependiendo el estado de la acción y refresca la página después de 3 seg.
+   * Muestra notificaciones dependiendo el estado de la acción y refresca la lista de proveedores.
    */
   createSupplier(): void {
     if (this.validator.validateForm(this.newSupplier)) {
@@ -43,9 +43,7 @@ export class SupplierComponent implements OnInit {
         console.log('Proveedor agregado exitosamente:', response);
         this.notification.showSuccessToast(`¡${this.newSupplier.name} fue agregado exitosamente!`, 'top', 3000);
         this.initializeSupplier(); // Reinicia la variable del cliente vacío.
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
+        this.getSuppliers();
       }, (error) => {
         const message = error.error.error;
         console.error('Error al agregar el proveedor:', error);
@@ -59,7 +57,7 @@ export class SupplierComponent implements OnInit {
   /**
    * Actualizar datos de un proveedor.
    * Valida el formulario y si es correcto, llama al servicio para actualizar el proveedor.
-   * Muestra notificaciones dependiendo el estado de la acción y refresca la página después de 3 seg.
+   * Muestra notificaciones dependiendo el estado de la acción y refresca la lista de proveedores.
    */
   updateSupplier(): void {
     if (this.validator.validateForm(this.newSupplier)) {
@@ -68,9 +66,7 @@ export class SupplierComponent implements OnInit {
         this.notification.showSuccessToast(`¡${this.newSupplier.name} fue actualizado exitosamente!`, 'top', 3000);
         this.initializeSupplier();
         this.status = false;
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
+        this.getSuppliers();
       }, (error) => {
         const message = error.error.error;
         console.error('Error al actualizar el proveedor:', error);
