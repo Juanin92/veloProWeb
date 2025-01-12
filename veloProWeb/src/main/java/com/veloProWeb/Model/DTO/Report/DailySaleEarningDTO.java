@@ -10,8 +10,8 @@ public class DailySaleEarningDTO {
     private LocalDate saleDTO;
     private int profit;
 
-    public DailySaleEarningDTO(LocalDate localDate, Integer profit) {
+    public DailySaleEarningDTO(LocalDate localDate, BigDecimal profit) {
         this.saleDTO = localDate;
-        this.profit = profit != null ? profit : 0;
+        this.profit = profit != null ? profit.intValue() : 0;
     }
 }

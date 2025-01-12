@@ -66,7 +66,7 @@ public class ReportService implements IReportService{
             List<DailySaleAvgDTO> dtoList = new ArrayList<>();
             for (Object[] result : results) {
                 Date date = (Date) result[0];
-                Integer avg = (Integer) result[1];
+                BigDecimal avg = (BigDecimal) result[1];
                 dtoList.add(new DailySaleAvgDTO(date.toLocalDate(), avg));
             }
             return dtoList;
@@ -84,7 +84,7 @@ public class ReportService implements IReportService{
             List<DailySaleEarningDTO> dtoList = new ArrayList<>();
             for (Object[] result : results) {
                 Date date = (Date) result[0];
-                Integer profit = (Integer) result[1];
+                BigDecimal profit = (BigDecimal) result[1];
                 dtoList.add(new DailySaleEarningDTO(date.toLocalDate(), profit));
             }
             return dtoList;

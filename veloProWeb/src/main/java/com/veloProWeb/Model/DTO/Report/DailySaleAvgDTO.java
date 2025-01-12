@@ -8,9 +8,9 @@ import java.time.LocalDate;
 @Data
 public class DailySaleAvgDTO {
     private LocalDate date;
-    private int avg;
+    private BigDecimal avg;
 
-    public DailySaleAvgDTO(LocalDate localDate, Integer avg) {
+    public DailySaleAvgDTO(LocalDate localDate, BigDecimal avg) {
         this.date = localDate;
         this.avg = avg;
     }
