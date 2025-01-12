@@ -1,12 +1,12 @@
 <div class="contianer-fluid d-flex flex-column p-1 text-center">
     <div class="d-flex flex-row justify-content-around border border-3 border-white border-start-0 border-end-0 border-top-0">
         <div>
-            <button type="button" class="btn btn-sm btn-outline-light m-2">Total <br>de Ventas</button>
-            <button type="button" class="btn btn-sm btn-outline-light m-2">Monto Total <br>de Ventas</button>
-            <button type="button" class="btn btn-sm btn-outline-light m-2">Promedio <br>de venta</button>
-            <button type="button" class="btn btn-sm btn-outline-light m-2">Ganancias <br>Totales</button>
-            <button type="button" class="btn btn-sm btn-outline-light m-2">Producto <br>Vendidos</button>
-            <button type="button" class="btn btn-sm btn-outline-light m-2">Categorías <br>Vendidas</button>
+            <button type="button" class="btn btn-sm btn-outline-light m-2" (click)="buttonClicked = true">Total <br>de Ventas</button>
+            <button type="button" class="btn btn-sm btn-outline-light m-2" (click)="buttonClicked = true">Monto Total <br>de Ventas</button>
+            <button type="button" class="btn btn-sm btn-outline-light m-2" (click)="buttonClicked = true">Promedio <br>de venta</button>
+            <button type="button" class="btn btn-sm btn-outline-light m-2" (click)="buttonClicked = true">Ganancias <br>Totales</button>
+            <button type="button" class="btn btn-sm btn-outline-light m-2" (click)="buttonClicked = true">Producto <br>Vendidos</button>
+            <button type="button" class="btn btn-sm btn-outline-light m-2" (click)="buttonClicked = true">Categorías <br>Vendidas</button>
         </div>
         <div>
             <button type="button" class="btn btn-outline-light border-0 m-2">Compras</button>
@@ -14,7 +14,7 @@
             <button type="button" class="btn btn-outline-light border-0 m-2">Kardex</button>
         </div>
     </div>
-    <div class="border border-3 border-white border-start-0 border-end-0 border-top-0">
+    <div *ngIf="buttonClicked" class="border border-3 border-white border-start-0 border-end-0 border-top-0">
         <p class="m-1 mb-0 text-start">Seleccione un periodo</p>
         <form class="d-flex flex-row justify-content-start align-items-end">
             <div class="input-group mb-3 mt-0 ms-2 justify-content-start">
@@ -63,6 +63,7 @@
             <button class="btn btn-success ms-2 m-2">Filtrar</button>
         </form>
     </div>
+    <button class="btn btn-close my-1" (click)="buttonClicked = false"></button>
     <div class="d-flex flex-row justify-content-around align-items-center text-center mt-4" style="height: 200px;">
         <div class="mx-3">GRÁFICOS</div>
         <div class="mx-3">TABLAS</div>
