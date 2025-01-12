@@ -70,16 +70,16 @@ public class ReportServiceTest {
     @ParameterizedTest
     @CsvSource({"2024-12-12","2024-11-12","2024-10-12","2024-07-12","2024-01-12","2022-11-12","2025-01-12"})
     public void getTotalSaleDaily_valid(LocalDate startDate){
-        Object[] result1 = {Date.valueOf(startDate), 10};
-        Object[] result2 = {Date.valueOf(start.plusDays(1)), 15};
+        Object[] result1 = {Date.valueOf(startDate), BigDecimal.valueOf(10)};
+        Object[] result2 = {Date.valueOf(start.plusDays(1)), BigDecimal.valueOf(15)};
         List<Object[]> mockResults = Arrays.asList(result1, result2);
         when(reportRepo.findTotalSalesByDateRange(Date.valueOf(startDate), Date.valueOf(end))).thenReturn(mockResults);
 
         List<DailySaleSumDTO> results = reportService.getTotalSaleDaily(startDate, end);
         assertEquals(2, results.size());
-        assertEquals(10, results.get(0).getSum());
+        assertEquals(BigDecimal.valueOf(10), results.get(0).getSum());
         assertEquals(startDate, results.get(0).getDate());
-        assertEquals(15, results.get(1).getSum());
+        assertEquals(BigDecimal.valueOf(15), results.get(1).getSum());
         verify(reportRepo, times(1)).findTotalSalesByDateRange(Date.valueOf(startDate), Date.valueOf(end));
     }
     @Test
