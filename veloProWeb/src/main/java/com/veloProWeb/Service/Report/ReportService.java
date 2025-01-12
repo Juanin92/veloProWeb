@@ -39,55 +39,55 @@ public class ReportService implements IReportService{
 
     @Override
     public List<DailySaleSumDTO> getTotalSaleDaily(LocalDate start, LocalDate end) {
-        try{
+        if (start.isAfter(end)) {
+            throw new IllegalArgumentException("La fecha de inicio no puede ser posterior a la fecha de fin.");
+        }else {
             Date startDate = Date.valueOf(start);
             Date endDate = Date.valueOf(end);
-            List<Object[]> results = reportRepo.findTotalSalesByDateRange(endDate, startDate);
+            List<Object[]> results = reportRepo.findTotalSalesByDateRange(startDate, endDate);
             List<DailySaleSumDTO> dtoList = new ArrayList<>();
             for (Object[] result : results) {
                 Date date = (Date) result[0];
-                BigDecimal sum = (BigDecimal) result[1];
+                Integer sum = (Integer) result[1];
                 dtoList.add(new DailySaleSumDTO(date.toLocalDate(), sum));
             }
             return dtoList;
-        }catch (Exception e){
-            throw new IllegalArgumentException("Debe ingresar fechas válidas en los campos");
         }
     }
 
     @Override
     public List<DailySaleAvgDTO> getAverageTotalSaleDaily(LocalDate start, LocalDate end) {
-        try{
+        if (start.isAfter(end)) {
+            throw new IllegalArgumentException("La fecha de inicio no puede ser posterior a la fecha de fin.");
+        }else {
             Date startDate = Date.valueOf(start);
             Date endDate = Date.valueOf(end);
-            List<Object[]> results = reportRepo.findAverageSalesPerDay(endDate, startDate);
+            List<Object[]> results = reportRepo.findAverageSalesPerDay(startDate, endDate);
             List<DailySaleAvgDTO> dtoList = new ArrayList<>();
             for (Object[] result : results) {
                 Date date = (Date) result[0];
-                BigDecimal avg = (BigDecimal) result[1];
+                Integer avg = (Integer) result[1];
                 dtoList.add(new DailySaleAvgDTO(date.toLocalDate(), avg));
             }
             return dtoList;
-        }catch (Exception e){
-            throw new IllegalArgumentException("Debe ingresar fechas válidas en los campos");
         }
     }
 
     @Override
     public List<DailySaleEarningDTO> getEarningSale(LocalDate start, LocalDate end) {
-        try{
+        if (start.isAfter(end)) {
+            throw new IllegalArgumentException("La fecha de inicio no puede ser posterior a la fecha de fin.");
+        }else {
             Date startDate = Date.valueOf(start);
             Date endDate = Date.valueOf(end);
-            List<Object[]> results = reportRepo.findEarningPerDay(endDate, startDate);
+            List<Object[]> results = reportRepo.findEarningPerDay(startDate, endDate);
             List<DailySaleEarningDTO> dtoList = new ArrayList<>();
             for (Object[] result : results) {
                 Date date = (Date) result[0];
-                BigDecimal profit = (BigDecimal) result[1];
+                Integer profit = (Integer) result[1];
                 dtoList.add(new DailySaleEarningDTO(date.toLocalDate(), profit));
             }
             return dtoList;
-        }catch (Exception e){
-            throw new IllegalArgumentException("Debe ingresar fechas válidas en los campos");
         }
     }
 }

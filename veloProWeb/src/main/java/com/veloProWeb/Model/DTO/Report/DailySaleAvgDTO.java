@@ -10,8 +10,8 @@ public class DailySaleAvgDTO {
     private LocalDate date;
     private int avg;
 
-    public DailySaleAvgDTO(LocalDate localDate, BigDecimal avg) {
+    public DailySaleAvgDTO(LocalDate localDate, Integer avg) {
         this.date = localDate;
-        this.avg = avg.intValue();
+        this.avg = avg;
     }
 }

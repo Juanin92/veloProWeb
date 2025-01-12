@@ -10,8 +10,8 @@ public class DailySaleSumDTO {
     private LocalDate date;
     private int sum;
 
-    public DailySaleSumDTO(LocalDate localDate, BigDecimal sum) {
+    public DailySaleSumDTO(LocalDate localDate, Integer sum) {
         this.date = localDate;
-        this.sum = sum.intValue();
+        this.sum = sum;
     }
 }

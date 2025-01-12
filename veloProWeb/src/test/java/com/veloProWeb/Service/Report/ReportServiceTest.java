@@ -1,15 +1,22 @@
 package com.veloProWeb.Service.Report;
 
+import com.veloProWeb.Model.DTO.Report.DailySaleAvgDTO;
 import com.veloProWeb.Model.DTO.Report.DailySaleCountDTO;
+import com.veloProWeb.Model.DTO.Report.DailySaleEarningDTO;
+import com.veloProWeb.Model.DTO.Report.DailySaleSumDTO;
 import com.veloProWeb.Repository.ReportRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSources;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.cglib.core.Local;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -35,25 +42,101 @@ public class ReportServiceTest {
     }
 
     //Prueba para obtener una lista de DailySaleCountDTO
-    @Test
-    public void getDailySale_valid(){
-        Object[] result1 = {Date.valueOf(start), 10L};
+    @ParameterizedTest
+    @CsvSource({"2024-12-12","2024-11-12","2024-10-12","2024-07-12","2024-01-12","2022-11-12","2025-01-12"})
+    public void getDailySale_valid(LocalDate startDate){
+        Object[] result1 = {Date.valueOf(startDate), 10L};
         Object[] result2 = {Date.valueOf(start.plusDays(1)), 15L};
         List<Object[]> mockResults = Arrays.asList(result1, result2);
-        when(reportRepo.findSalesByDateRange(Date.valueOf(start), Date.valueOf(end))).thenReturn(mockResults);
+        when(reportRepo.findSalesByDateRange(Date.valueOf(startDate), Date.valueOf(end))).thenReturn(mockResults);
 
-        List<DailySaleCountDTO> results = reportService.getDailySale(start, end);
+        List<DailySaleCountDTO> results = reportService.getDailySale(startDate, end);
         assertEquals(2, results.size());
         assertEquals(10L, results.get(0).getSale());
-        assertEquals(start, results.get(0).getDate());
+        assertEquals(startDate, results.get(0).getDate());
         assertEquals(15L, results.get(1).getSale());
-        verify(reportRepo, times(1)).findSalesByDateRange(Date.valueOf(start), Date.valueOf(end));
+        verify(reportRepo, times(1)).findSalesByDateRange(Date.valueOf(startDate), Date.valueOf(end));
     }
     @Test
     public void getDailySale_invalidDates(){
         LocalDate invalidStart = LocalDate.of(2025, 1, 15);
 
         Exception exception = assertThrows(IllegalArgumentException.class,() -> reportService.getDailySale(invalidStart, end));
+        assertEquals("La fecha de inicio no puede ser posterior a la fecha de fin.", exception.getMessage());
+        verifyNoInteractions(reportRepo);
+    }
+
+    //Prueba para obtener una lista de DailySaleSumDTO
+    @ParameterizedTest
+    @CsvSource({"2024-12-12","2024-11-12","2024-10-12","2024-07-12","2024-01-12","2022-11-12","2025-01-12"})
+    public void getTotalSaleDaily_valid(LocalDate startDate){
+        Object[] result1 = {Date.valueOf(startDate), 10};
+        Object[] result2 = {Date.valueOf(start.plusDays(1)), 15};
+        List<Object[]> mockResults = Arrays.asList(result1, result2);
+        when(reportRepo.findTotalSalesByDateRange(Date.valueOf(startDate), Date.valueOf(end))).thenReturn(mockResults);
+
+        List<DailySaleSumDTO> results = reportService.getTotalSaleDaily(startDate, end);
+        assertEquals(2, results.size());
+        assertEquals(10, results.get(0).getSum());
+        assertEquals(startDate, results.get(0).getDate());
+        assertEquals(15, results.get(1).getSum());
+        verify(reportRepo, times(1)).findTotalSalesByDateRange(Date.valueOf(startDate), Date.valueOf(end));
+    }
+    @Test
+    public void getTotalSaleDaily_invalidDates(){
+        LocalDate invalidStart = LocalDate.of(2025, 1, 15);
+
+        Exception exception = assertThrows(IllegalArgumentException.class,() -> reportService.getTotalSaleDaily(invalidStart, end));
+        assertEquals("La fecha de inicio no puede ser posterior a la fecha de fin.", exception.getMessage());
+        verifyNoInteractions(reportRepo);
+    }
+
+    //Prueba para obtener una lista de DailySaleAvgDTO
+    @ParameterizedTest
+    @CsvSource({"2024-12-12","2024-11-12","2024-10-12","2024-07-12","2024-01-12","2022-11-12","2025-01-12"})
+    public void getAverageTotalSaleDaily_valid(LocalDate startDate){
+        Object[] result1 = {Date.valueOf(startDate), 10};
+        Object[] result2 = {Date.valueOf(start.plusDays(1)), 15};
+        List<Object[]> mockResults = Arrays.asList(result1, result2);
+        when(reportRepo.findAverageSalesPerDay(Date.valueOf(startDate), Date.valueOf(end))).thenReturn(mockResults);
+
+        List<DailySaleAvgDTO> results = reportService.getAverageTotalSaleDaily(startDate, end);
+        assertEquals(2, results.size());
+        assertEquals(10, results.get(0).getAvg());
+        assertEquals(startDate, results.get(0).getDate());
+        assertEquals(15, results.get(1).getAvg());
+        verify(reportRepo, times(1)).findAverageSalesPerDay(Date.valueOf(startDate), Date.valueOf(end));
+    }
+    @Test
+    public void getAverageTotalSaleDaily_invalidDates(){
+        LocalDate invalidStart = LocalDate.of(2025, 1, 15);
+
+        Exception exception = assertThrows(IllegalArgumentException.class,() -> reportService.getAverageTotalSaleDaily(invalidStart, end));
+        assertEquals("La fecha de inicio no puede ser posterior a la fecha de fin.", exception.getMessage());
+        verifyNoInteractions(reportRepo);
+    }
+
+    //Prueba para obtener una lista de DailySaleEarningDTO
+    @ParameterizedTest
+    @CsvSource({"2024-12-12","2024-11-12","2024-10-12","2024-07-12","2024-01-12","2022-11-12","2025-01-12"})
+    public void getEarningSale_valid(LocalDate startDate){
+        Object[] result1 = {Date.valueOf(startDate), 10};
+        Object[] result2 = {Date.valueOf(start.plusDays(1)), 15};
+        List<Object[]> mockResults = Arrays.asList(result1, result2);
+        when(reportRepo.findEarningPerDay(Date.valueOf(startDate), Date.valueOf(end))).thenReturn(mockResults);
+
+        List<DailySaleEarningDTO> results = reportService.getEarningSale(startDate, end);
+        assertEquals(2, results.size());
+        assertEquals(10, results.get(0).getProfit());
+        assertEquals(startDate, results.get(0).getSaleDTO());
+        assertEquals(15, results.get(1).getProfit());
+        verify(reportRepo, times(1)).findEarningPerDay(Date.valueOf(startDate), Date.valueOf(end));
+    }
+    @Test
+    public void getEarningSale_invalidDates(){
+        LocalDate invalidStart = LocalDate.of(2025, 1, 15);
+
+        Exception exception = assertThrows(IllegalArgumentException.class,() -> reportService.getEarningSale(invalidStart, end));
         assertEquals("La fecha de inicio no puede ser posterior a la fecha de fin.", exception.getMessage());
         verifyNoInteractions(reportRepo);
     }
