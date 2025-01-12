@@ -15,6 +15,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Controlador REST para gestionar operaciones relacionadas con reportes de ventas.
+ * Este controlador proporciona endpoints para obtener listas.
+ */
 @RestController
 @RequestMapping("/reportes")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -22,6 +26,12 @@ public class ReportController {
 
     @Autowired private IReportService reportService;
 
+    /**
+     * Obtener el conteo diario de ventas en un rango de fechas.
+     * @param startDate - Fecha de inicio del rango (inclusive).
+     * @param endDate - Fecha de fin del rango (inclusive).
+     * @return - ResponseEntity Lista de objetos DTO o mensaje de excepción
+     */
     @GetMapping("/cantidad_ventas")
     public ResponseEntity<Object> getDailySale(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate){
         try{
@@ -34,6 +44,12 @@ public class ReportController {
         }
     }
 
+    /**
+     * Obtener la suma diaria de ventas en un rango de fechas.
+     * @param startDate - Fecha de inicio del rango (inclusive).
+     * @param endDate - Fecha de fin del rango (inclusive).
+     * @return - ResponseEntity Lista de objetos DTO o mensaje de excepción
+     */
     @GetMapping("/monto_ventas")
     public ResponseEntity<Object> getTotalSaleDaily(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate){
         try{
@@ -46,6 +62,12 @@ public class ReportController {
         }
     }
 
+    /**
+     * Obtener el promedio diario de ventas en un rango de fechas.
+     * @param startDate - Fecha de inicio del rango (inclusive).
+     * @param endDate - Fecha de fin del rango (inclusive).
+     * @return - ResponseEntity Lista de objetos DTO o mensaje de excepción
+     */
     @GetMapping("/promedio_ventas")
     public ResponseEntity<Object> getAverageTotalSaleDaily(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate){
         try{
@@ -58,6 +80,12 @@ public class ReportController {
         }
     }
 
+    /**
+     * Obtener las ganancias diarias de ventas en un rango de fechas.
+     * @param startDate - Fecha de inicio del rango (inclusive).
+     * @param endDate - Fecha de fin del rango (inclusive).
+     * @return - ResponseEntity Lista de objetos DTO o mensaje de excepción
+     */
     @GetMapping("/ganancias_ventas")
     public ResponseEntity<Object> getEarningSale(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate){
         try{

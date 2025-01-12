@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Controlador REST para gestionar operaciones relacionadas con compras.
+ * Este controlador proporciona endpoints para agregar y obtener cantidad total de compras.
+ */
 @RestController
 @RequestMapping("/compras")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -20,6 +24,11 @@ public class PurchaseController {
     @Autowired private IPurchaseService purchaseService;
     @Autowired private IPurchaseDetailService purchaseDetailService;
 
+    /**
+     * Crear una compra y su detalle de compra correspondiente
+     * @param dto - Objeto con los datos necesarios
+     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
+     */
     @PostMapping("/crear")
     public ResponseEntity<Map<String, String>> createPurchase(@RequestBody PurchaseRequestDTO dto){
         Map<String, String> response = new HashMap<>();
@@ -34,6 +43,10 @@ public class PurchaseController {
         }
     }
 
+    /**
+     * Obtener la cantidad de compras registrada
+     * @return - Long con el valor resultante
+     */
     @GetMapping("/total_compras")
     public ResponseEntity<Long> getTotalPurchase(){
         try{

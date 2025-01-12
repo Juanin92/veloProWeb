@@ -19,6 +19,13 @@ public class ReportService implements IReportService{
 
     @Autowired private ReportRepo reportRepo;
 
+    /**
+     * Obtiene el conteo diario de ventas en un rango de fechas.
+     * @param start - Fecha de inicio del rango (inclusive).
+     * @param end - Fecha de fin del rango (inclusive).
+     * @return - Lista de objetos DTO
+     * @throws IllegalArgumentException Si la fecha de inicio es posterior a la fecha de fin.
+     */
     @Override
     public List<DailySaleCountDTO> getDailySale(LocalDate start, LocalDate end) {
         if (start.isAfter(end)) {
@@ -37,6 +44,13 @@ public class ReportService implements IReportService{
         }
     }
 
+    /**
+     * Obtiene la suma diaria de ventas en un rango de fechas.
+     * @param start - Fecha de inicio del rango (inclusive).
+     * @param end - Fecha de fin del rango (inclusive).
+     * @return - Lista de objetos DTO
+     * @throws IllegalArgumentException Si la fecha de inicio es posterior a la fecha de fin.
+     */
     @Override
     public List<DailySaleSumDTO> getTotalSaleDaily(LocalDate start, LocalDate end) {
         if (start.isAfter(end)) {
@@ -55,6 +69,13 @@ public class ReportService implements IReportService{
         }
     }
 
+    /**
+     * Obtiene el promedio diario de ventas en un rango de fechas.
+     * @param start - Fecha de inicio del rango (inclusive).
+     * @param end - Fecha de fin del rango (inclusive).
+     * @return - Lista de objetos DTO
+     * @throws IllegalArgumentException Si la fecha de inicio es posterior a la fecha de fin.
+     */
     @Override
     public List<DailySaleAvgDTO> getAverageTotalSaleDaily(LocalDate start, LocalDate end) {
         if (start.isAfter(end)) {
@@ -73,6 +94,13 @@ public class ReportService implements IReportService{
         }
     }
 
+    /**
+     * Obtiene la ganancia diaria de ventas en un rango de fechas.
+     * @param start - Fecha de inicio del rango (inclusive).
+     * @param end - Fecha de fin del rango (inclusive).
+     * @return - Lista de objetos DTO
+     * @throws IllegalArgumentException Si la fecha de inicio es posterior a la fecha de fin.
+     */
     @Override
     public List<DailySaleEarningDTO> getEarningSale(LocalDate start, LocalDate end) {
         if (start.isAfter(end)) {
