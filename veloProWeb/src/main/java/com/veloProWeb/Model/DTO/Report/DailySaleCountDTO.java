@@ -8,4 +8,9 @@ import java.time.LocalDate;
 public class DailySaleCountDTO {
     private LocalDate date;
     private int sale;
+
+    public DailySaleCountDTO(LocalDate localDate, Long count) {
+        this.date = localDate;
+        this.sale = count.intValue();
+    }
 }
