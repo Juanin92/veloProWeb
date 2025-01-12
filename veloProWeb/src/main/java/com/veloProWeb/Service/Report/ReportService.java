@@ -21,23 +21,19 @@ public class ReportService implements IReportService{
 
     @Override
     public List<DailySaleCountDTO> getDailySale(LocalDate start, LocalDate end) {
-        try{
-            if (end.isAfter(start)) {
-                throw new IllegalArgumentException("La fecha de inicio no puede ser posterior a la fecha de fin.");
-            }else {
-                Date startDate = Date.valueOf(start);
-                Date endDate = Date.valueOf(end);
-                List<Object[]> results = reportRepo.findSalesByDateRange(endDate, startDate);
-                List<DailySaleCountDTO> dtoList = new ArrayList<>();
-                for (Object[] result : results){
-                    Date date = (Date) result[0];
-                    Long count = (Long) result[1];
-                    dtoList.add(new DailySaleCountDTO(date.toLocalDate(), count));
-                }
-                return dtoList;
+        if (start.isAfter(end)) {
+            throw new IllegalArgumentException("La fecha de inicio no puede ser posterior a la fecha de fin.");
+        }else {
+            Date startDate = Date.valueOf(start);
+            Date endDate = Date.valueOf(end);
+            List<Object[]> results = reportRepo.findSalesByDateRange(startDate, endDate);
+            List<DailySaleCountDTO> dtoList = new ArrayList<>();
+            for (Object[] result : results){
+                Date date = (Date) result[0];
+                Long count = (Long) result[1];
+                dtoList.add(new DailySaleCountDTO(date.toLocalDate(), count));
             }
-        }catch (Exception e){
-            throw new IllegalArgumentException("Debe ingresar fechas válidas en los campos");
+            return dtoList;
         }
     }
 
