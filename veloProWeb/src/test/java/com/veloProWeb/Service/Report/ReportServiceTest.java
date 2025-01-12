@@ -10,16 +10,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSources;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.cglib.core.Local;
 
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -95,16 +92,16 @@ public class ReportServiceTest {
     @ParameterizedTest
     @CsvSource({"2024-12-12","2024-11-12","2024-10-12","2024-07-12","2024-01-12","2022-11-12","2025-01-12"})
     public void getAverageTotalSaleDaily_valid(LocalDate startDate){
-        Object[] result1 = {Date.valueOf(startDate), 10};
-        Object[] result2 = {Date.valueOf(start.plusDays(1)), 15};
+        Object[] result1 = {Date.valueOf(startDate), BigDecimal.valueOf(10)};
+        Object[] result2 = {Date.valueOf(start.plusDays(1)), BigDecimal.valueOf(15)};
         List<Object[]> mockResults = Arrays.asList(result1, result2);
         when(reportRepo.findAverageSalesPerDay(Date.valueOf(startDate), Date.valueOf(end))).thenReturn(mockResults);
 
         List<DailySaleAvgDTO> results = reportService.getAverageTotalSaleDaily(startDate, end);
         assertEquals(2, results.size());
-        assertEquals(10, results.get(0).getAvg());
+        assertEquals(BigDecimal.valueOf(10), results.get(0).getAvg());
         assertEquals(startDate, results.get(0).getDate());
-        assertEquals(15, results.get(1).getAvg());
+        assertEquals(BigDecimal.valueOf(15), results.get(1).getAvg());
         verify(reportRepo, times(1)).findAverageSalesPerDay(Date.valueOf(startDate), Date.valueOf(end));
     }
     @Test
@@ -120,8 +117,8 @@ public class ReportServiceTest {
     @ParameterizedTest
     @CsvSource({"2024-12-12","2024-11-12","2024-10-12","2024-07-12","2024-01-12","2022-11-12","2025-01-12"})
     public void getEarningSale_valid(LocalDate startDate){
-        Object[] result1 = {Date.valueOf(startDate), 10};
-        Object[] result2 = {Date.valueOf(start.plusDays(1)), 15};
+        Object[] result1 = {Date.valueOf(startDate), BigDecimal.valueOf(10)};
+        Object[] result2 = {Date.valueOf(start.plusDays(1)), BigDecimal.valueOf(15)};
         List<Object[]> mockResults = Arrays.asList(result1, result2);
         when(reportRepo.findEarningPerDay(Date.valueOf(startDate), Date.valueOf(end))).thenReturn(mockResults);
 
