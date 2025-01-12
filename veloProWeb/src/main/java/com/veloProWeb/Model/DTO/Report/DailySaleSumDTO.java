@@ -8,9 +8,9 @@ import java.time.LocalDate;
 @Data
 public class DailySaleSumDTO {
     private LocalDate date;
-    private int sum;
+    private BigDecimal sum;
 
-    public DailySaleSumDTO(LocalDate localDate, Integer sum) {
+    public DailySaleSumDTO(LocalDate localDate, BigDecimal sum) {
         this.date = localDate;
         this.sum = sum;
     }

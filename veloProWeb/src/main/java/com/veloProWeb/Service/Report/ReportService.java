@@ -48,7 +48,7 @@ public class ReportService implements IReportService{
             List<DailySaleSumDTO> dtoList = new ArrayList<>();
             for (Object[] result : results) {
                 Date date = (Date) result[0];
-                Integer sum = (Integer) result[1];
+                BigDecimal sum = (BigDecimal) result[1];
                 dtoList.add(new DailySaleSumDTO(date.toLocalDate(), sum));
             }
             return dtoList;
