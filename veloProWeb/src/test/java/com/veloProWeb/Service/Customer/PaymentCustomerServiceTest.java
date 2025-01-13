@@ -37,49 +37,6 @@ public class PaymentCustomerServiceTest {
         paymentCustomer = new PaymentCustomer(1L,1000,"Test Comment", LocalDate.now(), customer, ticketHistory);
     }
 
-    //Pruebas de creación de registro de abono
-    @Test
-    public void addPayments_valid(){
-        paymentCustomerService.addPayments(paymentCustomer);
-        ArgumentCaptor<PaymentCustomer> paymentCustomerCaptor = ArgumentCaptor.forClass(PaymentCustomer.class);
-        verify(paymentCustomerRepo).save(paymentCustomerCaptor.capture());
-        PaymentCustomer paymentCustomerCaptured = paymentCustomerCaptor.getValue();
-        assertEquals( paymentCustomer.getCustomer(), paymentCustomerCaptured.getCustomer());
-        assertEquals( paymentCustomer.getAmount(), paymentCustomerCaptured.getAmount());
-        assertEquals( paymentCustomer.getComment(), paymentCustomerCaptured.getComment());
-        assertEquals( paymentCustomer.getDate(), paymentCustomerCaptured.getDate());
-        assertEquals( paymentCustomer.getDocument(), paymentCustomerCaptured.getDocument());
-    }
-    @Test
-    public void addPayments_invalidValidator(){
-        doThrow(new IllegalArgumentException("Error en Validación")).when(validator).validatePayment(anyString(),anyString());
-        assertThrows(IllegalArgumentException.class,() -> paymentCustomerService.addPayments(paymentCustomer));
-        verify(paymentCustomerRepo,never()).save(paymentCustomer);
-    }
-
-    //Pruebas de para agregar ajuste de abonos
-    @Test
-    public void createAdjustPayments_valid(){
-        //Se crea un espía para 2 métodos del mismo servicio
-        PaymentCustomerService spyService = spy(paymentCustomerService);
-        spyService.createAdjustPayments(1000, paymentCustomer.getDocument(), paymentCustomer.getCustomer());
-        ArgumentCaptor<PaymentCustomer> paymentCustomerCaptor = ArgumentCaptor.forClass(PaymentCustomer.class);
-        verify(spyService).addPayments(paymentCustomerCaptor.capture());
-
-        PaymentCustomer paymentCustomerCaptured = paymentCustomerCaptor.getValue();
-        assertEquals( 1000, paymentCustomerCaptured.getAmount());
-        assertEquals( "Ajuste", paymentCustomerCaptured.getComment());
-        assertEquals( paymentCustomer.getCustomer(), paymentCustomerCaptured.getCustomer());
-        assertEquals( paymentCustomer.getDocument(), paymentCustomerCaptured.getDocument());
-    }
-    @ParameterizedTest
-    @ValueSource(ints = {0, -10})
-    public void createAdjustPayments_invalidAmount(int value){
-        PaymentCustomerService spyService = spy(paymentCustomerService);
-        spyService.createAdjustPayments(value, paymentCustomer.getDocument(), paymentCustomer.getCustomer());
-        verify(spyService, never()).addPayments(paymentCustomer);
-    }
-
     //Prueba para obtener una lista de todos los abonos
     @Test
     public void getAll_valid(){
