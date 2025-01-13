@@ -11,4 +11,5 @@ public class PaymentRequestDTO {
     private List<TicketHistory> tickets;
     private Customer customer;
     private int amount;
+    private String comment;
 }
