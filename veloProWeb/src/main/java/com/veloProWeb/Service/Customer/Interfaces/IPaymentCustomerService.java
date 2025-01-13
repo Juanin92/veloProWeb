@@ -13,5 +13,4 @@ public interface IPaymentCustomerService {
     void createAdjustPayments(int amount, TicketHistory ticket, Customer customer);
     List<PaymentCustomer> getAll();
     List<PaymentCustomer> getCustomerSelected(Long id);
-    int calculateDebtTicket(TicketHistory ticket);
 }

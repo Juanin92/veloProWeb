@@ -116,19 +116,6 @@ public class PaymentCustomerService implements IPaymentCustomerService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Calcula el monto a pagar por tickets seleccionados
-     * @param ticket es el seleccionado para obtener el monto a pagar
-     * @return la suma de los monto adeudos por ticket
-     */
-    @Override
-    public int calculateDebtTicket(TicketHistory ticket) {
-        List<PaymentCustomer> paymentTickets = paymentCustomerRepo.findByDocument(ticket);
-        return paymentTickets.stream()
-                .mapToInt(PaymentCustomer::getAmount)
-                .sum();
-    }
-
     private void paymentDebtCustomer(TicketHistory ticket, String comment){
         PaymentCustomer paymentCustomer = new PaymentCustomer();
         paymentCustomer.setCustomer(ticket.getCustomer());

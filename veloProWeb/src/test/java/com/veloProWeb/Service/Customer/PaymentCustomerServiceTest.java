@@ -112,37 +112,4 @@ public class PaymentCustomerServiceTest {
         assertEquals(1, result.size());
         assertEquals(mockPayment, result);
     }
-
-    //Prueba para calcular el valor de la deuda por ticket
-    @Test
-    public void calculateDebtTicket_valid(){
-        paymentCustomerService.calculateDebtTicket(ticketHistory);
-        verify(paymentCustomerRepo).findByDocument(ticketHistory);
-    }
-    @Test
-    public void calculateDebtTicket_validOnePayments(){
-        List<PaymentCustomer> mockPayment = Collections.singletonList(paymentCustomer);
-        when(paymentCustomerRepo.findByDocument(ticketHistory)).thenReturn(mockPayment);
-        int result = paymentCustomerService.calculateDebtTicket(ticketHistory);
-
-        verify(paymentCustomerRepo).findByDocument(ticketHistory);
-        assertEquals(paymentCustomer.getAmount(), result);
-    }
-    @Test
-    public void calculateDebtTicket_validMorePayments(){
-        List<PaymentCustomer> mockPayment = Arrays.asList(paymentCustomer,new PaymentCustomer (1L,3000,"Test Comment", LocalDate.now(), customer, ticketHistory));
-        when(paymentCustomerRepo.findByDocument(ticketHistory)).thenReturn(mockPayment);
-        int result = paymentCustomerService.calculateDebtTicket(ticketHistory);
-
-        verify(paymentCustomerRepo).findByDocument(ticketHistory);
-        assertEquals(4000, result);
-    }
-    @Test
-    public void calculateDebtTicket_validNoPayments(){
-        when(paymentCustomerRepo.findByDocument(ticketHistory)).thenReturn(Collections.emptyList());
-        int result = paymentCustomerService.calculateDebtTicket(ticketHistory);
-
-        verify(paymentCustomerRepo).findByDocument(ticketHistory);
-        assertEquals(0, result);
-    }
 }
