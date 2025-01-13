@@ -12,4 +12,5 @@ public class PaymentRequestDTO {
     private Customer customer;
     private int amount;
     private String comment;
+    private int totalPaymentPaid;
 }
