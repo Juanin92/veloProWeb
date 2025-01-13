@@ -1,5 +1,6 @@
 package com.veloProWeb.Service.Customer;
 
+import com.veloProWeb.Model.DTO.PaymentRequestDTO;
 import com.veloProWeb.Model.Entity.Customer.Customer;
 import com.veloProWeb.Model.Entity.Customer.PaymentCustomer;
 import com.veloProWeb.Model.Entity.Customer.TicketHistory;
@@ -20,7 +21,38 @@ public class PaymentCustomerService implements IPaymentCustomerService {
 
     @Autowired private PaymentCustomerRepo paymentCustomerRepo;
     @Autowired private PaymentCustomerValidator validator;
-    @Autowired private TicketHistoryService ticketHistoryService;
+    @Autowired private TicketHistoryService ticketService;
+    @Autowired private CustomerService customerService;
+
+    @Override
+    public void createPaymentProcess(PaymentRequestDTO dto) {
+        List<TicketHistory> ticketList = dto.getTickets();
+        if (!ticketList.isEmpty()){
+            int totalSelectedTicket = dto.getTickets().stream().mapToInt(TicketHistory::getTotal).sum();
+            if (ticketList.size() > 1){
+                if (dto.getAmount() == totalSelectedTicket){
+                    for (TicketHistory ticket : ticketList){
+                        paymentDebtCustomer(ticket, dto.getComment());
+                        ticketService.updateStatus(ticket);
+                    }
+                }else {
+                    throw new IllegalArgumentException("El monto no es correcto para el pago de la deuda");
+                }
+            }else {
+                if (dto.getAmount() == (totalSelectedTicket - dto.getTotalPaymentPaid())){
+                    paymentDebtCustomer(ticketList.getFirst(), dto.getComment());
+                    ticketService.updateStatus(ticketList.getFirst());
+                } else if (dto.getAmount() < (totalSelectedTicket - dto.getTotalPaymentPaid())) {
+                    createAdjustPayments(dto.getAmount(), ticketList.getFirst(), dto.getCustomer());
+                    customerService.paymentDebt(dto.getCustomer(), String.valueOf(dto.getAmount()));
+                }else {
+                    throw new IllegalArgumentException("El monto supera el valor de la deuda.");
+                }
+            }
+        }else {
+            throw new IllegalArgumentException("No ha seleccionado ninguna boleta");
+        }
+    }
 
     /**
      * Agrega un pago a la deuda de un cliente.
@@ -75,7 +107,7 @@ public class PaymentCustomerService implements IPaymentCustomerService {
     @Override
     public List<PaymentCustomer> getCustomerSelected(Long  idCustomer) {
         List<PaymentCustomer> payments =  paymentCustomerRepo.findByCustomerId(idCustomer);
-        List<TicketHistory> tickets = ticketHistoryService.getByCustomerId(idCustomer);
+        List<TicketHistory> tickets = ticketService.getByCustomerId(idCustomer);
 
         return payments.stream()
                 .filter(payment -> tickets.stream()
@@ -95,5 +127,15 @@ public class PaymentCustomerService implements IPaymentCustomerService {
         return paymentTickets.stream()
                 .mapToInt(PaymentCustomer::getAmount)
                 .sum();
+    }
+
+    private void paymentDebtCustomer(TicketHistory ticket, String comment){
+        PaymentCustomer paymentCustomer = new PaymentCustomer();
+        paymentCustomer.setCustomer(ticket.getCustomer());
+        paymentCustomer.setDocument(ticket);
+        paymentCustomer.setComment(comment);
+        addPayments(paymentCustomer);
+        paymentCustomer.setAmount(ticket.getTotal());
+        customerService.paymentDebt(ticket.getCustomer(), String.valueOf(ticket.getTotal()));
     }
 }

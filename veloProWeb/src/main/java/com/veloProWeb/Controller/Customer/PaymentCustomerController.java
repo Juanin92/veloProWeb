@@ -1,12 +1,16 @@
 package com.veloProWeb.Controller.Customer;
 
+import com.veloProWeb.Model.DTO.PaymentRequestDTO;
 import com.veloProWeb.Model.Entity.Customer.PaymentCustomer;
 import com.veloProWeb.Service.Customer.Interfaces.IPaymentCustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Controlador REST para gestionar operaciones relacionadas con los pagos de los clientes.
@@ -39,5 +43,17 @@ public class PaymentCustomerController {
     public ResponseEntity<List<PaymentCustomer>> getCustomerSelectedPayment(@RequestParam Long customerId){
         return ResponseEntity.ok(paymentCustomerService.getCustomerSelected(customerId));
     }
-}
 
+    @PostMapping
+    public ResponseEntity<Map<String, String>> createPaymentCustomer(@RequestBody PaymentRequestDTO dto){
+        Map<String, String> response = new HashMap<>();
+        try{
+            response.put("message", "Pago registrado");
+            paymentCustomerService.createPaymentProcess(dto);
+            return ResponseEntity.ok(response);
+        }catch (IllegalArgumentException e){
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+}
