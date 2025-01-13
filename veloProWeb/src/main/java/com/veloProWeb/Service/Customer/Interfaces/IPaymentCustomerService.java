@@ -9,8 +9,6 @@ import java.util.List;
 
 public interface IPaymentCustomerService {
     void createPaymentProcess(PaymentRequestDTO dto);
-    void addPayments(PaymentCustomer customer);
-    void createAdjustPayments(int amount, TicketHistory ticket, Customer customer);
     List<PaymentCustomer> getAll();
     List<PaymentCustomer> getCustomerSelected(Long id);
 }

@@ -55,40 +55,6 @@ public class PaymentCustomerService implements IPaymentCustomerService {
     }
 
     /**
-     * Agrega un pago a la deuda de un cliente.
-     * Se encarga de válidar el pago y asignar los detalles antes de registrar el pago
-     * @param paymentCustomer contiene el detalle del pago
-     */
-    @Override
-    public void addPayments(PaymentCustomer paymentCustomer) {
-        validator.validatePayment(String.valueOf(paymentCustomer.getAmount()),paymentCustomer.getComment());
-        paymentCustomer.setCustomer(paymentCustomer.getCustomer());
-        paymentCustomer.setDate(LocalDate.now());
-        paymentCustomer.setDocument(paymentCustomer.getDocument());
-        paymentCustomer.setAmount(paymentCustomer.getAmount());
-        paymentCustomer.setComment(paymentCustomer.getComment());
-        paymentCustomerRepo.save(paymentCustomer);
-    }
-
-    /**
-     * agrega un ajuste a la deuda del cliente
-     * @param amount valor abonado
-     * @param ticket ticket al que se asocia el monto abonado
-     * @param customer cliente al cual se le hace el ajuste
-     */
-    @Override
-    public void createAdjustPayments(int amount, TicketHistory ticket, Customer customer) {
-        if (amount > 0) {
-            PaymentCustomer paymentCustomer = new PaymentCustomer();
-            paymentCustomer.setCustomer(customer);
-            paymentCustomer.setDocument(ticket);
-            paymentCustomer.setAmount(amount);
-            paymentCustomer.setComment("Ajuste");
-            addPayments(paymentCustomer);
-        }
-    }
-
-    /**
      * Obtiene los registro de pagos del cliente
      * @return una lista con los registros de pagos.
      */
@@ -114,6 +80,38 @@ public class PaymentCustomerService implements IPaymentCustomerService {
                         .anyMatch(ticket -> Objects.equals(ticket.getId(), payment.getDocument().getId())))
                 .sorted(Comparator.comparing(PaymentCustomer::getDate))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Agrega un pago a la deuda de un cliente.
+     * Se encarga de válidar el pago y asignar los detalles antes de registrar el pago
+     * @param paymentCustomer contiene el detalle del pago
+     */
+    private void addPayments(PaymentCustomer paymentCustomer) {
+        validator.validatePayment(String.valueOf(paymentCustomer.getAmount()),paymentCustomer.getComment());
+        paymentCustomer.setCustomer(paymentCustomer.getCustomer());
+        paymentCustomer.setDate(LocalDate.now());
+        paymentCustomer.setDocument(paymentCustomer.getDocument());
+        paymentCustomer.setAmount(paymentCustomer.getAmount());
+        paymentCustomer.setComment(paymentCustomer.getComment());
+        paymentCustomerRepo.save(paymentCustomer);
+    }
+
+    /**
+     * agrega un ajuste a la deuda del cliente
+     * @param amount valor abonado
+     * @param ticket ticket al que se asocia el monto abonado
+     * @param customer cliente al cual se le hace el ajuste
+     */
+    private void createAdjustPayments(int amount, TicketHistory ticket, Customer customer) {
+        if (amount > 0) {
+            PaymentCustomer paymentCustomer = new PaymentCustomer();
+            paymentCustomer.setCustomer(customer);
+            paymentCustomer.setDocument(ticket);
+            paymentCustomer.setAmount(amount);
+            paymentCustomer.setComment("Ajuste");
+            addPayments(paymentCustomer);
+        }
     }
 
     private void paymentDebtCustomer(TicketHistory ticket, String comment){
