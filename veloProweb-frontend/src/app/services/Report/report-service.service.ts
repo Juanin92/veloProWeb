@@ -12,12 +12,13 @@ export class ReportServiceService {
 
   constructor(private http: HttpClient) { }
 
-  getDailySale(startDate: string, endDate: string): Observable<DailySaleCountDTO[] | {message: string}>{
+  getDailySale(startDate: string, endDate: string): Observable<DailySaleCountDTO[]>{
     const params = new HttpParams().set('startDate', startDate).set('endDate', endDate);
     return this.http.get<DailySaleCountDTO[]>(`${this.apiUrl}/cantidad_ventas`, { params })
       .pipe(
         catchError((error) => {
-          return throwError(() => new Error(error.error.message || 'Error al obtener los datos.'));
+          const errorMessage = error.error.message;
+          return throwError(() => new Error(errorMessage));
         })
       );
   }

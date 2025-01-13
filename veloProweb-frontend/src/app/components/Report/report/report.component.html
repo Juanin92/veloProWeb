@@ -1,7 +1,7 @@
 <div class="contianer-fluid d-flex flex-column p-1 text-center">
     <div class="d-flex flex-row justify-content-around border border-3 border-white border-start-0 border-end-0 border-top-0">
         <div>
-            <button type="button" class="btn btn-sm btn-outline-light m-2" (click)="buttonClicked = true">Total <br>de Ventas</button>
+            <button type="button" class="btn btn-sm btn-outline-light m-2" (click)="getDailySale()">Total <br>de Ventas</button>
             <button type="button" class="btn btn-sm btn-outline-light m-2" (click)="buttonClicked = true">Monto Total <br>de Ventas</button>
             <button type="button" class="btn btn-sm btn-outline-light m-2" (click)="buttonClicked = true">Promedio <br>de venta</button>
             <button type="button" class="btn btn-sm btn-outline-light m-2" (click)="buttonClicked = true">Ganancias <br>Totales</button>
@@ -14,37 +14,41 @@
             <button type="button" class="btn btn-outline-light border-0 m-2">Kardex</button>
         </div>
     </div>
-    <div *ngIf="buttonClicked" class="border border-3 border-white border-start-0 border-end-0 border-top-0">
+    <div class="border border-3 border-white border-start-0 border-end-0 border-top-0">
         <p class="m-1 mb-0 text-start">Seleccione un periodo</p>
         <form class="d-flex flex-row justify-content-start align-items-end">
             <div class="input-group mb-3 mt-0 ms-2 justify-content-start">
                 <div class="form-check me-4">
                     <input class="form-check-input" type="radio" name="radioDocumentType" id="radioPeriodThirty"
-                        value="30" />
+                        value="30" (change)="onPeriodChange('30')" />
                     <label class="form-check-label" for="radioDocumentTypeTicket">
                         30 días
                     </label>
                 </div>
                 <div class="form-check me-4">
-                    <input class="form-check-input" type="radio" name="radioDocumentType" id="radioPeriodsixty" value="60" />
+                    <input class="form-check-input" type="radio" name="radioDocumentType" id="radioPeriodsixty" 
+                        value="60" (change)="onPeriodChange('60')" />
                     <label class="form-check-label" for="radioDocumentTypeTicket">
                         60 días
                     </label>
                 </div>
                 <div class="form-check me-4">
-                    <input class="form-check-input" type="radio" name="radioDocumentType" id="radioPeriodNinety" value="90" />
+                    <input class="form-check-input" type="radio" name="radioDocumentType" id="radioPeriodNinety" 
+                        value="90" (change)="onPeriodChange('90')" />
                     <label class="form-check-label" for="radioDocumentTypeTicket">
                         90 días
                     </label>
                 </div>
                 <div class="form-check me-4">
-                    <input class="form-check-input" type="radio" name="radioDocumentType" id="radioPeriodMonths" value="6" />
+                    <input class="form-check-input" type="radio" name="radioDocumentType" id="radioPeriodMonths" 
+                        value="6" (change)="onPeriodChange('6')" />
                     <label class="form-check-label" for="radioDocumentTypeTicket">
                         6 meses
                     </label>
                 </div>
                 <div class="form-check me-4">
-                    <input class="form-check-input" type="radio" name="radioDocumentType" id="radioPeriodYear" value="1" />
+                    <input class="form-check-input" type="radio" name="radioDocumentType" id="radioPeriodYear" 
+                        value="1" (change)="onPeriodChange('1')" />
                     <label class="form-check-label" for="radioDocumentTypeTicket">
                         1 año
                     </label>
@@ -75,9 +79,9 @@
                     </tr>
                 </thead>
                 <tbody class="table-group-divider text-center align-middle">
-                    <tr>
-                        <th scope="row">Fechas</th>
-                        <td>343</td>
+                    <tr *ngFor="let item of dailySaleCountList">
+                        <th scope="row">{{item.date}}</th>
+                        <td>{{item.sale}}</td>
                     </tr>
                 </tbody>
             </table>
