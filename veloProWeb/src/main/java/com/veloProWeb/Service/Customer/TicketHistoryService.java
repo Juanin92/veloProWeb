@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TicketHistoryService implements ITicketHistoryService {
@@ -89,6 +90,11 @@ public class TicketHistoryService implements ITicketHistoryService {
     public void updateStatus(TicketHistory ticket) {
         ticket.setStatus(true);
         ticketHistoryRepo.save(ticket);
+    }
+
+    @Override
+    public TicketHistory getTicketByID(Long Id) {
+        return ticketHistoryRepo.findById(Id).orElseThrow(() -> new IllegalArgumentException("Ticket no encontrado"));
     }
 
     /**
