@@ -69,6 +69,16 @@ public class CustomerService implements ICustomerService {
     }
 
     /**
+     * Obtiene un cliente espécifico
+     * @param ID - Identificador del cliente
+     * @return - Objeto de cliente o una excepción si no encuentra nada
+     */
+    @Override
+    public Customer getCustomerById(Long ID) {
+        return customerRepo.findById(ID).orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
+    }
+
+    /**
      *  Obtiene el registro de todos los clientes en la DB
      * @return lista de clientes.
      */

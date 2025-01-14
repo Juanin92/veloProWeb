@@ -14,4 +14,5 @@ public interface ICustomerService {
     void addSaleToCustomer(Customer customer);
     void updateTotalDebt(Customer customer);
     void updateCustomer(Customer customer);
+    Customer getCustomerById(Long ID);
 }
