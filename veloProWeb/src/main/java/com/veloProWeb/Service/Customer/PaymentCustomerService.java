@@ -24,27 +24,39 @@ public class PaymentCustomerService implements IPaymentCustomerService {
     @Autowired private TicketHistoryService ticketService;
     @Autowired private CustomerService customerService;
 
+    /**
+     * Procesa la creación de un pago basado en los valores del DTO.
+     * Gestiona el proceso de pago para uno o varios tickets.
+     * Si el pago cubre una parte de la deuda, se genera un ajuste en el sistema.
+     * @param dto - Contiene los detalles del pago
+     */
     @Override
     public void createPaymentProcess(PaymentRequestDTO dto) {
-        List<TicketHistory> ticketList = dto.getTickets();
+        Customer customer = customerService.getCustomerById(dto.getCustomerID());
+        List<TicketHistory> ticketList = new java.util.ArrayList<>(List.of());
+        for (Long id : dto.getTicketIDs()){
+            TicketHistory ticketHistory = ticketService.getTicketByID(id);
+            ticketList.add(ticketHistory);
+        }
         if (!ticketList.isEmpty()){
-            int totalSelectedTicket = dto.getTickets().stream().mapToInt(TicketHistory::getTotal).sum();
+            int totalSelectedTicket = ticketList.stream().mapToInt(TicketHistory::getTotal).sum();
             if (ticketList.size() > 1){
                 if (dto.getAmount() == totalSelectedTicket){
                     for (TicketHistory ticket : ticketList){
-                        paymentDebtCustomer(ticket, dto.getComment());
+                        paymentDebtCustomer(ticket, dto.getComment(), dto.getAmount(), true);
                         ticketService.updateStatus(ticket);
+                        dto.setAmount(dto.getAmount() - ticket.getTotal());
                     }
                 }else {
                     throw new IllegalArgumentException("El monto no es correcto para el pago de la deuda");
                 }
             }else {
-                if (dto.getAmount() == (totalSelectedTicket - dto.getTotalPaymentPaid())){
-                    paymentDebtCustomer(ticketList.getFirst(), dto.getComment());
+                if (dto.getAmount() == (ticketList.getFirst().getTotal() - dto.getTotalPaymentPaid())){
+                    paymentDebtCustomer(ticketList.getFirst(), dto.getComment(), dto.getAmount(), false);
                     ticketService.updateStatus(ticketList.getFirst());
-                } else if (dto.getAmount() < (totalSelectedTicket - dto.getTotalPaymentPaid())) {
-                    createAdjustPayments(dto.getAmount(), ticketList.getFirst(), dto.getCustomer());
-                    customerService.paymentDebt(dto.getCustomer(), String.valueOf(dto.getAmount()));
+                } else if (dto.getAmount() < (ticketList.getFirst().getTotal() - dto.getTotalPaymentPaid())) {
+                    createAdjustPayments(dto.getAmount(), ticketList.getFirst(), customer);
+                    customerService.paymentDebt(customer, String.valueOf(dto.getAmount()));
                 }else {
                     throw new IllegalArgumentException("El monto supera el valor de la deuda.");
                 }
@@ -98,7 +110,7 @@ public class PaymentCustomerService implements IPaymentCustomerService {
     }
 
     /**
-     * agrega un ajuste a la deuda del cliente
+     * Agrega un ajuste (diferencia) a la deuda del cliente
      * @param amount valor abonado
      * @param ticket ticket al que se asocia el monto abonado
      * @param customer cliente al cual se le hace el ajuste
@@ -114,13 +126,22 @@ public class PaymentCustomerService implements IPaymentCustomerService {
         }
     }
 
-    private void paymentDebtCustomer(TicketHistory ticket, String comment){
+    /**
+     * Creación de Pago de cliente
+     * procesa la reducción de la deuda del cliente, utilizando el monto especificado o
+     * el total del ticket según si el pago corresponde a una lista de tickets o no.
+     * @param ticket - Ticket que se realiza el pago
+     * @param comment - cadena con comentario
+     * @param amount - monto a pagar
+     * @param list - Indica si el pago desde una lista de tickets o no
+     */
+    private void paymentDebtCustomer(TicketHistory ticket, String comment, int amount, boolean list){
         PaymentCustomer paymentCustomer = new PaymentCustomer();
         paymentCustomer.setCustomer(ticket.getCustomer());
         paymentCustomer.setDocument(ticket);
         paymentCustomer.setComment(comment);
+        paymentCustomer.setAmount(amount);
         addPayments(paymentCustomer);
-        paymentCustomer.setAmount(ticket.getTotal());
-        customerService.paymentDebt(ticket.getCustomer(), String.valueOf(ticket.getTotal()));
+        customerService.paymentDebt(ticket.getCustomer(), list ? String.valueOf(ticket.getTotal()) : String.valueOf(amount));
     }
 }
