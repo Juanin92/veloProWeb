@@ -8,8 +8,8 @@ import java.util.List;
 
 @Data
 public class PaymentRequestDTO {
-    private List<TicketHistory> tickets;
-    private Customer customer;
+    private List<Long> ticketIDs;
+    private Long customerID;
     private int amount;
     private String comment;
     private int totalPaymentPaid;
