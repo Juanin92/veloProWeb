@@ -12,4 +12,5 @@ public interface ITicketHistoryService {
     List<TicketHistory> getByCustomerId(Long id);
     void valideTicketByCustomer(Customer customer);
     void updateStatus(TicketHistory  ticket);
+    TicketHistory getTicketByID(Long Id);
 }
