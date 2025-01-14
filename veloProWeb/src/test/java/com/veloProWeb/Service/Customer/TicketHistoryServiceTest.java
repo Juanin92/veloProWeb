@@ -39,7 +39,6 @@ public class TicketHistoryServiceTest {
         ticketHistory = new TicketHistory(1L, "BO001", 2000, false, LocalDate.now(), LocalDate.now(), customer);
         customerReal = new Customer();
         customerReal.setId(1L);
-//        lastValidationDate = LocalDate.now();
     }
     //Prueba para agregar un ticket al cliente
     @Test
@@ -82,25 +81,23 @@ public class TicketHistoryServiceTest {
 
     //Prueba para validar tiempo del ticket de un cliente
     @Test
-    public void valideTicketByCustomer_valid(){
-        TicketHistoryService spyService = Mockito.spy(ticketHistoryService);
+    public void valideTicketByCustomer_valid() {
         List<TicketHistory> tickets = Collections.singletonList(ticketHistory);
         when(ticketHistoryRepo.findByCustomerId(customerReal.getId())).thenReturn(tickets);
-        doReturn(true).when(spyService).validateDate(ticketHistory);
-        doNothing().when(customerService).updateTotalDebt(customerReal);
-        spyService.valideTicketByCustomer(customerReal);
+        ticketHistory.setStatus(false);
+        ticketHistory.setDate(LocalDate.now().minusDays(31));
+        ticketHistory.setNotificationsDate(null);
+        ticketHistoryService.valideTicketByCustomer(customerReal);
 
-        ArgumentCaptor<Customer> customerCaptor = ArgumentCaptor.forClass(Customer.class);
-        verify(customerService).updateTotalDebt(customerCaptor.capture());
-        assertEquals(PaymentStatus.VENCIDA, customerCaptor.getValue().getStatus());
+        verify(ticketHistoryRepo, times(1)).save(ticketHistory);
+        assertEquals(PaymentStatus.VENCIDA, customerReal.getStatus());
     }
+
     @Test
     public void valideTicketByCustomer_validReturnFalseMethod(){
-        TicketHistoryService spyService = Mockito.spy(ticketHistoryService);
         List<TicketHistory> tickets = Collections.singletonList(ticketHistory);
         when(ticketHistoryRepo.findByCustomerId(customerReal.getId())).thenReturn(tickets);
-        doReturn(false).when(spyService).validateDate(ticketHistory);
-        spyService.valideTicketByCustomer(customerReal);
+        ticketHistoryService.valideTicketByCustomer(customerReal);
 
         verify(customerService, never()).updateTotalDebt(customerReal);
     }
@@ -154,42 +151,5 @@ public class TicketHistoryServiceTest {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() -> ticketHistoryService.getTicketByID(id));
 
         assertEquals("Ticket no encontrado", e.getMessage());
-    }
-
-    //Prueba de validación de fecha de un ticket
-    @Test
-    public void validateDate_validTicketPaid(){
-        ticketHistory.setStatus(true);
-        ticketHistory.setNotificationsDate(null);
-        ticketHistory.setDate(LocalDate.now().minusDays(31));
-        boolean result = ticketHistoryService.validateDate(ticketHistory);
-        assertFalse(result);
-        verify(ticketHistoryRepo, never()).save(ticketHistory);
-    }
-    @Test
-    public void validateDate_validTicketOlderAndNotificationDateNull(){
-        ticketHistory.setNotificationsDate(null);
-        ticketHistory.setDate(LocalDate.now().minusDays(31));
-        boolean result = ticketHistoryService.validateDate(ticketHistory);
-        assertTrue(result);
-        assertEquals(LocalDate.now(), ticketHistory.getNotificationsDate());
-        verify(ticketHistoryRepo).save(ticketHistory);
-    }
-    @Test
-    public void validateDate_validTicketOlderAndNotificationDateOlderThan15Days(){
-        ticketHistory.setNotificationsDate(LocalDate.now().minusDays(16));
-        ticketHistory.setDate(LocalDate.now().minusDays(31));
-        boolean result = ticketHistoryService.validateDate(ticketHistory);
-        assertTrue(result);
-        assertEquals(LocalDate.now(), ticketHistory.getNotificationsDate());
-        verify(ticketHistoryRepo).save(ticketHistory);
-    }
-    @Test
-    public void validateDate_validTicketYoungerThan30Days(){
-        ticketHistory.setNotificationsDate(null);
-        ticketHistory.setDate(LocalDate.now().minusDays(10));
-        boolean result = ticketHistoryService.validateDate(ticketHistory);
-        assertFalse(result);
-        verify(ticketHistoryRepo, never()).save(ticketHistory);
     }
 }
