@@ -13,7 +13,6 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TicketHistoryService implements ITicketHistoryService {
@@ -92,6 +91,11 @@ public class TicketHistoryService implements ITicketHistoryService {
         ticketHistoryRepo.save(ticket);
     }
 
+    /**
+     * Obtener un ticket específico
+     * @param Id - Identificador de ticket a buscar
+     * @return - Ticket encontrado o excepción depende del caso
+     */
     @Override
     public TicketHistory getTicketByID(Long Id) {
         return ticketHistoryRepo.findById(Id).orElseThrow(() -> new IllegalArgumentException("Ticket no encontrado"));
@@ -106,7 +110,7 @@ public class TicketHistoryService implements ITicketHistoryService {
      * @param ticket ticket que se debe validar
      * @return verdadero si el ticket fue validado y la fecha de notificación fue actualizada, falso en caso contrario
      */
-    public boolean validateDate(TicketHistory ticket) {
+    private boolean validateDate(TicketHistory ticket) {
         LocalDate now = LocalDate.now();
         LocalDate ticketDate = ticket.getDate();
         LocalDate notificationDate = ticket.getNotificationsDate();
@@ -122,5 +126,4 @@ public class TicketHistoryService implements ITicketHistoryService {
         }
         return false;
     }
-
 }
