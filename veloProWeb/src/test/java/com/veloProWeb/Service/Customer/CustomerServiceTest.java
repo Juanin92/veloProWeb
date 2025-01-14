@@ -162,4 +162,19 @@ public class CustomerServiceTest {
         customerService.updateTotalDebt(customer);
         verify(customerRepo).save(customer);
     }
+
+    //Prueba para obtener un cliente por ID
+    @Test
+    public void getCustomerByID_valid(){
+        when(customerRepo.findById(1L)).thenReturn(Optional.of(customer));
+        Customer result = customerService.getCustomerById(1L);
+        verify(customerRepo).findById(1L);
+        assertEquals(1L, result.getId());
+    }
+    @Test
+    public void getCustomerByID_invalid(){
+        when(customerRepo.findById(1L)).thenReturn(Optional.empty());
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() -> customerService.getCustomerById(1L));
+        assertEquals("Cliente no encontrado", e.getMessage());
+    }
 }
