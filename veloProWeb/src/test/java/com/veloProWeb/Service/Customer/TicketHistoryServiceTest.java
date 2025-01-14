@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -134,6 +135,25 @@ public class TicketHistoryServiceTest {
         verify(ticketHistoryRepo).save(ticketHistoryCaptor.capture());
         TicketHistory ticketHistoryCaptured = ticketHistoryCaptor.getValue();
         assertTrue(ticketHistoryCaptured.isStatus());
+    }
+
+    //Prueba para obtener un ticket por id
+    @Test
+    public void getTicketByID_valid(){
+        Long id = 1L;
+        when(ticketHistoryRepo.findById(id)).thenReturn(Optional.of(ticketHistory));
+        TicketHistory result = ticketHistoryService.getTicketByID(id);
+
+        verify(ticketHistoryRepo).findById(id);
+        assertEquals(1L, result.getId());
+    }
+    @Test
+    public void getTicketByID_invalid(){
+        Long id = 2L;
+        when(ticketHistoryRepo.findById(id)).thenReturn(Optional.empty());
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() -> ticketHistoryService.getTicketByID(id));
+
+        assertEquals("Ticket no encontrado", e.getMessage());
     }
 
     //Prueba de validación de fecha de un ticket
