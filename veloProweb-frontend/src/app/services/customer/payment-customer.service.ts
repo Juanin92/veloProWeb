@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PaymentCustomer } from '../../models/Entity/Customer/payment-customer.model';
+import { PaymentRequestDTO } from '../../models/DTO/payment-request-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -28,5 +29,14 @@ export class PaymentCustomerService {
   getCustomerSelectedPayment(customerID: number): Observable<PaymentCustomer[]>{
     let params = new HttpParams().set('customerId', customerID.toString())
     return this.httpClient.get<PaymentCustomer[]>(`${this.apiUrl}/abonos`, {params});
+  }
+
+  /**
+   * Crea un pago de cliente haciendo una petición POST
+   * @param dto - Objeto con los valores para la acción
+   * @returns - Observable emite un mensaje de confirmación o error
+   */
+  createPaymentCustomer(dto: PaymentRequestDTO): Observable<{message: string}>{
+    return this.httpClient.post<{message: string}>(`${this.apiUrl}`, dto);
   }
 }
