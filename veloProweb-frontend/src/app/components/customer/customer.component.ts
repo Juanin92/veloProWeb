@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Customer } from '../../models/Entity/Customer/customer.model';
 import { CustomerService } from '../../services/customer/customer.service';
 import { CommonModule, NgStyle } from '@angular/common';
@@ -8,6 +8,8 @@ import { AddCustomerComponent } from "./add-customer/add-customer.component";
 import { UpdateCustomerComponent } from "./update-customer/update-customer.component";
 import { CustomerHelperServiceService } from '../../services/customer/customer-helper-service.service';
 import { NotificationService } from '../../utils/notification-service.service';
+import { TooltipService } from '../../utils/tooltip.service';
+import bootstrap from 'bootstrap';
 
 
 @Component({
@@ -17,7 +19,7 @@ import { NotificationService } from '../../utils/notification-service.service';
   templateUrl: './customer.component.html',
   styleUrl: './customer.component.css'
 })
-export class CustomerComponent implements OnInit {
+export class CustomerComponent implements OnInit, AfterViewInit {
   customers: Customer[] = [];
   filteredCustomers: Customer[] = [];
   selectedCustomer: Customer;
@@ -28,8 +30,13 @@ export class CustomerComponent implements OnInit {
   constructor(
     private customerService: CustomerService,
     private customerHelper: CustomerHelperServiceService,
-    private notification: NotificationService) {
+    private notification: NotificationService,
+    private tooltipService: TooltipService) {
     this.selectedCustomer = customerHelper.createEmptyCustomer();
+  }
+
+  ngAfterViewInit(): void {
+    this.tooltipService.initializeTooltips();
   }
 
   ngOnInit(): void {
@@ -152,5 +159,11 @@ export class CustomerComponent implements OnInit {
         (this.textFilter.toLowerCase() === 'inactivo' && !customer.account)
       );
     }
+  }
+
+  openModal(): void {
+    const modalElement = document.getElementById('addCustomer');
+    const modal = new bootstrap.Modal(modalElement);
+    modal.show();
   }
 }
