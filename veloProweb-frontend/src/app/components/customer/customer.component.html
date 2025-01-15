@@ -1,38 +1,37 @@
 <div class="container-fluid d-flex flex-column p-1">
     <div class="p-0 pb-0">
         <p class="text-center fw-bold fs-2 m-0">Total Dinero: {{totalDebts | currency:'CLP':'$':'1.0-0'}}</p>
-        <div class="d-flex flex-lg-row flex-column">
-            <div class="order-lg-0 order-2 p-2 align-content-start">
+        <div class="d-flex flex-lg-row flex-column justify-content-between">
+            <div class="order-lg-0 order-2 p-1 mb-2 align-content-start">
                 <p class="fw-bold fs-4 mb-0 m-1">Buscar Cliente:</p>
                 <div class="input-group input-group-md">
                     <input [(ngModel)]="textFilter" (ngModelChange)="searchFilterCustomer()" type="text" class="form-control" aria-label="buscar cliente filtrado" aria-describedby="inputGroup-sizing-md" placeholder="Ingrese un valor">
                 </div>
             </div>
-            <div class="order-lg-1 order-0 d-flex flex-row m-auto mb-4">
-                <div class="position-relative">
-                    <div class="position-absolute top-0 start-50 translate-middle"
-                        style="width: 20px; height: 20px; background-color: rgb(40, 238, 40);"></div>
-                    <p class="p-2 fw-semibold">Pagada</p>
+            <div class="border border-1 border-white p-1 mb-2 mt-2 my-4 h-100 d-flex flex-row">
+                <div class="m-2">
+                    <span class="mt-1 d-inline-block ms-3" style="width: 15px;height: 15px;background-color: rgb(40, 238, 40);"></span>
+                    <p class="ms-1 mb-0">Pagada</p>
                 </div>
-                <div class="position-relative">
-                    <div class="position-absolute top-0 start-50 translate-middle"
-                        style="width: 20px; height: 20px; background-color: red;"></div>
-                    <p class="p-2 fw-semibold">Pendiente</p>
+                <div class="m-2">
+                    <span class="mt-1 d-inline-block ms-4" style="width: 15px;height: 15px;background-color: red;"></span>
+                    <p class="ms-1 mb-0">Pendiente</p>
                 </div>
-                <div class="position-relative">
-                    <div class="position-absolute top-0 start-50 translate-middle"
-                        style="width: 20px; height: 20px; background-color: rgb(9, 180, 237);"></div>
-                    <p class="p-2 fw-semibold">Parcial</p>
+                <div class="m-2">
+                    <span class="mt-1 d-inline-block ms-3" style="width: 15px;height: 15px;background-color: rgb(9, 180, 237);"></span>
+                    <p class="ms-1 mb-0">Parcial</p>
                 </div>
-                <div class="position-relative">
-                    <div class="position-absolute top-0 start-50 translate-middle"
-                        style="width: 20px; height: 20px; background-color: blue;"></div>
-                    <p class="p-2 fw-semibold">Vencida</p>
+                <div class="m-2">
+                    <span class="mt-1 d-inline-block ms-4" style="width: 15px;height: 15px;background-color: rgb(21, 0, 255);"></span>
+                    <p class="ms-1 mb-0">Vencida</p>
                 </div>
             </div>
-            <div class="order-lg-2 order-1 m-2 mt-0">
-                <button class="btn btn-outline-light m-2 mt-1 " data-bs-toggle="modal" data-bs-target="#addCustomer"><img src="/assets/icons/iconAddUser.png" alt="Agregar_cliente"  width="60" height="60" class="d-inline-block img-fluid"></button>
-                <p class="text-center fs-7 m-0">Agregar</p>
+            <div class="order-lg-2 order-1 m-2 mt-0 align-content-end">
+                <button class="btn btn-outline-success border-0 m-2 mt-1" 
+                data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              data-bs-title="Crear nuevo cliente" 
+               data-bs-target="#addCustomer"><img src="/assets/icons/iconAddUser.png" alt="Agregar_cliente"  width="60" height="60" class="d-inline-block img-fluid"></button>
             </div>
         </div>
     </div>
