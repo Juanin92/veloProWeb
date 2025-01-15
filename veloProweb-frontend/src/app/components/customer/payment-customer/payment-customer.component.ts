@@ -25,7 +25,7 @@ export class PaymentCustomerComponent implements OnChanges {
   totalDebt: number = 0; 
   debtValue: number = 0; 
   paymentValue: number = 0;
-  selectedTicketsAmount: number[] = []; //Lista de monto deuda de tickets seleccionados
+  selectedTickets: TicketHistory[] = []; //Lista de tickets seleccionados
   
 
   constructor(
@@ -50,13 +50,14 @@ export class PaymentCustomerComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedCustomer'] && changes['selectedCustomer'].currentValue) { 
       this.debtValue = 0;
-      this.selectedTicketsAmount = [];
+      this.selectedTickets = [];
       //Llama al método para obtener los pagos del cliente con valor actualizados
       this.getPayments(changes['selectedCustomer'].currentValue); 
     }
   }
 
   createPaymentCustomer(): void{
+    this.paymentRequest.ticketIDs = this.selectedTickets.map(ticket => ticket.id);
     this.paymentRequest.customerID = this.selectedCustomer.id;
     this.paymentRequest.totalPaymentPaid = this.paymentValue;
     console.log('DTO -> ', this.paymentRequest);
@@ -93,26 +94,28 @@ export class PaymentCustomerComponent implements OnChanges {
 
   /**
    * Actualiza el valor acumulado de deuda en base a los tickets seleccionados.
-   * Busca un pago en la lista de pagos si este coincide con ID ticket seleccionado.
-   * Calcula el monto, Si hay un pago asociado, resta el monto pagado del total del ticket; de lo contrario, usa el total completo.
    * Valida si ticket fue marcado o no con un check
    * Calcula el valor acumulado de las deudas seleccionadas sumando todos los monto en la lista.
+   * Busca un pago en la lista de pagos si este coincide con ID ticket seleccionado.
+   * Calcula el monto, Si hay un pago asociado, resta el monto pagado del total del ticket; de lo contrario, usa el total completo.
    * @param ticket - Ticket seleccionado o no seleccionado.
    * @param event - Evento asociado a la acción de check del ticket.
    */
   updateDebtValueLabel(ticket: TicketHistory, event: Event): void {
     const checkbox = event.target as HTMLInputElement; //Obtiene el estado del checkbox desde el evento del DOM.
-    const payment = this.payments.find(payment => payment.document.id === ticket.id);
-    const ticketAmount =  payment ? ticket.total - payment.amount : ticket.total;
     if (checkbox.checked) {
-      this.selectedTicketsAmount.push(ticketAmount);
+      this.selectedTickets.push(ticket);
     }else{
-      const index = this.selectedTicketsAmount.indexOf(ticketAmount);
+      const index = this.selectedTickets.findIndex(t => t.id === ticket.id);
       if (index > -1) {
-          this.selectedTicketsAmount.splice(index, 1);
+          this.selectedTickets.splice(index, 1);
       }
     }
-    this.debtValue = Array.from(this.selectedTicketsAmount).reduce((collector, current) => collector + current, 0);
+    this.debtValue = Array.from(this.selectedTickets).reduce((collector, current) => {
+      const payment = this.payments.find(payment => payment.document.id === current.id);
+      const ticketAmount =  payment ? current.total - payment.amount : current.total;
+      return collector + ticketAmount;
+    }, 0);
   }
 
   /**
