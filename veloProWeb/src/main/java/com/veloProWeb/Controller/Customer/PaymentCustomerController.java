@@ -14,7 +14,8 @@ import java.util.Map;
 
 /**
  * Controlador REST para gestionar operaciones relacionadas con los pagos de los clientes.
- * Este controlador proporciona endpoints para obtener todos los pagos y los pagos seleccionados de un cliente específico.
+ * Este controlador proporciona endpoints para obtener todos los pagos, los pagos seleccionados de un cliente específico
+ * y crear pagos a la deuda.
  *
  */
 @RestController
@@ -44,6 +45,11 @@ public class PaymentCustomerController {
         return ResponseEntity.ok(paymentCustomerService.getCustomerSelected(customerId));
     }
 
+    /**
+     * Crear pagos a la deuda de clientes
+     * @param dto - Objeto con los valores necesarios para los pagos
+     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
+     */
     @PostMapping
     public ResponseEntity<Map<String, String>> createPaymentCustomer(@RequestBody PaymentRequestDTO dto){
         Map<String, String> response = new HashMap<>();
