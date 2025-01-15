@@ -5,13 +5,9 @@ import com.veloProWeb.Model.Entity.Customer.Customer;
 import com.veloProWeb.Model.Entity.Customer.PaymentCustomer;
 import com.veloProWeb.Model.Entity.Customer.TicketHistory;
 import com.veloProWeb.Repository.Customer.PaymentCustomerRepo;
-import com.veloProWeb.Validation.PaymentCustomerValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -28,7 +24,6 @@ import static org.mockito.Mockito.*;
 public class PaymentCustomerServiceTest {
     @InjectMocks private PaymentCustomerService paymentCustomerService;
     @Mock private PaymentCustomerRepo paymentCustomerRepo;
-    @Mock private PaymentCustomerValidator validator;
     @Mock private TicketHistoryService ticketService;
     @Mock private CustomerService customerService;
     @Mock private TicketHistory ticketHistory;
@@ -53,7 +48,7 @@ public class PaymentCustomerServiceTest {
         ticketHistoryReal2.setTotal(5000);
         dto = new PaymentRequestDTO();
         dto.setAmount(10000);
-        dto.setCustomer(realCustomer);
+        dto.setCustomerID(realCustomer.getId());
         dto.setComment("Efectivo");
         dto.setTotalPaymentPaid(0);
     }
@@ -61,46 +56,54 @@ public class PaymentCustomerServiceTest {
     //Prueba para crear un proceso de pagos de tickets
     @Test
     public void createPaymentProcess_validMultiplesTickets(){
-        dto.setTickets(Arrays.asList(ticketHistoryReal,ticketHistoryReal2));
+        dto.setTicketIDs(Arrays.asList(ticketHistoryReal.getId(),ticketHistoryReal2.getId()));
+        when(customerService.getCustomerById(1L)).thenReturn(realCustomer);
+        when(ticketService.getTicketByID(1L)).thenReturn(ticketHistoryReal);
+        when(ticketService.getTicketByID(2L)).thenReturn(ticketHistoryReal2);
         paymentCustomerService.createPaymentProcess(dto);
 
+        verify(customerService, times(2)).paymentDebt(eq(realCustomer), eq("5000"));
         verify(ticketService, times(1)).updateStatus(ticketHistoryReal);
         verify(ticketService, times(1)).updateStatus(ticketHistoryReal2);
-        verify(customerService, times(2)).paymentDebt(eq(realCustomer), eq("5000"));
+
     }
     @Test
-    public void createPaymentProcess_invalidAmountThrowsException() {
-        dto.setTickets(Arrays.asList(ticketHistoryReal, ticketHistoryReal2));
+    public void createPaymentProcess_invalidAmountMultiplesTickets() {
+        dto.setTicketIDs(Arrays.asList(ticketHistoryReal.getId(), ticketHistoryReal2.getId()));
         dto.setAmount(8000);
+        when(customerService.getCustomerById(1L)).thenReturn(realCustomer);
+        when(ticketService.getTicketByID(1L)).thenReturn(ticketHistoryReal);
+        when(ticketService.getTicketByID(2L)).thenReturn(ticketHistoryReal2);
 
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> paymentCustomerService.createPaymentProcess(dto)
         );
         assertEquals("El monto no es correcto para el pago de la deuda", exception.getMessage());
-        verifyNoInteractions(customerService);
     }
-//    @Test
-//    public void createPaymentProcess_adjustPaymentForSingleTicket() {
-//        dto.setAmount(3000);
-//        dto.setTotalPaymentPaid(2000);
-//        dto.setTickets(Collections.singletonList(ticketHistoryReal));
-//        paymentCustomerService.createPaymentProcess(dto);
-//
-//        verify(paymentCustomerRepo, times(1)).save(any(PaymentCustomer.class));
-//        verify(customerService, times(1)).paymentDebt(realCustomer, "3000");
-//        verifyNoInteractions(ticketService);
-//    }
     @Test
-    public void createPaymentProcess_emptyTicketListThrowsException() {
-        dto.setTickets(Collections.emptyList());
+    public void createPaymentProcess_adjustPaymentForSingleTicket() {
+        dto.setAmount(3000);
+        dto.setTotalPaymentPaid(2000);
+        dto.setTicketIDs(Collections.singletonList(ticketHistoryReal.getId()));
+        when(customerService.getCustomerById(1L)).thenReturn(realCustomer);
+        when(ticketService.getTicketByID(1L)).thenReturn(ticketHistoryReal);
+        paymentCustomerService.createPaymentProcess(dto);
+
+        verify(paymentCustomerRepo, times(1)).save(any(PaymentCustomer.class));
+        verify(customerService, times(1)).paymentDebt(realCustomer, "3000");
+    }
+    @Test
+    public void createPaymentProcess_emptyTicketList() {
+        dto.setTicketIDs(Collections.emptyList());
+        when(customerService.getCustomerById(1L)).thenReturn(realCustomer);
 
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> paymentCustomerService.createPaymentProcess(dto)
         );
         assertEquals("No ha seleccionado ninguna boleta", exception.getMessage());
-        verifyNoInteractions(customerService, ticketService, paymentCustomerRepo);
+        verifyNoInteractions(paymentCustomerRepo);
     }
 
     //Prueba para obtener una lista de todos los abonos
@@ -125,14 +128,17 @@ public class PaymentCustomerServiceTest {
         paymentCustomerService.getCustomerSelected(1L);
         verify(paymentCustomerRepo).findByCustomerId(1L);
     }
-//    @Test
-//    public void getCustomerSelected_validValue(){
-//        List<PaymentCustomer> mockPayment = Collections.singletonList(paymentCustomer);
-//        when(paymentCustomerRepo.findByCustomerId(1L)).thenReturn(mockPayment);
-//
-//        List<PaymentCustomer> result = paymentCustomerService.getCustomerSelected(1L);
-//        verify(paymentCustomerRepo).findByCustomerId(1L);
-//        assertEquals(1, result.size());
-//        assertEquals(mockPayment, result);
-//    }
+    @Test
+    public void getCustomerSelected_validValue(){
+        paymentCustomer.setDocument(ticketHistoryReal);
+        List<PaymentCustomer> mockPayment = Collections.singletonList(paymentCustomer);
+        List<TicketHistory> mockTickets = Collections.singletonList(ticketHistoryReal);
+        when(paymentCustomerRepo.findByCustomerId(1L)).thenReturn(mockPayment);
+        when(ticketService.getByCustomerId(1L)).thenReturn(mockTickets);
+
+        List<PaymentCustomer> result = paymentCustomerService.getCustomerSelected(1L);
+        verify(paymentCustomerRepo).findByCustomerId(1L);
+        assertEquals(1, result.size());
+        assertEquals(mockPayment, result);
+    }
 }
