@@ -37,19 +37,19 @@
             <div>
               <form>
                 <div class="input-group mb-3">
-                  <label class="input-group-text" for="inputGroupSelect01">Forma Pago</label>
-                  <select class="form-select" id="inputGroupSelect01">
-                    <option value="1">Tarjeta</option>
-                    <option value="2">Efectivo</option>
-                    <option value="3">Otros</option>
+                  <label class="input-group-text" for="paymentType">Forma Pago</label>
+                  <select class="form-select" id="paymentType" name="paymentType" [(ngModel)]="paymentRequest.comment">
+                    <option value="Tarjeta">Tarjeta</option>
+                    <option value="Efectivo">Efectivo</option>
+                    <option value="Otros">Otros</option>
                   </select>
                 </div>
                 <div class="form-floating mb-1">
                   <input type="number" class="form-control form-control-lg" id="paymentDebt" placeholder="Ingrese monto"
-                    name="paymentDebt" required />
+                    name="paymentDebt" [(ngModel)]="paymentRequest.amount" required/>
                   <label for="paymentDebt" class="form-label">Monto a abonar</label>
                 </div>
-                <button type="submit" class="btn btn-success mb-4">
+                <button type="submit" class="btn btn-success mb-4" (click)="createPaymentCustomer()">
                   Ingresar
                 </button>
               </form>

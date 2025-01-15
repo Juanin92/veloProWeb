@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { PaymentCustomerService } from '../../../services/customer/payment-customer.service';
 import { Customer } from '../../../models/Entity/Customer/customer.model';
 import { CustomerHelperServiceService } from '../../../services/customer/customer-helper-service.service';
@@ -6,12 +6,13 @@ import { PaymentCustomer } from '../../../models/Entity/Customer/payment-custome
 import { CommonModule } from '@angular/common';
 import { TicketHistoryService } from '../../../services/customer/ticket-history.service';
 import { TicketHistory } from '../../../models/Entity/Customer/ticket-history.model';
-import { tick } from '@angular/core/testing';
+import { PaymentRequestDTO } from '../../../models/DTO/payment-request-dto';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-payment-customer',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './payment-customer.component.html',
   styleUrl: './payment-customer.component.css'
 })
@@ -20,6 +21,7 @@ export class PaymentCustomerComponent implements OnChanges {
   @Input() selectedCustomer: Customer; //Cliente seleccionado desde un componente padre
   payments: PaymentCustomer[] = []; //Lista de pagos 
   tickets: TicketHistory[] = []; //Lista de tickets
+  paymentRequest: PaymentRequestDTO;
   totalDebt: number = 0; 
   debtValue: number = 0; 
   paymentValue: number = 0;
@@ -31,6 +33,13 @@ export class PaymentCustomerComponent implements OnChanges {
     private customerHelper: CustomerHelperServiceService,
     private ticketService: TicketHistoryService) {
     this.selectedCustomer = customerHelper.createEmptyCustomer();
+    this.paymentRequest = {
+      ticketIDs: [],
+      customerID: 0,
+      amount: 0,
+      comment: '',
+      totalPaymentPaid: 0
+    }
   }
 
   /**
@@ -45,6 +54,12 @@ export class PaymentCustomerComponent implements OnChanges {
       //Llama al método para obtener los pagos del cliente con valor actualizados
       this.getPayments(changes['selectedCustomer'].currentValue); 
     }
+  }
+
+  createPaymentCustomer(): void{
+    this.paymentRequest.customerID = this.selectedCustomer.id;
+    this.paymentRequest.totalPaymentPaid = this.paymentValue;
+    console.log('DTO -> ', this.paymentRequest);
   }
 
   /**
