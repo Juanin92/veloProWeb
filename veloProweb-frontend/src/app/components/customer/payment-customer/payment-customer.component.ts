@@ -8,6 +8,7 @@ import { TicketHistoryService } from '../../../services/customer/ticket-history.
 import { TicketHistory } from '../../../models/Entity/Customer/ticket-history.model';
 import { PaymentRequestDTO } from '../../../models/DTO/payment-request-dto';
 import { FormsModule } from '@angular/forms';
+import { PaymentValidator } from '../../../validation/payment-validator';
 
 @Component({
   selector: 'app-payment-customer',
@@ -26,6 +27,7 @@ export class PaymentCustomerComponent implements OnChanges {
   debtValue: number = 0; 
   paymentValue: number = 0;
   selectedTickets: TicketHistory[] = []; //Lista de tickets seleccionados
+  validation = PaymentValidator;
   
 
   constructor(
@@ -60,7 +62,11 @@ export class PaymentCustomerComponent implements OnChanges {
     this.paymentRequest.ticketIDs = this.selectedTickets.map(ticket => ticket.id);
     this.paymentRequest.customerID = this.selectedCustomer.id;
     this.paymentRequest.totalPaymentPaid = this.paymentValue;
-    console.log('DTO -> ', this.paymentRequest);
+    if (this.validation.validateFormPayment(this.paymentRequest)) {
+      console.log('DTO -> ', this.paymentRequest);
+    }else{ 
+      console.log('Error');
+    }
   }
 
   /**
