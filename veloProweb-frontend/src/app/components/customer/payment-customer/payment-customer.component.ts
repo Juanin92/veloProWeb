@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { PaymentCustomerService } from '../../../services/customer/payment-customer.service';
 import { Customer } from '../../../models/Entity/Customer/customer.model';
 import { CustomerHelperServiceService } from '../../../services/customer/customer-helper-service.service';
@@ -9,6 +9,7 @@ import { TicketHistory } from '../../../models/Entity/Customer/ticket-history.mo
 import { PaymentRequestDTO } from '../../../models/DTO/payment-request-dto';
 import { FormsModule } from '@angular/forms';
 import { PaymentValidator } from '../../../validation/payment-validator';
+import { NotificationService } from '../../../utils/notification-service.service';
 
 @Component({
   selector: 'app-payment-customer',
@@ -20,28 +21,24 @@ import { PaymentValidator } from '../../../validation/payment-validator';
 export class PaymentCustomerComponent implements OnChanges {
 
   @Input() selectedCustomer: Customer; //Cliente seleccionado desde un componente padre
+  @Output() paymentRealized = new EventEmitter<void>();
   payments: PaymentCustomer[] = []; //Lista de pagos 
   tickets: TicketHistory[] = []; //Lista de tickets
   paymentRequest: PaymentRequestDTO;
-  totalDebt: number = 0; 
-  debtValue: number = 0; 
+  totalDebt: number = 0;
+  debtValue: number = 0;
   paymentValue: number = 0;
   selectedTickets: TicketHistory[] = []; //Lista de tickets seleccionados
   validation = PaymentValidator;
-  
+
 
   constructor(
     private paymentService: PaymentCustomerService,
     private customerHelper: CustomerHelperServiceService,
-    private ticketService: TicketHistoryService) {
+    private ticketService: TicketHistoryService,
+    private notification: NotificationService) {
     this.selectedCustomer = customerHelper.createEmptyCustomer();
-    this.paymentRequest = {
-      ticketIDs: [],
-      customerID: 0,
-      amount: 0,
-      comment: '',
-      totalPaymentPaid: 0
-    }
+    this.paymentRequest = this.resetPayments();
   }
 
   /**
@@ -50,22 +47,37 @@ export class PaymentCustomerComponent implements OnChanges {
    * @param changes -  Objeto que contiene los cambios detectados en las propiedades de entrada.
    */
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['selectedCustomer'] && changes['selectedCustomer'].currentValue) { 
+    if (changes['selectedCustomer'] && changes['selectedCustomer'].currentValue) {
       this.debtValue = 0;
       this.selectedTickets = [];
       //Llama al método para obtener los pagos del cliente con valor actualizados
-      this.getPayments(changes['selectedCustomer'].currentValue); 
+      this.getPayments(changes['selectedCustomer'].currentValue);
     }
   }
 
-  createPaymentCustomer(): void{
+  /**
+   * Realiza el pago de tickets del cliente
+   * Valida que los datos del objetos sean correctos
+   */
+  createPaymentCustomer(): void {
     this.paymentRequest.ticketIDs = this.selectedTickets.map(ticket => ticket.id);
     this.paymentRequest.customerID = this.selectedCustomer.id;
     this.paymentRequest.totalPaymentPaid = this.paymentValue;
     if (this.validation.validateFormPayment(this.paymentRequest)) {
-      console.log('DTO -> ', this.paymentRequest);
-    }else{ 
-      console.log('Error');
+      this.paymentService.createPaymentCustomer(this.paymentRequest).subscribe((response) => {
+        console.log('Pago Realizado: ', response);
+        this.notification.showSuccessToast("Pago realizado", 'center', 3000);
+        this.getPayments(this.selectedCustomer);
+        this.getListTicketByCustomer(this.selectedCustomer.id);
+        this.paymentRequest = this.resetPayments();
+        this.paymentRealized.emit();
+      }, (error) => {
+        const message = error.error?.message || error.error?.error;
+        console.error('Problema al realizar pago: \t', error);
+        this.notification.showErrorToast(`Error al realizar el pago \n${message}`, 'top', 5000);
+      });
+    } else {
+      this.notification.showWarning("Advertencia", "Falta datos para realizar el pago");
     }
   }
 
@@ -90,13 +102,13 @@ export class PaymentCustomerComponent implements OnChanges {
    * Obtiene la lista de tickets asociados al cliente seleccionado.
    * @param id - Identificador del cliente.
    */
-  getListTicketByCustomer(id: number): void{
+  getListTicketByCustomer(id: number): void {
     this.ticketService.getListTicketByCustomer(this.selectedCustomer.id).subscribe((ticketList) => {
       this.tickets = ticketList;
     }, (error) => {
       console.log('Error no se encontró información de los tickets ', error);
     });
-  } 
+  }
 
   /**
    * Actualiza el valor acumulado de deuda en base a los tickets seleccionados.
@@ -111,15 +123,15 @@ export class PaymentCustomerComponent implements OnChanges {
     const checkbox = event.target as HTMLInputElement; //Obtiene el estado del checkbox desde el evento del DOM.
     if (checkbox.checked) {
       this.selectedTickets.push(ticket);
-    }else{
+    } else {
       const index = this.selectedTickets.findIndex(t => t.id === ticket.id);
       if (index > -1) {
-          this.selectedTickets.splice(index, 1);
+        this.selectedTickets.splice(index, 1);
       }
     }
     this.debtValue = Array.from(this.selectedTickets).reduce((collector, current) => {
       const payment = this.payments.find(payment => payment.document.id === current.id);
-      const ticketAmount =  payment ? current.total - payment.amount : current.total;
+      const ticketAmount = payment ? current.total - payment.amount : current.total;
       return collector + ticketAmount;
     }, 0);
   }
@@ -136,5 +148,19 @@ export class PaymentCustomerComponent implements OnChanges {
    */
   updateTotalDebtLabel(): void {
     this.totalDebt = this.selectedCustomer.debt;
+  }
+
+  /**
+   * Inicializa los valores del objeto DTO
+   * @returns - DTO con sus valores predeterminados inicializados
+   */
+  resetPayments(): PaymentRequestDTO {
+    return {
+      ticketIDs: [],
+      customerID: 0,
+      amount: 0,
+      comment: '',
+      totalPaymentPaid: 0
+    }
   }
 }

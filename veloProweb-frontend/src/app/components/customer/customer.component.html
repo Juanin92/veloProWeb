@@ -78,4 +78,4 @@
 <!-- Modal Update Customer -->
 <app-update-customer [selectedCustomer]="selectedCustomer" (customerUpdated)="getAllCustomer()"></app-update-customer>
 <!-- Modal Payment Customer -->
-<app-payment-customer [selectedCustomer]="selectedCustomer"></app-payment-customer>
+<app-payment-customer (paymentRealized)="getAllCustomer()" [selectedCustomer]="selectedCustomer"></app-payment-customer>
