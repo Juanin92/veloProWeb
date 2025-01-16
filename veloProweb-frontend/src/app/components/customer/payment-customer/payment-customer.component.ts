@@ -10,6 +10,7 @@ import { PaymentRequestDTO } from '../../../models/DTO/payment-request-dto';
 import { FormsModule } from '@angular/forms';
 import { PaymentValidator } from '../../../validation/payment-validator';
 import { NotificationService } from '../../../utils/notification-service.service';
+import { ModalService } from '../../../utils/modal.service';
 
 @Component({
   selector: 'app-payment-customer',
@@ -36,7 +37,8 @@ export class PaymentCustomerComponent implements OnChanges {
     private paymentService: PaymentCustomerService,
     private customerHelper: CustomerHelperServiceService,
     private ticketService: TicketHistoryService,
-    private notification: NotificationService) {
+    private notification: NotificationService,
+    public modalService: ModalService) {
     this.selectedCustomer = customerHelper.createEmptyCustomer();
     this.paymentRequest = this.resetPayments();
   }
@@ -71,6 +73,7 @@ export class PaymentCustomerComponent implements OnChanges {
         this.getListTicketByCustomer(this.selectedCustomer.id);
         this.paymentRequest = this.resetPayments();
         this.paymentRealized.emit();
+        this.modalService.closeModal();
       }, (error) => {
         const message = error.error?.message || error.error?.error;
         console.error('Problema al realizar pago: \t', error);

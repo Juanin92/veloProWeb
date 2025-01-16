@@ -49,7 +49,9 @@
                     name="paymentDebt" [(ngModel)]="paymentRequest.amount" required/>
                   <label for="paymentDebt" class="form-label">Monto a abonar</label>
                 </div>
-                <button type="submit" class="btn btn-success mb-4" (click)="createPaymentCustomer()">
+                <button type="submit" class="btn btn-success mb-4" 
+                  (click)="createPaymentCustomer()"
+                  [attr.data-bs-dismiss]="modalService.isModalVisible() ? 'modal' : null">
                   Ingresar
                 </button>
               </form>
