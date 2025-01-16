@@ -75,7 +75,7 @@ export class AddCategoriesComponent implements OnInit{
         this.notification.showSuccessToast(`${this.newBrand.name} ha sido registrada`,'top', 3000);
         this.newBrand = this.helper.createEmptyBrand();
       }, (error) => {
-        const message = error.error.message;
+        const message = error.error?.message || error.error?.error;
         console.error('Error:', error);
         this.notification.showErrorToast(`${message}`, 'top', 5000);
       });
@@ -94,7 +94,7 @@ export class AddCategoriesComponent implements OnInit{
         this.notification.showSuccessToast(`${this.newCategory.name} ha sido registrada`,'top', 3000);
         this.newCategory = this.helper.createEmptyCategory();
       }, (error) => {
-        const message = error.error.message;
+        const message = error.error?.message || error.error?.error;
         console.error('Error:', error);
         this.notification.showErrorToast(`${message}`, 'top', 5000);
       });
@@ -115,7 +115,7 @@ export class AddCategoriesComponent implements OnInit{
         this.notification.showSuccessToast(`${this.newSubcategory.name} ha sido registrada`,'top', 3000);
         this.newSubcategory = this.helper.createEmptySubcategory();
       }, (error) => {
-        const message = error.error.message;
+        const message = error.error?.message || error.error?.error;
         console.error('Error:', error);
         this.notification.showErrorToast(`${message}`, 'top', 5000);
       });
@@ -134,7 +134,7 @@ export class AddCategoriesComponent implements OnInit{
         this.notification.showSuccessToast(`${this.newUnit.nameUnit} ha sido registrada`,'top', 3000);
         this.newUnit = this.helper.createEmptyUnit();
       }, (error) => {
-        const message = error.error.message;
+        const message = error.error?.message || error.error?.error;
         console.error('Error:', error);
         this.notification.showErrorToast(`${message}`, 'top', 5000);
       });
