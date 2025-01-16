@@ -25,7 +25,7 @@ export class UpdateCustomerComponent {
     private customerService: CustomerService,
     private customerHelper: CustomerHelperServiceService,
     private notification: NotificationService,
-    private modalService: ModalService) {
+    public modalService: ModalService) {
     //Se inicializa la variable con valores vacíos mediante el helper
     this.selectedCustomer = customerHelper.createEmptyCustomer();
   }
@@ -71,9 +71,5 @@ export class UpdateCustomerComponent {
         this.notification.showErrorToast(`Error al activar al cliente \n${message}`, 'top', 5000);
       })
     }
-  }
-
-  get isModalVisible(): boolean {
-    return this.modalService.isModalVisible();
   }
 }

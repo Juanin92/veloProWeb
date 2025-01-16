@@ -57,7 +57,7 @@
                     <button type="button" class="btn btn-success" (click)="updateCustomer()"
                         [disabled]="!customerValidator.validateForm(selectedCustomer)"
                         [hidden]="!selectedCustomer.account"
-                        [attr.data-bs-dismiss]="isModalVisible ? 'modal' : null">Actualizar</button>
+                        [attr.data-bs-dismiss]="modalService.isModalVisible() ? 'modal' : null">Actualizar</button>
                     <button type="button" class="btn btn-warning" [hidden]="selectedCustomer.account"
                         (click)="activeCustomer(selectedCustomer)">Activar</button>
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
