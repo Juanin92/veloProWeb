@@ -47,7 +47,7 @@ export class AddCustomerComponent {
           this.modalService.closeModal();
         },
         (error) => {
-          const message = error.error.error;
+          const message = error.error?.message || error.error?.error;
           console.error('Error al agregar el cliente:', error);
           this.notification.showErrorToast(`Error al agregar cliente \n${message}`, 'top', 5000);
         }

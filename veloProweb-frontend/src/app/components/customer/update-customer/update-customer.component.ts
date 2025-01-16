@@ -43,7 +43,7 @@ export class UpdateCustomerComponent {
         this.customerUpdated.emit();
       },
         (error) => {
-          const message = error.error.error;
+          const message = error.error?.message || error.error?.error;
           this.notification.showErrorToast(`Error al actualizar cliente \n${message}`, 'top', 5000);
           console.log('Error al actualizar cliente: ', message);
         }
