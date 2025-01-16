@@ -63,7 +63,7 @@
                     <td>
                         <div>
                             <button *ngIf="customer.debt > 0" class="btn btn-sm btn-success m-1" data-bs-toggle="modal" data-bs-target="#paymentCustomer" (click)="openModalCustomer(customer)"><img src="/assets/icons/btnPayIcon.png" alt="pago" width="30" height="30" class="img-fluid"></button>
-                            <button  class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#updateCustomer" (click)="openModalCustomer(customer)"><img src="/assets/icons/btnEditIcon.png" alt="editar" width="30" height="30" class="img-fluid"></button>
+                            <button  class="btn btn-sm btn-warning m-1" (click)="openModalCustomer(customer)"><img src="/assets/icons/btnEditIcon.png" alt="editar" width="30" height="30" class="img-fluid"></button>
                             <button *ngIf="customer.debt === 0 && customer.account" class="btn btn-sm btn-danger m-1" (click)="deleteCustomer(customer)" ><img src="/assets/icons/btnDeleteIcon.png" alt="borrar" width="30" height="30" class="img-fluid"></button>
                         </div>
                     </td>

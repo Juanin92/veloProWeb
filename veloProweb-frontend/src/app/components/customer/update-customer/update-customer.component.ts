@@ -6,6 +6,7 @@ import { CustomerService } from '../../../services/customer/customer.service';
 import { CustomerValidator } from '../../../validation/customer-validator';
 import { CustomerHelperServiceService } from '../../../services/customer/customer-helper-service.service';
 import { NotificationService } from '../../../utils/notification-service.service';
+import { ModalService } from '../../../utils/modal.service';
 
 @Component({
   selector: 'app-update-customer',
@@ -23,7 +24,8 @@ export class UpdateCustomerComponent {
   constructor(
     private customerService: CustomerService,
     private customerHelper: CustomerHelperServiceService,
-    private notification: NotificationService) {
+    private notification: NotificationService,
+    public modalService: ModalService) {
     //Se inicializa la variable con valores vacíos mediante el helper
     this.selectedCustomer = customerHelper.createEmptyCustomer();
   }
@@ -41,6 +43,7 @@ export class UpdateCustomerComponent {
         console.log('Se actualizo el cliente: ', updateCustomer);
         this.notification.showSuccessToast(`Se actualizo el cliente ${updateCustomer.name} ${updateCustomer.surname} correctamente`, 'top', 3000);
         this.customerUpdated.emit();
+        this.modalService.closeModal();
       },
         (error) => {
           const message = error.error?.message || error.error?.error;

@@ -1,10 +1,10 @@
-<div class="modal fade" id="updateCustomer" tabindex="-1" aria-labelledby="updateCustomer" aria-hidden="true"
-    *ngIf="selectedCustomer">
+<div class="modal fade show d-block" id="updateCustomer" tabindex="-1" aria-labelledby="updateCustomer" aria-hidden="true"
+    *ngIf="selectedCustomer && modalService.isModalOpen('updateCustomer')">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header text-center w-100">
                 <h1 class="modal-title fs-3 w-100">Actualización de Clientes</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" aria-label="Close" (click)="modalService.closeModal()"></button>
             </div>
             <div class="modal-body" [hidden]="!selectedCustomer.account">
                 <form #form="ngForm">
@@ -59,7 +59,7 @@
                     [hidden]="!selectedCustomer.account">Actualizar</button>
                 <button type="button" class="btn btn-warning" [hidden]="selectedCustomer.account"
                     (click)="activeCustomer(selectedCustomer)">Activar</button>
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" (click)="modalService.closeModal()">Cancelar</button>
             </div>
         </div>
     </div>
