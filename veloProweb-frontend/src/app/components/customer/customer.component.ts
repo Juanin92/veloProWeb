@@ -32,7 +32,7 @@ export class CustomerComponent implements OnInit, AfterViewInit {
     private customerHelper: CustomerHelperServiceService,
     private notification: NotificationService,
     private tooltipService: TooltipService,
-    public modalService: ModalService) {
+    private modalService: ModalService) {
     this.selectedCustomer = customerHelper.createEmptyCustomer();
   }
 
@@ -98,7 +98,7 @@ export class CustomerComponent implements OnInit, AfterViewInit {
   openModalCustomer(customer: Customer): void {
     if (customer) {
       this.selectedCustomer = { ...customer };
-      // this.modalService.openModal('updateCustomer');
+      this.modalService.openModal();
     } else {
       console.error('No se pudo abrir modal, el cliente es undefined');
     }
