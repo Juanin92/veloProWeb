@@ -6,6 +6,7 @@ import { Product } from '../../../models/Entity/Product/product.model';
 import { ProductValidator } from '../../../validation/product-validator';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ModalService } from '../../../utils/modal.service';
 
 @Component({
   selector: 'app-update-product',
@@ -25,7 +26,8 @@ export class UpdateProductComponent implements OnChanges{
   constructor(
     private productService: ProductService,
     private helper: ProductHelperService,
-    private notification: NotificationService) {
+    private notification: NotificationService,
+    public modalService: ModalService) {
     this.selectedProduct = helper.createEmptyProduct();
     this.originalStock = this.selectedProduct.stock;
   }
@@ -80,8 +82,9 @@ export class UpdateProductComponent implements OnChanges{
         this.productUpdated.emit();
         this.originalStock = this.selectedProduct.stock;
         this.stockChanged = false;
+        this.modalService.closeModal();
       }, (error) => {
-        const message = error.error.error;
+        const message = error.error?.message || error.error?.error;
         this.notification.showErrorToast(`Error al actualizar producto \n${message}`, 'top', 5000);
         console.log('Error al actualizar producto: ', message);
       });

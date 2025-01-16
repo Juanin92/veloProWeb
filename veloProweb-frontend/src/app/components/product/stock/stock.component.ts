@@ -10,6 +10,7 @@ import { AddCategoriesComponent } from "../add-categories/add-categories.compone
 import { Router } from '@angular/router';
 import { StatusProduct } from '../../../models/enum/status-product';
 import { NotificationService } from '../../../utils/notification-service.service';
+import { ModalService } from '../../../utils/modal.service';
 
 @Component({
   selector: 'app-stock',
@@ -30,7 +31,8 @@ export class StockComponent implements OnInit {
     private stockService: ProductService,
     private helper: ProductHelperService,
     private router: Router,
-    private notification: NotificationService) {
+    private notification: NotificationService,
+    public modalService: ModalService) {
     this.selectedProduct = helper.createEmptyProduct();
   }
 
@@ -111,6 +113,7 @@ export class StockComponent implements OnInit {
   openModalProduct(product: Product): void {
     if (product) {
       this.selectedProduct = { ...product };
+      this.modalService.openModal();
     } else {
       console.error('No se pudo abrir modal, el producto no esta definido');
     }

@@ -14,6 +14,7 @@ import { CategoryService } from '../../../services/Product/category.service';
 import { SubcategoryService } from '../../../services/Product/subcategory.service';
 import { Category } from '../../../models/Entity/Product/category';
 import { Subcategory } from '../../../models/Entity/Product/subcategory';
+import { ModalService } from '../../../utils/modal.service';
 
 @Component({
   selector: 'app-add-product',
@@ -43,7 +44,8 @@ export class AddProductComponent implements OnInit {
     private categoryService: CategoryService,
     private subcategoryService: SubcategoryService,
     private helper: ProductHelperService,
-    private notification: NotificationService) {
+    private notification: NotificationService,
+    public modalService: ModalService) {
     this.newProduct = helper.createEmptyProduct();
   }
 
@@ -129,8 +131,9 @@ export class AddProductComponent implements OnInit {
         this.notification.showSuccessToast("Producto creado exitosamente!", 'top', 3000);
         this.resetProductForm();
         this.productAdded.emit();
+        this.modalService.closeModal();
       }, (error) => {
-        const message = error.error.message;
+        const message = error.error?.message || error.error?.error;
           console.error('Error:', error);
           this.notification.showErrorToast(`Error: ${message}`, 'top', 5000);
       });
