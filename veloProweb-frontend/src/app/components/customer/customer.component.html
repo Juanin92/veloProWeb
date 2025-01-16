@@ -26,12 +26,14 @@
                     <p class="ms-1 mb-0">Vencida</p>
                 </div>
             </div>
-            <div class="order-lg-2 order-1 m-2 mt-0 align-content-end">
-                <button class="btn btn-outline-success border-0 m-2 mt-1" 
+            <div class="order-lg-2 order-1 m-2 mt-0 align-content-end" 
                 data-bs-toggle="tooltip"
-              data-bs-placement="auto"
-              data-bs-title="Crear nuevo cliente" 
-            (click)="modalService.openModal('addCustomer')"><img src="/assets/icons/iconAddUser.png" alt="Agregar_cliente"  width="60" height="60" class="d-inline-block img-fluid"></button>
+                data-bs-placement="auto"
+                data-bs-title="Crear nuevo cliente" >
+                <button class="btn btn-outline-success border-0 m-2 mt-1" 
+                data-bs-toggle="modal"
+                data-bs-target="#addCustomer" 
+            ><img src="/assets/icons/iconAddUser.png" alt="Agregar_cliente"  width="60" height="60" class="d-inline-block img-fluid"></button>
             </div>
         </div>
     </div>
@@ -63,7 +65,7 @@
                     <td>
                         <div>
                             <button *ngIf="customer.debt > 0" class="btn btn-sm btn-success m-1" data-bs-toggle="modal" data-bs-target="#paymentCustomer" (click)="openModalCustomer(customer)"><img src="/assets/icons/btnPayIcon.png" alt="pago" width="30" height="30" class="img-fluid"></button>
-                            <button  class="btn btn-sm btn-warning m-1" (click)="openModalCustomer(customer)" (click)="modalService.openModal('updateCustomer')"><img src="/assets/icons/btnEditIcon.png" alt="editar" width="30" height="30" class="img-fluid"></button>
+                            <button  class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#updateCustomer" (click)="openModalCustomer(customer)"><img src="/assets/icons/btnEditIcon.png" alt="editar" width="30" height="30" class="img-fluid"></button>
                             <button *ngIf="customer.debt === 0 && customer.account" class="btn btn-sm btn-danger m-1" (click)="deleteCustomer(customer)" ><img src="/assets/icons/btnDeleteIcon.png" alt="borrar" width="30" height="30" class="img-fluid"></button>
                         </div>
                     </td>
