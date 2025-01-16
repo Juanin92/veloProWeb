@@ -5,29 +5,27 @@ import { Injectable } from '@angular/core';
 })
 export class ModalService {
 
-  private activeModalId: string | null = null;
+  private isVisible: boolean = false;
 
   /**
-   * Abre un modal específico configurando su ID como el modal activo.
-   * @param modalId ID del modal a abrir
+   * Abre un modal 
    */
-  openModal(modalId: string): void {
-    this.activeModalId = modalId;
+  openModal(): void {
+    this.isVisible = true;
   }
 
   /**
    * Cierra el modal actualmente activo.
    */
   closeModal(): void {
-    this.activeModalId = null;
+    this.isVisible = false;
   }
 
   /**
-   * Verifica si un modal con el ID especificado está activo (abierto).
-   * @param modalId ID del modal a verificar
-   * @returns `true` si el modal está activo, `false` en caso contrario
+   * Retornar el estado de visibilidad
+   * @returns - estado de visibilidad
    */
-  isModalOpen(modalId: string): boolean {
-    return this.activeModalId === modalId;
+  isModalVisible(): boolean {
+    return this.isVisible;
   }
 }
