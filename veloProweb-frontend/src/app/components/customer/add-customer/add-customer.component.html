@@ -1,10 +1,10 @@
-<div class="modal fade" id="addCustomer" tabindex="-1" aria-labelledby="addCustomer" aria-hidden="true"
+<div *ngIf="modalService.isModalOpen('addCustomer')" class="modal fade show d-block" id="addCustomer" tabindex="-1" aria-labelledby="addCustomer" aria-hidden="true"
  (hidden.bs.modal)="resetCustomerForm()">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header text-center w-100">
                 <h1 class="modal-title fs-3 w-100">Registro de Clientes</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" aria-label="Close" (click)="modalService.closeModal()"></button>
             </div>
             <div class="modal-body">
                 <form>
@@ -51,7 +51,7 @@
             <div class="modal-footer d-flex justify-content-center">
                 <button type="submit" class="btn btn-success" (click)="addCustomer()"
                     [disabled]="!customerValidator.validateForm(newCustomer)">Guardar</button>
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" (click)="modalService.closeModal()">Cancelar</button>
             </div>
         </div>
     </div>

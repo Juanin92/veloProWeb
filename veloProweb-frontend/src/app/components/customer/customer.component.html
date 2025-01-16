@@ -31,7 +31,7 @@
                 data-bs-toggle="tooltip"
               data-bs-placement="top"
               data-bs-title="Crear nuevo cliente" 
-               data-bs-target="#addCustomer"><img src="/assets/icons/iconAddUser.png" alt="Agregar_cliente"  width="60" height="60" class="d-inline-block img-fluid"></button>
+            (click)="modalService.openModal('addCustomer')"><img src="/assets/icons/iconAddUser.png" alt="Agregar_cliente"  width="60" height="60" class="d-inline-block img-fluid"></button>
             </div>
         </div>
     </div>
@@ -73,7 +73,7 @@
     </div>
 </div>
 <!-- Modal Add Customer -->
-<app-add-customer (customerAdded)="getAllCustomer()"></app-add-customer>
+<app-add-customer id="addCustomer" (customerAdded)="getAllCustomer()"></app-add-customer>
 <!-- Modal Update Customer -->
 <app-update-customer [selectedCustomer]="selectedCustomer" (customerUpdated)="getAllCustomer()"></app-update-customer>
 <!-- Modal Payment Customer -->

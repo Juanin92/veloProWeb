@@ -9,7 +9,7 @@ import { UpdateCustomerComponent } from "./update-customer/update-customer.compo
 import { CustomerHelperServiceService } from '../../services/customer/customer-helper-service.service';
 import { NotificationService } from '../../utils/notification-service.service';
 import { TooltipService } from '../../utils/tooltip.service';
-import bootstrap from 'bootstrap';
+import { ModalService } from '../../utils/modal.service';
 
 
 @Component({
@@ -31,7 +31,8 @@ export class CustomerComponent implements OnInit, AfterViewInit {
     private customerService: CustomerService,
     private customerHelper: CustomerHelperServiceService,
     private notification: NotificationService,
-    private tooltipService: TooltipService) {
+    private tooltipService: TooltipService,
+    public modalService: ModalService) {
     this.selectedCustomer = customerHelper.createEmptyCustomer();
   }
 
@@ -159,11 +160,5 @@ export class CustomerComponent implements OnInit, AfterViewInit {
         (this.textFilter.toLowerCase() === 'inactivo' && !customer.account)
       );
     }
-  }
-
-  openModal(): void {
-    const modalElement = document.getElementById('addCustomer');
-    const modal = new bootstrap.Modal(modalElement);
-    modal.show();
   }
 }

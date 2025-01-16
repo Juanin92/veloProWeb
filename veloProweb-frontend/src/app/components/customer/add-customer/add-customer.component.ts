@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Customer } from '../../../models/Entity/Customer/customer.model';
 import { CustomerService } from '../../../services/customer/customer.service';
@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { CustomerHelperServiceService } from '../../../services/customer/customer-helper-service.service';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ProductHelperService } from '../../../services/Product/product-helper.service';
+import { ModalService } from '../../../utils/modal.service';
 
 @Component({
   selector: 'app-add-customer',
@@ -24,7 +25,8 @@ export class AddCustomerComponent {
   constructor(
     private customerService: CustomerService,
     private customerHelper: CustomerHelperServiceService,
-    private notification: NotificationService) {
+    private notification: NotificationService,
+    public modalService: ModalService) {
     //Se inicializa la variable con valores vacíos mediante el helper
     this.newCustomer = customerHelper.createEmptyCustomer();
   }
@@ -42,6 +44,7 @@ export class AddCustomerComponent {
           this.notification.showSuccessToast(`¡El cliente ${this.newCustomer.name} ${this.newCustomer.surname} fue agregado exitosamente!`, 'top', 3000);
           this.customerHelper.createEmptyCustomer(); // Reinicia la variable del cliente vacío.
           this.customerAdded.emit();
+          this.modalService.closeModal();
         },
         (error) => {
           const message = error.error.error;
