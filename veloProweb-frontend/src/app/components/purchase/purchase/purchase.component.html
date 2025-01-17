@@ -1,127 +1,73 @@
 <div class="contianer-fluid d-flex flex-lg-row flex-column p-1 min-vh-100">
   <div
-    class="flex-column text-center w-25 border border-start-0 border-top-0 border-bottom-0 border-3 border-white vh-100 overflow-y-auto"
-  >
+    class="d-flex flex-column align-items-center text-center w-25 border border-start-0 border-top-0 border-bottom-0 border-3 border-white vh-100 overflow-y-auto">
     <p class="fw-bold fs-1 mb-0">Compra</p>
     <p class="fw-bolder">N°{{ TotalPurchaseDB }}</p>
-    <form>
-      <div>
-        <div class="form-floating mb-2 ms-4 w-75">
-          <input
-            type="text"
-            class="form-control"
-            id="document"
-            name="document"
-            placeholder="Ingrese un n° documento"
-            aria-label="Ingrese un número de documento"
-            aria-describedby="addDocument"
-            [(ngModel)]="purchase.document"
+    <form class="w-100">
+      <div class="d-flex flex-column align-items-center w-100">
+        <div class="form-floating mb-2 w-75">
+          <input type="text" class="form-control" id="document" name="document" placeholder="Ingrese un n° documento"
+            aria-label="Ingrese un número de documento" aria-describedby="addDocument" [(ngModel)]="purchase.document"
             [ngClass]="{
               'is-invalid': !validator.isFieldValid(purchase, 'document'),
               'is-valid': validator.isFieldValid(purchase, 'document')
-            }"
-            required
-          />
+            }" required />
           <label for="document" class="form-label">N° Documento</label>
         </div>
-        <div class="form-floating mb-2 ms-4 w-75">
-          <input
-            type="date"
-            class="form-control"
-            id="date"
-            name="date"
-            placeholder="Ingrese fecha"
-            aria-label="Ingrese fecha de compra"
-            aria-describedby="addDate"
-            [(ngModel)]="purchase.date"
-            [ngClass]="{
+        <div class="form-floating mb-2 w-75">
+          <input type="date" class="form-control" id="date" name="date" placeholder="Ingrese fecha"
+            aria-label="Ingrese fecha de compra" aria-describedby="addDate" [(ngModel)]="purchase.date" [ngClass]="{
               'is-invalid': !validator.isFieldValid(purchase, 'date'),
               'is-valid': validator.isFieldValid(purchase, 'date')
-            }"
-            required
-          />
+            }" required />
           <label for="date" class="form-label">Fecha</label>
         </div>
-        <div class="input-group mb-3 w-75 ms-4">
-          <select
-            class="form-select"
-            name="supplier"
-            id="supplier"
-            aria-label="Seleccione un proveedor"
-            [(ngModel)]="purchase.supplier"
-            [ngClass]="{
+        <div class="input-group mb-3 w-75">
+          <select class="form-select" name="supplier" id="supplier" aria-label="Seleccione un proveedor"
+            [(ngModel)]="purchase.supplier" [ngClass]="{
               'is-invalid': !validator.isFieldValid(purchase, 'supplier'),
               'is-valid': validator.isFieldValid(purchase, 'supplier')
-            }"
-          >
+            }">
             <option [ngValue]="null" selected disabled>Proveedor</option>
             <option *ngFor="let supplier of supplierList" [ngValue]="supplier">
               {{ supplier.name }}
             </option>
           </select>
         </div>
-        <div class="input-group mb-2 ms-0 justify-content-center">
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="radioDocumentType"
-              id="radioDocumentTypeTicket"
-              [(ngModel)]="purchase.documentType"
-              value="Boleta"
-            />
+        <div class="input-group mb-2 justify-content-center w-75">
+          <div class="form-check me-4">
+            <input class="form-check-input" type="radio" name="radioDocumentType" id="radioDocumentTypeTicket"
+              [(ngModel)]="purchase.documentType" value="Boleta" />
             <label class="form-check-label" for="radioDocumentTypeTicket">
               Boleta
             </label>
           </div>
-          <div class="form-check ms-5">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="radioDocumentType"
-              id="radioDocumentTypeReceipt"
-              [(ngModel)]="purchase.documentType"
-              value="Factura"
-              checked
-            />
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="radioDocumentType" id="radioDocumentTypeReceipt"
+              [(ngModel)]="purchase.documentType" value="Factura" checked />
             <label class="form-check-label" for="radioDocumentTypeReceipt">
               Factura
             </label>
           </div>
         </div>
-        <div class="form-floating mb-2 ms-4 w-75">
-          <input
-            type="number"
-            class="form-control"
-            id="purchaseTotal"
-            name="purchaseTotal"
-            placeholder="Ingrese valor"
-            aria-label="Ingrese total"
-            aria-describedby="addTotal"
-            [(ngModel)]="purchase.purchaseTotal"
-            [ngClass]="{
+        <div class="form-floating mb-2 w-75">
+          <input type="number" class="form-control" id="purchaseTotal" name="purchaseTotal" placeholder="Ingrese valor"
+            aria-label="Ingrese total" aria-describedby="addTotal" [(ngModel)]="purchase.purchaseTotal" [ngClass]="{
               'is-invalid': !validator.isFieldValid(purchase, 'purchaseTotal'),
               'is-valid': validator.isFieldValid(purchase, 'purchaseTotal')
-            }"
-            required
-          />
+            }" required />
           <label for="purchaseTotal" class="form-label">Valor total</label>
         </div>
-        <p
-          *ngIf="validator.validateTotals(purchase, total)"
-          class="text-danger fw-light"
-        >
+        <p *ngIf="validator.validateTotals(purchase, total)" class="text-danger fw-light mb-1">
           Verifique total de la {{ purchase.documentType }}
         </p>
         <p>IVA: {{ purchase.tax | currency : "CLP" : "$" : "1.0-0" }}</p>
-        <button
-          [disabled]="!validator.validateForm(purchase)"
-          class="btn btn-success m-1"
-          (click)="createNewPurchaseProcess()"
-        >
-          Guardar
-        </button>
-        <button class="btn btn-info m-1" (click)="resetData()">Limpiar</button>
+        <div class="flex-row mb-1">
+          <button [disabled]="!validator.validateForm(purchase)" class="btn btn-success m-1" (click)="createNewPurchaseProcess()">
+            Guardar
+          </button>
+          <button class="btn btn-info m-1" (click)="resetData()">Limpiar</button>
+        </div>
       </div>
     </form>
   </div>
