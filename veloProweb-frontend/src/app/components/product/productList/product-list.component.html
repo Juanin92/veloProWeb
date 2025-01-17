@@ -3,35 +3,29 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-body d-flex flex-column">
-                <div class="d-flex flex-row justify-content-around mb-1">
-                    <div class="form-floating mb-0 mt-5">
+                <div class="d-flex flex-row justify-content-between mb-2">
+                    <div class="form-floating mt-2">
                         <input [(ngModel)]="textFilter" (ngModelChange)="searchFilterCustomer()" type="text"
-                            class="form-control" id="searchProduct" name="searchProduct" placeholder="Búsqueda Rápida"
+                            class="form-control form-control-lg" id="searchProduct" name="searchProduct" placeholder="Búsqueda Rápida"
                             aria-label="Búsqueda Rápida de productos" aria-describedby="searchProduct" />
                         <label for="searchProduct" class="form-label">Búsqueda Rápida</label>
                     </div>
-                    <div class="border border-1 border-white p-1 mt-5 h-100">
-                        <p class="ms-1 mb-0">
-                            <span class="mt-1 d-inline-block" style="
-                  width: 15px;
-                  height: 15px;
-                  background-color: rgb(40, 238, 40);
-                "></span>
-                            Disponible
-                        </p>
-                        <p class="ms-1 mb-0">
-                            <span class="mt-1 d-inline-block" style="
-                  width: 15px;
-                  height: 15px;
-                  background-color: rgb(9, 180, 237);
-                "></span>
-                            No Disponible
-                        </p>
-                        <p class="ms-1 mb-0">
-                            <span class="mt-1 d-inline-block"
-                                style="width: 15px; height: 15px; background-color: red"></span>
-                            Descontinuado
-                        </p>
+                    <div
+                        class="border border-1 border-white p-1 mb-0 mt-0 d-flex flex-row">
+                        <div class="m-1">
+                            <span class="mt-1 d-inline-block ms-4"
+                                style="width: 15px;height: 15px;background-color: rgb(40, 238, 40);"></span>
+                            <p class="ms-1 mb-0 fw-semibold">Disponible</p>
+                        </div>
+                        <div class="m-1">
+                            <span class="mt-1 d-inline-block ms-5"
+                                style="width: 15px;height: 15px;background-color: rgb(9, 180, 237);"></span>
+                            <p class="ms-1 mb-0 fw-semibold">No Disponible</p>
+                        </div>
+                        <div class="m-1">
+                            <span class="mt-1 d-inline-block ms-5" style="width: 15px;height: 15px;background-color: red"></span>
+                            <p class="ms-1 mb-0 fw-semibold">Descontinuado</p>
+                        </div>
                     </div>
                 </div>
                 <div class="table-responsive text-center p-2 pt-0" style="max-height: 325px">
