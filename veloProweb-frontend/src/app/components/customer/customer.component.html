@@ -1,14 +1,16 @@
 <div class="container-fluid d-flex flex-column p-1">
     <div class="p-0 pb-0">
         <p class="text-center fw-bold fs-2 m-0">Total Dinero: {{totalDebts | currency:'CLP':'$':'1.0-0'}}</p>
-        <div class="d-flex flex-lg-row flex-column justify-content-between">
+        <div class="d-flex flex-lg-row flex-column justify-content-between position-relative">
             <div class="order-lg-0 order-2 p-1 mb-2 align-content-start">
-                <p class="fw-bold fs-4 mb-0 m-1">Buscar Cliente:</p>
-                <div class="input-group input-group-md">
-                    <input [(ngModel)]="textFilter" (ngModelChange)="searchFilterCustomer()" type="text" class="form-control" aria-label="buscar cliente filtrado" aria-describedby="inputGroup-sizing-md" placeholder="Ingrese un valor">
+                <div class="form-floating mb-1">
+                    <input id="searchProduct" [(ngModel)]="textFilter" (ngModelChange)="searchFilterCustomer()" type="text"
+                        class="form-control form-control-lg" aria-label="buscar producto filtrado"
+                        aria-describedby="inputGroup-sizing-md" placeholder="Ingrese un valor" />
+                    <label for="searchProduct" class="form-label">Búsqueda Rápida</label>
                 </div>
             </div>
-            <div class="border border-1 border-white p-1 mb-2 mt-2 my-4 h-100 d-flex flex-row">
+            <div class="border border-1 border-white p-1 mb-2 mt-2 my-4 d-flex flex-row position-absolute start-50 translate-middle-x">
                 <div class="m-2">
                     <span class="mt-1 d-inline-block ms-3" style="width: 15px;height: 15px;background-color: rgb(40, 238, 40);"></span>
                     <p class="ms-1 mb-0">Pagada</p>
