@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { SupplierService } from '../../../services/Purchase/supplier.service';
 import { Supplier } from '../../../models/Entity/Purchase/supplier';
 import { FormsModule } from '@angular/forms';
-import { ProductService } from '../../../services/Product/product.service';
 import { Product } from '../../../models/Entity/Product/product.model';
 import { TooltipService } from '../../../utils/tooltip.service';
 import { PurchaseDetails } from '../../../models/Entity/Purchase/purchase-details';
@@ -16,12 +15,12 @@ import { PurchaseRequestDTO } from '../../../models/DTO/purchase-request-dto';
 import { Router } from '@angular/router';
 import { AddCategoriesComponent } from '../../product/add-categories/add-categories.component';
 import { AddProductComponent } from "../../product/add-product/add-product.component";
-import { StockComponent } from '../../product/stock/stock.component';
+import { ProductListComponent } from "../../product/productList/product-list.component";
 
 @Component({
   selector: 'app-purchase',
   standalone: true,
-  imports: [CommonModule, FormsModule, AddCategoriesComponent, AddProductComponent],
+  imports: [CommonModule, FormsModule, AddCategoriesComponent, AddProductComponent, ProductListComponent],
   templateUrl: './purchase.component.html',
   styleUrl: './purchase.component.css'
 })
@@ -29,20 +28,17 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
   
   purchase: Purchase;
   supplierList: Supplier[] = [];
-  productList: Product[] = [];
-  filteredProductsList: Product[] = [];
-  purchaseDetailList: PurchaseDetails[] = [];
+  productSelected: Product | null = null;
+  purchaseDetailList: PurchaseDetails[] = []; 
   requestDTO: PurchaseRequestDTO | null = null;
   validator = PurchaseValidator;
   total: number = 0; //Total acumulado de la compra
-  textFilter: string = '';
   TotalPurchaseDB: number = 0; //Total de compras registradas en la BD
   editingFields: { [key: string]: { quantity?: boolean; price?: boolean } } = {}; // (Map) Campos de edición activa para cantidades o precios en detalles de compra
 
   constructor(
     private purchaseService: PurchaseService,
     private supplierService: SupplierService,
-    private productService: ProductService,
     private helper: PurchaseHelperService,
     private tooltipService: TooltipService,
     private notification: NotificationService,
@@ -58,7 +54,6 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
 
   ngOnInit(): void {
     this.getSuppliers();
-    this.getProducts();
     this.getTotalPurchase();
   }
 
@@ -74,7 +69,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
         this.notification.showSuccessToast(`¡Compra N°${this.TotalPurchaseDB} fue agregada exitosamente!`, 'top', 3000);
         this.route.navigate(['/stock']);
       }, (error) =>{
-        const message = error.error || error.message || 'Ocurrió un error inesperado.';
+        const message = error.error?.message || error.error?.error;
         console.error('Error al agregar la compra: ', error);
         this.notification.showErrorToast(`Error al agregar la compra \n${message}`, 'top', 5000);
       });
@@ -88,14 +83,6 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     this.supplierService.getSuppliers().subscribe((list) => {
       this.supplierList = list;
     })
-  }
-
-  /** Obtiene una lista de productos */
-  getProducts(): void{
-    this.productService.getProducts().subscribe((list) => {
-      this.productList = list;
-      this.filteredProductsList = list;
-    });
   }
 
   /** Obtiene el numero total de compras realizadas */
@@ -112,6 +99,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
    * @param product - Producto seleccionado para agregar a la lista
    */
   addSelectedProductToPurchaseDetailList(product: Product): void{
+    this.productSelected = product;
     const isProductAdded = this.purchaseDetailList.some((detail) => detail.product.id === product.id);
     if (!isProductAdded) {
       const newPurchaseDetail: PurchaseDetails = {
@@ -165,7 +153,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     this.purchaseDetailList.forEach((purchaseDetail) =>{
       this.total += purchaseDetail.total;
       this.purchase.tax += purchaseDetail.tax;
-    })
+    });
   }
 
   /** Reinicia los datos de la compra */
@@ -197,37 +185,5 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
   isEditing(detail: PurchaseDetails, field: 'quantity' | 'price'): boolean {
     const key = detail.id.toString();
     return !!this.editingFields[key]?.[field];
-  }
-
-  /**
-   * Retorna el color asociado con el estado del producto.
-   * @param status - El estado del producto.
-   * @returns - El color correspondiente al estado del producto.
-   */
-  statusColor(status: string): string {
-    switch (status) {
-      case 'DISPONIBLE': return 'rgb(40, 238, 40)';
-      case 'DESCONTINUADO': return 'red';
-      case 'NODISPONIBLE': return 'rgb(9, 180, 237)';
-      default: return 'transparent';
-    }
-  }
-
-  /**
-   * Filtrar lista de productos según el criterio de búsqueda
-   * Se filtrara por nombre de marca, categoría, subcategoría y descripción donde textFilter
-   * contendrá el valor a filtrar
-   */
-  searchFilterCustomer(): void {
-    if (this.textFilter.trim() === '') {
-      this.filteredProductsList = this.productList;
-    } else {
-      this.filteredProductsList = this.productList.filter(product =>
-        product.brand.name.toLowerCase().includes(this.textFilter.toLowerCase()) ||
-        product.category.name.toLowerCase().includes(this.textFilter.toLowerCase()) ||
-        product.subcategoryProduct.name.toLowerCase().includes(this.textFilter.toLowerCase()) ||
-        product.description.toLowerCase().includes(this.textFilter.toLowerCase())
-      );
-    }
   }
 }
