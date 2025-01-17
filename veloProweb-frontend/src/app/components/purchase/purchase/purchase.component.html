@@ -143,7 +143,16 @@
           data-bs-title="Seleccionar Productos"
         />
       </button>
-      <div class="row m-3 w-75 justify-content-between">
+      <button class="btn btn-outline-success border-0 m-2 mt-1" data-bs-toggle="modal" data-bs-target="#addProduct">
+        <img src="/assets/icons/iconAdd.png" alt="Agregar_producto" width="20" height="20" class="d-inline-block img-fluid" data-bs-toggle="tooltip" data-bs-placement="auto"
+        data-bs-title="Crear nuevo producto"/>
+      </button>
+      <button class="btn btn-outline-success border-0 m-2 mt-1" data-bs-toggle="modal" data-bs-target="#categoriesModal">
+        <img src="/assets/icons/iconCategories.png" alt="Agregar_categoría" width="20" height="20"
+          class="d-inline-block img-fluid" data-bs-toggle="tooltip" data-bs-placement="auto"
+          data-bs-title="Crear nuevas categorías" />
+      </button>
+      <div class="row m-3 mt-1 w-75 justify-content-between">
         <div class="col-6">
           <p class="fw-bold fs-4">
             Cantidad Producto: {{ purchaseDetailList.length }}
@@ -264,36 +273,6 @@
               >Búsqueda Rápida</label
             >
           </div>
-          <div>
-            <button
-              class="btn btn-outline-success border-0 m-2 mt-5"
-              data-bs-toggle="tooltip"
-              data-bs-placement="top"
-              data-bs-title="Crear nuevo producto"
-            >
-              <img
-                src="/assets/icons/iconAdd.png"
-                alt="Agregar_producto"
-                width="40"
-                height="40"
-                class="d-inline-block img-fluid"
-              />
-            </button>
-            <button
-              class="btn btn-outline-success border-0 m-2 mt-5"
-              data-bs-toggle="tooltip"
-              data-bs-placement="top"
-              data-bs-title="Crear nuevas categorías"
-            >
-              <img
-                src="/assets/icons/iconCategories.png"
-                alt="Agregar_categoría"
-                width="40"
-                height="40"
-                class="d-inline-block img-fluid"
-              />
-            </button>
-          </div>
           <div class="border border-1 border-white p-1 mt-5 h-100">
             <p class="ms-1 mb-0">
               <span
@@ -366,3 +345,7 @@
     </div>
   </div>
 </div>
+<!-- MODAL ADD CATEGORIES -->
+<app-add-categories></app-add-categories>
+<!-- MODAL ADD PRODUCTS -->
+<app-add-product></app-add-product>
