@@ -20,19 +20,20 @@
       >
         <p class="fw-bold fs-4 m-0">Categorías</p>
       </button>
-      <button
+      <a
         type="button"
         class="btn btn-outline-light btn-lg"
-        (click)="navigateToRoute('proveedor')"
+        [routerLink]="['/proveedores']"
       >
         <p class="fw-bold fs-4 m-0">Proveedor</p>
-      </button>
-      <button 
+      </a>
+      <a 
         type="button" 
         class="btn btn-outline-light btn-lg me-2"
-        (click)="navigateToRoute('compra')">
+        [routerLink]="['/compras']"
+        target="_blank">
         <p class="fw-bold fs-4 m-0">Compras</p>
-      </button>
+      </a>
     </div>
     <div class="d-flex flex-lg-row flex-column m-1 align-items-center justify-content-between position-relative">
       <div class="order-lg-0 order-2 d-flex flex-column align-items-start">
