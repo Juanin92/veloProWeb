@@ -53,6 +53,13 @@ export class AddProductComponent implements OnInit {
    * Inicializa el componente cargando las lista de categorías, marcas y unidades de medidas
    */
   ngOnInit(): void {
+    this.loadData();
+  }
+
+  /**
+   * Encargado de cargar los métodos
+   */
+  loadData(): void{
     this.getAllBrands();
     this.getAllUnits();
     this.getAllCategories();

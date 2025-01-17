@@ -1,5 +1,5 @@
 <div class="modal fade" id="addProduct" tabindex="-1" aria-labelledby="addProduct" aria-hidden="true" 
-    (hidden.bs.modal)="resetProductForm()">
+    (hidden.bs.modal)="resetProductForm()" (shown.bs.modal)="loadData()">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header text-center w-100">
