@@ -7,7 +7,7 @@ import { AddProductComponent } from "../add-product/add-product.component";
 import { ProductHelperService } from '../../../services/Product/product-helper.service';
 import { UpdateProductComponent } from "../update-product/update-product.component";
 import { AddCategoriesComponent } from "../add-categories/add-categories.component";
-import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { StatusProduct } from '../../../models/enum/status-product';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ModalService } from '../../../utils/modal.service';
@@ -15,7 +15,7 @@ import { ModalService } from '../../../utils/modal.service';
 @Component({
   selector: 'app-stock',
   standalone: true,
-  imports: [CommonModule, NgStyle, FormsModule, AddProductComponent, UpdateProductComponent, AddCategoriesComponent],
+  imports: [CommonModule, NgStyle, FormsModule, RouterModule, AddProductComponent, UpdateProductComponent, AddCategoriesComponent],
   templateUrl: './stock.component.html',
   styleUrl: './stock.component.css'
 })
@@ -30,7 +30,6 @@ export class StockComponent implements OnInit {
   constructor(
     private stockService: ProductService,
     private helper: ProductHelperService,
-    private router: Router,
     private notification: NotificationService,
     public modalService: ModalService) {
     this.selectedProduct = helper.createEmptyProduct();
@@ -130,13 +129,6 @@ export class StockComponent implements OnInit {
       case 'DESCONTINUADO': return 'red';
       case 'NODISPONIBLE': return 'rgb(9, 180, 237)';
       default: return 'transparent';
-    }
-  }
-
-  navigateToRoute(route: string): void {
-    switch(route){
-      case 'proveedor': this.router.navigate(['/proveedores']); break;
-      case 'compra': this.router.navigate(['/compras']); break;
     }
   }
 
