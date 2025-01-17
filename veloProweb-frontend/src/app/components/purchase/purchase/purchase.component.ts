@@ -14,11 +14,14 @@ import { PurchaseService } from '../../../services/Purchase/purchase.service';
 import { PurchaseHelperService } from '../../../services/Purchase/purchase-helper.service';
 import { PurchaseRequestDTO } from '../../../models/DTO/purchase-request-dto';
 import { Router } from '@angular/router';
+import { AddCategoriesComponent } from '../../product/add-categories/add-categories.component';
+import { AddProductComponent } from "../../product/add-product/add-product.component";
+import { StockComponent } from '../../product/stock/stock.component';
 
 @Component({
   selector: 'app-purchase',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AddCategoriesComponent, AddProductComponent],
   templateUrl: './purchase.component.html',
   styleUrl: './purchase.component.css'
 })
