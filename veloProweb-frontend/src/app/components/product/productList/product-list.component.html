@@ -41,7 +41,7 @@
                                 <th scope="col" class="position-sticky top-0">Estado</th>
                             </tr>
                         </thead>
-                        <tbody class="table-group-divider text-center align-middle">
+                        <tbody class="table-group-divider text-center align-middle" style="cursor: pointer;">
                             <tr *ngFor="let product of filteredProductsList" (click)="selectProduct(product)">
                                 <th scope="row">{{ product.id }}</th>
                                 <td>{{ product.brand.name }}</td>
