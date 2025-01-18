@@ -1,20 +1,22 @@
 .main {
-    width: calc(100% - 200px);
-    left: 200px;
-    transition: 0.5s;
+  width: calc(100% - 200px);
+  margin-left: 200px;
+  transition: 0.5s;
+}
+
+.main.active {
+  width: calc(100% - 65px);
+  margin-left: 65px;
+}
+
+@media screen and (max-width: 1024px) {
+  .main {
+    width: 100%;
+    margin-left: 0;
   }
+
   .main.active {
-    width: calc(100% - 65px);
-    left: 65px;
+    width: calc(100% - 200px);
+    margin-left: 200px;
   }
-  
-  @media screen and (max-width: 1024px) {
-    .main {
-      width: 100%;
-      left: 0;
-    }
-    .main.active {
-      width: calc(100% - 200px);
-      left: 200px;
-    }
-  }
+}
