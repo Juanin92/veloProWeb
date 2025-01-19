@@ -1,28 +1,24 @@
 <div class="d-flex flex-column min-vh-100">
   <app-menu [isActive]="isMenuActive"></app-menu>
-  <div [class.active]="isMenuActive" class="main flex-grow-1">
-    <div
-      class="d-flex justify-content-between align-items-center p-1 border-bottom border-2"
-    >
-      <div class="toggle" style="cursor: pointer">
-        <span (click)="toggleMenu()" class="icon d-flex align-items-center">
-          <img
-            src="/assets/icons/iconCategories.png"
-            alt="toggle-menu"
-            width="30px"
-            height="30px"
-        /></span>
-      </div>
-      <div class="search">
-        <span class="icon d-flex align-items-center">
-          <img
-            src="/assets/icons/usercircle.png"
-            alt="user-profile"
-            width="30px"
-            height="30px"
-        /></span>
+  <div [class.active]="isMenuActive" class="main flex-grow-1 position-relative">
+    <!-- Modificado el div toggle-search -->
+    <div class="toggle-search-wrapper position-sticky bg-body w-100">
+      <div class="toggle-search d-flex justify-content-between align-items-center p-1 border-bottom border-2">
+        <div class="toggle" style="cursor: pointer">
+          <span (click)="toggleMenu()" class="icon d-flex align-items-center">
+            <img src="/assets/icons/iconCategories.png" alt="toggle-menu" width="30" height="30" />
+          </span>
+        </div>
+        <div class="search">
+          <span class="icon d-flex align-items-center">
+            <img src="/assets/icons/usercircle.png" alt="user-profile" width="30" height="30" />
+          </span>
+        </div>
       </div>
     </div>
-    <router-outlet></router-outlet>
+    <!-- Agregamos un div para el contenido con padding-top -->
+    <div class="content-wrapper w-100 h-100 overflow-y-auto">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 </div>
