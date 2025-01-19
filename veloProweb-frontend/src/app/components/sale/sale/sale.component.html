@@ -1,147 +1,18 @@
-<!-- <div class="contianer-fluid d-flex flex-column p-1 min-vh-100">
-    <div class="d-flex justify-content-between align-items-center">
-        <button class="btn btn-sm btn-outline-primary border-0 m-2 mt-1" data-bs-toggle="modal" data-bs-target="#selectProduct">
-            <img src="/assets/icons/iconFind.png" alt="Seleccionar_producto" width="40" height="40"
-                class="d-inline-block img-fluid" data-bs-toggle="tooltip" data-bs-placement="auto"
-                data-bs-title="Seleccionar Productos" />
-        </button>
-        <div class="position-absolute w-100 text-center">
-            <p class="m-0 fs-4 fw-bold">N°-123</p>
-        </div>
-        <div class="input-group w-25 me-4">
-            <select class="form-select" name="customer" id="customer" aria-label="Seleccione un cliente">
-                <option [ngValue]="null" selected disabled>Clientes</option>
-                <option *ngFor="let customer of customerList" [ngValue]="customer">{{customer.name + ' ' + customer.surname}}</option>
-            </select>
-        </div>
-    </div>
-    <div class="d-flex flex-column text-center">
-        <div class="table-responsive text-center p-5 pt-0 overflow-auto" style="max-height: 250px">
-            <table class="table table-hover">
-                <thead class="table-warning">
-                    <tr>
-                        <th scope="col" class="position-sticky top-0">#</th>
-                        <th scope="col" class="position-sticky top-0">Descripción</th>
-                        <th scope="col" class="position-sticky top-0">Unidad</th>
-                        <th scope="col" class="position-sticky top-0">Precio</th>
-                        <th scope="col" class="position-sticky top-0">Cantidad</th>
-                        <th scope="col" class="position-sticky top-0">Total</th>
-                        <th scope="col" class="position-sticky top-0"></th>
-                    </tr>
-                </thead>
-                <tbody class="table-group-divider text-center align-middle">
-                    <tr *ngFor="let saleDetail of saleDetailList; let i = index">
-                        <th scope="row">{{ i + 1}}</th>
-                        <td>{{saleDetail.product.description}}</td>
-                        <td>{{saleDetail.product.unit.nameUnit}}</td>
-                        <td>{{saleDetail.product.salePrice| currency : "CLP" : "$" : "1.0-0"}}</td>
-                        <td>
-                            <div *ngIf="!isEditing(saleDetail)" (click)="enableEdit(saleDetail)">
-                                {{saleDetail.quantity}}
-                            </div>
-                            <input *ngIf="isEditing(saleDetail)" type="number" [(ngModel)]="saleDetail.quantity"
-                                (blur)="disableEdit(saleDetail)" (keydown.enter)="disableEdit(saleDetail)"
-                                class="form-control form-control-sm" style="width: 60px" />
-                        </td>
-                        <td>{{saleDetail.total | currency : "CLP" : "$" : "1.0-0"}}</td>
-                        <td>
-                            <button class="btn btn-sm m-1" (click)="removeDetail(i)">
-                                <img src="/assets/icons/iconCancel.png" alt="activar" width="30" height="30"
-                                    class="img-fluid" />
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <p *ngIf="saleDetailList.length === 0" class="fw-bold fs-2">
-                Agregue un producto
-            </p>
-        </div>
-    </div>
-    <div class="d-flex justify-content-between align-items-center">
-        <div class="ms-4">
-            <p class="fs-5 fw-bolder text-center">Formas de Pagos</p>
-            <div>
-                <button class="btn btn-sm btn-outline-info border-0 m-2 mt-1">
-                    <img src="/assets/icons/iconCash.png" alt="Efectivo" width="40" height="40" class="d-inline-block img-fluid"
-                        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Efectivo" />
-                </button>
-                <button class="btn btn-sm btn-outline-info border-0 m-2 mt-1">
-                    <img src="/assets/icons/iconsBanktransfer.png" alt="Transferencia" width="40" height="40"
-                        class="d-inline-block img-fluid" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                        data-bs-title="Transferencia" />
-                </button>
-                <button class="btn btn-sm btn-outline-info border-0 m-2 mt-1">
-                    <img src="/assets/icons/iconLoan.png" alt="Prestamos" width="40" height="40" class="d-inline-block img-fluid"
-                        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Prestamos" />
-                </button>
-            </div>
-            <div>
-                <button class="btn btn-sm btn-outline-info border-0 m-2 mt-4 mb-4">
-                    <img src="/assets/icons/iconCreditcard.png" alt="Crédito" width="40" height="40" class="d-inline-block img-fluid"
-                        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Crédito" />
-                </button>
-                <button class="btn btn-sm btn-outline-info border-0 m-2 mt-4 mb-4">
-                    <img src="/assets/icons/iconPos.png" alt="Débito" width="40" height="40" class="d-inline-block img-fluid"
-                        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Débito" />
-                </button>
-                <button class="btn btn-sm btn-outline-info border-0 m-2 mt-4 mb-4">
-                    <img src="/assets/icons/iconMixed.png" alt="Mixto" width="40" height="40" class="d-inline-block img-fluid"
-                        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Mixto" />
-                </button>
-            </div>
-        </div>
-        <div class="text-center">
-            <div>
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="SwitchCheckDiscount">
-                    <label class="form-check-label" for="SwitchCheckDiscount">Descuento</label>
-                </div>
-                <div class="form-floating mb-2 w-75">
-                    <input type="number" class="form-control form-control-lg" id="amountDiscount" name="amountDiscount"
-                        placeholder="Ingrese monto de descuento" aria-label="Ingrese monto de descuento" aria-describedby="amountDiscount" />
-                    <label for="amountDiscount" class="form-label">Descuento</label>
-                </div>
-            </div>
-            <div>
-                <div class="form-floating mb-2 w-100">
-                    <input type="number" class="form-control form-control-lg" id="amountSale" name="amountSale" placeholder="Ingrese monto"
-                        aria-label="Ingrese monto a pagar" aria-describedby="amountSale"/>
-                    <label for="amountSale" class="form-label">Monto a pagar</label>
-                </div>
-            </div>
-        </div>
-        <div class="text-end">
-            <div class="me-5">
-                <p class="fw-bold mb-0">Total pagar: $0</p>
-                <p class="fw-bold mb-0">Descuento: $0</p>
-                <p class="fw-bold mb-0">Préstamo: $0</p>
-                <p class="fw-bold mb-0">Efectivo: $0</p>
-                <p class="fw-bold mb-0">Vuelto: $0</p>
-            </div>
-            <div class="btn-group btn-group-lg">
-                <button class="btn btn-success m-1">Pagar</button> 
-                <button class="btn btn-danger m-1">Cancelar</button> 
-            </div>
-        </div>
-    </div>
-</div> -->
-<div class="container-fluid d-flex flex-column p-3 min-vh-100">
+<div class="container-fluid d-flex flex-column p-2 min-vh-100">
     <!-- Área superior -->
-    <div class="row mb-4 align-items-center">
-        <div class="col-md-4 col-6 order-1">
-            <button class="btn btn-outline-primary rounded-circle shadow-sm" data-bs-toggle="modal"
+    <div class="row py-1 align-items-center">
+        <div class="col-md-4 col-6">
+            <button class="btn btn-outline-primary btn-sm border-0 rounded-pill shadow-sm" data-bs-toggle="modal"
                 data-bs-target="#selectProduct">
-                <img src="/assets/icons/iconFind.png" alt="Seleccionar_producto" width="40" height="40"
-                    class="img-fluid" data-bs-toggle="tooltip" data-bs-placement="auto"
-                    data-bs-title="Seleccionar Productos" />
+                <img src="/assets/icons/iconFind.png" alt="Seleccionar_producto" width="30" height="30" class="img-fluid"
+                    data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="Seleccionar Productos" />
             </button>
         </div>
-        <div class="col-md-4 col-12 order-md-2 order-3 text-center">
-            <h2 class="display-6 fw-bold mb-0">N°-123</h2>
+        <div class="col-md-4 col-12 text-center">
+            <h4 class="mb-0 fw-bold">Venta N° 123</h4>
         </div>
-        <div class="col-md-4 col-6 order-md-3 order-2">
-            <select class="form-select form-select-lg shadow-sm" name="customer" id="customer"
+        <div class="col-md-4 col-6">
+            <select class="form-select form-select-sm shadow-sm" name="customer" id="customer"
                 aria-label="Seleccione un cliente">
                 <option [ngValue]="null" selected disabled>Clientes</option>
                 <option *ngFor="let customer of customerList" [ngValue]="customer">{{customer.name + ' ' +
@@ -149,15 +20,14 @@
             </select>
         </div>
     </div>
-
     <!-- Área de la tabla -->
-    <div class="row mb-4">
+    <div class="row mb-2">
         <div class="col-12">
             <div class="card shadow-sm">
                 <div class="card-body p-0">
-                    <div class="table-responsive" style="max-height: 300px;">
+                    <div class="table-responsive text-center p-1 pt-0 overflow-auto" style="max-height: 230px;">
                         <table class="table table-hover mb-0">
-                            <thead class="table-light sticky-top">
+                            <thead class="table-info table-bordered sticky-top">
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Descripción</th>
@@ -182,11 +52,11 @@
                                         <input *ngIf="isEditing(saleDetail)" type="number"
                                             [(ngModel)]="saleDetail.quantity" (blur)="disableEdit(saleDetail)"
                                             (keydown.enter)="disableEdit(saleDetail)"
-                                            class="form-control form-control-sm" style="width: 60px" />
+                                            class="form-control form-control-sm" style="width: 80px" />
                                     </td>
                                     <td>{{saleDetail.total | currency : "CLP" : "$" : "1.0-0"}}</td>
                                     <td>
-                                        <button class="btn btn-outline-danger btn-sm rounded-circle"
+                                        <button class="btn btn-outline-danger btn-sm border-0"
                                             (click)="removeDetail(i)">
                                             <img src="/assets/icons/iconCancel.png" alt="Eliminar" width="20"
                                                 height="20" class="img-fluid" />
@@ -196,48 +66,47 @@
                             </tbody>
                         </table>
                     </div>
-                    <p *ngIf="saleDetailList.length === 0" class="text-center py-4 text-muted">
+                    <p *ngIf="saleDetailList.length === 0" class="text-center py-4 text-muted fs-3">
                         Agregue un producto
                     </p>
                 </div>
             </div>
         </div>
     </div>
-
     <!-- Área inferior -->
     <div class="row">
         <!-- Formas de pago -->
-        <div class="col-md-4 mb-4">
+        <div class="col-md-4 mb-0">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title text-center mb-3">Formas de Pagos</h5>
                     <div class="d-flex flex-wrap justify-content-center gap-2">
-                        <button class="btn btn-outline-primary rounded-circle p-2" data-bs-toggle="tooltip"
+                        <button class="btn btn-outline-primary border-0 rounded-pill p-2" data-bs-toggle="tooltip"
                             data-bs-placement="top" data-bs-title="Efectivo">
                             <img src="/assets/icons/iconCash.png" alt="Efectivo" width="40" height="40"
                                 class="img-fluid" />
                         </button>
-                        <button class="btn btn-outline-primary rounded-circle p-2" data-bs-toggle="tooltip"
+                        <button class="btn btn-outline-primary border-0 rounded-pill p-2" data-bs-toggle="tooltip"
                             data-bs-placement="top" data-bs-title="Transferencia">
                             <img src="/assets/icons/iconsBanktransfer.png" alt="Transferencia" width="40" height="40"
                                 class="img-fluid" />
                         </button>
-                        <button class="btn btn-outline-primary rounded-circle p-2" data-bs-toggle="tooltip"
+                        <button class="btn btn-outline-primary border-0 rounded-pill p-2" data-bs-toggle="tooltip"
                             data-bs-placement="top" data-bs-title="Prestamos">
                             <img src="/assets/icons/iconLoan.png" alt="Prestamos" width="40" height="40"
                                 class="img-fluid" />
                         </button>
-                        <button class="btn btn-outline-primary rounded-circle p-2" data-bs-toggle="tooltip"
+                        <button class="btn btn-outline-primary border-0 rounded-pill p-2" data-bs-toggle="tooltip"
                             data-bs-placement="top" data-bs-title="Crédito">
                             <img src="/assets/icons/iconCreditcard.png" alt="Crédito" width="40" height="40"
                                 class="img-fluid" />
                         </button>
-                        <button class="btn btn-outline-primary rounded-circle p-2" data-bs-toggle="tooltip"
+                        <button class="btn btn-outline-primary border-0 rounded-pill p-2" data-bs-toggle="tooltip"
                             data-bs-placement="top" data-bs-title="Débito">
                             <img src="/assets/icons/iconPos.png" alt="Débito" width="40" height="40"
                                 class="img-fluid" />
                         </button>
-                        <button class="btn btn-outline-primary rounded-circle p-2" data-bs-toggle="tooltip"
+                        <button class="btn btn-outline-primary border-0 rounded-pill p-2" data-bs-toggle="tooltip"
                             data-bs-placement="top" data-bs-title="Mixto">
                             <img src="/assets/icons/iconMixed.png" alt="Mixto" width="40" height="40"
                                 class="img-fluid" />
@@ -246,7 +115,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Descuento y monto a pagar -->
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm">
@@ -255,44 +123,43 @@
                         <input class="form-check-input" type="checkbox" role="switch" id="SwitchCheckDiscount">
                         <label class="form-check-label" for="SwitchCheckDiscount">Aplicar Descuento</label>
                     </div>
-                    <div class="mb-3">
-                        <label for="amountDiscount" class="form-label">Monto de Descuento</label>
-                        <input type="number" class="form-control" id="amountDiscount" name="amountDiscount"
-                            placeholder="Ingrese monto de descuento" aria-label="Ingrese monto de descuento" />
+                    <div class="form-floating mb-2 w-75">
+                        <input type="number" class="form-control form-control-lg" id="amountDiscount" name="amountDiscount"
+                            placeholder="Ingrese monto de descuento" aria-label="Ingrese monto de descuento"
+                            aria-describedby="amountDiscount" />
+                        <label for="amountDiscount" class="form-label">Descuento</label>
                     </div>
-                    <div>
-                        <label for="amountSale" class="form-label">Monto a Pagar</label>
+                    <div class="form-floating mb-2 w-100">
                         <input type="number" class="form-control form-control-lg" id="amountSale" name="amountSale"
-                            placeholder="Ingrese monto a pagar" aria-label="Ingrese monto a pagar" />
+                            placeholder="Ingrese monto" aria-label="Ingrese monto a pagar" aria-describedby="amountSale" />
+                        <label for="amountSale" class="form-label">Monto a pagar</label>
                     </div>
                 </div>
             </div>
         </div>
-
         <!-- Resumen y botones -->
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm mb-3">
+        <div class="col-md-4 mb-0">
+            <div class="card shadow-sm mb-2">
                 <div class="card-body">
-                    <h5 class="card-title text-center mb-3">Resumen</h5>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <li class="list-group-item d-flex justify-content-between align-items-center fw-bold text-uppercase fs-5">
                             Total a pagar
                             <span class="badge bg-primary rounded-pill">$0</span>
                         </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <li class="list-group-item d-flex justify-content-between align-items-center fw-semibold">
                             Descuento
                             <span class="badge bg-secondary rounded-pill">$0</span>
                         </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <li class="list-group-item d-flex justify-content-between align-items-center fw-semibold">
                             Vuelto
                             <span class="badge bg-warning rounded-pill">$0</span>
                         </li>
                     </ul>
                 </div>
-            </div>
-            <div class="d-grid gap-2">
-                <button class="btn btn-success btn-lg">Pagar</button>
-                <button class="btn btn-danger btn-lg">Cancelar</button>
+                <div class="d-flex gap-2 mb-1 justify-content-center">
+                    <button class="btn btn-success btn-lg">Pagar</button>
+                    <button class="btn btn-danger btn-lg">Cancelar</button>
+                </div>
             </div>
         </div>
     </div>
