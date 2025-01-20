@@ -10,6 +10,7 @@ import { SaleHelperService } from '../../../services/Sale/sale-helper.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CustomerService } from '../../../services/customer/customer.service';
+import { SaleService } from '../../../services/Sale/sale.service';
 
 @Component({
   selector: 'app-sale',
@@ -43,6 +44,7 @@ export class SaleComponent implements AfterViewInit, OnInit {
 
 
   constructor(
+    private saleService: SaleService,
     private customerService: CustomerService,
     private tooltipService: TooltipService,
     private notification: NotificationService,
@@ -52,6 +54,7 @@ export class SaleComponent implements AfterViewInit, OnInit {
 
   ngOnInit(): void {
     this.getCustomer();
+    this.getTotalSale();
   }
 
   ngAfterViewInit(): void {
@@ -183,6 +186,12 @@ export class SaleComponent implements AfterViewInit, OnInit {
   getCustomer(): void {
     this.customerService.getCustomer().subscribe((list) => {
       this.customerList = list;
+    });
+  }
+
+  getTotalSale(): void{
+    this.saleService.getTotalSale().subscribe((totalSales) =>{
+      this.TotalSaleDB = totalSales;
     });
   }
 
