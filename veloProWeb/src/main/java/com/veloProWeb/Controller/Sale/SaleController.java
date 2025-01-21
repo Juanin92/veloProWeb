@@ -1,13 +1,16 @@
 package com.veloProWeb.Controller.Sale;
 
+import com.veloProWeb.Model.DTO.SaleRequestDTO;
+import com.veloProWeb.Model.Entity.Sale.Sale;
 import com.veloProWeb.Service.SaleService.Interface.ISaleDetailService;
 import com.veloProWeb.Service.SaleService.Interface.ISaleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/ventas")
@@ -16,6 +19,25 @@ public class SaleController {
 
     @Autowired private ISaleService saleService;
     @Autowired private ISaleDetailService saleDetailService;
+
+    /**
+     * Crear una venta y su detalle de venta correspondiente
+     * @param dto - Objeto con los datos necesarios
+     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
+     */
+    @PostMapping()
+    public ResponseEntity<Map<String, String>> createSale(@RequestBody SaleRequestDTO dto){
+        Map<String, String> response = new HashMap<>();
+        try {
+            Sale sale = saleService.createSale(dto);
+            saleDetailService.createSaleDetails(dto.getDetailList(), sale);
+            response.put("message", "Venta registrada correctamente!");
+            return ResponseEntity.ok(response);
+        }catch (IllegalArgumentException e){
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
 
     /**
      * Obtener la cantidad de ventas registrada
