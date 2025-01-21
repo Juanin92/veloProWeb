@@ -1,184 +1,394 @@
 <div class="container-fluid d-flex flex-column p-2 min-vh-100 p-0">
-    <!-- Área superior -->
-    <div class="row py-1 align-items-center">
-        <div class="col-md-4 col-6">
-            <button class="btn btn-outline-primary btn-sm border-0 rounded-pill shadow-sm" data-bs-toggle="modal"
-                data-bs-target="#selectProduct">
-                <img src="/assets/icons/iconFind.png" alt="Seleccionar_producto" width="30" height="30" class="img-fluid"
-                    data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="Seleccionar Productos" />
+  <!-- Área superior -->
+  <div class="row py-1 align-items-center">
+    <div class="col-md-4 col-6">
+      <button
+        class="btn btn-outline-primary btn-sm border-0 rounded-pill shadow-sm"
+        data-bs-toggle="modal"
+        data-bs-target="#selectProduct"
+      >
+        <img
+          src="/assets/icons/iconFind.png"
+          alt="Seleccionar_producto"
+          width="30"
+          height="30"
+          class="img-fluid"
+          data-bs-toggle="tooltip"
+          data-bs-placement="auto"
+          data-bs-title="Seleccionar Productos"
+        />
+      </button>
+    </div>
+    <div class="col-md-4 col-12 text-center">
+      <h4 class="mb-0 fw-bold">Venta n° {{ TotalSaleDB }}</h4>
+    </div>
+    <div
+      *ngIf="isLoanPayment || isMixPayment"
+      class="col-md-4 col-6 mt-lg-0 mt-2"
+    >
+      <select
+        class="form-select form-select-sm shadow-sm"
+        name="customer"
+        id="customer"
+        aria-label="Seleccione un cliente"
+        [(ngModel)]="sale.customer"
+        (change)="chooseCustomerToPay()"
+      >
+        <option [ngValue]="null" selected disabled>Clientes</option>
+        <option *ngFor="let customer of customerList" [ngValue]="customer">
+          {{ customer.name + " " + customer.surname }}
+        </option>
+      </select>
+    </div>
+  </div>
+  <!-- Área de la tabla -->
+  <div class="row mb-2 flex-grow-1">
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-body p-0">
+          <div
+            class="table-responsive text-center p-1 pt-0 overflow-auto"
+            style="max-height: calc(100vh - 330px)"
+          >
+            <table class="table table-hover mb-0">
+              <thead class="table-info table-bordered sticky-top">
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Descripción</th>
+                  <th scope="col">Unidad</th>
+                  <th scope="col">Precio</th>
+                  <th scope="col">Cantidad</th>
+                  <th scope="col">Total</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody class="table-group-divider align-middle">
+                <tr *ngFor="let saleDetail of saleDetailList; let i = index">
+                  <th scope="row">{{ i + 1 }}</th>
+                  <td>{{ saleDetail.product.description }}</td>
+                  <td>{{ saleDetail.product.unit.nameUnit }}</td>
+                  <td>
+                    {{ saleDetail.price | currency : "CLP" : "$" : "1.0-0" }}
+                  </td>
+                  <td>
+                    <div
+                      *ngIf="!isEditing(saleDetail)"
+                      (click)="enableEdit(saleDetail)"
+                      class="editable-field"
+                    >
+                      {{ saleDetail.quantity }}
+                    </div>
+                    <input
+                      *ngIf="isEditing(saleDetail)"
+                      type="number"
+                      [(ngModel)]="saleDetail.quantity"
+                      (blur)="disableEdit(saleDetail)"
+                      (keydown.enter)="disableEdit(saleDetail)"
+                      class="form-control form-control-sm"
+                      style="width: 80px"
+                    />
+                  </td>
+                  <td>
+                    {{ saleDetail.total | currency : "CLP" : "$" : "1.0-0" }}
+                  </td>
+                  <td>
+                    <button
+                      class="btn btn-outline-danger btn-sm border-0"
+                      (click)="removeDetail(i)"
+                    >
+                      <img
+                        src="/assets/icons/iconCancel.png"
+                        alt="Eliminar"
+                        width="20"
+                        height="20"
+                        class="img-fluid"
+                      />
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p
+            *ngIf="saleDetailList.length === 0"
+            class="text-center py-4 text-muted fs-3"
+          >
+            Agregue un producto
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Área inferior -->
+  <div class="row flex-grow-1">
+    <!-- Formas de pago -->
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title text-center mb-3">Formas de Pagos</h5>
+          <div class="d-flex flex-wrap justify-content-center gap-2">
+            <button
+              [disabled]="saleDetailList.length === 0"
+              class="btn btn-outline-primary border-0 rounded-pill p-2"
+              data-bs-toggle="tooltip"
+              data-bs-placement="bottom"
+              data-bs-title="Efectivo"
+              (click)="initiateMethodPayment(1)"
+              [ngClass]="{
+                'btn-primary': isCashPayment,
+                'btn-outline-primary': !isCashPayment
+              }"
+            >
+              <img
+                src="/assets/icons/iconCash.png"
+                alt="Efectivo"
+                width="40"
+                height="40"
+                class="img-fluid"
+              />
             </button>
+            <button
+              [disabled]="saleDetailList.length === 0"
+              class="btn btn-outline-primary border-0 rounded-pill p-2"
+              data-bs-toggle="tooltip"
+              data-bs-placement="bottom"
+              data-bs-title="Transferencia"
+              (click)="initiateMethodPayment(2)"
+              [ngClass]="{
+                'btn-primary': isTransferPayment,
+                'btn-outline-primary': !isTransferPayment
+              }"
+            >
+              <img
+                src="/assets/icons/iconsBanktransfer.png"
+                alt="Transferencia"
+                width="40"
+                height="40"
+                class="img-fluid"
+              />
+            </button>
+            <button
+              [disabled]="saleDetailList.length === 0"
+              class="btn btn-outline-primary border-0 rounded-pill p-2"
+              data-bs-toggle="tooltip"
+              data-bs-placement="bottom"
+              data-bs-title="Crédito"
+              (click)="initiateMethodPayment(4)"
+              [ngClass]="{
+                'btn-primary': isCreditPayment,
+                'btn-outline-primary': !isCreditPayment
+              }"
+            >
+              <img
+                src="/assets/icons/iconCreditcard.png"
+                alt="Crédito"
+                width="40"
+                height="40"
+                class="img-fluid"
+              />
+            </button>
+            <button
+              [disabled]="saleDetailList.length === 0"
+              class="btn btn-outline-primary border-0 rounded-pill p-2"
+              data-bs-toggle="tooltip"
+              data-bs-placement="bottom"
+              data-bs-title="Débito"
+              (click)="initiateMethodPayment(5)"
+              [ngClass]="{
+                'btn-primary': isDebitPayment,
+                'btn-outline-primary': !isDebitPayment
+              }"
+            >
+              <img
+                src="/assets/icons/iconPos.png"
+                alt="Débito"
+                width="40"
+                height="40"
+                class="img-fluid"
+              />
+            </button>
+            <button
+              [disabled]="saleDetailList.length === 0"
+              class="btn btn-outline-primary border-0 rounded-pill p-2"
+              data-bs-toggle="tooltip"
+              data-bs-placement="bottom"
+              data-bs-title="Prestamos"
+              (click)="initiateMethodPayment(3)"
+              [ngClass]="{
+                'btn-primary': isLoanPayment,
+                'btn-outline-primary': !isLoanPayment
+              }"
+            >
+              <img
+                src="/assets/icons/iconLoan.png"
+                alt="Prestamos"
+                width="40"
+                height="40"
+                class="img-fluid"
+              />
+            </button>
+            <button
+              [disabled]="saleDetailList.length === 0"
+              class="btn btn-outline-primary border-0 rounded-pill p-2"
+              data-bs-toggle="tooltip"
+              data-bs-placement="bottom"
+              data-bs-title="Mixto"
+              (click)="initiateMethodPayment(6)"
+              [ngClass]="{
+                'btn-primary': isMixPayment,
+                'btn-outline-primary': !isMixPayment
+              }"
+            >
+              <img
+                src="/assets/icons/iconMixed.png"
+                alt="Mixto"
+                width="40"
+                height="40"
+                class="img-fluid"
+              />
+            </button>
+          </div>
         </div>
-        <div class="col-md-4 col-12 text-center">
-            <h4 class="mb-0 fw-bold">Venta n° {{TotalSaleDB}}</h4>
-        </div>
-        <div *ngIf="isLoanPayment || isMixPayment" class="col-md-4 col-6 mt-lg-0 mt-2">
-            <select class="form-select form-select-sm shadow-sm" name="customer" id="customer"
-                aria-label="Seleccione un cliente" 
-                [(ngModel)]="sale.customer" (change)="chooseCustomerToPay()">
-                <option [ngValue]="null" selected disabled>Clientes</option>
-                <option *ngFor="let customer of customerList" 
-                    [ngValue]="customer">{{customer.name + ' ' + customer.surname}}</option>
-            </select>
-        </div>
+      </div>
     </div>
-    <!-- Área de la tabla -->
-    <div class="row mb-2 flex-grow-1">
-        <div class="col-12">
-            <div class="card shadow-sm">
-                <div class="card-body p-0">
-                    <div class="table-responsive text-center p-1 pt-0 overflow-auto" style="max-height: calc(100vh - 330px);">
-                        <table class="table table-hover mb-0">
-                            <thead class="table-info table-bordered sticky-top">
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Descripción</th>
-                                    <th scope="col">Unidad</th>
-                                    <th scope="col">Precio</th>
-                                    <th scope="col">Cantidad</th>
-                                    <th scope="col">Total</th>
-                                    <th scope="col"></th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-group-divider align-middle">
-                                <tr *ngFor="let saleDetail of saleDetailList; let i = index">
-                                    <th scope="row">{{ i + 1}}</th>
-                                    <td>{{saleDetail.product.description}}</td>
-                                    <td>{{saleDetail.product.unit.nameUnit}}</td>
-                                    <td>{{saleDetail.price| currency : "CLP" : "$" : "1.0-0"}}</td>
-                                    <td>
-                                        <div *ngIf="!isEditing(saleDetail)" (click)="enableEdit(saleDetail)"
-                                            class="editable-field">
-                                            {{saleDetail.quantity}}
-                                        </div>
-                                        <input *ngIf="isEditing(saleDetail)" type="number"
-                                            [(ngModel)]="saleDetail.quantity" (blur)="disableEdit(saleDetail)"
-                                            (keydown.enter)="disableEdit(saleDetail)"
-                                            class="form-control form-control-sm" style="width: 80px" />
-                                    </td>
-                                    <td>{{saleDetail.total | currency : "CLP" : "$" : "1.0-0"}}</td>
-                                    <td>
-                                        <button class="btn btn-outline-danger btn-sm border-0"
-                                            (click)="removeDetail(i)">
-                                            <img src="/assets/icons/iconCancel.png" alt="Eliminar" width="20"
-                                                height="20" class="img-fluid" />
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p *ngIf="saleDetailList.length === 0" class="text-center py-4 text-muted fs-3">
-                        Agregue un producto
-                    </p>
-                </div>
-            </div>
+    <!-- Descuento y monto a pagar -->
+    <div class="col-md-3 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div *ngIf="showSwitch" class="form-check form-switch mb-3">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              role="switch"
+              id="SwitchCheckDiscount"
+              [(ngModel)]="isDiscount"
+              (ngModelChange)="handleDiscountSwitch()"
+            />
+            <label class="form-check-label" for="SwitchCheckDiscount"
+              >Aplicar Descuento</label
+            >
+          </div>
+          <div *ngIf="isDiscount" class="form-floating mb-2 w-75">
+            <input
+              type="number"
+              class="form-control form-control-lg"
+              id="amountDiscount"
+              name="amountDiscount"
+              placeholder="Ingrese monto de descuento"
+              aria-label="Ingrese monto de descuento"
+              aria-describedby="amountDiscount"
+              [(ngModel)]="discountAmount"
+              (keyup.enter)="updateTotalWithDiscount()"
+            />
+            <label for="amountDiscount" class="form-label">Descuento</label>
+          </div>
+          <div
+            *ngIf="isCashPayment || isMixPayment"
+            class="form-floating mb-2 w-100"
+          >
+            <input
+              type="number"
+              class="form-control form-control-lg"
+              id="amountSale"
+              name="amountSale"
+              placeholder="Ingrese monto"
+              aria-label="Ingrese monto a pagar"
+              aria-describedby="amountSale"
+              [(ngModel)]="cashAmount"
+              (keyup.enter)="updateTotalWithCash()"
+            />
+            <label for="amountSale" class="form-label">Monto a pagar</label>
+          </div>
         </div>
+      </div>
     </div>
-    <!-- Área inferior -->
-    <div class="row flex-grow-1">
-        <!-- Formas de pago -->
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title text-center mb-3">Formas de Pagos</h5>
-                    <div class="d-flex flex-wrap justify-content-center gap-2">
-                        <button [disabled]="saleDetailList.length === 0" class="btn btn-outline-primary border-0 rounded-pill p-2" data-bs-toggle="tooltip"
-                            data-bs-placement="bottom" data-bs-title="Efectivo" (click)="initiateMethodPayment(1)" [ngClass]="{'btn-primary': isCashPayment, 'btn-outline-primary': !isCashPayment}">
-                            <img src="/assets/icons/iconCash.png" alt="Efectivo" width="40" height="40"
-                                class="img-fluid" />
-                        </button>
-                        <button [disabled]="saleDetailList.length === 0" class="btn btn-outline-primary border-0 rounded-pill p-2" data-bs-toggle="tooltip"
-                            data-bs-placement="bottom" data-bs-title="Transferencia" (click)="initiateMethodPayment(2)" [ngClass]="{'btn-primary': isTransferPayment, 'btn-outline-primary': !isTransferPayment}">
-                            <img src="/assets/icons/iconsBanktransfer.png" alt="Transferencia" width="40" height="40"
-                                class="img-fluid" />
-                        </button>
-                        <button [disabled]="saleDetailList.length === 0" class="btn btn-outline-primary border-0 rounded-pill p-2" data-bs-toggle="tooltip"
-                            data-bs-placement="bottom" data-bs-title="Crédito" (click)="initiateMethodPayment(4)" [ngClass]="{'btn-primary': isCreditPayment, 'btn-outline-primary': !isCreditPayment}">
-                            <img src="/assets/icons/iconCreditcard.png" alt="Crédito" width="40" height="40"
-                                class="img-fluid" />
-                        </button>
-                        <button [disabled]="saleDetailList.length === 0" class="btn btn-outline-primary border-0 rounded-pill p-2" data-bs-toggle="tooltip"
-                            data-bs-placement="bottom" data-bs-title="Débito" (click)="initiateMethodPayment(5)" [ngClass]="{'btn-primary': isDebitPayment, 'btn-outline-primary': !isDebitPayment}">
-                            <img src="/assets/icons/iconPos.png" alt="Débito" width="40" height="40"
-                                class="img-fluid" />
-                        </button>
-                        <button [disabled]="saleDetailList.length === 0" class="btn btn-outline-primary border-0 rounded-pill p-2"
-                            data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Prestamos" (click)="initiateMethodPayment(3)"
-                            [ngClass]="{'btn-primary': isLoanPayment, 'btn-outline-primary': !isLoanPayment}">
-                            <img src="/assets/icons/iconLoan.png" alt="Prestamos" width="40" height="40" class="img-fluid" />
-                        </button>
-                        <button [disabled]="saleDetailList.length === 0" class="btn btn-outline-primary border-0 rounded-pill p-2" data-bs-toggle="tooltip"
-                            data-bs-placement="bottom" data-bs-title="Mixto" (click)="initiateMethodPayment(6)" [ngClass]="{'btn-primary': isMixPayment, 'btn-outline-primary': !isMixPayment}">
-                            <img src="/assets/icons/iconMixed.png" alt="Mixto" width="40" height="40"
-                                class="img-fluid" />
-                        </button>
-                    </div>
-                </div>
-            </div>
+    <!-- Resumen y botones -->
+    <div class="col-md-4 mb-lg-5">
+      <div class="card shadow-sm mb-2">
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            <li
+              class="list-group-item d-flex justify-content-between align-items-center fw-bold text-uppercase fs-5"
+            >
+              Total a pagar
+              <span class="badge bg-primary rounded-pill fs-5">{{
+                total | currency : "CLP" : "$" : "1.0-0"
+              }}</span>
+            </li>
+            <li
+              *ngIf="isDiscount && discountAmount > 0"
+              class="list-group-item d-flex justify-content-between align-items-center fw-semibold"
+            >
+              Descuento
+              <span class="badge bg-danger rounded-pill">{{
+                discountAmount | currency : "CLP" : "$" : "1.0-0"
+              }}</span>
+            </li>
+            <li
+              *ngIf="isCashPayment"
+              class="list-group-item d-flex justify-content-between align-items-center fw-semibold"
+            >
+              Efectivo
+              <span class="badge bg-success fs-6 rounded-pill">{{
+                cashAmount | currency : "CLP" : "$" : "1.0-0"
+              }}</span>
+            </li>
+            <li
+              *ngIf="isCashPayment"
+              class="list-group-item d-flex justify-content-between align-items-center fw-semibold"
+            >
+              Vuelto
+              <span class="badge bg-warning-subtle fs-6 rounded-pill">{{
+                changeAmount | currency : "CLP" : "$" : "1.0-0"
+              }}</span>
+            </li>
+            <li
+              *ngIf="isLoanPayment || isMixPayment"
+              class="list-group-item d-flex justify-content-between align-items-center fw-semibold"
+            >
+              Préstamo
+              <span class="badge bg-success fs-6 rounded-pill">{{
+                total | currency : "CLP" : "$" : "1.0-0"
+              }}</span>
+            </li>
+            <li
+              *ngIf="isMixPayment"
+              class="list-group-item d-flex justify-content-between align-items-center fw-semibold"
+            >
+              Diferencia
+              <span class="badge bg-success fs-6 rounded-pill">{{
+                total - cashAmount | currency : "CLP" : "$" : "1.0-0"
+              }}</span>
+            </li>
+          </ul>
         </div>
-        <!-- Descuento y monto a pagar -->
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <div *ngIf="showSwitch" class="form-check form-switch mb-3">
-                        <input class="form-check-input" type="checkbox" role="switch" id="SwitchCheckDiscount" 
-                        [(ngModel)]="isDiscount" (ngModelChange)="handleDiscountSwitch()">
-                        <label class="form-check-label" for="SwitchCheckDiscount">Aplicar Descuento</label>
-                    </div>
-                    <div *ngIf="isDiscount" class="form-floating mb-2 w-75">
-                        <input type="number" class="form-control form-control-lg" id="amountDiscount" name="amountDiscount"
-                            placeholder="Ingrese monto de descuento" aria-label="Ingrese monto de descuento"
-                            aria-describedby="amountDiscount" 
-                            [(ngModel)]="discountAmount" (keyup.enter)="updateTotalWithDiscount()" />
-                        <label for="amountDiscount" class="form-label">Descuento</label>
-                    </div>
-                    <div *ngIf="isCashPayment || isMixPayment" class="form-floating mb-2 w-100">
-                        <input type="number" class="form-control form-control-lg" id="amountSale" name="amountSale"
-                            placeholder="Ingrese monto" aria-label="Ingrese monto a pagar" aria-describedby="amountSale" 
-                            [(ngModel)]="cashAmount" (keyup.enter)="updateTotalWithCash()"/>
-                        <label for="amountSale" class="form-label">Monto a pagar</label>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Resumen y botones -->
-        <div class="col-md-4 mb-lg-5">
-            <div class="card shadow-sm mb-2">
-                <div class="card-body">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item d-flex justify-content-between align-items-center fw-bold text-uppercase fs-5">
-                            Total a pagar
-                            <span class="badge bg-primary rounded-pill fs-5">{{total | currency : "CLP" : "$" : "1.0-0"}}</span>
-                        </li>
-                        <li *ngIf="isDiscount && discountAmount > 0" class="list-group-item d-flex justify-content-between align-items-center fw-semibold">
-                            Descuento
-                            <span class="badge bg-danger rounded-pill">{{discountAmount | currency : "CLP" : "$" : "1.0-0"}}</span>
-                        </li>
-                        <li *ngIf="isCashPayment" class="list-group-item d-flex justify-content-between align-items-center fw-semibold">
-                            Efectivo
-                            <span class="badge bg-success fs-6 rounded-pill">{{cashAmount | currency : "CLP" : "$" : "1.0-0"}}</span>
-                        </li>
-                        <li *ngIf="isCashPayment" class="list-group-item d-flex justify-content-between align-items-center fw-semibold">
-                            Vuelto
-                            <span class="badge bg-warning-subtle fs-6 rounded-pill">{{changeAmount | currency : "CLP" : "$" : "1.0-0"}}</span>
-                        </li>
-                        <li *ngIf="isLoanPayment || isMixPayment" class="list-group-item d-flex justify-content-between align-items-center fw-semibold">
-                            Préstamo
-                            <span class="badge bg-success fs-6 rounded-pill">{{cashAmount | currency : "CLP" : "$" : "1.0-0"}}</span>
-                        </li>
-                        <li *ngIf="isMixPayment" class="list-group-item d-flex justify-content-between align-items-center fw-semibold">
-                            Diferencia
-                            <span class="badge bg-success fs-6 rounded-pill">{{cashAmount | currency : "CLP" : "$" : "1.0-0"}}</span>
-                        </li>
-                    </ul>
-                </div>
-                <div class="d-flex gap-2 mb-1 justify-content-center">
-                    <button [disabled]="!isOk" (click)="createNewSaleProcess()" class="btn btn-success btn-lg">Pagar</button>
-                    <button [disabled]="saleDetailList.length === 0" (click)="resetProcess()" class="btn btn-danger btn-lg">Cancelar</button>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+    <div class="col-md-2 mb-lg-5">
+      <div class="card shadow-sm mb-2">
+        <div class="card-body">
+          <div class="d-flex flex-column gap-2 mb-1 justify-content-center">
+            <button
+              [disabled]="!isOk"
+              (click)="createNewSaleProcess()"
+              class="btn btn-success btn-lg"
+            >
+              Pagar
+            </button>
+            <button
+              [disabled]="saleDetailList.length === 0"
+              (click)="resetProcess()"
+              class="btn btn-danger btn-lg"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-<!-- MODAL SELECTING PRODUCTS -->
-<app-product-list (productSelected)="addSelectedProductToSaleDetailList($event)"></app-product-list>
+  <!-- MODAL SELECTING PRODUCTS -->
+  <app-product-list
+    (productSelected)="addSelectedProductToSaleDetailList($event)"
+  ></app-product-list>
