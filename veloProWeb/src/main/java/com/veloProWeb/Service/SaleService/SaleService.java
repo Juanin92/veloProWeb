@@ -20,6 +20,11 @@ public class SaleService implements ISaleService {
     @Autowired private TicketHistoryService ticketHistoryService;
     @Autowired private CustomerService customerService;
 
+    /**
+     * Crea una nueva venta.
+     * @param dto - contiene los datos necesarios para crear una venta.
+     * @return - objeto venta que representa la venta creada y persistida en la BD.
+     */
     @Override
     public Sale createSale(SaleRequestDTO dto) {
         Sale sale = new Sale();
@@ -35,11 +40,23 @@ public class SaleService implements ISaleService {
         return sale;
     }
 
+    /**
+     * Obtiene el número total de ventas registradas
+     * @return - cantidad total de ventas
+     */
     @Override
     public Long totalSales() {
         return saleRepo.count();
     }
 
+    /**
+     * Configura una Sale dependiendo el método de pago realizo en la venta.
+     * Si el pago es mixto o préstamo se actualiza la deuda del cliente
+     * y se agrega un ticket asociado al cliente con la venta
+     * @param sale - Venta con los datos necesarios
+     * @param dto - DTO con los datos que proporcionan información para la venta
+     * @throws IllegalArgumentException si el cliente especificado no existe en la BD
+     */
     private void configureSaleByPaymentMethod(Sale sale,SaleRequestDTO dto) {
         switch (dto.getPaymentMethod()){
             case PRESTAMO -> {

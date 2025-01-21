@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+* Controlador REST para gestionar operaciones relacionadas con ventas.
+* Este controlador proporciona endpoints para agregar y obtener cantidad total de ventas.
+*/
 @RestController
 @RequestMapping("/ventas")
 @CrossOrigin(origins = "http://localhost:4200")
