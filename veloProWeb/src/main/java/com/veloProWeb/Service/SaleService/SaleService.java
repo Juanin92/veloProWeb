@@ -40,27 +40,6 @@ public class SaleService implements ISaleService {
         return saleRepo.count();
     }
 
-//    @Override
-//    public Optional<Sale> getSaleById(Long id) {
-//        return saleRepo.findById(id);
-//    }
-//
-//    @Override
-//    public List<Sale> getAll() {
-//        return saleRepo.findAll();
-//    }
-//    @Override
-//    public void saleRegisterVoid(Sale sale) {
-//        sale.setStatus(false);
-//        if (sale.getComment() == null) {
-//            sale.setComment("ANULADO");
-//        }else{
-//            sale.setComment("ANULADO - " + sale.getComment());
-//        }
-//        saleRepo.save(sale);
-//    }
-//
-
     private void configureSaleByPaymentMethod(Sale sale,SaleRequestDTO dto) {
         switch (dto.getPaymentMethod()){
             case PRESTAMO -> {
@@ -98,7 +77,7 @@ public class SaleService implements ISaleService {
             case TRANSFERENCIA -> {
                 sale.setPaymentMethod(PaymentMethod.TRANSFERENCIA);
                 sale.setCustomer(null);
-                sale.setComment("Transferencia: n°" + dto.getComment());
+                    sale.setComment("Transferencia: n°" + dto.getComment());
                 break;
             }
             case EFECTIVO -> {
@@ -109,4 +88,25 @@ public class SaleService implements ISaleService {
             }
         }
     }
+
+//    @Override
+//    public Optional<Sale> getSaleById(Long id) {
+//        return saleRepo.findById(id);
+//    }
+//
+//    @Override
+//    public List<Sale> getAll() {
+//        return saleRepo.findAll();
+//    }
+//    @Override
+//    public void saleRegisterVoid(Sale sale) {
+//        sale.setStatus(false);
+//        if (sale.getComment() == null) {
+//            sale.setComment("ANULADO");
+//        }else{
+//            sale.setComment("ANULADO - " + sale.getComment());
+//        }
+//        saleRepo.save(sale);
+//    }
+//
 }
