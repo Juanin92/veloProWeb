@@ -21,7 +21,7 @@ public class SaleDetailService implements ISaleDetailService {
     @Override
     public void createSaleDetails(List<DetailSaleDTO> dtoList, Sale sale) {
         for (DetailSaleDTO dto : dtoList) {
-            Product product = productService.getProductById(dto.getId());
+            Product product = productService.getProductById(dto.getIdProduct());
             SaleDetail saleDetail = new SaleDetail();
             saleDetail.setId(null);
             saleDetail.setQuantity(dto.getQuantity());
