@@ -7,7 +7,6 @@ import com.veloProWeb.Model.Enum.PaymentMethod;
 import com.veloProWeb.Repository.Sale.SaleRepo;
 import com.veloProWeb.Service.Customer.CustomerService;
 import com.veloProWeb.Service.Customer.TicketHistoryService;
-import com.veloProWeb.Service.SaleService.SaleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

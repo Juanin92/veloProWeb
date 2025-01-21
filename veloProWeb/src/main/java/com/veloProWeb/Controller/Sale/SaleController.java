@@ -2,8 +2,8 @@ package com.veloProWeb.Controller.Sale;
 
 import com.veloProWeb.Model.DTO.SaleRequestDTO;
 import com.veloProWeb.Model.Entity.Sale.Sale;
-import com.veloProWeb.Service.SaleService.Interface.ISaleDetailService;
-import com.veloProWeb.Service.SaleService.Interface.ISaleService;
+import com.veloProWeb.Service.Sale.Interface.ISaleDetailService;
+import com.veloProWeb.Service.Sale.Interface.ISaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

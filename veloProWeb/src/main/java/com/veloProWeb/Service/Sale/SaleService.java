@@ -1,4 +1,4 @@
-package com.veloProWeb.Service.SaleService;
+package com.veloProWeb.Service.Sale;
 
 import com.veloProWeb.Model.DTO.SaleRequestDTO;
 import com.veloProWeb.Model.Entity.Customer.Customer;
@@ -7,7 +7,7 @@ import com.veloProWeb.Model.Enum.PaymentMethod;
 import com.veloProWeb.Repository.Sale.SaleRepo;
 import com.veloProWeb.Service.Customer.CustomerService;
 import com.veloProWeb.Service.Customer.TicketHistoryService;
-import com.veloProWeb.Service.SaleService.Interface.ISaleService;
+import com.veloProWeb.Service.Sale.Interface.ISaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

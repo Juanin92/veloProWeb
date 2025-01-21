@@ -2,12 +2,10 @@ package com.veloProWeb.Service.Sale;
 
 import com.veloProWeb.Model.DTO.DetailSaleDTO;
 import com.veloProWeb.Model.Entity.Product.Product;
-import com.veloProWeb.Model.Entity.Purchase.PurchaseDetail;
 import com.veloProWeb.Model.Entity.Sale.Sale;
 import com.veloProWeb.Model.Entity.Sale.SaleDetail;
 import com.veloProWeb.Repository.Sale.SaleDetailRepo;
 import com.veloProWeb.Service.Product.ProductService;
-import com.veloProWeb.Service.SaleService.SaleDetailService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
