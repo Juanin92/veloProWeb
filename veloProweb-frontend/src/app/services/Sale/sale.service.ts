@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { SaleRequestDTO } from '../../models/DTO/sale-request-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,19 @@ export class SaleService {
 
   constructor(private http: HttpClient) { }
 
+  /**
+     * Crea un nueva venta realizando una petición POST a la API
+     * @param saleRequest - DTO con los valores de venta a agregar
+     * @returns - Observable emite un mensaje de confirmación o error
+     */
+    createSale(saleRequest: SaleRequestDTO): Observable<{message: string}>{
+      return this.http.post<{message: string}>(`${this.apiUrl}`, saleRequest);
+    }
+  
+  /**
+   * Obtiene cantidad total de ventas realizadas haciendo una petición GET a la API
+   * @returns - Observable emite un valor numérico
+   */  
   getTotalSale(): Observable<number> {
     return this.http.get<number>(`${this.apiUrl}`);
   }
