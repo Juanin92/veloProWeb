@@ -83,4 +83,25 @@ export class NotificationService {
             cancelButtonText: cancelButton,
           })
   }
+
+  showInputDialog(title: string, text: string, confirmButton: string, cancelButton: string): Promise<any> {
+    return Swal.fire({
+      title: title,
+      text: text,
+      input: 'text',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: confirmButton,
+      cancelButtonText: cancelButton,
+      background: '#2c2c2c',
+      color: '#ffffff',
+      inputValidator: (value) => {
+        if (!value) {
+          return '¡Por favor ingresa un valor!';
+        }
+        return null;
+      }
+    });
+  }  
 }
