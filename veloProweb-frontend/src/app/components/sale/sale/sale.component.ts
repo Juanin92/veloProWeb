@@ -11,6 +11,8 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CustomerService } from '../../../services/customer/customer.service';
 import { SaleService } from '../../../services/Sale/sale.service';
+import { SaleRequestDTO } from '../../../models/DTO/sale-request-dto';
+import { PaymentMethod } from '../../../models/enum/payment-method';
 
 @Component({
   selector: 'app-sale',
@@ -25,6 +27,7 @@ export class SaleComponent implements AfterViewInit, OnInit {
   customerList: Customer[] = [];
   productSelected: Product | null = null;
   saleDetailList: SaleDetail[] = [];
+  requestDTO: SaleRequestDTO | null = null;
   total: number = 0; //Total acumulado de la venta
   TotalSaleDB: number = 0; //Total de ventas registradas en la BD
   cashAmount: number = 0;
@@ -65,25 +68,27 @@ export class SaleComponent implements AfterViewInit, OnInit {
    * Crear un nuevo proceso de venta
    * Redirige a la ruta de stock 
    * */
-  createNewSaleProcess(): void{
-    console.log('Crea el proceso');
+  async createNewSaleProcess(): Promise<void>{
     console.log('Detalle Venta: ', this.saleDetailList);
     console.log('Venta: ',this.sale);
-    // this.requestDTO = this.helper.createDto(this.purchase, this.purchaseDetailList);
-    // if (this.validator.validateForm(this.purchase)|| this.purchaseDetailList) {
-      
-    //   this.purchaseService.createPurchase(this.requestDTO).subscribe((response) => {
-    //     console.log('Compra agregada exitosamente: ', response);
-    //     this.notification.showSuccessToast(`¡Compra N°${this.TotalPurchaseDB} fue agregada exitosamente!`, 'top', 3000);
-    //     this.route.navigate(['/stock']);
-    //   }, (error) =>{
-    //     const message = error.error?.message || error.error?.error;
-    //     console.error('Error al agregar la compra: ', error);
-    //     this.notification.showErrorToast(`Error al agregar la compra \n${message}`, 'top', 5000);
-    //   });
-    // } else {
-    //   this.notification.showWarning('Formulario incompleto', 'Por favor, complete correctamente todos los campos obligatorios.');
-    // }
+    await this.requestPaymentConfirmation(this.sale.paymentMethod!);
+    this.requestDTO = this.helper.createDto(this.sale, this.saleDetailList, 
+      this.TotalSaleDB, this.total, this.discountAmount);
+    if (this.requestDTO.detailList.length > 0 || this.requestDTO.paymentMethod !== null) {
+      console.log('REQUESTDTO ', this.requestDTO);
+      // this.saleService.createSale(this.requestDTO).subscribe((response) => {
+      //   console.log('Venta realizada exitosamente: ', response);
+        this.notification.showSuccessToast(`¡Venta N°${this.TotalSaleDB} fue realizada exitosamente!`, 'top', 3000);
+        this.resetProcess();
+      //   this.getTotalSale();
+      // }, (error) =>{
+      //   const message = error.error?.message || error.error?.error;
+      //   console.error('Error al realizar la venta: ', error);
+      //   this.notification.showErrorToast(`Error al realizar la venta \n${message}`, 'top', 5000);
+      // });
+    } else {
+      this.notification.showWarning('Problemas con la venta', 'Por favor, Ingrese datos a la venta.');
+    }
   }
 
   /**
@@ -125,6 +130,7 @@ export class SaleComponent implements AfterViewInit, OnInit {
         this.isDebitPayment = false;
         this.isMixPayment = false;
         this.sale.customer = null;
+        this.sale.paymentMethod = PaymentMethod.EFECTIVO;
         break;
       case 2 : 
         this.showSwitch = true;
@@ -134,8 +140,9 @@ export class SaleComponent implements AfterViewInit, OnInit {
         this.isCreditPayment = false;
         this.isDebitPayment = false;
         this.isMixPayment = false;
-        this.sale.customer = null;
         this.isOk = true;
+        this.sale.customer = null;
+        this.sale.paymentMethod = PaymentMethod.TRANSFERENCIA;
         break;
       case 3 : 
         this.showSwitch = true;
@@ -146,6 +153,7 @@ export class SaleComponent implements AfterViewInit, OnInit {
         this.isDebitPayment = false;
         this.isMixPayment = false;
         this.isOk = false;
+        this.sale.paymentMethod = PaymentMethod.PRESTAMO;
         break;
       case 4 : 
         this.showSwitch = true;
@@ -155,8 +163,9 @@ export class SaleComponent implements AfterViewInit, OnInit {
         this.isCashPayment = false;
         this.isDebitPayment = false;
         this.isMixPayment = false;
-        this.sale.customer = null;
         this.isOk = true;
+        this.sale.customer = null;
+        this.sale.paymentMethod = PaymentMethod.CREDITO;
         break;
       case 5 : 
         this.showSwitch = true;
@@ -166,8 +175,9 @@ export class SaleComponent implements AfterViewInit, OnInit {
         this.isCreditPayment = false;
         this.isCashPayment = false;
         this.isMixPayment = false;
-        this.sale.customer = null;
         this.isOk = true;
+        this.sale.customer = null;
+        this.sale.paymentMethod = PaymentMethod.DEBITO;
         break;
       case 6 :
         this.showSwitch = false;
@@ -178,10 +188,54 @@ export class SaleComponent implements AfterViewInit, OnInit {
         this.isDebitPayment = false;
         this.isCashPayment = false;
         this.isOk = false;
+        this.sale.paymentMethod = PaymentMethod.MIXTO;
         break;
     }
   }
 
+  requestPaymentConfirmation(method: PaymentMethod): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (method === PaymentMethod.CREDITO || method === PaymentMethod.DEBITO) {
+        this.notification.showInputDialog(
+          'Ingrese comprobante para confirmar la venta',
+          'N° Comprobante',
+          'Aceptar',
+          'Cancelar'
+        ).then((result) => {
+          if (result.isConfirmed) {
+            this.sale.comment = result.value;
+            resolve();
+          } else {
+            this.resetProcess();
+            this.notification.showError('Operación Cancelada', 'Ha cancelado la operación.');
+            reject('Cancelado por el usuario');
+          }
+        });
+      } else if (method === PaymentMethod.TRANSFERENCIA) {
+        this.notification.showInputDialog(
+          'Ingrese transferencia para confirmar la venta',
+          'N° Transferencia',
+          'Aceptar',
+          'Cancelar'
+        ).then((result) => {
+          if (result.isConfirmed) {
+            this.sale.comment = result.value;
+            resolve();
+          } else {
+            this.resetProcess();
+            this.notification.showError('Operación Cancelada', 'Ha cancelado la operación.');
+            reject('Cancelado por el usuario');
+          }
+        });
+      } else if (method === PaymentMethod.EFECTIVO) {
+        this.sale.comment = this.cashAmount.toString();
+        resolve();
+      } else {
+        reject('Método de pago no reconocido');
+      }
+    });
+  }
+  
   /**Obtener una lista de clientes */
   getCustomer(): void {
     this.customerService.getCustomer().subscribe((list) => {
@@ -269,11 +323,11 @@ export class SaleComponent implements AfterViewInit, OnInit {
   }
 
   resetProcess(): void{
+    this.getTotalSale();
     this.sale = this.helper.createEmptySale();
     this.customerList = [];
     this.saleDetailList = [];
     this.total = 0;
-    this.TotalSaleDB = 0;
     this.cashAmount = 0;
     this.changeAmount = 0;
     this.discountAmount = 0;
