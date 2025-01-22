@@ -11,7 +11,9 @@ export class NotificationService {
       icon: 'success',
       title: title,
       text: text,
-      confirmButtonText: 'Aceptar'
+      confirmButtonText: 'Aceptar',
+      background: '#2c2c2c',
+      color: '#ffffff',
     });
   }
 
@@ -20,7 +22,9 @@ export class NotificationService {
       icon: 'error',
       title: title,
       text: text,
-      confirmButtonText: 'Aceptar'
+      confirmButtonText: 'Aceptar',
+      background: '#2c2c2c',
+      color: '#ffffff',
     });
   }
 
@@ -29,7 +33,9 @@ export class NotificationService {
       icon: 'warning',
       title: title,
       text: text,
-      confirmButtonText: 'Aceptar'
+      confirmButtonText: 'Aceptar',
+      background: '#2c2c2c',
+      color: '#ffffff',
     });
   }
 
@@ -40,6 +46,8 @@ export class NotificationService {
       showConfirmButton: false,
       timer: time,
       timerProgressBar: true,
+      background: '#2c2c2c',
+      color: '#ffffff',
       didOpen: (toast) => {
         toast.addEventListener('mouseenter', Swal.stopTimer);
         toast.addEventListener('mouseleave', Swal.resumeTimer);
@@ -59,6 +67,8 @@ export class NotificationService {
       showConfirmButton: false,
       timer: time,
       timerProgressBar: true,
+      background: '#2c2c2c',
+      color: '#ffffff',
       didOpen: (toast) => {
         toast.addEventListener('mouseenter', Swal.stopTimer);
         toast.addEventListener('mouseleave', Swal.resumeTimer);
@@ -81,6 +91,8 @@ export class NotificationService {
             cancelButtonColor: "#d33",
             confirmButtonText: confirmButton,
             cancelButtonText: cancelButton,
+            background: '#2c2c2c',
+            color: '#ffffff',
           })
   }
 
