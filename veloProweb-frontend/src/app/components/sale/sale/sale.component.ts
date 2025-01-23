@@ -272,7 +272,7 @@ export class SaleComponent implements AfterViewInit, OnInit {
     this.sale.tax = 0;
     this.saleDetailList.forEach((saleDetail) => {
       this.total += saleDetail.total;
-      this.sale.tax += saleDetail.tax;
+      this.sale.tax += saleDetail.tax * saleDetail.quantity;
     });
     this.originalTotal = this.total;
   }
