@@ -223,6 +223,8 @@ export class SaleComponent implements AfterViewInit, OnInit {
       } else if (method === PaymentMethod.EFECTIVO) {
         this.sale.comment = this.cashAmount.toString();
         resolve();
+      } else if (method === PaymentMethod.MIXTO || method === PaymentMethod.PRESTAMO){
+        resolve();
       } else {
         reject('Método de pago no reconocido');
       }
@@ -333,6 +335,7 @@ export class SaleComponent implements AfterViewInit, OnInit {
     this.isDebitPayment = false;
     this.isMixPayment = false;
     this.isOk = false;
+    this.getCustomer();
   }
 
   /** Habilita la edición de un campo en un detalle específico */
