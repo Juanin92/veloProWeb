@@ -9,7 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -54,5 +56,10 @@ public class SaleController {
         }catch (IllegalArgumentException e){
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @GetMapping("/lista-venta")
+    public List<SaleRequestDTO> getAllSales(){
+        return saleService.getAllSale();
     }
 }
