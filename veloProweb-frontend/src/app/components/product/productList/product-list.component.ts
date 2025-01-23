@@ -4,6 +4,7 @@ import { Product } from '../../../models/Entity/Product/product.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { StatusProduct } from '../../../models/enum/status-product';
+import { NotificationService } from '../../../utils/notification-service.service';
 
 @Component({
   selector: 'app-product-list',
@@ -22,7 +23,9 @@ export class ProductListComponent implements OnInit{
   filteredProductsList: Product[] = [];
   textFilter: string = '';
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private notification: NotificationService) {}
 
   ngOnInit(): void {
     this.loadData();
@@ -45,7 +48,11 @@ export class ProductListComponent implements OnInit{
   }
 
   selectProduct(product: Product): void {
-    this.productSelected.emit(product); 
+    if (product.statusProduct === StatusProduct.DISCONTINUED) {
+      this.notification.showWarningToast('Debes activar el producto', 'top', 3000);
+    }else{
+      this.productSelected.emit(product);
+    }
   }
 
   /**
