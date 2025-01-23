@@ -66,6 +66,7 @@ public class SaleService implements ISaleService {
                 sale.setCustomer(customer);
                 customer.setTotalDebt(customer.getDebt() + dto.getTotal());
                 customerService.updateTotalDebt(customer);
+                customerService.addSaleToCustomer(customer);
                 ticketHistoryService.AddTicketToCustomer(customer, (long) dto.getNumberDocument(), dto.getTotal(), LocalDate.now());
                 break;
             }
