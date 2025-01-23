@@ -1,8 +1,9 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ProductService } from '../../../services/Product/product.service';
 import { Product } from '../../../models/Entity/Product/product.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { StatusProduct } from '../../../models/enum/status-product';
 
 @Component({
   selector: 'app-product-list',
@@ -13,6 +14,9 @@ import { CommonModule } from '@angular/common';
 })
 export class ProductListComponent implements OnInit{
 
+  @Input() showStatusColumn: boolean = true;
+  @Input() showStockColumn: boolean = false;
+  @Input() filterList: boolean = false;
   @Output() productSelected = new EventEmitter<Product>();
   productList: Product[] = [];
   filteredProductsList: Product[] = [];
@@ -27,12 +31,16 @@ export class ProductListComponent implements OnInit{
   loadData(): void{
     this.getProducts();
   }
-
+  
   /** Obtiene una lista de productos */
   getProducts(): void {
     this.productService.getProducts().subscribe((list) => {
       this.productList = list;
-      this.filteredProductsList = list;
+      if (this.filterList) {
+        this.filteredProductsList = list.filter(product => product.statusProduct === StatusProduct.AVAILABLE);
+      }else{
+        this.filteredProductsList = list;
+      }
     });
   }
 
