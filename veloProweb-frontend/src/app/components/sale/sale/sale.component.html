@@ -390,5 +390,8 @@
 </div>
 <!-- MODAL SELECTING PRODUCTS -->
 <app-product-list
+  [showStockColumn]="true"
+  [showStatusColumn]="false"
+  [filterList]="true"
   (productSelected)="addSelectedProductToSaleDetailList($event)"
 ></app-product-list>
