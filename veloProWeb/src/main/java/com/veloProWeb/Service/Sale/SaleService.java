@@ -1,8 +1,10 @@
 package com.veloProWeb.Service.Sale;
 
+import com.veloProWeb.Model.DTO.DetailSaleDTO;
 import com.veloProWeb.Model.DTO.SaleRequestDTO;
 import com.veloProWeb.Model.Entity.Customer.Customer;
 import com.veloProWeb.Model.Entity.Sale.Sale;
+import com.veloProWeb.Model.Entity.Sale.SaleDetail;
 import com.veloProWeb.Model.Enum.PaymentMethod;
 import com.veloProWeb.Repository.Sale.SaleRepo;
 import com.veloProWeb.Service.Customer.CustomerService;
@@ -12,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class SaleService implements ISaleService {
@@ -47,6 +51,17 @@ public class SaleService implements ISaleService {
     @Override
     public Long totalSales() {
         return saleRepo.count();
+    }
+
+    @Override
+    public List<SaleRequestDTO> getAllSale() {
+        List<Sale> saleList = saleRepo.findAll();
+        List<SaleRequestDTO> dtoList = new ArrayList<>();
+        for (Sale sale : saleList){
+            SaleRequestDTO dto = convertToSaleRequestDTO(sale);
+            dtoList.add(dto);
+        }
+        return dtoList;
     }
 
     /**
@@ -107,14 +122,33 @@ public class SaleService implements ISaleService {
         }
     }
 
+    private SaleRequestDTO convertToSaleRequestDTO(Sale sale){
+        SaleRequestDTO dto = new SaleRequestDTO();
+        dto.setId(sale.getId());
+        dto.setDate(sale.getDate());
+        dto.setIdCustomer(sale.getCustomer() != null && sale.getCustomer().getId() != null ? sale.getCustomer().getId() : 0L);
+        dto.setPaymentMethod(sale.getPaymentMethod());
+        dto.setTax(sale.getTax());
+        dto.setTotal(sale.getTotalSale());
+        dto.setDiscount(sale.getDiscount());
+        dto.setComment(sale.getComment() + " # " + sale.getDocument());
+        dto.setNumberDocument(0);
+
+        List<DetailSaleDTO> detailSaleDTOS = new ArrayList<>();
+        for (SaleDetail detail : sale.getSaleDetails()){
+            DetailSaleDTO detailSaleDTO =  new DetailSaleDTO();
+            detailSaleDTO.setId(detail.getId());
+            detailSaleDTO.setIdProduct(detail.getProduct().getId());
+            detailSaleDTO.setQuantity(detail.getQuantity());
+            detailSaleDTOS.add(detailSaleDTO);
+        }
+        dto.setDetailList(detailSaleDTOS);
+        return dto;
+    }
+
 //    @Override
 //    public Optional<Sale> getSaleById(Long id) {
 //        return saleRepo.findById(id);
-//    }
-//
-//    @Override
-//    public List<Sale> getAll() {
-//        return saleRepo.findAll();
 //    }
 //    @Override
 //    public void saleRegisterVoid(Sale sale) {
