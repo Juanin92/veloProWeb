@@ -29,7 +29,7 @@ public class SaleService implements ISaleService {
     public Sale createSale(SaleRequestDTO dto) {
         Sale sale = new Sale();
         sale.setId(null);
-        sale.setDate(dto.getDate());
+        sale.setDate(LocalDate.now());
         sale.setDocument("BO_" + dto.getNumberDocument());
         sale.setDiscount(dto.getDiscount());
         sale.setStatus(true);
