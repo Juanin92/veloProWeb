@@ -64,28 +64,21 @@ export class SaleComponent implements AfterViewInit, OnInit {
     this.tooltipService.initializeTooltips();
   }
 
-  /** 
-   * Crear un nuevo proceso de venta
-   * Redirige a la ruta de stock 
-   * */
   async createNewSaleProcess(): Promise<void>{
-    console.log('Detalle Venta: ', this.saleDetailList);
-    console.log('Venta: ',this.sale);
     await this.requestPaymentConfirmation(this.sale.paymentMethod!);
     this.requestDTO = this.helper.createDto(this.sale, this.saleDetailList, 
       this.TotalSaleDB, this.total, this.discountAmount);
     if (this.requestDTO.detailList.length > 0 || this.requestDTO.paymentMethod !== null) {
-      console.log('REQUESTDTO ', this.requestDTO);
-      // this.saleService.createSale(this.requestDTO).subscribe((response) => {
-      //   console.log('Venta realizada exitosamente: ', response);
+      this.saleService.createSale(this.requestDTO).subscribe((response) => {
+        console.log('Venta realizada exitosamente: ', response);
         this.notification.showSuccessToast(`¡Venta N°${this.TotalSaleDB} fue realizada exitosamente!`, 'top', 3000);
         this.resetProcess();
-      //   this.getTotalSale();
-      // }, (error) =>{
-      //   const message = error.error?.message || error.error?.error;
-      //   console.error('Error al realizar la venta: ', error);
-      //   this.notification.showErrorToast(`Error al realizar la venta \n${message}`, 'top', 5000);
-      // });
+        this.getTotalSale();
+      }, (error) =>{
+        const message = error.error?.message || error.error?.error;
+        console.error('Error al realizar la venta: ', error);
+        this.notification.showErrorToast(`Error al realizar la venta \n${message}`, 'top', 5000);
+      });
     } else {
       this.notification.showWarning('Problemas con la venta', 'Por favor, Ingrese datos a la venta.');
     }
