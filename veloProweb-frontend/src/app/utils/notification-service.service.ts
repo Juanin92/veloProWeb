@@ -81,6 +81,27 @@ export class NotificationService {
     });
   }
 
+  showWarningToast(title: string, showPosition: 'top-end' | 'top-start' | 'top' | 'bottom-end' | 'bottom-start' | 'bottom' | 'center' | 'center-start' | 'center-end', time: number): void {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: showPosition,    
+      showConfirmButton: false,
+      timer: time,
+      timerProgressBar: true,
+      background: '#2c2c2c',
+      color: '#ffffff',
+      didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer);
+        toast.addEventListener('mouseleave', Swal.resumeTimer);
+      }
+    });
+
+    Toast.fire({
+      icon: 'warning',
+      title: title
+    });
+  }
+
   showConfirmation(title: string, text: string, confirmButton: string, cancelButton: string): Promise<any>{
     return Swal.fire({
             title: title,
