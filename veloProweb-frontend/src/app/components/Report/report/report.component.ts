@@ -4,12 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { DailySaleCountDTO } from '../../../models/DTO/Report/daily-sale-count-dto';
 import { ReportServiceService } from '../../../services/Report/report-service.service';
 import { subDays, subMonths, subYears, format } from 'date-fns';
+import { RouterModule } from '@angular/router';
 
 
 @Component({
   selector: 'app-report',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterModule],
   templateUrl: './report.component.html',
   styleUrl: './report.component.css'
 })
