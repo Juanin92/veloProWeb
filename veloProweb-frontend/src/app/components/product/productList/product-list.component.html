@@ -1,62 +1,109 @@
-<div class="modal fade" id="selectProduct" tabindex="-1" aria-labelledby="selectProduct" aria-hidden="true"
-    (shown.bs.modal)="loadData()">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-body d-flex flex-column">
-                <div class="d-flex flex-row justify-content-between mb-2">
-                    <div class="form-floating mt-2">
-                        <input [(ngModel)]="textFilter" (ngModelChange)="searchFilterCustomer()" type="text"
-                            class="form-control form-control-lg" id="searchProduct" name="searchProduct" placeholder="Búsqueda Rápida"
-                            aria-label="Búsqueda Rápida de productos" aria-describedby="searchProduct" />
-                        <label for="searchProduct" class="form-label">Búsqueda Rápida</label>
-                    </div>
-                    <div
-                        class="border border-1 border-white p-1 mb-0 mt-0 d-flex flex-row">
-                        <div class="m-1">
-                            <span class="mt-1 d-inline-block ms-4"
-                                style="width: 15px;height: 15px;background-color: rgb(40, 238, 40);"></span>
-                            <p class="ms-1 mb-0 fw-semibold">Disponible</p>
-                        </div>
-                        <div class="m-1">
-                            <span class="mt-1 d-inline-block ms-5"
-                                style="width: 15px;height: 15px;background-color: rgb(9, 180, 237);"></span>
-                            <p class="ms-1 mb-0 fw-semibold">No Disponible</p>
-                        </div>
-                        <div class="m-1">
-                            <span class="mt-1 d-inline-block ms-5" style="width: 15px;height: 15px;background-color: red"></span>
-                            <p class="ms-1 mb-0 fw-semibold">Descontinuado</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="table-responsive text-center p-2 pt-0" style="max-height: 325px">
-                    <table class="table table-hover">
-                        <thead class="table-info">
-                            <tr>
-                                <th scope="col" class="position-sticky top-0">#</th>
-                                <th scope="col" class="position-sticky top-0">Marca</th>
-                                <th scope="col" class="position-sticky top-0">Categoría</th>
-                                <th scope="col" class="position-sticky top-0">SubCategoría</th>
-                                <th scope="col" class="position-sticky top-0">Descripción</th>
-                                <th scope="col" class="position-sticky top-0">Un</th>
-                                <th scope="col" class="position-sticky top-0">Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-group-divider text-center align-middle" style="cursor: pointer;">
-                            <tr *ngFor="let product of filteredProductsList" (click)="selectProduct(product)">
-                                <th scope="row">{{ product.id }}</th>
-                                <td>{{ product.brand.name }}</td>
-                                <td>{{ product.category.name }}</td>
-                                <td>{{ product.subcategoryProduct.name }}</td>
-                                <td>{{ product.description }}</td>
-                                <td>{{ product.unit.nameUnit }}</td>
-                                <td [ngStyle]="{
-                    'background-color': statusColor(product.statusProduct)
-                  }"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+<div
+  class="modal fade"
+  id="selectProduct"
+  tabindex="-1"
+  aria-labelledby="selectProduct"
+  aria-hidden="true"
+  (shown.bs.modal)="loadData()"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body d-flex flex-column">
+        <div class="d-flex flex-row justify-content-between mb-2">
+          <div class="form-floating mt-2">
+            <input
+              [(ngModel)]="textFilter"
+              (ngModelChange)="searchFilterCustomer()"
+              type="text"
+              class="form-control form-control-lg"
+              id="searchProduct"
+              name="searchProduct"
+              placeholder="Búsqueda Rápida"
+              aria-label="Búsqueda Rápida de productos"
+              aria-describedby="searchProduct"
+            />
+            <label for="searchProduct" class="form-label"
+              >Búsqueda Rápida</label
+            >
+          </div>
+          <div
+            *ngIf="!showStockColumn"
+            class="border border-1 border-white p-1 mb-0 mt-0 d-flex flex-row"
+          >
+            <div class="m-1">
+              <span
+                class="mt-1 d-inline-block ms-4"
+                style="
+                  width: 15px;
+                  height: 15px;
+                  background-color: rgb(40, 238, 40);
+                "
+              ></span>
+              <p class="ms-1 mb-0 fw-semibold">Disponible</p>
             </div>
+            <div class="m-1">
+              <span
+                class="mt-1 d-inline-block ms-5"
+                style="
+                  width: 15px;
+                  height: 15px;
+                  background-color: rgb(9, 180, 237);
+                "
+              ></span>
+              <p class="ms-1 mb-0 fw-semibold">No Disponible</p>
+            </div>
+            <div class="m-1">
+              <span
+                class="mt-1 d-inline-block ms-5"
+                style="width: 15px; height: 15px; background-color: red"
+              ></span>
+              <p class="ms-1 mb-0 fw-semibold">Descontinuado</p>
+            </div>
+          </div>
         </div>
+        <div
+          class="table-responsive text-center p-2 pt-0"
+          style="max-height: 325px"
+        >
+          <table class="table table-hover">
+            <thead class="table-info">
+              <tr>
+                <th scope="col" class="position-sticky top-0">#</th>
+                <th scope="col" class="position-sticky top-0">Marca</th>
+                <th scope="col" class="position-sticky top-0">Categoría</th>
+                <th scope="col" class="position-sticky top-0">SubCategoría</th>
+                <th scope="col" class="position-sticky top-0">Descripción</th>
+                <th scope="col" class="position-sticky top-0">Un</th>
+                <th *ngIf="showStatusColumn" scope="col" class="position-sticky top-0">Estado</th>
+                <th *ngIf="showStockColumn" scope="col" class="position-sticky top-0">Stock</th>
+              </tr>
+            </thead>
+            <tbody
+              class="table-group-divider text-center align-middle"
+              style="cursor: pointer"
+            >
+              <tr
+                *ngFor="let product of filteredProductsList"
+                (click)="selectProduct(product)"
+              >
+                <th scope="row">{{ product.id }}</th>
+                <td>{{ product.brand.name }}</td>
+                <td>{{ product.category.name }}</td>
+                <td>{{ product.subcategoryProduct.name }}</td>
+                <td>{{ product.description }}</td>
+                <td>{{ product.unit.nameUnit }}</td>
+                <td
+                    *ngIf="showStatusColumn"
+                  [ngStyle]="{
+                    'background-color': statusColor(product.statusProduct)
+                  }"
+                ></td>
+                <td *ngIf="showStockColumn">{{ product.stock }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
