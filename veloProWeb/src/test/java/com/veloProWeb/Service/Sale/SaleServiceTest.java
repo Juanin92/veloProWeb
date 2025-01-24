@@ -17,6 +17,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -30,9 +32,21 @@ public class SaleServiceTest {
     @Mock private CustomerService customerService;
     private SaleRequestDTO saleRequestDTO;
     private Customer customer;
+    private Sale sale;
 
     @BeforeEach
     void setUp(){
+        sale = new Sale();
+        sale.setId(1L);
+        sale.setDate(LocalDate.now());
+        sale.setPaymentMethod(PaymentMethod.EFECTIVO);
+        sale.setDocument("BO001");
+        sale.setComment("Venta realizada");
+        sale.setDiscount(0);
+        sale.setTax(114);
+        sale.setTotalSale(714);
+        sale.setStatus(true);
+
         saleRequestDTO = new SaleRequestDTO();
         saleRequestDTO.setId(1L);
         saleRequestDTO.setDate(LocalDate.now());
@@ -171,5 +185,21 @@ public class SaleServiceTest {
         Long totalSale =  saleService.totalSales();
         verify(saleRepo).count();
         assertEquals(1L, totalSale);
+    }
+
+    //Prueba para obtener todas las ventas registradas
+    @Test
+    public void getAllSale_valid(){
+        when(saleRepo.findAll()).thenReturn(Collections.singletonList(sale));
+
+        List<SaleRequestDTO> result = saleService.getAllSale();
+        verify(saleRepo, times(1)).findAll();
+        assertNotNull(result);
+        assertEquals(1, result.size());
+
+        SaleRequestDTO dto = result.get(0);
+        assertEquals(sale.getId(), dto.getId());
+        assertEquals(sale.getDate(), dto.getDate());
+        assertEquals(sale.getPaymentMethod(), dto.getPaymentMethod());
     }
 }
