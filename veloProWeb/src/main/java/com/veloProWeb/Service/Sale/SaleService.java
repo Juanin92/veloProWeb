@@ -53,6 +53,11 @@ public class SaleService implements ISaleService {
         return saleRepo.count();
     }
 
+    /**
+     * Obtener todas las ventas registradas
+     * Crea una lista que contendrá los datos en la lista del objeto DTO
+     * @return - La lista de objetos con los detalle de la venta
+     */
     @Override
     public List<SaleRequestDTO> getAllSale() {
         List<Sale> saleList = saleRepo.findAll();
@@ -122,6 +127,11 @@ public class SaleService implements ISaleService {
         }
     }
 
+    /**
+     *  Convierte un objeto Sale a un DTO
+     * @param sale - la venta que se va convertir
+     * @return - objeto DTO que contiene los detalle de la venta
+     */
     private SaleRequestDTO convertToSaleRequestDTO(Sale sale){
         SaleRequestDTO dto = new SaleRequestDTO();
         dto.setId(sale.getId());

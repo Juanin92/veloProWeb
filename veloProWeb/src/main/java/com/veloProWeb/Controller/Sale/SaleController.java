@@ -9,14 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
 * Controlador REST para gestionar operaciones relacionadas con ventas.
-* Este controlador proporciona endpoints para agregar y obtener cantidad total de ventas.
+* Este controlador proporciona endpoints para agregar venta, obtener cantidad total de ventas y todas las ventas.
 */
 @RestController
 @RequestMapping("/ventas")
@@ -58,6 +57,10 @@ public class SaleController {
         }
     }
 
+    /**
+     *  Obtener todas las ventas registradas
+     * @return - Lista con las ventas registradas
+     */
     @GetMapping("/lista-venta")
     public List<SaleRequestDTO> getAllSales(){
         return saleService.getAllSale();
