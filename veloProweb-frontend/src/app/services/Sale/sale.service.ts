@@ -28,4 +28,8 @@ export class SaleService {
   getTotalSale(): Observable<number> {
     return this.http.get<number>(`${this.apiUrl}`);
   }
+
+  getAllSales(): Observable<SaleRequestDTO[]>{
+    return this.http.get<SaleRequestDTO[]>(`${this.apiUrl}/lista-venta`);
+  }
 }
