@@ -3,17 +3,40 @@
     <div class="p-0 pb-0">
         <div class="d-flex flex-lg-row flex-column m-1 align-items-center justify-content-between position-relative">
             <div class="order-lg-0 order-2 d-flex flex-column align-items-start">
-                <div class="form-floating mb-1">
+                <div class="form-floating mb-3 mb-lg-1">
                     <input id="searchProduct"
                         type="text" class="form-control form-control-lg" aria-label="buscar una venta rápida"
                         aria-describedby="inputGroup-sizing-md" placeholder="Ingrese un valor" />
                     <label for="searchProduct" class="form-label">Búsqueda Rápida</label>
                 </div>
             </div>
+            <div class="order-lg-0 order-3 d-flex flex-row align-items-start">
+                <div class="input-group me-1 w-50">
+                    <span class="input-group-text">Desde</span>
+                    <input type="date" class="form-control" id="startDate" name="startDate" placeholder="Ingrese fecha"
+                        aria-label="Ingrese fecha de inicio" aria-describedby="addStartDate" />
+                </div>
+                <div class="input-group w-50">
+                    <span class="input-group-text">Hasta</span>
+                    <input type="date" class="form-control" id="finalDate" name="finalDate" placeholder="Ingrese fecha"
+                        aria-label="Ingrese fecha de final" aria-describedby="addFinalDate" />
+                </div>
+                <button class="btn btn-outline-success border-0 btn-sm m-1">
+                    <img src="/assets/icons/iconOk.png" alt="activar" width="30" height="30" class="img-fluid" />
+                </button>
+                <button class="btn btn-outline-secondary border-0 btn-sm m-1">
+                    <img src="/assets/icons/iconClean.png" alt="activar" width="30" height="30" class="img-fluid" />
+                </button>
+            </div>
+            <div class="order-lg-0 order-4 d-flex flex-column align-items-start">
+                <button class="btn btn-outline-success border-0 btn-sm m-1">
+                    <img src="/assets/icons/iconExcel.png" alt="activar" width="30" height="30" class="img-fluid" />
+                </button>
+            </div>
         </div>
     </div>
     <!-- TABLE AREA -->
-    <div class="text-center p-2 pt-0 table-responsive" style="max-height: calc(100vh - 220px);">
+    <div class="text-center p-2 pt-0 table-responsive" style="max-height: calc(100vh - 200px);">
         <table class="table table-hover">
             <thead class="table-light">
                 <tr>
@@ -27,21 +50,23 @@
                 </tr>
             </thead>
             <tbody class="table-group-divider text-center align-middle">
-                <tr *ngFor="let sale of saleReportList">
+                <tr *ngFor="let sale of saleList">
                     <th scope="row">{{ sale.document }}</th>
-                    <td>{{ sale.date }}</td>
+                    <td>{{ sale.date | date: 'dd-MM-yyyy'}}</td>
                     <td>{{ sale.paymentMethod }}</td>
-                    <td>{{ sale.tax }}</td>
-                    <td>{{ sale.totalSale }}</td>
-                    <td>{{ sale.comment }}</td>
+                    <td>{{ sale.tax | currency: 'CLP':'$':'1.0-0'}}</td>
+                    <td>{{ sale.totalSale | currency: 'CLP':'$':'1.0-0' }}</td>
+                    <td>{{ sale.comment.includes('null') ? '+++' : sale.comment }}</td>
                     <td>
                         <div>
-                            <button class="btn btn-sm btn-danger m-1">
-                                <img src="/assets/icons/iconCancel.png" alt="borrar" width="30" height="30"
-                                    class="img-fluid" />
+                            <button class="btn btn-outline-success border-0 btn-sm m-0">
+                                <img src="/assets/icons/iconAdd.png" alt="activar" width="30" height="30" class="img-fluid" />
                             </button>
-                            <button class="btn btn-sm m-1">
-                                <img src="/assets/icons/iconPrint.png" alt="activar" width="30" height="30"
+                            <button class="btn btn-outline-light border-0 btn-sm m-0">
+                                <img src="/assets/icons/iconPrint.png" alt="activar" width="30" height="30" class="img-fluid" />
+                            </button>
+                            <button class="btn btn-outline-danger border-0 btn-sm m-0">
+                                <img src="/assets/icons/iconCancel.png" alt="borrar" width="30" height="30"
                                     class="img-fluid" />
                             </button>
                         </div>
