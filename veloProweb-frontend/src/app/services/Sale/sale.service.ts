@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SaleRequestDTO } from '../../models/DTO/sale-request-dto';
+import { DetailSaleRequestDTO } from '../../models/DTO/detail-sale-request-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -31,5 +32,11 @@ export class SaleService {
 
   getAllSales(): Observable<SaleRequestDTO[]>{
     return this.http.get<SaleRequestDTO[]>(`${this.apiUrl}/lista-venta`);
+  }
+
+  getDetailSale(idSale: number): Observable<DetailSaleRequestDTO[]>{
+    return this.http.get<DetailSaleRequestDTO[]>(`${this.apiUrl}/detalles`, {
+      params: {idSale: idSale.toString()}
+    });
   }
 }
