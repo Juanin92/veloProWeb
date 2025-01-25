@@ -1,5 +1,6 @@
 package com.veloProWeb.Controller.Sale;
 
+import com.veloProWeb.Model.DTO.DetailSaleRequestDTO;
 import com.veloProWeb.Model.DTO.SaleRequestDTO;
 import com.veloProWeb.Model.Entity.Sale.Sale;
 import com.veloProWeb.Service.Sale.Interface.ISaleDetailService;
@@ -64,5 +65,14 @@ public class SaleController {
     @GetMapping("/lista-venta")
     public List<SaleRequestDTO> getAllSales(){
         return saleService.getAllSale();
+    }
+
+    @GetMapping("/detalles")
+    public ResponseEntity<List<DetailSaleRequestDTO>> getDetailSale(@RequestParam Long idSale){
+        try{
+            return ResponseEntity.ok(saleDetailService.getSaleDetails(idSale));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 }
