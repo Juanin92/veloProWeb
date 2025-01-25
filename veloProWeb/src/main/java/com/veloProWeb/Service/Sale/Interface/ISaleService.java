@@ -4,9 +4,11 @@ import com.veloProWeb.Model.DTO.SaleRequestDTO;
 import com.veloProWeb.Model.Entity.Sale.Sale;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ISaleService {
     Sale createSale(SaleRequestDTO dto);
     Long totalSales();
     List<SaleRequestDTO> getAllSale();
+    Optional<Sale> getSaleById(Long id);
 }

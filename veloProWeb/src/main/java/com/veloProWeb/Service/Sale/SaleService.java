@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SaleService implements ISaleService {
@@ -156,10 +157,10 @@ public class SaleService implements ISaleService {
         return dto;
     }
 
-//    @Override
-//    public Optional<Sale> getSaleById(Long id) {
-//        return saleRepo.findById(id);
-//    }
+    @Override
+    public Optional<Sale> getSaleById(Long id) {
+        return saleRepo.findById(id);
+    }
 //    @Override
 //    public void saleRegisterVoid(Sale sale) {
 //        sale.setStatus(false);
