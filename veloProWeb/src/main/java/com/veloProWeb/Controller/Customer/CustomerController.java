@@ -96,16 +96,4 @@ public class CustomerController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
-
-    @GetMapping("/cliente")
-    public ResponseEntity<Map<String, Customer>> getCustomer(@RequestParam Long id){
-        Map<String, Customer> response = new HashMap<>();
-        try{
-            response.put("OK", customerService.getCustomerById(id));
-            return ResponseEntity.ok(response);
-        }catch (Exception e){
-            response.put(e.getMessage(), null);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
-    }
 }
