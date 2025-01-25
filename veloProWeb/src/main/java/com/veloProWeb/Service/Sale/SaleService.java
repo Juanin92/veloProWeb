@@ -157,6 +157,11 @@ public class SaleService implements ISaleService {
         return dto;
     }
 
+    /**
+     * Obtener una venta determinada por un ID
+     * @param id - Identificador de la venta requerida
+     * @return - Optional de venta encontrada
+     */
     @Override
     public Optional<Sale> getSaleById(Long id) {
         return saleRepo.findById(id);
