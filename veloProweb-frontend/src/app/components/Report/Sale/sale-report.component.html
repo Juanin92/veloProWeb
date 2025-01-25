@@ -4,10 +4,10 @@
         <div class="d-flex flex-lg-row flex-column m-1 align-items-center justify-content-between position-relative">
             <div class="order-lg-0 order-2 d-flex flex-column align-items-start">
                 <div class="form-floating mb-3 mb-lg-1">
-                    <input id="searchProduct"
+                    <input id="searchSale"
                         type="text" class="form-control form-control-lg" aria-label="buscar una venta rápida"
                         aria-describedby="inputGroup-sizing-md" placeholder="Ingrese un valor" />
-                    <label for="searchProduct" class="form-label">Búsqueda Rápida</label>
+                    <label for="searchSale" class="form-label">Búsqueda Rápida</label>
                 </div>
             </div>
             <div class="order-lg-0 order-3 d-flex flex-row align-items-start">
@@ -59,7 +59,9 @@
                     <td>{{ sale.comment.includes('null') ? '+++' : sale.comment }}</td>
                     <td>
                         <div>
-                            <button class="btn btn-outline-success border-0 btn-sm m-0">
+                            <button class="btn btn-outline-success border-0 btn-sm m-0" 
+                                data-bs-toggle="modal" data-bs-target="#saleDetailModal"
+                                (click)="getSaleDetailsData(sale)">
                                 <img src="/assets/icons/iconAdd.png" alt="activar" width="30" height="30" class="img-fluid" />
                             </button>
                             <button class="btn btn-outline-light border-0 btn-sm m-0">
@@ -74,5 +76,60 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+</div>
+<!-- MODAL SALE DETAILS INFO -->
+<div class="modal fade" id="saleDetailModal" tabindex="-1" aria-labelledby="saleDetailModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="saleDetailModal">Detalle de la venta</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex flex-column">
+                <div class="d-flex flex-row justify-content-around text-center">
+                    <div *ngIf="saleSelected?.discount != 0" class=flex-column>
+                        <p class="fw-bold fs-5 m-1 mb-0">Descuento</p>
+                        <p class="fw-light fs-6 m-1 mt-0">{{saleSelected?.discount}}</p>
+                    </div>
+                    <div *ngIf="customerSale !== ''" class=flex-column>
+                        <p class="fw-bold fs-5 m-1 mb-0">Cliente</p>
+                        <p class="fw-light fs-6 m-1 mt-0">{{customerSale}}</p>
+                    </div>
+                    <div class=flex-column>
+                        <p class="fw-bold fs-5 m-1 mb-0">Estado</p>
+                        <p class="fw-light fs-6 m-1 mt-0">{{saleSelected?.status ? 'Aprobada': 'Anulada'}}</p>
+                    </div>
+                    <div *ngIf="notificationSale !== null" class=flex-column>
+                        <p class="fw-bold fs-5 m-1 mb-0">Notificación</p>
+                        <p class="fw-light fs-6 m-1 mt-0">{{notificationSale | date: 'dd-MM-yyyy'}}</p>
+                    </div>    
+                    <div class=flex-column>
+                        <p class="fw-bold fs-5 m-1 mb-0">Pagada</p>
+                        <p class="fw-light fs-6 m-1 mt-0">{{statusTicket ? 'Si': 'No'}}</p>
+                    </div>
+                </div>
+                <div class="text-center p-2 pt-1 table-responsive" style="max-height: calc(100vh - 220px);">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col" class="position-sticky top-0">#</th>
+                                <th scope="col" class="position-sticky top-0">Descripción</th>
+                                <th scope="col" class="position-sticky top-0">Cantidad</th>
+                                <th scope="col" class="position-sticky top-0">Precio</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider text-center align-middle">
+                            <tr *ngFor="let detail of saleDetailList; let i = index">
+                                <th scope="row">{{i + 1}}</th>
+                                <td>{{detail?.descriptionProduct}}</td>
+                                <td>{{detail?.quantity}}</td>
+                                <td>{{detail?.price | currency: 'CLP':'$':'1.0-0'}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
