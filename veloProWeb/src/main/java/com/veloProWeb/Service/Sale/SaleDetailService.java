@@ -64,6 +64,13 @@ public class SaleDetailService implements ISaleDetailService {
         return saleDetailRepo.findAll();
     }
 
+    /**
+     * Obtener detalle de venta de una venta específica.
+     * Incluye los datos si esta venta tiene un cliente asociado para obtener tickets de la venta
+     * y tener mayor detalle de esta venta del cliente sabiendo su estado y notificaciones del ticket
+     * @param idSale - Identificador de la venta específica
+     * @return - Lista de DTO con detalles de la venta
+     */
     @Override
     public List<DetailSaleRequestDTO> getSaleDetails(Long idSale) {
         List<DetailSaleRequestDTO> saleRequestDTOS = new ArrayList<>();
