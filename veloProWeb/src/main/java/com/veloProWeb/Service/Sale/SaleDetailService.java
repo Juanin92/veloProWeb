@@ -1,22 +1,34 @@
 package com.veloProWeb.Service.Sale;
 
 import com.veloProWeb.Model.DTO.DetailSaleDTO;
+import com.veloProWeb.Model.DTO.DetailSaleRequestDTO;
+import com.veloProWeb.Model.Entity.Customer.Customer;
+import com.veloProWeb.Model.Entity.Customer.TicketHistory;
 import com.veloProWeb.Model.Entity.Product.Product;
 import com.veloProWeb.Model.Entity.Sale.Sale;
 import com.veloProWeb.Model.Entity.Sale.SaleDetail;
+import com.veloProWeb.Repository.Customer.TicketHistoryRepo;
 import com.veloProWeb.Repository.Sale.SaleDetailRepo;
+import com.veloProWeb.Service.Customer.CustomerService;
+import com.veloProWeb.Service.Customer.TicketHistoryService;
 import com.veloProWeb.Service.Product.ProductService;
 import com.veloProWeb.Service.Sale.Interface.ISaleDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SaleDetailService implements ISaleDetailService {
 
     @Autowired private SaleDetailRepo saleDetailRepo;
+    @Autowired private TicketHistoryRepo ticketHistoryRepo;
     @Autowired private ProductService productService;
+    @Autowired private CustomerService customerService;
+    @Autowired private SaleService saleService;
 
     /**
      * Crear detalle de ventas proporcionadas
@@ -50,5 +62,40 @@ public class SaleDetailService implements ISaleDetailService {
     @Override
     public List<SaleDetail> getAll() {
         return saleDetailRepo.findAll();
+    }
+
+    @Override
+    public List<DetailSaleRequestDTO> getSaleDetails(Long idSale) {
+        List<DetailSaleRequestDTO> saleRequestDTOS = new ArrayList<>();
+        List<SaleDetail> saleDetails = saleDetailRepo.findBySaleId(idSale);
+        Optional<Sale> sale = saleService.getSaleById(idSale);
+        String customerNames = "";
+        boolean status = true;
+        LocalDate notification = null;
+        if (sale.isPresent()){
+            if (sale.get().getCustomer() != null){
+                Long idCustomer = sale.get().getCustomer().getId();
+                Customer customer = customerService.getCustomerById(idCustomer);
+                customerNames = customer.getName() + " " + customer.getSurname();
+                List<TicketHistory> ticketHistoryList = ticketHistoryRepo.findByCustomerId(customer.getId());
+                for (TicketHistory ticket : ticketHistoryList){
+                    if (ticket.getDocument().equals(sale.get().getDocument())){
+                        status = ticket.isStatus();
+                        notification = ticket.getNotificationsDate();
+                    }
+                }
+            }
+            for (SaleDetail saleDetail : saleDetails){
+                DetailSaleRequestDTO dto = new DetailSaleRequestDTO();
+                dto.setQuantity(saleDetail.getQuantity());
+                dto.setPrice(saleDetail.getPrice());
+                dto.setDescriptionProduct(saleDetail.getProduct().getDescription());
+                dto.setCustomer(customerNames);
+                dto.setTicketStatus(status);
+                dto.setNotification(notification);
+                saleRequestDTOS.add(dto);
+            }
+        }
+        return saleRequestDTOS;
     }
 }
