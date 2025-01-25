@@ -31,7 +31,7 @@ public class TicketHistoryService implements ITicketHistoryService {
     @Override
     public void AddTicketToCustomer(Customer customer, Long number, int total, LocalDate date) {
         TicketHistory ticket = new TicketHistory();
-        String name = "BO00" + number;
+        String name = "BO_" + number;
         ticket.setTotal(total);
         ticket.setDocument(name);
         ticket.setStatus(false);
