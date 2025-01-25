@@ -16,7 +16,8 @@ import java.util.Map;
 
 /**
 * Controlador REST para gestionar operaciones relacionadas con ventas.
-* Este controlador proporciona endpoints para agregar venta, obtener cantidad total de ventas y todas las ventas.
+* Este controlador proporciona endpoints para agregar venta, obtener cantidad total de ventas,
+ * todas las ventas y detalles de una venta.
 */
 @RestController
 @RequestMapping("/ventas")
@@ -67,6 +68,11 @@ public class SaleController {
         return saleService.getAllSale();
     }
 
+    /**
+     * Obtener detalles de una venta especifica
+     * @param idSale - Identificador de la venta seleccionada
+     * @return - ResponseEntity con una lista de DTO con detalles de la venta
+     */
     @GetMapping("/detalles")
     public ResponseEntity<List<DetailSaleRequestDTO>> getDetailSale(@RequestParam Long idSale){
         try{
