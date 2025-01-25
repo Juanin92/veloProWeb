@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -201,5 +202,19 @@ public class SaleServiceTest {
         assertEquals(sale.getId(), dto.getId());
         assertEquals(sale.getDate(), dto.getDate());
         assertEquals(sale.getPaymentMethod(), dto.getPaymentMethod());
+    }
+
+    //Prueba para obtener una venta por ID
+    @Test
+    public void getSaleById_valid(){
+        when(saleRepo.findById(1L)).thenReturn(Optional.of(sale));
+        saleService.getSaleById(1L);
+        verify(saleRepo).findById(1L);
+    }
+    @Test
+    public void getSaleById_validNull(){
+        when(saleRepo.findById(2L)).thenReturn(Optional.empty());
+        saleService.getSaleById(2L);
+        verify(saleRepo).findById(2L);
     }
 }
