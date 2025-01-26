@@ -1,117 +1,153 @@
 <div class="container-fluid d-flex flex-column p-1">
     <!-- INPUT AREA -->
-    <div class="p-0 pb-0">
-        <div class="d-flex flex-lg-row flex-column m-1 align-items-center justify-content-between position-relative">
-            <div class="order-lg-0 order-2 d-flex flex-column align-items-start">
-                <div class="form-floating mb-3 mb-lg-1">
-                    <input id="searchSale"
-                        type="text" class="form-control form-control-lg" aria-label="buscar una venta rápida"
-                        aria-describedby="inputGroup-sizing-md" placeholder="Ingrese un valor" />
-                    <label for="searchSale" class="form-label">Búsqueda Rápida</label>
+    <div class="card shadow mb-2">
+        <div class="card-body p-0">
+            <div class="d-flex flex-lg-row flex-column m-1 align-items-center justify-content-between position-relative">
+                <div class="order-lg-0 order-2 d-flex flex-column align-items-start">
+                    <div class="form-floating mb-3 mb-lg-1">
+                        <input id="searchSale" [(ngModel)]="textFilter" (ngModelChange)="searchFilterSales()" type="text"
+                            class="form-control form-control-lg" aria-label="buscar una venta rápida"
+                            aria-describedby="inputGroup-sizing-md" placeholder="Ingrese un valor" />
+                        <label for="searchSale" class="form-label">Búsqueda Rápida</label>
+                    </div>
                 </div>
-            </div>
-            <div class="order-lg-0 order-3 d-flex flex-row align-items-start">
-                <div class="input-group me-1 w-50">
-                    <span class="input-group-text">Desde</span>
-                    <input type="date" class="form-control" id="startDate" name="startDate" placeholder="Ingrese fecha"
-                        aria-label="Ingrese fecha de inicio" aria-describedby="addStartDate" />
+                <div class="order-lg-0 order-3 d-flex flex-row align-items-start">
+                    <div class="input-group me-1 w-50">
+                        <span class="input-group-text">Desde</span>
+                        <input [(ngModel)]="startDate" type="date" class="form-control" id="startDate" name="startDate"
+                            placeholder="Ingrese fecha" aria-label="Ingrese fecha de inicio" aria-describedby="addStartDate" />
+                    </div>
+                    <div class="input-group w-50">
+                        <span class="input-group-text">Hasta</span>
+                        <input [(ngModel)]="finalDate" type="date" class="form-control" id="finalDate" name="finalDate"
+                            placeholder="Ingrese fecha" aria-label="Ingrese fecha de final" aria-describedby="addFinalDate" />
+                    </div>
                 </div>
-                <div class="input-group w-50">
-                    <span class="input-group-text">Hasta</span>
-                    <input type="date" class="form-control" id="finalDate" name="finalDate" placeholder="Ingrese fecha"
-                        aria-label="Ingrese fecha de final" aria-describedby="addFinalDate" />
+                <div class="order-lg-0 order-4 d-flex flex-row align-items-start">
+                    <button *ngIf="startDate && finalDate" class="btn btn-outline-success border-0 btn-sm m-1"
+                        (click)="dateFilterSales()" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        data-bs-title="Filtrar ventas">
+                        <img src="/assets/icons/iconOk.png" alt="activar" width="30" height="30" class="img-fluid" />
+                    </button>
+                    <button *ngIf="startDate && finalDate" class="btn btn-outline-secondary border-0 btn-sm m-1"
+                        (click)="cleanInputFilterDates()" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        data-bs-title="Limpiar filtrado">
+                        <img src="/assets/icons/iconClean.png" alt="activar" width="30" height="30" class="img-fluid" />
+                    </button>
+                    <button class="btn btn-outline-success border-0 btn-sm m-1" data-bs-toggle="tooltip" data-bs-placement="auto"
+                        data-bs-title="Exportar Excel">
+                        <img src="/assets/icons/iconExcel.png" alt="activar" width="30" height="30" class="img-fluid" />
+                    </button>
                 </div>
-                <button class="btn btn-outline-success border-0 btn-sm m-1">
-                    <img src="/assets/icons/iconOk.png" alt="activar" width="30" height="30" class="img-fluid" />
-                </button>
-                <button class="btn btn-outline-secondary border-0 btn-sm m-1">
-                    <img src="/assets/icons/iconClean.png" alt="activar" width="30" height="30" class="img-fluid" />
-                </button>
-            </div>
-            <div class="order-lg-0 order-4 d-flex flex-column align-items-start">
-                <button class="btn btn-outline-success border-0 btn-sm m-1">
-                    <img src="/assets/icons/iconExcel.png" alt="activar" width="30" height="30" class="img-fluid" />
-                </button>
             </div>
         </div>
     </div>
     <!-- TABLE AREA -->
-    <div class="text-center p-2 pt-0 table-responsive" style="max-height: calc(100vh - 200px);">
-        <table class="table table-hover">
-            <thead class="table-light">
-                <tr>
-                    <th scope="col" class="position-sticky top-0">n° Doc</th>
-                    <th scope="col" class="position-sticky top-0">Fecha</th>
-                    <th scope="col" class="position-sticky top-0">Método pago</th>
-                    <th scope="col" class="position-sticky top-0">IVA</th>
-                    <th scope="col" class="position-sticky top-0">Total</th>
-                    <th scope="col" class="position-sticky top-0">Comentario</th>
-                    <th scope="col" class="position-sticky top-0">Acción</th>
-                </tr>
-            </thead>
-            <tbody class="table-group-divider text-center align-middle">
-                <tr *ngFor="let sale of saleList">
-                    <th scope="row">{{ sale.document }}</th>
-                    <td>{{ sale.date | date: 'dd-MM-yyyy'}}</td>
-                    <td>{{ sale.paymentMethod }}</td>
-                    <td>{{ sale.tax | currency: 'CLP':'$':'1.0-0'}}</td>
-                    <td>{{ sale.totalSale | currency: 'CLP':'$':'1.0-0' }}</td>
-                    <td>{{ sale.comment.includes('null') ? '+++' : sale.comment }}</td>
-                    <td>
-                        <div>
-                            <button class="btn btn-outline-success border-0 btn-sm m-0" 
-                                data-bs-toggle="modal" data-bs-target="#saleDetailModal"
-                                (click)="getSaleDetailsData(sale)">
-                                <img src="/assets/icons/iconAdd.png" alt="activar" width="30" height="30" class="img-fluid" />
-                            </button>
-                            <button class="btn btn-outline-light border-0 btn-sm m-0">
-                                <img src="/assets/icons/iconPrint.png" alt="activar" width="30" height="30" class="img-fluid" />
-                            </button>
-                            <button class="btn btn-outline-danger border-0 btn-sm m-0">
-                                <img src="/assets/icons/iconCancel.png" alt="borrar" width="30" height="30"
-                                    class="img-fluid" />
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="card shadow p-1">
+        <div class="card-body p-1 pt-0 table-responsive" style="max-height: calc(100vh - 180px);">
+            <table class="table table-hover">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th scope="col" class="position-sticky top-0">n° Doc</th>
+                        <th scope="col" class="position-sticky top-0">Fecha</th>
+                        <th scope="col" class="position-sticky top-0">Método pago</th>
+                        <th scope="col" class="position-sticky top-0">IVA</th>
+                        <th scope="col" class="position-sticky top-0">Total</th>
+                        <th scope="col" class="position-sticky top-0">Comentario</th>
+                        <th scope="col" class="position-sticky top-0 bg-light" style="z-index: 1020;"></th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider text-center align-middle">
+                    <tr *ngFor="let sale of filteredSaleList">
+                        <th scope="row">{{ sale.document }}</th>
+                        <td>{{ sale.date | date: 'dd-MM-yyyy'}}</td>
+                        <td>{{ sale.paymentMethod }}</td>
+                        <td>{{ sale.tax | currency: 'CLP':'$':'1.0-0'}}</td>
+                        <td>{{ sale.totalSale | currency: 'CLP':'$':'1.0-0' }}</td>
+                        <td>{{ sale.comment.includes('null') ? '+++' : sale.comment }}</td>
+                        <td>
+                            <div class="btn-group" role="group" aria-label="Acciones de venta">
+                                <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#saleDetailModal"
+                                    (click)="getSaleDetailsData(sale)">
+                                    <img src="/assets/icons/iconAdd.png" alt="Más información" width="24" height="24"
+                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Más información">
+                                </button>
+                                <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimir">
+                                    <img src="/assets/icons/iconPrint.png" alt="Imprimir" width="24" height="24">
+                                </button>
+                                <button *ngIf="sale.status" class="btn btn-outline-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top"
+                                    title="Anular">
+                                    <img src="/assets/icons/iconCancel.png" alt="Anular" width="24" height="24">
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 <!-- MODAL SALE DETAILS INFO -->
 <div class="modal fade" id="saleDetailModal" tabindex="-1" aria-labelledby="saleDetailModal" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="saleDetailModal">Detalle de la venta</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fs-4 text-center w-100" id="saleDetailModalLabel">Detalle de la venta</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
-            <div class="modal-body d-flex flex-column">
-                <div class="d-flex flex-row justify-content-around text-center">
-                    <div *ngIf="saleSelected?.discount != 0" class=flex-column>
-                        <p class="fw-bold fs-5 m-1 mb-0">Descuento</p>
-                        <p class="fw-light fs-6 m-1 mt-0">{{saleSelected?.discount}}</p>
+            <div class="modal-body">
+                <div class="row row-cols-1 row-cols-md-3 g-2 mb-3">
+                    <div class="col" *ngIf="saleSelected?.discount != 0">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <h6 class="card-title fw-bold fs-5 mb-0">Descuento</h6>
+                                <p class="card-text mt-1">{{saleSelected?.discount}}</p>
+                            </div>
+                        </div>
                     </div>
-                    <div *ngIf="customerSale !== ''" class=flex-column>
-                        <p class="fw-bold fs-5 m-1 mb-0">Cliente</p>
-                        <p class="fw-light fs-6 m-1 mt-0">{{customerSale}}</p>
+                    <div class="col" *ngIf="customerSale !== ''">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <h6 class="card-title fw-bold fs-5 mb-0">Cliente</h6>
+                                <p class="card-text mt-1">{{customerSale}}</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class=flex-column>
-                        <p class="fw-bold fs-5 m-1 mb-0">Estado</p>
-                        <p class="fw-light fs-6 m-1 mt-0">{{saleSelected?.status ? 'Aprobada': 'Anulada'}}</p>
+                    <div class="col">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <h6 class="card-title fw-bold fs-5 mb-0">Estado</h6>
+                                <p class="card-text mt-1"
+                                    [ngClass]="{'text-success': saleSelected?.status, 'text-danger': !saleSelected?.status}">
+                                    {{saleSelected?.status ? 'Aprobada': 'Anulada'}}
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                    <div *ngIf="notificationSale !== null" class=flex-column>
-                        <p class="fw-bold fs-5 m-1 mb-0">Notificación</p>
-                        <p class="fw-light fs-6 m-1 mt-0">{{notificationSale | date: 'dd-MM-yyyy'}}</p>
-                    </div>    
-                    <div class=flex-column>
-                        <p class="fw-bold fs-5 m-1 mb-0">Pagada</p>
-                        <p class="fw-light fs-6 m-1 mt-0">{{statusTicket ? 'Si': 'No'}}</p>
+                    <div class="col" *ngIf="notificationSale !== null">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <h6 class="card-title fw-bold fs-5 mb-0">Notificación</h6>
+                                <p class="card-text mt-1">{{notificationSale | date: 'dd-MM-yyyy'}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <h6 class="card-title fw-bold fs-5 mb-0">Pagada</h6>
+                                <p class="card-text mt-1"
+                                    [ngClass]="{'text-success': statusTicket, 'text-danger': !statusTicket}">
+                                    {{statusTicket ? 'Si': 'No'}}
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="text-center p-2 pt-1 table-responsive" style="max-height: calc(100vh - 220px);">
-                    <table class="table table-hover">
-                        <thead class="table-light">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <thead class="table-primary">
                             <tr>
                                 <th scope="col" class="position-sticky top-0">#</th>
                                 <th scope="col" class="position-sticky top-0">Descripción</th>
@@ -119,7 +155,7 @@
                                 <th scope="col" class="position-sticky top-0">Precio</th>
                             </tr>
                         </thead>
-                        <tbody class="table-group-divider text-center align-middle">
+                        <tbody>
                             <tr *ngFor="let detail of saleDetailList; let i = index">
                                 <th scope="row">{{i + 1}}</th>
                                 <td>{{detail?.descriptionProduct}}</td>
