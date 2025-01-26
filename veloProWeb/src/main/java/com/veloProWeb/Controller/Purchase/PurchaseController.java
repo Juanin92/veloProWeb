@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -54,5 +55,10 @@ public class PurchaseController {
         }catch (IllegalArgumentException e){
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @GetMapping("lista-compras")
+    public List<PurchaseRequestDTO> getAllPurchases(){
+        return purchaseService.getAllPurchases();
     }
 }
