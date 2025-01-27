@@ -12,8 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -77,5 +76,16 @@ public class SupplierServiceTest {
     public void getAll_valid(){
         service.getAll();
         verify(repo).findAll();
+    }
+
+    //Prueba para obtener un proveedor por un ID
+    @Test
+    public void getSupplierById_valid(){
+        when(repo.findById(1L)).thenReturn(Optional.of(supplier));
+        Optional<Supplier> result = service.getSupplierById(1L);
+        verify(repo).findById(1L);
+        assertTrue(result.isPresent());
+        assertEquals(1L, result.get().getId());
+        assertEquals("Samsung", result.get().getName());
     }
 }
