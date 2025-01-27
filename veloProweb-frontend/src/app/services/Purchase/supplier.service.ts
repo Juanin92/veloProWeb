@@ -37,4 +37,8 @@ export class SupplierService {
   updateSupplier(supplier: Supplier): Observable<{message: string}>{
     return this.http.put<{message: string}>(`${this.apiUrl}`, supplier);
   }
+
+  getSupplier(id: number): Observable<Supplier>{
+    return this.http.get<Supplier>(`${this.apiUrl}/buscar`, {params:{id: id.toString()}});
+  } 
 }
