@@ -1,6 +1,7 @@
 package com.veloProWeb.Service.Purchase;
 
 import com.veloProWeb.Model.DTO.DetailPurchaseDTO;
+import com.veloProWeb.Model.DTO.DetailPurchaseRequestDTO;
 import com.veloProWeb.Model.Entity.Product.Product;
 import com.veloProWeb.Model.Entity.Purchase.Purchase;
 import com.veloProWeb.Model.Entity.Purchase.PurchaseDetail;
@@ -26,9 +27,12 @@ public class PurchaseDetailServiceTest {
     @InjectMocks private PurchaseDetailService purchaseDetailService;
     @Mock private PurchaseDetailRepo purchaseDetailRepo;
     @Mock private ProductService productService;
+    @Mock private PurchaseService purchaseService;
     private Purchase purchase;
     private Product product;
     private DetailPurchaseDTO dto;
+    private DetailPurchaseRequestDTO detailDto;
+    private PurchaseDetail purchaseDetail;
 
     @BeforeEach
     void setUp(){
@@ -46,6 +50,22 @@ public class PurchaseDetailServiceTest {
 
         product = new Product();
         product.setId(5L);
+        product.setDescription("prueba");
+
+        purchaseDetail = new PurchaseDetail();
+        purchaseDetail.setPurchase(purchase);
+        purchaseDetail.setProduct(product);
+        purchaseDetail.setTax(100);
+        purchaseDetail.setPrice(10000);
+        purchaseDetail.setQuantity(2);
+        purchaseDetail.setTotal(20200);
+
+        detailDto =  new DetailPurchaseRequestDTO();
+        detailDto.setDescriptionProduct(product.getDescription());
+        detailDto.setPrice(purchaseDetail.getPrice());
+        detailDto.setQuantity(purchaseDetail.getQuantity());
+        detailDto.setTotal(purchaseDetail.getTotal());
+        detailDto.setTax(purchaseDetail.getTax());
     }
 
     //Prueba para crear un detalle de compra
@@ -67,13 +87,20 @@ public class PurchaseDetailServiceTest {
 
     //Prueba para obtener todos los detalles de compras
     @Test
-    public void getAll_valid(){
-        PurchaseDetail purchaseDetail = new PurchaseDetail();
-        PurchaseDetail purchaseDetail2 = new PurchaseDetail();
-        List<PurchaseDetail> purchaseDetailList = Arrays.asList(purchaseDetail, purchaseDetail2);
-        when(purchaseDetailService.getAll()).thenReturn(purchaseDetailList);
-        List<PurchaseDetail> result = purchaseDetailService.getAll();
-        verify(purchaseDetailRepo).findAll();
-        assertEquals(2, result.size());
+    public void getPurchaseDetails_valid(){
+        List<PurchaseDetail> purchaseDetails = Collections.singletonList(purchaseDetail);
+        when(purchaseDetailRepo.findByPurchaseId(purchase.getId())).thenReturn(purchaseDetails);
+        when(purchaseService.getPurchaseById(purchase.getId())).thenReturn(Optional.of(purchase));
+        List<DetailPurchaseRequestDTO> result = purchaseDetailService.getPurchaseDetails(purchase.getId());
+        verify(purchaseDetailRepo).findByPurchaseId(purchase.getId());
+        verify(purchaseService).getPurchaseById(purchase.getId());
+
+        assertEquals(1, result.size());
+        DetailPurchaseRequestDTO resultDto = result.get(0);
+        assertEquals(product.getDescription(), resultDto.getDescriptionProduct());
+        assertEquals(purchaseDetail.getPrice(), resultDto.getPrice());
+        assertEquals(purchaseDetail.getQuantity(), resultDto.getQuantity());
+        assertEquals(purchaseDetail.getTax(), resultDto.getTax());
+        assertEquals(purchaseDetail.getTotal(), resultDto.getTotal());
     }
 }
