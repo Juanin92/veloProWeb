@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PurchaseRequestDTO } from '../../models/DTO/purchase-request-dto';
+import { DetailPurchaseRequestDTO } from '../../models/DTO/detail-purchase-request-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -27,5 +28,15 @@ export class PurchaseService {
    */
   getTotalPurchase(): Observable<number>{
     return this.http.get<number>(`${this.apiUrl}/total_compras`);
+  }
+
+  getAllPurchases(): Observable<PurchaseRequestDTO[]>{
+    return this.http.get<PurchaseRequestDTO[]>(`${this.apiUrl}/lista-compras`);
+  }
+
+  getDetailPurchase(idPurchase: number): Observable<DetailPurchaseRequestDTO[]>{
+    return this.http.get<DetailPurchaseRequestDTO[]>(`${this.apiUrl}/detalles`, {
+      params: {idPurchase: idPurchase.toString()}
+    });
   }
 }
