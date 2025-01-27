@@ -86,6 +86,11 @@ public class SupplierService implements ISupplierService {
         return supplier.orElse(null);
     }
 
+    /**
+     * Obtener un proveedor por un ID
+     * @param id - Identificador del proveedor a obtener
+     * @return - Un proveedor si está presente o un objeto vació
+     */
     @Override
     public Optional<Supplier> getSupplierById(Long id) {
         return supplierRepo.findById(id);
