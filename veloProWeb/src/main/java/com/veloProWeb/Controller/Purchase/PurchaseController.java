@@ -58,11 +58,20 @@ public class PurchaseController {
         }
     }
 
+    /**
+     * Obtiene todas las compras registradas
+     * @return - Lista con las compras
+     */
     @GetMapping("/lista-compras")
     public List<PurchaseRequestDTO> getAllPurchases(){
         return purchaseService.getAllPurchases();
     }
 
+    /**
+     * Obtiene una compra especifíca
+     * @param idPurchase - Identificador de la compra a buscar
+     * @return - ResponseEntity con la lista DTO con detalle de la compra, si no NOT_FOUND no encuentra nada
+     */
     @GetMapping("/detalles")
     public ResponseEntity<List<DetailPurchaseRequestDTO>> getDetails(@RequestParam Long idPurchase){
         try{

@@ -52,6 +52,10 @@ public class PurchaseService implements IPurchaseService {
         return purchaseRepo.count();
     }
 
+    /**
+     * Obtiene todas las compras registradas
+     * @return - Lista DTO con las compras registradas
+     */
     @Override
     public List<PurchaseRequestDTO> getAllPurchases() {
         List<Purchase> purchases = purchaseRepo.findAll();
@@ -63,6 +67,11 @@ public class PurchaseService implements IPurchaseService {
         return dtoList;
     }
 
+    /**
+     * Obtiene una compra especifíca
+     * @param id - Identificador de la compra a buscar
+     * @return - Una compra si está presente o un objeto vació
+     */
     @Override
     public Optional<Purchase> getPurchaseById(Long id) {
         return purchaseRepo.findById(id);

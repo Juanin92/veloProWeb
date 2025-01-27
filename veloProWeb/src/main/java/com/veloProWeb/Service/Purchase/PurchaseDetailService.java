@@ -49,8 +49,9 @@ public class PurchaseDetailService implements IPurchaseDetailService {
     }
 
     /**
-     * Obtiene el registro de todos los detalles de compras
-     * @return - Lista con los detalles de compras
+     * Obtiene una lista de detalles de una compra en específico
+     * @param idPurchase - Identificador de la compra
+     * @return - Lista de DTO con los detalles de la compra encontrados
      */
     @Override
     public List<DetailPurchaseRequestDTO> getPurchaseDetails(Long idPurchase) {
