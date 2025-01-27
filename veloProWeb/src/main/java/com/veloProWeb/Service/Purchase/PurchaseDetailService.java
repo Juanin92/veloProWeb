@@ -1,22 +1,27 @@
 package com.veloProWeb.Service.Purchase;
 
 import com.veloProWeb.Model.DTO.DetailPurchaseDTO;
+import com.veloProWeb.Model.DTO.DetailPurchaseRequestDTO;
 import com.veloProWeb.Model.Entity.Product.Product;
 import com.veloProWeb.Model.Entity.Purchase.Purchase;
 import com.veloProWeb.Model.Entity.Purchase.PurchaseDetail;
 import com.veloProWeb.Repository.Purchase.PurchaseDetailRepo;
 import com.veloProWeb.Service.Product.Interfaces.IProductService;
 import com.veloProWeb.Service.Purchase.Interfaces.IPurchaseDetailService;
+import com.veloProWeb.Service.Purchase.Interfaces.IPurchaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PurchaseDetailService implements IPurchaseDetailService {
 
     @Autowired private PurchaseDetailRepo purchaseDetailRepo;
     @Autowired private IProductService productService;
+    @Autowired private IPurchaseService purchaseService;
 
     /**
      * Crear detalle de compras proporcionadas
@@ -48,7 +53,21 @@ public class PurchaseDetailService implements IPurchaseDetailService {
      * @return - Lista con los detalles de compras
      */
     @Override
-    public List<PurchaseDetail> getAll() {
-        return purchaseDetailRepo.findAll();
+    public List<DetailPurchaseRequestDTO> getPurchaseDetails(Long idPurchase) {
+        List<DetailPurchaseRequestDTO> purchaseRequestDTOS = new ArrayList<>();
+        List<PurchaseDetail> purchaseDetails = purchaseDetailRepo.findByPurchaseId(idPurchase);
+        Optional<Purchase> purchase = purchaseService.getPurchaseById(idPurchase);
+        if (purchase.isPresent()) {
+            for (PurchaseDetail purchaseDetail : purchaseDetails){
+                DetailPurchaseRequestDTO dto = new DetailPurchaseRequestDTO();
+                dto.setPrice(purchaseDetail.getPrice());
+                dto.setQuantity(purchaseDetail.getQuantity());
+                dto.setTax(purchaseDetail.getTax());
+                dto.setTotal(purchaseDetail.getTotal());
+                dto.setDescriptionProduct(purchaseDetail.getProduct().getDescription());
+                purchaseRequestDTOS.add(dto);
+            }
+        }
+        return purchaseRequestDTOS;
     }
 }
