@@ -1,14 +1,8 @@
 package com.veloProWeb.Service.Purchase;
 
-import com.veloProWeb.Model.DTO.DetailPurchaseDTO;
-import com.veloProWeb.Model.DTO.DetailSaleDTO;
 import com.veloProWeb.Model.DTO.PurchaseRequestDTO;
-import com.veloProWeb.Model.DTO.SaleRequestDTO;
 import com.veloProWeb.Model.Entity.Purchase.Purchase;
-import com.veloProWeb.Model.Entity.Purchase.PurchaseDetail;
 import com.veloProWeb.Model.Entity.Purchase.Supplier;
-import com.veloProWeb.Model.Entity.Sale.Sale;
-import com.veloProWeb.Model.Entity.Sale.SaleDetail;
 import com.veloProWeb.Repository.Purchase.PurchaseRepo;
 import com.veloProWeb.Repository.Purchase.SupplierRepo;
 import com.veloProWeb.Service.Purchase.Interfaces.IPurchaseService;
@@ -67,6 +61,11 @@ public class PurchaseService implements IPurchaseService {
             dtoList.add(dto);
         }
         return dtoList;
+    }
+
+    @Override
+    public Optional<Purchase> getPurchaseById(Long id) {
+        return purchaseRepo.findById(id);
     }
 
     /**
