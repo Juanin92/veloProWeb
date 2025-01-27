@@ -85,4 +85,9 @@ public class SupplierService implements ISupplierService {
         Optional<Supplier> supplier = supplierRepo.findByRut(rut);
         return supplier.orElse(null);
     }
+
+    @Override
+    public Optional<Supplier> getSupplierById(Long id) {
+        return supplierRepo.findById(id);
+    }
 }
