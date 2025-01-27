@@ -16,10 +16,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,6 +32,7 @@ public class PurchaseServiceTest {
     @Mock private PurchaseValidator validator;
     private PurchaseRequestDTO purchaseDTO;
     private Supplier supplier;
+    private Purchase purchase;
 
     @BeforeEach
     void setUp(){
@@ -46,6 +48,10 @@ public class PurchaseServiceTest {
 
         supplier =  new Supplier();
         supplier.setId(3L);
+
+        purchase = new Purchase();
+        purchase.setId(2L);
+        purchase.setSupplier(supplier);
     }
 
     //Prueba para crear una nueva compra
@@ -79,5 +85,26 @@ public class PurchaseServiceTest {
         Long totalPurchase =  purchaseService.totalPurchase();
         verify(purchaseRepo).count();
         assertEquals(1L, totalPurchase);
+    }
+
+    //Prueba para obtener todas las compras
+    @Test
+    public void getAllPurchases_valid(){
+        List<Purchase> purchases = Collections.singletonList(purchase);
+        when(purchaseRepo.findAll()).thenReturn(purchases);
+
+        List<PurchaseRequestDTO> result = purchaseService.getAllPurchases();
+        verify(purchaseRepo).findAll();
+        assertEquals(supplier.getId(), result.getFirst().getIdSupplier());
+    }
+
+    //Prueba para obtener una compra especifíca
+    @Test
+    public void getPurchaseById_valid(){
+        when(purchaseRepo.findById(purchase.getId())).thenReturn(Optional.of(purchase));
+
+        Optional<Purchase> result = purchaseService.getPurchaseById(purchase.getId());
+        assertTrue(result.isPresent());
+        assertEquals(purchase.getId(), result.get().getId());
     }
 }
