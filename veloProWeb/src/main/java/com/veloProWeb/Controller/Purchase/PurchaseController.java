@@ -1,5 +1,6 @@
 package com.veloProWeb.Controller.Purchase;
 
+import com.veloProWeb.Model.DTO.DetailPurchaseRequestDTO;
 import com.veloProWeb.Model.DTO.PurchaseRequestDTO;
 import com.veloProWeb.Model.Entity.Purchase.Purchase;
 import com.veloProWeb.Service.Purchase.Interfaces.IPurchaseDetailService;
@@ -57,8 +58,17 @@ public class PurchaseController {
         }
     }
 
-    @GetMapping("lista-compras")
+    @GetMapping("/lista-compras")
     public List<PurchaseRequestDTO> getAllPurchases(){
         return purchaseService.getAllPurchases();
+    }
+
+    @GetMapping("/detalles")
+    public ResponseEntity<List<DetailPurchaseRequestDTO>> getDetails(@RequestParam Long idPurchase){
+        try{
+            return ResponseEntity.ok(purchaseDetailService.getPurchaseDetails(idPurchase));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 }
