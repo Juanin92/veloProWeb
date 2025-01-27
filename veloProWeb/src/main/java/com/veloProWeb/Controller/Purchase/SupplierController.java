@@ -14,7 +14,7 @@ import java.util.Optional;
 
 /**
  * Controlador REST para gestionar operaciones relacionadas con proveedores.
- * Este controlador proporciona endpoints para listar, agregar, actualizar proveedores.
+ * Este controlador proporciona endpoints para listar, agregar, buscar, actualizar proveedores.
  */
 @RestController
 @RequestMapping("/proveedores")
@@ -68,6 +68,11 @@ public class SupplierController {
         }
     }
 
+    /**
+     * Obtener un proveedor por un ID
+     * @param id - Identificador de proveedor a buscar
+     * @return - ResponseEntity con el proveedor o Not_found al no obtener nada
+     */
     @GetMapping("/buscar")
     public ResponseEntity<Supplier> getSupplierById(@RequestParam Long id){
         Optional<Supplier> supplier = supplierService.getSupplierById(id);
