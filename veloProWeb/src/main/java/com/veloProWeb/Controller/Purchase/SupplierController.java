@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Controlador REST para gestionar operaciones relacionadas con proveedores.
@@ -65,5 +66,11 @@ public class SupplierController {
             response.put("message", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<Supplier> getSupplierById(@RequestParam Long id){
+        Optional<Supplier> supplier = supplierService.getSupplierById(id);
+        return supplier.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 }
