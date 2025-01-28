@@ -45,6 +45,9 @@ export class PurchaseReportComponent implements OnInit, AfterViewInit {
     this.getPurchasesList();
   }
 
+  /**
+   * Obtiene una lista de compras
+   */
   getPurchasesList(): void {
     this.purchaseService.getAllPurchases().subscribe({
       next: (list) => {
@@ -56,6 +59,11 @@ export class PurchaseReportComponent implements OnInit, AfterViewInit {
     });
   }
 
+  /**
+   * Asocia proveedores a la lista de compras recibida
+   * Crea una compra con los datos y la agrega a una lista de compras.
+   * @param list - Lista de compras
+   */
   async getSupplierPurchase(list: PurchaseRequestDTO[]): Promise<void> {
     for (const dto of list) {
       const supplier = await this.getSupplier(dto);
@@ -73,6 +81,11 @@ export class PurchaseReportComponent implements OnInit, AfterViewInit {
     this.filteredPurchaseList = this.purchaseList;
   }
 
+  /**
+   * Obtiene un proveedor asociado de una compra seleccionada
+   * @param dto - Objeto contiene los datos de la compra
+   * @returns - Proveedor o null si no encuentra registro 
+   */
   async getSupplier(dto: PurchaseRequestDTO): Promise<Supplier | null> {
     try {
       const supplier = await firstValueFrom(this.supplierService.getSupplier(dto.idSupplier));
@@ -83,6 +96,10 @@ export class PurchaseReportComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+   * Obtiene información de los detalles de compra de una compra seleccionada
+   * @param purchase - Compra seleccionada
+   */
   getPurchaseDetailsData(purchase: Purchase): void {
     this.purchaseSelected = purchase;
     this.purchaseService.getDetailPurchase(this.purchaseSelected.id).subscribe({
@@ -95,6 +112,10 @@ export class PurchaseReportComponent implements OnInit, AfterViewInit {
     });
   }
 
+  /**
+   * Filtra las compras por rango de fechas ingresadas por el usuario.
+   * Muestra un mensaje de advertencia si las fechas no son válidas.
+   */
   dateFilterPurchases(): void {
     if (this.startDate && this.finalDate) {
       const startDate = new Date(this.startDate);
@@ -111,13 +132,19 @@ export class PurchaseReportComponent implements OnInit, AfterViewInit {
     }
   }
 
-
+  /**
+   *Limpia los campos de filtro de fechas y restablece la lista de compras filtradas.
+   */
   cleanInputFilterDates(): void {
     this.startDate = '';
     this.finalDate = '';
     this.filteredPurchaseList = this.purchaseList;
   }
 
+  /**
+   *Filtra las compras según el texto ingresado en el campo de búsqueda.
+   *Busca coincidencias en el documento, tipo de documento o nombre del proveedor.
+   */
   searchFilterPurchases(): void {
     if (this.textFilter.trim() === '') {
       this.filteredPurchaseList = this.purchaseList;

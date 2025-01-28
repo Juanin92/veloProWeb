@@ -35,8 +35,8 @@ export class SaleComponent implements AfterViewInit, OnInit {
   discountAmount: number = 0;
   originalTotal: number = 0;
   showSwitch: boolean =  false;
-  isDiscount: boolean = false;
-  isCashPayment: boolean = false;
+  isDiscount: boolean = false; 
+  isCashPayment: boolean = false; 
   isTransferPayment: boolean =  false;
   isLoanPayment: boolean =  false;
   isCreditPayment: boolean =  false;
@@ -64,6 +64,10 @@ export class SaleComponent implements AfterViewInit, OnInit {
     this.tooltipService.initializeTooltips();
   }
 
+  /**
+   * Crea un nuevo proceso de venta, 
+   * confirmando el método de pago y enviando la solicitud al servicio de ventas.
+   */
   async createNewSaleProcess(): Promise<void>{
     await this.requestPaymentConfirmation(this.sale.paymentMethod!);
     this.requestDTO = this.helper.createDto(this.sale, this.saleDetailList, 
@@ -112,6 +116,10 @@ export class SaleComponent implements AfterViewInit, OnInit {
     }
   }
 
+  /**
+   * Inicia el método de pago según el botón presionado.
+   * @param button - Número del botón que indica el método de pago
+   */
   initiateMethodPayment(button: number): void{
     switch(button){
       case 1 : 
@@ -186,6 +194,11 @@ export class SaleComponent implements AfterViewInit, OnInit {
     }
   }
 
+  /**
+   * Solicita confirmación del método de pago.
+   * @param method - Método de pago seleccionado
+   * @returns - promesa que se resuelve si se confirma el pago, o se rechaza si se cancela
+   */
   requestPaymentConfirmation(method: PaymentMethod): Promise<void> {
     return new Promise((resolve, reject) => {
       if (method === PaymentMethod.CREDITO || method === PaymentMethod.DEBITO) {
@@ -238,6 +251,9 @@ export class SaleComponent implements AfterViewInit, OnInit {
     });
   }
 
+  /**
+   * Obtiene número de total de ventas registradas
+   */
   getTotalSale(): void{
     this.saleService.getTotalSale().subscribe((totalSales) =>{
       this.TotalSaleDB = totalSales;
@@ -279,12 +295,19 @@ export class SaleComponent implements AfterViewInit, OnInit {
     this.originalTotal = this.total;
   }
 
+  /**
+   * Verifica si se ha elegido un cliente para el pago.
+   * Permite el pago de la venta
+   */
   chooseCustomerToPay(): void{
     if (this.sale.customer) {
       this.isOk = true;
     }
   }
 
+  /**
+   * Actualiza el total cuando se paga en efectivo.
+   */
   updateTotalWithCash(): void{
     if(this.cashAmount >= this.total){
       this.changeAmount = this.cashAmount - this.total;
@@ -297,6 +320,9 @@ export class SaleComponent implements AfterViewInit, OnInit {
     }
   }
 
+  /**
+   * Actualiza el total con un descuento aplicado.
+   */
   updateTotalWithDiscount(): void{
     if (this.discountAmount >= 0 && this.discountAmount < this.originalTotal) {
       this.total = this.originalTotal - this.discountAmount; 
@@ -307,6 +333,9 @@ export class SaleComponent implements AfterViewInit, OnInit {
     }
   }
 
+  /**
+   * Maneja el cambio de estado del descuento.
+   */
   handleDiscountSwitch(): void{
     if (this.isDiscount) {
       this.updateTotalWithDiscount();
@@ -317,6 +346,9 @@ export class SaleComponent implements AfterViewInit, OnInit {
     }
   }
 
+  /**
+   * Reinicia el proceso de venta a su estado inicial.
+   */
   resetProcess(): void{
     this.getTotalSale();
     this.sale = this.helper.createEmptySale();

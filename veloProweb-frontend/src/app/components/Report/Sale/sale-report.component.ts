@@ -47,18 +47,27 @@ export class SaleReportComponent implements OnInit, AfterViewInit {
     this.getSalesList();
   }
 
+  /**
+   * Obtiene una lista de ventas
+   */
   getSalesList(): void {
     this.saleService.getAllSales().subscribe({
-      next:(list) =>{
+      next: (list) => {
         this.saleReportList = list;
         this.getDocumentAndCommentSale(this.saleReportList);
       },
-      error: (error) =>{
+      error: (error) => {
         console.log('Error al obtener la lista de ventas: ', error);
       }
     });
   }
 
+  /**
+   * Obtiene documento y comentario de una lista de ventas.
+   * Crea un objeto Ventas con los datos de la lista.
+   * Valida que el contenido del documento tenga una formato
+   * @param list - Lista con los detalles de las ventas
+   */
   getDocumentAndCommentSale(list: SaleRequestDTO[]): void {
     list.forEach(dto => {
       const documentMatch = dto.comment.match(/# (BO_\d+)/);
@@ -81,6 +90,10 @@ export class SaleReportComponent implements OnInit, AfterViewInit {
     this.filteredSaleList = this.saleList;
   }
 
+  /**
+   * Obtiene los detalles de una venta seleccionado y actualiza sus propiedades
+   * @param sale - Venta seleccionada
+   */
   getSaleDetailsData(sale: Sale): void {
     this.saleSelected = sale;
     this.saleService.getDetailSale(this.saleSelected.id).subscribe({
@@ -98,24 +111,30 @@ export class SaleReportComponent implements OnInit, AfterViewInit {
     });
   }
 
+  /**
+   * Filtra ventas por un rango de fechas
+   * Muestra un mensaje de advertencia si el rango no es valido
+   */
   dateFilterSales(): void {
     if (this.startDate && this.finalDate) {
-        const startDate = new Date(this.startDate);
-        const finalDate = new Date(this.finalDate);
+      const startDate = new Date(this.startDate);
+      const finalDate = new Date(this.finalDate);
 
-        if (startDate < finalDate) {
-            this.filteredSaleList = this.saleList.filter(sale => {
-                const saleDate = new Date(sale.date);
-                return saleDate >= startDate && saleDate <= finalDate;
-            });
-        } else {
-          this.notification.showWarningToast('La fecha de inicio debe ser menor que la fecha final.', "top", 2000);
-        }
+      if (startDate < finalDate) {
+        this.filteredSaleList = this.saleList.filter(sale => {
+          const saleDate = new Date(sale.date);
+          return saleDate >= startDate && saleDate <= finalDate;
+        });
+      } else {
+        this.notification.showWarningToast('La fecha de inicio debe ser menor que la fecha final.', "top", 2000);
+      }
     }
     this.tooltip.initializeTooltips();
-}
+  }
 
-
+  /**
+   * Limpia los campos de filtro de fechas y restablece la lista de ventas filtradas.
+   */
   cleanInputFilterDates(): void {
     this.startDate = '';
     this.finalDate = '';
@@ -123,6 +142,10 @@ export class SaleReportComponent implements OnInit, AfterViewInit {
     this.tooltip.initializeTooltips();
   }
 
+  /**
+   * Filtra las ventas según el texto ingresado en el campo de búsqueda.
+   * Busca coincidencias en el método de pago, documento o si la venta está anulada.
+   */
   searchFilterSales(): void {
     if (this.textFilter.trim() === '') {
       this.filteredSaleList = this.saleList;
