@@ -4,6 +4,7 @@ import { Kardex } from '../../../models/Entity/kardex';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TooltipService } from '../../../utils/tooltip.service';
+import { MovementsType } from '../../../models/enum/movements-type';
 
 @Component({
   selector: 'app-kardex',
@@ -50,6 +51,15 @@ export class KardexComponent implements OnInit, AfterViewInit{
       this.filteredKardexList = this.kardexList.filter(kardex =>
         kardex.movementsType.toString().toLowerCase().includes(this.textFilter.toLowerCase()) || 
         kardex.product.description.toLowerCase().includes(this.textFilter.toLowerCase()));
+    }
+  }
+
+  colorToMovementTypes(movementType: string): string{
+    switch (movementType) {
+      case 'AJUSTE': return 'text-bg-warning';
+      case 'SALIDA': return 'text-bg-danger';
+      case 'ENTRADA': return 'text-bg-success';
+      default: return 'text-white';
     }
   }
 }

@@ -48,7 +48,8 @@
                                         <td>{{kardex.product.description}}</td>
                                         <td>{{kardex.stock}}</td>
                                         <td>{{kardex.price | currency: 'CLP':'$':'1.0-0'}}</td>
-                                        <td>{{kardex.movementsType}}</td>
+                                        <td [ngClass]='colorToMovementTypes(kardex.movementsType.toString())'>
+                                            {{kardex.movementsType}}</td>
                                         <td>{{kardex.quantity}}</td>
                                         <td>{{kardex.user}}</td>
                                         <td>{{kardex.comment}}</td>
