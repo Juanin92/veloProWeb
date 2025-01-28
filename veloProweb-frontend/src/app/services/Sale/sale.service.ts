@@ -30,10 +30,19 @@ export class SaleService {
     return this.http.get<number>(`${this.apiUrl}`);
   }
 
+  /**
+   * Obtiene todas la ventas registradas haciendo una petición GET 
+   * @returns - Observable emite una lista DTO con los datos de ventas registradas
+   */
   getAllSales(): Observable<SaleRequestDTO[]>{
     return this.http.get<SaleRequestDTO[]>(`${this.apiUrl}/lista-venta`);
   }
 
+  /**
+   * Obtener detalle de ventas de una venta especifica mediante una petición GET
+   * @param idSale - Identificador de la venta seleccionada
+   * @returns - Observable emite una lista con los detalles de la venta
+   */
   getDetailSale(idSale: number): Observable<DetailSaleRequestDTO[]>{
     return this.http.get<DetailSaleRequestDTO[]>(`${this.apiUrl}/detalles`, {
       params: {idSale: idSale.toString()}

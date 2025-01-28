@@ -30,9 +30,9 @@ export class SaleHelperService {
   }
 
   /**
-     * Crea un DTO de compras para unir la información de una compra y sus detalles, 
-     * @param sale - Objeto compra con los valores necesarios
-     * @param details - lista de detalle de compra con valores
+     * Crea un DTO de ventas para unir la información de una venta y sus detalles, 
+     * @param sale - Objeto venta con los valores necesarios
+     * @param details - lista de detalle de venta con valores
      * @returns - DTO con los valores necesarios para realizar una solicitud.
      */
   createDto(sale: Sale, details: SaleDetail[], numberDocument: number, totalSale: number,

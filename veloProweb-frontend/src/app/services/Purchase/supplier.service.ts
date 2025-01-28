@@ -38,6 +38,11 @@ export class SupplierService {
     return this.http.put<{message: string}>(`${this.apiUrl}`, supplier);
   }
 
+  /**
+   * Obtiene un proveedor especifico haciendo una petición GET
+   * @param id - Identificador del proveedor
+   * @returns - Observable emite un objeto supplier
+   */
   getSupplier(id: number): Observable<Supplier>{
     return this.http.get<Supplier>(`${this.apiUrl}/buscar`, {params:{id: id.toString()}});
   } 
