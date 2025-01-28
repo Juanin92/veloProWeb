@@ -27,7 +27,7 @@ public class Kardex {
     private MovementsType movementsType;
 
     @ManyToOne
-    @JoinColumn(name = "id_´product", nullable = true)
+    @JoinColumn(name = "id_product", nullable = true)
     private Product product;
 
     @ManyToOne
