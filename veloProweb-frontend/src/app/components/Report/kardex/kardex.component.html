@@ -1,0 +1,64 @@
+<div class="d-flex flex-column vh-100">
+    <div class="container-fluid h-100">
+        <div class="row mb-3 mt-1 w-100">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-body p-1 d-flex justify-content-between align-items-center">
+                        <div class="order-lg-0 order-0 d-flex flex-column align-items-start">
+                            <div class="form-floating mb-3 mb-lg-1">
+                                <input id="searchKardex" [(ngModel)]="textFilter" (ngModelChange)="searchFilterRegisters()" type="text"
+                                    class="form-control form-control-lg" aria-label="buscar una registro"
+                                    aria-describedby="inputGroup-sizing-md" placeholder="Ingrese un valor" />
+                                <label for="searchKardex" class="form-label">Búsqueda Rápida</label>
+                            </div>
+                        </div>
+                        <div class="order-lg-0 order-1 d-flex flex-row align-items-start">
+                            <button class="btn btn-outline-success border-0 btn-sm m-1" data-bs-toggle="tooltip" data-bs-placement="auto"
+                                data-bs-title="Exportar Excel">
+                                <img src="/assets/icons/iconExcel.png" alt="activar" width="30" height="30" class="img-fluid" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row flex-grow-1">
+            <div class="col-12">
+                <div class="card h-100">
+                    <div class="card-body p-0">
+                        <div class="table-responsive p-1 pt-0" style="height: calc(100vh - 150px); overflow-y: auto;">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light text-center">
+                                    <tr>
+                                        <th scope="col" class="position-sticky top-0">#</th>
+                                        <th scope="col" class="position-sticky top-0">Fecha</th>
+                                        <th scope="col" class="position-sticky top-0">Descripción</th>
+                                        <th scope="col" class="position-sticky top-0">Stock</th>
+                                        <th scope="col" class="position-sticky top-0">Precio</th>
+                                        <th scope="col" class="position-sticky top-0">Movimiento</th>
+                                        <th scope="col" class="position-sticky top-0">Cantidad</th>
+                                        <th scope="col" class="position-sticky top-0">Usuario</th>
+                                        <th scope="col" class="position-sticky top-0">Observación</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-group-divider text-center align-middle">
+                                    <tr *ngFor="let kardex of filteredKardexList">
+                                        <td scope="row">{{kardex.id}}</td>
+                                        <td>{{kardex.date | date: 'dd-MM-yyyy'}}</td>
+                                        <td>{{kardex.product.description}}</td>
+                                        <td>{{kardex.stock}}</td>
+                                        <td>{{kardex.price | currency: 'CLP':'$':'1.0-0'}}</td>
+                                        <td>{{kardex.movementsType}}</td>
+                                        <td>{{kardex.quantity}}</td>
+                                        <td>{{kardex.user}}</td>
+                                        <td>{{kardex.comment}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
