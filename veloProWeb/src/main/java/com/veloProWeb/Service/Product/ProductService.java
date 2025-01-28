@@ -1,9 +1,11 @@
 package com.veloProWeb.Service.Product;
 
 import com.veloProWeb.Model.Entity.Product.Product;
+import com.veloProWeb.Model.Enum.MovementsType;
 import com.veloProWeb.Model.Enum.StatusProduct;
 import com.veloProWeb.Repository.Product.ProductRepo;
 import com.veloProWeb.Service.Product.Interfaces.IProductService;
+import com.veloProWeb.Service.Report.IkardexService;
 import com.veloProWeb.Validation.ProductValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ public class ProductService implements IProductService {
 
     @Autowired private ProductRepo productRepo;
     @Autowired private ProductValidator validator;
+    @Autowired private IkardexService kardexService;
 
     /**
      * Creación de un nuevo producto
@@ -32,6 +35,7 @@ public class ProductService implements IProductService {
         product.setSalePrice(0);
         product.setStock(0);
         productRepo.save(product);
+        kardexService.addKardex(product, 0, "Creación Producto", MovementsType.AJUSTE);
     }
 
     /**
@@ -62,6 +66,7 @@ public class ProductService implements IProductService {
     public void active(Product product) {
         product.setStatusProduct(StatusProduct.NODISPONIBLE);
         productRepo.save(product);
+        kardexService.addKardex(product, 0, "Activado", MovementsType.AJUSTE);
     }
 
     /**
@@ -100,6 +105,7 @@ public class ProductService implements IProductService {
         product.setStatus(false);
         product.setStatusProduct(StatusProduct.DESCONTINUADO);
         productRepo.save(product);
+        kardexService.addKardex(product, 0, "Eliminado / Descontinuado", MovementsType.AJUSTE);
     }
 
     /**
