@@ -5,10 +5,12 @@ import com.veloProWeb.Model.DTO.DetailPurchaseRequestDTO;
 import com.veloProWeb.Model.Entity.Product.Product;
 import com.veloProWeb.Model.Entity.Purchase.Purchase;
 import com.veloProWeb.Model.Entity.Purchase.PurchaseDetail;
+import com.veloProWeb.Model.Enum.MovementsType;
 import com.veloProWeb.Repository.Purchase.PurchaseDetailRepo;
 import com.veloProWeb.Service.Product.Interfaces.IProductService;
 import com.veloProWeb.Service.Purchase.Interfaces.IPurchaseDetailService;
 import com.veloProWeb.Service.Purchase.Interfaces.IPurchaseService;
+import com.veloProWeb.Service.Report.IkardexService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,7 @@ public class PurchaseDetailService implements IPurchaseDetailService {
     @Autowired private PurchaseDetailRepo purchaseDetailRepo;
     @Autowired private IProductService productService;
     @Autowired private IPurchaseService purchaseService;
+    @Autowired private IkardexService kardexService;
 
     /**
      * Crear detalle de compras proporcionadas
@@ -45,6 +48,8 @@ public class PurchaseDetailService implements IPurchaseDetailService {
             purchaseDetail.setPurchase(purchase);
             purchaseDetailRepo.save(purchaseDetail);
             productService.updateStockPurchase(product, purchaseDetail.getPrice(), purchaseDetail.getQuantity());
+            kardexService.addKardex(product, dto.getQuantity(), "Compra / " +
+                    purchase.getDocumentType() + " - " + purchase.getDocument(), MovementsType.ENTRADA);
         }
     }
 
