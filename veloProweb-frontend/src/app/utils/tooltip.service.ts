@@ -36,7 +36,7 @@ export class TooltipService {
               if (!tooltipTriggerEl.matches(':hover')) {
                 instance.hide();
               }
-            }, 2000);
+            }, 100);
           }
         });
 
