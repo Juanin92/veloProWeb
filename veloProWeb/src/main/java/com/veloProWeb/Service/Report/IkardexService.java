@@ -1,11 +1,12 @@
 package com.veloProWeb.Service.Report;
 
-import com.veloProWeb.Model.DTO.KardexRequestDTO;
 import com.veloProWeb.Model.Entity.Kardex;
+import com.veloProWeb.Model.Entity.Product.Product;
+import com.veloProWeb.Model.Enum.MovementsType;
 
 import java.util.List;
 
 public interface IkardexService {
-    void addKardex(KardexRequestDTO dto);
+    void addKardex(Product product, int quantity, String comment, MovementsType moves);
     List<Kardex> getAll();
 }
