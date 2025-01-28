@@ -41,12 +41,6 @@ public class KardexServiceTest {
         kardex.setPrice(2000);
         kardex.setQuantity(2);
 
-        dto = new KardexRequestDTO();
-        dto.setComment("Prueba");
-        dto.setMovementsType(MovementsType.ENTRADA);
-        dto.setIdProduct(1L);
-        dto.setQuantity(2);
-
         product = new Product();
         product.setId(1L);
         product.setStock(10);
@@ -59,7 +53,7 @@ public class KardexServiceTest {
         kardex.setProduct(product);
         kardex.setId(null);
         when(productService.getProductById(1L)).thenReturn(product);
-        kardexService.addKardex(dto);
+        kardexService.addKardex(product, 2, "Prueba", MovementsType.ENTRADA);
 
         verify(productService).getProductById(1L);
         verify(kardexRepo).save(kardex);
