@@ -15,7 +15,6 @@ import java.util.List;
 @Service
 public class KardexService implements IkardexService{
     @Autowired private KardexRepo kardexRepo;
-    @Autowired private IProductService productService;
 
     /**
      * Crea un registro/movimiento de productos (Kardex)
