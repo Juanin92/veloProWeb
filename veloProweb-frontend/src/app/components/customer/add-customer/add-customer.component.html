@@ -37,7 +37,7 @@
                             Teléfono no válido (+569 12345678).
                         </div>
                     </div>
-                    <div class="form-floating mb-3">
+                    <div class="form-floating mb-1">
                         <input type="email" class="form-control" id="email" placeholder="Ingrese email" name="email"
                             [(ngModel)]="newCustomer.email"
                             [ngClass]="{'is-invalid': !customerValidator.isFieldValid(newCustomer,'email'), 'is-valid': customerValidator.isFieldValid(newCustomer, 'email')}" />
@@ -48,7 +48,7 @@
                     </div>
                 </form>
             </div>
-            <div class="modal-footer d-flex justify-content-center">
+            <div class="modal-footer d-flex justify-content-center mb-0 mt-1 p-0">
                 <button type="submit" class="btn btn-success" 
                     (click)="addCustomer()"
                     [disabled]="!customerValidator.validateForm(newCustomer)"
