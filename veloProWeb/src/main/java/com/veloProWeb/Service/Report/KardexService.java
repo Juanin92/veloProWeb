@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class kardexService implements IkardexService{
+public class KardexService implements IkardexService{
     @Autowired private KardexRepo kardexRepo;
     @Autowired private IProductService productService;
 
