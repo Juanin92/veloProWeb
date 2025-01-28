@@ -7,12 +7,14 @@ import com.veloProWeb.Model.Entity.Customer.TicketHistory;
 import com.veloProWeb.Model.Entity.Product.Product;
 import com.veloProWeb.Model.Entity.Sale.Sale;
 import com.veloProWeb.Model.Entity.Sale.SaleDetail;
+import com.veloProWeb.Model.Enum.MovementsType;
 import com.veloProWeb.Repository.Customer.TicketHistoryRepo;
 import com.veloProWeb.Repository.Sale.SaleDetailRepo;
-import com.veloProWeb.Service.Customer.CustomerService;
-import com.veloProWeb.Service.Customer.TicketHistoryService;
-import com.veloProWeb.Service.Product.ProductService;
+import com.veloProWeb.Service.Customer.Interfaces.ICustomerService;
+import com.veloProWeb.Service.Product.Interfaces.IProductService;
+import com.veloProWeb.Service.Report.IkardexService;
 import com.veloProWeb.Service.Sale.Interface.ISaleDetailService;
+import com.veloProWeb.Service.Sale.Interface.ISaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,14 +28,16 @@ public class SaleDetailService implements ISaleDetailService {
 
     @Autowired private SaleDetailRepo saleDetailRepo;
     @Autowired private TicketHistoryRepo ticketHistoryRepo;
-    @Autowired private ProductService productService;
-    @Autowired private CustomerService customerService;
-    @Autowired private SaleService saleService;
+    @Autowired private IProductService productService;
+    @Autowired private ICustomerService customerService;
+    @Autowired private ISaleService saleService;
+    @Autowired private IkardexService kardexService;
 
     /**
      * Crear detalle de ventas proporcionadas
      * Busca el producto correspondiente en el sistema utilizando por ID.
      * Actualiza el stock del producto mediante el servicio de Producto
+     * Crea un registro del movimiento del producto
      * @param dtoList - Lista de objetos DTO que contienen los detalles de la venta.
      * @param sale - Objeto que representa la venta asociada a los detalles.
      * @throws IllegalArgumentException Si no se encuentra un producto con el ID proporcionado en alguno de los detalles.
@@ -52,6 +56,8 @@ public class SaleDetailService implements ISaleDetailService {
             saleDetail.setProduct(product);
             saleDetailRepo.save(saleDetail);
             productService.updateStockSale(product, saleDetail.getQuantity());
+            kardexService.addKardex(product, dto.getQuantity(),
+                    "Venta / " + sale.getDocument(), MovementsType.SALIDA);
         }
     }
 
