@@ -52,7 +52,7 @@ public class UserService implements IUserService{
 
     @Override
     public List<User> getAllUser() {
-        return List.of();
+        return userRepository.findAll();
     }
 
     @Override
