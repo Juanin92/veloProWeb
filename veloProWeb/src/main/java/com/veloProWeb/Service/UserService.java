@@ -108,6 +108,10 @@ public class UserService implements IUserService{
         }
     }
 
+    /**
+     * Obtiene una lista de todos los usuarios registrados
+     * @return - Lista con los usuarios
+     */
     @Override
     public List<User> getAllUser() {
         return userRepository.findAll();
@@ -124,12 +128,6 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public User getUserWithUsername(String username) {
-        Optional<User> optionalUser = userRepository.findByUsername(username);
-        return optionalUser.orElse(null);
-    }
-
-    @Override
     public void sendEmailCode(User user) {
 
     }
@@ -139,8 +137,23 @@ public class UserService implements IUserService{
 
     }
 
+    /**
+     * Obtiene un usuario ya registrado por su Rut.
+     * @param rut - El rut del usuario a buscar.
+     * @return - usuario con el mismo rut o null si no se encuentra
+     */
     private User getUserCreated(String rut){
         Optional<User> user = userRepository.findByRut(rut);
         return user.orElse(null);
+    }
+
+    /**
+     * Obtiene un usuario ya registrado por su username.
+     * @param username - El nombre de usuario a buscar.
+     * @return - usuario con el mismo rut o null si no se encuentra
+     */
+    private User getUserWithUsername(String username) {
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        return optionalUser.orElse(null);
     }
 }
