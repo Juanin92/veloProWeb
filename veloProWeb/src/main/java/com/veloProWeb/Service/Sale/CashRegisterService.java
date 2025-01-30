@@ -4,9 +4,11 @@ import com.veloProWeb.Model.Entity.Sale.CashRegister;
 import com.veloProWeb.Repository.Sale.CashRegisterRepo;
 import com.veloProWeb.Service.Sale.Interface.ICashRegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class CashRegisterService implements ICashRegisterService {
 
     @Autowired private CashRegisterRepo cashRegisterRepo;
@@ -31,6 +33,10 @@ public class CashRegisterService implements ICashRegisterService {
         return null;
     }
 
+    /**
+     * Obtener una lista de registro de la caja
+     * @return - lista con los registros
+     */
     @Override
     public List<CashRegister> getAll() {
         return cashRegisterRepo.findAll();
