@@ -132,42 +132,42 @@
     </div>
 </div> -->
 <div class="container-fluid vh-100 d-flex flex-column">
-    <h3 class="text-center my-3">Gestión de Usuarios</h3>
+    <h4 class="text-center my-1">Gestión de Usuarios</h4>
     <div class="row flex-grow-1">
-        <div class="col-lg-7 col-md-6 d-flex flex-column">
-            <div class="card shadow h-100">
-                <div class="card-body d-flex flex-column">
+        <div [ngClass]="{'w-100': !addUserButton}" class="col-lg-6 col-md-6 d-flex flex-column">
+            <div class="card shadow">
+                <div class="card-body d-flex flex-column p-1">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <h5 class="mb-0">Usuarios</h5>
-                        <button class="btn btn-primary btn-sm">➕ Agregar</button>
+                        <button class="btn btn-success btn-sm" (click)="createUser()">Agregar</button>
                     </div>
-                    <div class="table-responsive flex-grow-1" style="max-height: 70vh; overflow-y: auto;">
+                    <div class="table-responsive flex-grow-1" style="max-height: 75vh; overflow-y: auto;">
                         <table class="table table-hover text-center">
                             <thead class="table-light">
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Nombre</th>
-                                    <th>Apellido</th>
-                                    <th>RUT</th>
-                                    <th>Usuario</th>
-                                    <th>Email</th>
-                                    <th>Rol</th>
-                                    <th>Fecha</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
+                                    <th  scope="col" class="position-sticky top-0">ID</th>
+                                    <th  scope="col" class="position-sticky top-0">Nombre</th>
+                                    <th  scope="col" class="position-sticky top-0">Apellido</th>
+                                    <th  scope="col" class="position-sticky top-0">RUT</th>
+                                    <th  scope="col" class="position-sticky top-0">Usuario</th>
+                                    <th  scope="col" class="position-sticky top-0">Email</th>
+                                    <th  scope="col" class="position-sticky top-0">Rol</th>
+                                    <th  scope="col" class="position-sticky top-0">Fecha</th>
+                                    <th  scope="col" class="position-sticky top-0">Estado</th>
+                                    <th  scope="col" class="position-sticky top-0">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Juan</td>
-                                    <td>Perez</td>
-                                    <td>12345678-9</td>
-                                    <td>juanP</td>
-                                    <td>juan.perez.com</td>
-                                    <td>USER</td>
-                                    <td>29-01-2025</td>
-                                    <td>Activo</td>
+                                <tr *ngFor="let user of userList">
+                                    <td>{{user.id}}</td>
+                                    <td>{{user.name}}</td>
+                                    <td>{{user.surname}}</td>
+                                    <td>{{user.rut}}</td>
+                                    <td>{{user.username}}</td>
+                                    <td>{{user.email}}</td>
+                                    <td>{{user.role}}</td>
+                                    <td>{{user.date | date: 'dd-MM-yyyy'}}</td>
+                                    <td>{{user.status ? 'Activo':'Inactivo'}}</td>
                                     <td>
                                         <button class="btn btn-warning btn-sm">✏</button>
                                         <button class="btn btn-danger btn-sm">🗑</button>
@@ -176,23 +176,41 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="text-center mt-2">
-                        <button class="btn btn-primary">Agregar Usuario</button>
-                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-5 col-md-6 d-flex">
-            <div class="card shadow-lg w-100">
+        <div *ngIf="addUserButton" class="col-lg-6 col-md-6 d-flex">
+            <div class="card shadow-lg w-100" style="max-height: 80vh; overflow-y: auto;">
                 <div class="card-body">
-                    <h5 class="text-center">'Editar Usuario' : 'Crear Usuario'</h5>
+                    <h5 class="text-center">{{addUserButton ? 'Crear Usuario' : 'Editar Usuario'}}</h5>
                     <form >
-                        <div class="row g-3">
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <select class="form-select" id="role" name="role" required>
+                                    <option value="Admin">Admin</option>
+                                    <option value="Usuario">Usuario</option>
+                                </select>
+                                <label for="role">Rol</label>
+                            </div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="rut" placeholder="Rut" name="rut" required>
+                                    <label for="rut">Rut</label>
+                                </div>
+                            </div>
                             <div class="col-12">
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="name" placeholder="Nombre"
                                         name="name" required>
                                     <label for="name">Nombre</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="surname" placeholder="Apellido" name="surname" required>
+                                    <label for="surname">Apellido</label>
                                 </div>
                             </div>
                             <div class="col-12">
@@ -204,25 +222,22 @@
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
+                                    <input type="text" class="form-control" id="username" placeholder="Nombre usuario" name="username" required>
+                                    <label for="username">Username</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
                                     <input type="password" class="form-control" id="password" placeholder="Contraseña"
                                         name="password" required>
                                     <label for="password">Contraseña</label>
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <div class="form-floating">
-                                    <select class="form-select" id="role" name="role"
-                                        required>
-                                        <option value="Admin">Admin</option>
-                                        <option value="Usuario">Usuario</option>
-                                    </select>
-                                    <label for="role">Rol</label>
-                                </div>
-                            </div>
                         </div>
                         <div class="text-center mt-3">
                             <button type="submit" class="btn btn-success">Guardar</button>
-                            <button type="button" class="btn btn-secondary ms-2"
+                            <button type="button" 
+                            class="btn btn-secondary ms-2"
                                 >Cancelar</button>
                         </div>
                     </form>
