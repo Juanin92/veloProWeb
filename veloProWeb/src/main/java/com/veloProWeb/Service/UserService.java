@@ -16,6 +16,11 @@ public class UserService implements IUserService{
     @Autowired private UserRepo userRepository;
     @Autowired private UserValidator validator;
 
+    /**
+     * Crea un usuario nuevo.
+     * Válida que no exista un registro del usuario y que el nombre de username no este tampoco registrado
+     * @param user - Objeto con los datos necesario de usuario
+     */
     @Override
     public void addUser(User user) {
         User userDB = getUserCreated(user.getRut());
@@ -27,27 +32,68 @@ public class UserService implements IUserService{
             user.setDate(LocalDate.now());
             user.setName(user.getName().substring(0, 1).toUpperCase() + user.getName().substring(1));
             user.setSurname(user.getSurname().substring(0, 1).toUpperCase() + user.getSurname().substring(1));
-            User userNameExist = getUser(user.getUsername());
+            User userNameExist = getUserWithUsername(user.getUsername());
             if (userNameExist != null && userNameExist.getUsername().equalsIgnoreCase(user.getUsername())) {
                 throw new IllegalArgumentException("Este nombre de usuario ya existe");
+            }else {
+                user.setUsername(user.getUsername());
             }
+            user.setPassword(user.getPassword());
             userRepository.save(user);
         }
     }
 
+    /**
+     * Actualizar los datos de un usuario seleccionado.
+     * Válida que el username no esté registrado anteriormente
+     * @param user - Objeto con los datos actualizados del usuario
+     */
     @Override
     public void updateUser(User user) {
-
+        validator.validate(user);
+        user.setName(user.getName().substring(0, 1).toUpperCase() + user.getName().substring(1));
+        user.setSurname(user.getSurname().substring(0, 1).toUpperCase() + user.getSurname().substring(1));
+        user.setRut(user.getRut());
+        User userNameExist = getUserWithUsername(user.getUsername());
+        if (userNameExist != null && userNameExist.getUsername().equalsIgnoreCase(user.getUsername())) {
+            throw new IllegalArgumentException("Este nombre de usuario ya existe");
+        }else {
+            user.setUsername(user.getUsername());
+        }
+        user.setEmail(user.getEmail());
+        user.setToken(user.getPassword());
+        userRepository.save(user);
     }
 
+    /**
+     * Eliminar/Desactivar usuario.
+     * Válida que el usuario no esté ya eliminado
+     * @param user - Objeto con los datos de usuario
+     */
     @Override
     public void deleteUser(User user) {
-
+        if (user.isStatus()) {
+            user.setStatus(false);
+            userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("El usuario ya está inactivo y no puede ser eliminado nuevamente.");
+        }
     }
 
+    /**
+     * Activar un usuario.
+     * Válida que usuario esté eliminado
+     * @param user - Objeto con los datos del usuario
+     */
     @Override
     public void activateUser(User user) {
-
+        if (!user.isStatus()) {
+            user.setStatus(true);
+            user.setDate(LocalDate.now());
+            userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("El usuario ya está activo y no puede ser activado nuevamente.");
+        }
     }
 
     @Override
@@ -66,8 +112,9 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public User getUser(String username) {
-        return null;
+    public User getUserWithUsername(String username) {
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        return optionalUser.orElse(null);
     }
 
     @Override
