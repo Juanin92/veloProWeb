@@ -45,11 +45,15 @@ public class UserService implements IUserService{
 
     /**
      * Actualizar los datos de un usuario seleccionado.
-     * Válida que el username no esté registrado anteriormente
+     * Válida que el username no esté registrado anteriormente y el usuario exista
      * @param user - Objeto con los datos actualizados del usuario
      */
     @Override
     public void updateUser(User user) {
+        User existingUser = getUserCreated(user.getRut());
+        if (existingUser == null){
+            throw new IllegalArgumentException("El usuario no existe en la base de datos.");
+        }
         validator.validate(user);
         user.setName(user.getName().substring(0, 1).toUpperCase() + user.getName().substring(1));
         user.setSurname(user.getSurname().substring(0, 1).toUpperCase() + user.getSurname().substring(1));
@@ -67,14 +71,18 @@ public class UserService implements IUserService{
 
     /**
      * Eliminar/Desactivar usuario.
-     * Válida que el usuario no esté ya eliminado
+     * Válida que el usuario exista y no esté ya eliminado
      * @param user - Objeto con los datos de usuario
      */
     @Override
     public void deleteUser(User user) {
-        if (user.isStatus()) {
-            user.setStatus(false);
-            userRepository.save(user);
+        User existingUser = getUserCreated(user.getRut());
+        if (existingUser == null){
+            throw new IllegalArgumentException("El usuario no existe en la base de datos.");
+        }
+        if (existingUser.isStatus()) {
+            existingUser.setStatus(false);
+            userRepository.save(existingUser);
         } else {
             throw new IllegalArgumentException("El usuario ya está inactivo y no puede ser eliminado nuevamente.");
         }
@@ -82,15 +90,19 @@ public class UserService implements IUserService{
 
     /**
      * Activar un usuario.
-     * Válida que usuario esté eliminado
+     * Válida que usuario exista y esté eliminado
      * @param user - Objeto con los datos del usuario
      */
     @Override
     public void activateUser(User user) {
-        if (!user.isStatus()) {
-            user.setStatus(true);
-            user.setDate(LocalDate.now());
-            userRepository.save(user);
+        User existingUser = getUserCreated(user.getRut());
+        if (existingUser == null){
+            throw new IllegalArgumentException("El usuario no existe en la base de datos.");
+        }
+        if (!existingUser.isStatus()) {
+            existingUser.setStatus(true);
+            existingUser.setDate(LocalDate.now());
+            userRepository.save(existingUser);
         } else {
             throw new IllegalArgumentException("El usuario ya está activo y no puede ser activado nuevamente.");
         }
