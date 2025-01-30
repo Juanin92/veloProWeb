@@ -13,22 +13,35 @@ public class LocalDataService implements ILocalDataService {
 
     @Autowired private LocalDataRepo localDataRepo;
 
+    /**
+     * Crear información local
+     * @param data - Objeto con la información local necesaria
+     */
     @Override
-    public void saveData(String name, String phone, String email, String access, String address) {
+    public void saveData(LocalData data) {
         LocalData localData =  new LocalData();
-        localData.setName(name);
-        localData.setPhone(phone);
-        localData.setEmail(email);
-        localData.setEmailSecurityApp(access);
-        localData.setAddress(address);
+        localData.setId(null);
+        localData.setName(data.getName());
+        localData.setPhone(data.getPhone());
+        localData.setEmail(data.getEmail());
+        localData.setEmailSecurityApp(data.getEmailSecurityApp());
+        localData.setAddress(data.getAddress());
         localDataRepo.save(localData);
     }
 
+    /**
+     * Actualiza los datos locales
+     * @param localData - Objeto con los datos para actualizar
+     */
     @Override
     public void updateData(LocalData localData) {
         localDataRepo.save(localData);
     }
 
+    /**
+     * Obtener una lista con los datos locales
+     * @return - Lista con los datos locales
+     */
     @Override
     public List<LocalData> getData() {
         return localDataRepo.findAll();
