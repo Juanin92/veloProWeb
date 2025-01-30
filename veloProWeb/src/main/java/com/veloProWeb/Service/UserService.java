@@ -27,8 +27,8 @@ public class UserService implements IUserService{
             user.setDate(LocalDate.now());
             user.setName(user.getName().substring(0, 1).toUpperCase() + user.getName().substring(1));
             user.setSurname(user.getSurname().substring(0, 1).toUpperCase() + user.getSurname().substring(1));
-            User user2 = getUser(user.getUsername());
-            if (user2 != null && user2.getUsername().equalsIgnoreCase(user.getUsername())) {
+            User userNameExist = getUser(user.getUsername());
+            if (userNameExist != null && userNameExist.getUsername().equalsIgnoreCase(user.getUsername())) {
                 throw new IllegalArgumentException("Este nombre de usuario ya existe");
             }
             userRepository.save(user);
