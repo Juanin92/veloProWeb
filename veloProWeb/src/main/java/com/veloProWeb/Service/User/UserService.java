@@ -1,7 +1,8 @@
-package com.veloProWeb.Service;
+package com.veloProWeb.Service.User;
 
 import com.veloProWeb.Model.Entity.User;
 import com.veloProWeb.Repository.UserRepo;
+import com.veloProWeb.Service.User.Interface.IUserService;
 import com.veloProWeb.Validation.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService implements IUserService{
+public class UserService implements IUserService {
 
     @Autowired private UserRepo userRepository;
     @Autowired private UserValidator validator;

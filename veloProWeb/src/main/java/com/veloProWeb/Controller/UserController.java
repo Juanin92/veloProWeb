@@ -1,7 +1,7 @@
 package com.veloProWeb.Controller;
 
 import com.veloProWeb.Model.Entity.User;
-import com.veloProWeb.Service.IUserService;
+import com.veloProWeb.Service.User.Interface.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
