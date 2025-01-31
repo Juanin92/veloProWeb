@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CashRegister } from '../../models/Entity/cash-register';
 import { CashRegisterService } from '../../services/Sale/cash-register.service';
+import { LocalDataService } from '../../services/local-data.service';
+import { LocalData } from '../../models/Entity/local-data';
 
 @Component({
   selector: 'app-setting',
@@ -17,14 +19,24 @@ export class SettingComponent implements OnInit{
 
   recordList: Record[] = [];
   cashRegistersList: CashRegister[] = [];
+  data: LocalData = {
+    id: 0,
+    name: '',
+    phone: '',
+    email: '',
+    emailSecurityApp: '',
+    address: ''
+  };
 
   constructor(
     private recordService: RecordService,
-    private cashRegisterService: CashRegisterService){}
+    private cashRegisterService: CashRegisterService,
+    private localDataService: LocalDataService){}
 
   ngOnInit(): void {
     this.getRecords();
     this.getCashRegisters();
+    this.getData();
   }
 
   getRecords(): void{
@@ -45,6 +57,16 @@ export class SettingComponent implements OnInit{
       },
       error: (error)=>{
         console.log('No se encontró información sobre los registros de caja')
+      }
+    });
+  }
+
+  getData(): void{
+    this.localDataService.getData().subscribe({
+      next:(list)=>{
+        if(list.length === 1){
+          this.data = list[0];
+        }
       }
     });
   }
