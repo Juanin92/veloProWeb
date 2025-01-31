@@ -22,7 +22,7 @@
                 <div class="card shadow h-100">
                     <div class="card-body d-flex flex-column p-3" style="height: 100%;">
                         <h5 class="text-center mb-3">Movimientos de Caja</h5>
-                        <div class="table-responsive flex-grow-1p-1 pt-0" style="height: calc(100vh - 150px); overflow-y: auto;">
+                        <div class="table-responsive flex-grow-1p-1 pt-0" style="height: calc(100vh - 180px); overflow-y: auto;">
                             <table class="table table-group-divider table-hover">
                                 <thead class="table-light text-center">
                                     <tr>
@@ -66,35 +66,36 @@
                                 <div class="col-md-6">
                                     <div class="form-floating">
                                         <input type="text" class="form-control" id="name" placeholder="Ingrese nombre de la empresa"
-                                            name="name" required />
+                                            name="name" [(ngModel)]="data.name" required />
                                         <label for="name" class="form-label">Nombre Empresa</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating">
                                         <input type="tel" class="form-control" id="phone" placeholder="Ingrese número de teléfono"
-                                            value="+569 " name="phone" />
+                                            value="+569 " name="phone" [(ngModel)]="data.phone" required/>
                                         <label for="phone" class="form-label">Teléfono</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating">
                                         <input type="email" class="form-control" id="email" placeholder="Ingrese email"
-                                            name="email" />
+                                            name="email" [(ngModel)]="data.email" required/>
                                         <label for="email" class="form-label">Correo Electrónico</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating">
                                         <input type="text" class="form-control" id="access" placeholder="Ingrese acceso email"
-                                            name="access" required />
+                                            name="access" [(ngModel)]="data.emailSecurityApp" required />
                                         <label for="access" class="form-label">Acceso Email</label>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-floating">
                                         <input type="text" class="form-control" id="address"
-                                            placeholder="Ingrese dirección de la empresa" name="address" required />
+                                            placeholder="Ingrese dirección de la empresa" name="address" 
+                                            [(ngModel)]="data.address" required />
                                         <label for="address" class="form-label">Dirección</label>
                                     </div>
                                 </div>
@@ -116,19 +117,19 @@
                                 <input type="password" class="form-control" id="userPass">
                             </div>
                         </form> -->
-                        <div class="table-responsive flex-grow-1 p-1 pt-0" style="height: calc(100vh - 150px); overflow-y: auto;">
+                        <div class="table-responsive flex-grow-1 p-1 pt-0" style="height: calc(100vh - 180px); overflow-y: auto;">
                             <table class="table table-group-divider table-hover">
                                 <thead class="table-light text-center">
                                     <tr>
-                                        <th colspan="3" scope="col" class="position-sticky top-0">Fechas</th>
-                                        <th rowspan="2" scope="col" class="position-sticky top-0">Acción</th>
-                                        <th rowspan="2" scope="col" class="position-sticky top-0">Comentario</th>
-                                        <th rowspan="2" scope="col" class="position-sticky top-0">Usuario</th>
+                                        <th colspan="3">Fechas</th>
+                                        <th rowspan="2">Acción</th>
+                                        <th rowspan="2">Comentario</th>
+                                        <th rowspan="2">Usuario</th>
                                     </tr>
                                     <tr>
-                                        <th scope="col" class="position-sticky top-0">Ingreso</th>
-                                        <th scope="col" class="position-sticky top-0">Salida</th>
-                                        <th scope="col" class="position-sticky top-0">Evento</th>
+                                        <th>Ingreso</th>
+                                        <th>Salida</th>
+                                        <th>Evento</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-group-divider text-center align-middle">
