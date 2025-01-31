@@ -1,11 +1,9 @@
 package com.veloProWeb.Service.Report;
 
-import com.veloProWeb.Model.DTO.KardexRequestDTO;
 import com.veloProWeb.Model.Entity.Kardex;
 import com.veloProWeb.Model.Entity.Product.Product;
 import com.veloProWeb.Model.Enum.MovementsType;
 import com.veloProWeb.Repository.KardexRepo;
-import com.veloProWeb.Service.Product.Interfaces.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
