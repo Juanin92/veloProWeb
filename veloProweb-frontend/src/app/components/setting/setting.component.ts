@@ -3,6 +3,8 @@ import { RecordService } from '../../services/record.service';
 import { Record } from '../../models/Entity/record';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CashRegister } from '../../models/Entity/cash-register';
+import { CashRegisterService } from '../../services/Sale/cash-register.service';
 
 @Component({
   selector: 'app-setting',
@@ -14,11 +16,15 @@ import { FormsModule } from '@angular/forms';
 export class SettingComponent implements OnInit{
 
   recordList: Record[] = [];
+  cashRegistersList: CashRegister[] = [];
 
-  constructor(private recordService: RecordService){}
+  constructor(
+    private recordService: RecordService,
+    private cashRegisterService: CashRegisterService){}
 
   ngOnInit(): void {
     this.getRecords();
+    this.getCashRegisters();
   }
 
   getRecords(): void{
@@ -27,7 +33,18 @@ export class SettingComponent implements OnInit{
         this.recordList = list;
       },
       error: (error)=>{
-        console.log('No se encontró información sobre los registros')
+        console.log('No se encontró información sobre los registros');
+      }
+    });
+  }
+
+  getCashRegisters(): void{
+    this.cashRegisterService.getCashRegisters().subscribe({
+      next:(list)=>{
+        this.cashRegistersList = list;
+      },
+      error: (error)=>{
+        console.log('No se encontró información sobre los registros de caja')
       }
     });
   }
