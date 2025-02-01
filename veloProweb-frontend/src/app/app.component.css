@@ -1,6 +1,6 @@
 .main {
-  width: calc(100% - 200px);
-  margin-left: 200px;
+  width: calc(100% - 150px);
+  margin-left: 150px;
   transition: 0.5s;
 }
 
@@ -27,8 +27,8 @@
   }
 
   .main.active {
-    width: calc(100% - 200px);
-    margin-left: 200px;
+    width: calc(100% - 150px);
+    margin-left: 150px;
   }
 
   .toggle-search-wrapper {
@@ -45,7 +45,7 @@
   }
 
   .main.active .toggle-search-wrapper {
-    left: 200px;
-    width: calc(100% - 200px);
+    left: 150px;
+    width: calc(100% - 150px);
   }
 }
