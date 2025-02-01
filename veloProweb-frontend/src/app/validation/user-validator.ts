@@ -1,10 +1,10 @@
 import { User } from "../models/Entity/user";
-import { Role } from "../models/enum/role";
 
 export class UserValidator {
     static validateForm(selectedUser: User): boolean{
             return this.isFieldValid(selectedUser, 'name') &&
-                this.isFieldValid(selectedUser, 'name') &&
+                this.isFieldValid(selectedUser, 'surname') &&
+                this.isFieldValid(selectedUser, 'username') &&
                 this.isFieldValid(selectedUser, 'rut') &&
                 this.isFieldValid(selectedUser, 'password') &&
                 this.isFieldValid(selectedUser, 'email') && 
@@ -19,11 +19,14 @@ export class UserValidator {
             if (fieldName === 'surname') {
                 return value !== null && typeof value === 'string' && value.trim().length > 3 && /^[a-zA-Z ]+$/.test(value.trim());
             }
+            if (fieldName === 'username') {
+                return value !== null && typeof value === 'string' && value.trim().length > 3;
+            }
             if (fieldName === 'rut') {
                 return value !== null && typeof value === 'string' && /^\d{7,8}-\d|[kK]$$/.test(value);
             }
             if (fieldName === 'email') {
-                return !value || typeof value === 'string' && /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value);
+                return value !== null && typeof value === 'string' && /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value);
             }
             if (fieldName === 'password') {
                 return value !== null && typeof value === 'string' && value.trim().length >= 7;
