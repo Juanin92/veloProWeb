@@ -11,5 +11,5 @@ export interface User {
     password: string;
     token: string;
     status: boolean;
-    role: Role;
+    role: Role | null;
 }
