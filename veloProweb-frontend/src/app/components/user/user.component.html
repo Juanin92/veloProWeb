@@ -1,160 +1,27 @@
-<!-- <div class="container-fluid vh-100 d-flex flex-column">
-    <h3 class="text-center my-3">Gestión de Usuarios</h3>
-    <ul class="nav nav-tabs" id="userTabs">
-        <li class="nav-item">
-            <a class="nav-link active" data-bs-toggle="tab" href="#listUsers">Lista de Usuarios</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#createUser">Crear Usuario</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#updateUser">Actualizar Usuario</a>
-        </li>
-    </ul>
-
-    <div class="tab-content flex-grow-1 mt-3">
-        <div class="tab-pane fade show active" id="listUsers">
-            <div class="card shadow h-100">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="text-center mb-3">Lista de Usuarios</h5>
-                    <div class="table-responsive flex-grow-1">
-                        <table class="table table-hover text-center">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Nombre</th>
-                                    <th>Email</th>
-                                    <th>Rol</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>user.id</td>
-                                    <td>user.name</td>
-                                    <td>user.email</td>
-                                    <td>user.role</td>
-                                    <td>
-                                        <button class="btn btn-warning btn-sm">Editar</button>
-                                        <button class="btn btn-danger btn-sm">Eliminar</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="tab-pane fade" id="createUser">
-            <div class="card shadow">
-                <div class="card-body">
-                    <h5 class="text-center mb-3">Crear Nuevo Usuario</h5>
-                    <form>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="name" placeholder="Nombre"
-                                        name="name" required>
-                                    <label for="name">Nombre</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="email" class="form-control" id="email" placeholder="Email"
-                                        name="email" required>
-                                    <label for="email">Email</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="password" class="form-control" id="password" placeholder="Contraseña"
-                                        name="password" required>
-                                    <label for="password">Contraseña</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <select class="form-select" id="role" name="role"
-                                        required>
-                                        <option value="Admin">Admin</option>
-                                        <option value="Usuario">Usuario</option>
-                                    </select>
-                                    <label for="role">Rol</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="text-center mt-4">
-                            <button type="submit" class="btn btn-success">Guardar Usuario</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane fade" id="updateUser">
-            <div class="card shadow">
-                <div class="card-body">
-                    <h5 class="text-center mb-3">Actualizar Usuario</h5>
-                    <form>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="editName" placeholder="Nombre"
-                                        name="editName" required>
-                                    <label for="editName">Nombre</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="email" class="form-control" id="editEmail" placeholder="Email"
-                                        name="editEmail" required>
-                                    <label for="editEmail">Email</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <select class="form-select" id="editRole"
-                                        name="editRole" required>
-                                        <option value="Admin">Admin</option>
-                                        <option value="Usuario">Usuario</option>
-                                    </select>
-                                    <label for="editRole">Rol</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="text-center mt-4">
-                            <button type="submit" class="btn btn-primary">Actualizar Usuario</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
 <div class="container-fluid vh-100 d-flex flex-column">
     <h4 class="text-center my-1">Gestión de Usuarios</h4>
     <div class="row flex-grow-1">
-        <div [ngClass]="{'w-100': !addUserButton}" class="col-lg-6 col-md-6 d-flex flex-column">
+        <div [ngClass]="{'w-100': !showForm}" class="col-lg-6 col-md-6 d-flex flex-column">
             <div class="card shadow">
                 <div class="card-body d-flex flex-column p-1">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <h5 class="mb-0">Usuarios</h5>
-                        <button class="btn btn-success btn-sm" (click)="createUser()">Agregar</button>
+                        <button class="btn btn-success btn-sm" (click)="showForm = true && addUserButton = true">Agregar</button>
                     </div>
                     <div class="table-responsive flex-grow-1" style="max-height: 75vh; overflow-y: auto;">
                         <table class="table table-hover text-center">
                             <thead class="table-light">
-                                <tr>
-                                    <th  scope="col" class="position-sticky top-0">ID</th>
-                                    <th  scope="col" class="position-sticky top-0">Nombre</th>
-                                    <th  scope="col" class="position-sticky top-0">Apellido</th>
-                                    <th  scope="col" class="position-sticky top-0">RUT</th>
-                                    <th  scope="col" class="position-sticky top-0">Usuario</th>
-                                    <th  scope="col" class="position-sticky top-0">Email</th>
-                                    <th  scope="col" class="position-sticky top-0">Rol</th>
-                                    <th  scope="col" class="position-sticky top-0">Fecha</th>
-                                    <th  scope="col" class="position-sticky top-0">Estado</th>
-                                    <th  scope="col" class="position-sticky top-0">Acciones</th>
+                                <tr class="position-sticky top-0">
+                                    <th  scope="col">ID</th>
+                                    <th  scope="col">Nombre</th>
+                                    <th  scope="col">Apellido</th>
+                                    <th  scope="col">RUT</th>
+                                    <th  scope="col">Usuario</th>
+                                    <th  scope="col">Email</th>
+                                    <th  scope="col">Rol</th>
+                                    <th  scope="col">Fecha</th>
+                                    <th  scope="col">Estado</th>
+                                    <th  scope="col">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -165,12 +32,13 @@
                                     <td>{{user.rut}}</td>
                                     <td>{{user.username}}</td>
                                     <td>{{user.email}}</td>
-                                    <td>{{user.role}}</td>
+                                    <td>{{roleLabels[user.role!]}}</td>
                                     <td>{{user.date | date: 'dd-MM-yyyy'}}</td>
                                     <td>{{user.status ? 'Activo':'Inactivo'}}</td>
                                     <td>
-                                        <button class="btn btn-warning btn-sm">✏</button>
-                                        <button class="btn btn-danger btn-sm">🗑</button>
+                                        <button class="btn btn-warning btn-sm"
+                                        (click)="getSelectedUser(user)"><img src="/assets/icons/btnEditIcon.png" alt="editar" width="15" height="15" class="img-fluid"></button>
+                                        <button class="btn btn-danger btn-sm"><img src="/assets/icons/btnDeleteIcon.png" alt="borrar" width="15" height="15" class="img-fluid"></button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -179,66 +47,106 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="addUserButton" class="col-lg-6 col-md-6 d-flex">
+        <div *ngIf="showForm" class="col-lg-6 col-md-6 d-flex">
             <div class="card shadow-lg w-100" style="max-height: 80vh; overflow-y: auto;">
                 <div class="card-body">
                     <h5 class="text-center">{{addUserButton ? 'Crear Usuario' : 'Editar Usuario'}}</h5>
                     <form >
-                        <div class="col-12">
+                        <div class="col-12 mb-2">
                             <div class="form-floating">
-                                <select class="form-select" id="role" name="role" required>
-                                    <option value="Admin">Admin</option>
-                                    <option value="Usuario">Usuario</option>
+                                <select class="form-select" id="role" name="role"
+                                    [(ngModel)]="user.role"
+                                    [ngClass]="{'is-invalid': !validator.isFieldValid(user, 'role'), 'is-valid': validator.isFieldValid(user, 'role')}"
+                                    required>
+                                    <option value="" disabled selected>Seleccione un rol</option>
+                                    <ng-container *ngFor="let role of roles">
+                                        <option *ngIf="!(role === 'MASTER' && !existingMasterUser)" [value]="role">
+                                            {{ roleLabels[role] }}
+                                        </option>
+                                    </ng-container>
                                 </select>
                                 <label for="role">Rol</label>
+                                <div *ngIf="!validator.isFieldValid(user, 'role')" class="invalid-feedback">
+                                    Seleccione un rol.
+                                </div>
                             </div>
                         </div>
                         <div class="row g-2">
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="rut" placeholder="Rut" name="rut" required>
+                                    <input type="text" class="form-control" id="rut" placeholder="Rut" name="rut" 
+                                    [(ngModel)]="user.rut"
+                                    [ngClass]="{'is-invalid': !validator.isFieldValid(user, 'rut'), 'is-valid': validator.isFieldValid(user, 'rut')}" required>
                                     <label for="rut">Rut</label>
+                                    <div *ngIf="!validator.isFieldValid(user,'rut')" class="invalid-feedback">
+                                        Formato Incorrecto (Sin puntos, solo guión).
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="name" placeholder="Nombre"
-                                        name="name" required>
+                                        name="name" 
+                                        [(ngModel)]="user.name"
+                                        [ngClass]="{'is-invalid': !validator.isFieldValid(user, 'name'), 'is-valid': validator.isFieldValid(user, 'name')}" required>
                                     <label for="name">Nombre</label>
+                                    <div *ngIf="!validator.isFieldValid(user,'name')" class="invalid-feedback">
+                                        Nombre no válido debe tener al menos 3 letras.
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="surname" placeholder="Apellido" name="surname" required>
+                                    <input type="text" class="form-control" id="surname" placeholder="Apellido" name="surname" 
+                                    [(ngModel)]="user.surname"
+                                    [ngClass]="{'is-invalid': !validator.isFieldValid(user, 'surname'), 'is-valid': validator.isFieldValid(user, 'surname')}" required>
                                     <label for="surname">Apellido</label>
+                                    <div *ngIf="!validator.isFieldValid(user,'surname')" class="invalid-feedback">
+                                        Apellido no válido debe tener al menos 3 letras.
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
                                     <input type="email" class="form-control" id="email" placeholder="Email"
-                                        name="email" required>
+                                        name="email"
+                                        [(ngModel)]="user.email"
+                                        [ngClass]="{'is-invalid': !validator.isFieldValid(user, 'email'), 'is-valid': validator.isFieldValid(user, 'email')}" required>
                                     <label for="email">Email</label>
+                                    <div *ngIf="!validator.isFieldValid(user,'email')" class="invalid-feedback">
+                                        Email no válido (example&commat;test.com)
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="username" placeholder="Nombre usuario" name="username" required>
+                                    <input type="text" class="form-control" id="username" placeholder="Nombre usuario" name="username"
+                                        [(ngModel)]="user.username"
+                                        [ngClass]="{'is-invalid': !validator.isFieldValid(user, 'username'), 'is-valid': validator.isFieldValid(user, 'username')}" required>
                                     <label for="username">Username</label>
+                                    <div *ngIf="!validator.isFieldValid(user,'username')" class="invalid-feedback">
+                                        Nombre de Usuario no válido debe tener al menos 3 letras.
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
                                     <input type="password" class="form-control" id="password" placeholder="Contraseña"
-                                        name="password" required>
+                                        name="password" 
+                                        [(ngModel)]="user.password"
+                                        [ngClass]="{'is-invalid': !validator.isFieldValid(user, 'password'), 'is-valid': validator.isFieldValid(user, 'password')}" required>
                                     <label for="password">Contraseña</label>
+                                    <div *ngIf="!validator.isFieldValid(user,'password')" class="invalid-feedback">
+                                        Contraseña debe tener 7 0 más caracteres.
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="text-center mt-3">
-                            <button type="submit" class="btn btn-success">Guardar</button>
+                            <button [disabled]="!validator.validateForm(user)" type="submit" class="btn btn-success">Guardar</button>
                             <button type="button" 
                             class="btn btn-secondary ms-2"
-                                >Cancelar</button>
+                                (click)="resetForms()">Cancelar</button>
                         </div>
                     </form>
                 </div>
