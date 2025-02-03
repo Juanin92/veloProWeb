@@ -10,6 +10,7 @@ import { PurchaseReportComponent } from './components/Report/Purchase/purchase-r
 import { KardexComponent } from './components/Report/kardex/kardex.component';
 import { SettingComponent } from './components/setting/setting.component';
 import { UserComponent } from './components/user/user.component';
+import { HomeComponent } from './components/Home/home.component';
 
 export const routes: Routes = [
     {path: 'clientes', component: CustomerComponent},
@@ -22,5 +23,6 @@ export const routes: Routes = [
     {path: 'compras-reporte', component: PurchaseReportComponent},
     {path: 'registro-producto', component: KardexComponent},
     {path: 'configuraciones', component: SettingComponent},
-    {path: 'usuario', component: UserComponent}
+    {path: 'usuario', component: UserComponent},
+    {path: 'home', component: HomeComponent},
 ];
