@@ -1,90 +1,125 @@
-<div class="contianer-fluid d-flex flex-column p-1 text-center">
-    <div class="d-flex flex-row justify-content-around border border-3 border-white border-start-0 border-end-0 border-top-0">
-        <div>
-            <button type="button" class="btn btn-sm btn-outline-light m-2" (click)="getDailySale()">Total <br>de Ventas</button>
-            <button type="button" class="btn btn-sm btn-outline-light m-2" (click)="buttonClicked = true">Monto Total <br>de Ventas</button>
-            <button type="button" class="btn btn-sm btn-outline-light m-2" (click)="buttonClicked = true">Promedio <br>de venta</button>
-            <button type="button" class="btn btn-sm btn-outline-light m-2" (click)="buttonClicked = true">Ganancias <br>Totales</button>
-            <button type="button" class="btn btn-sm btn-outline-light m-2" (click)="buttonClicked = true">Producto <br>Vendidos</button>
-            <button type="button" class="btn btn-sm btn-outline-light m-2" (click)="buttonClicked = true">Categorías <br>Vendidas</button>
-        </div>
-        <div>
-            <button type="button" class="btn btn-outline-light border-0 m-2" [routerLink]="['/compras-reporte']">Compras</button>
-            <button type="button" class="btn btn-outline-light border-0 m-2" [routerLink]="['/ventas-reporte']">Ventas</button>
-            <button type="button" class="btn btn-outline-light border-0 m-2" [routerLink]="['/registro-producto']">Kardex</button>
-        </div>
-    </div>
-    <div class="border border-3 border-white border-start-0 border-end-0 border-top-0">
-        <p class="m-1 mb-0 text-start">Seleccione un periodo</p>
-        <form class="d-flex flex-row justify-content-start align-items-end">
-            <div class="input-group mb-3 mt-0 ms-2 justify-content-start">
-                <div class="form-check me-4">
-                    <input class="form-check-input" type="radio" name="radioDocumentType" id="radioPeriodThirty"
-                        value="30" (change)="onPeriodChange('30')" />
-                    <label class="form-check-label" for="radioDocumentTypeTicket">
-                        30 días
-                    </label>
+<div class="container-fluid vh-100 d-flex flex-column p-2">
+    <div class="row flex-grow-1">
+        <div class="col-12 d-flex flex-column">
+            <div class="row mb-1">
+                <div class="col-md-4 mb-2">
+                    <a class="btn btn-sm btn-primary w-100" [routerLink]="['/compras-reporte']" target="_blank">Ventas</a>
                 </div>
-                <div class="form-check me-4">
-                    <input class="form-check-input" type="radio" name="radioDocumentType" id="radioPeriodsixty" 
-                        value="60" (change)="onPeriodChange('60')" />
-                    <label class="form-check-label" for="radioDocumentTypeTicket">
-                        60 días
-                    </label>
+                <div class="col-md-4 mb-2">
+                    <a class="btn btn-sm btn-primary w-100" [routerLink]="['/ventas-reporte']" target="_blank">Compras</a>
                 </div>
-                <div class="form-check me-4">
-                    <input class="form-check-input" type="radio" name="radioDocumentType" id="radioPeriodNinety" 
-                        value="90" (change)="onPeriodChange('90')" />
-                    <label class="form-check-label" for="radioDocumentTypeTicket">
-                        90 días
-                    </label>
-                </div>
-                <div class="form-check me-4">
-                    <input class="form-check-input" type="radio" name="radioDocumentType" id="radioPeriodMonths" 
-                        value="6" (change)="onPeriodChange('6')" />
-                    <label class="form-check-label" for="radioDocumentTypeTicket">
-                        6 meses
-                    </label>
-                </div>
-                <div class="form-check me-4">
-                    <input class="form-check-input" type="radio" name="radioDocumentType" id="radioPeriodYear" 
-                        value="1" (change)="onPeriodChange('1')" />
-                    <label class="form-check-label" for="radioDocumentTypeTicket">
-                        1 año
-                    </label>
+                <div class="col-md-4 mb-2">
+                    <a class="btn btn-sm btn-primary w-100" [routerLink]="['/registro-producto']" target="_blank">Kardex</a>
                 </div>
             </div>
-            <div class="input-group mb-2 w-50">
-                <span class="input-group-text">Desde</span>
-                <input type="date" class="form-control" id="startDate" name="startDate" placeholder="Ingrese fecha"
-                    aria-label="Ingrese fecha de inicio" aria-describedby="addStartDate" />
+            <div class="row mb-1">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body p-2 pb-0">
+                            <h5 class="card-title fs-6">Seleccione los datos a mostrar</h5>
+                            <div class="d-flex flex-wrap justify-content-between">
+                                <button class="btn btn-outline-info m-1" 
+                                    (click)="onButtonClick('totalSale')"
+                                    [ngClass]="{'active': activeButton === 'totalSale'}">Total de Ventas</button>
+                                <button class="btn btn-outline-info m-1"
+                                     (click)="onButtonClick('amountSale')"
+                                    [ngClass]="{'active': activeButton === 'amountSale'}">Monto Total de Ventas</button>
+                                <button class="btn btn-outline-info m-1"
+                                 (click)="onButtonClick('averageSale')"
+                                    [ngClass]="{'active': activeButton === 'averageSale'}">Promedio de venta</button>
+                                <button class="btn btn-outline-info m-1"
+                                 (click)="onButtonClick('totalEarnings')"
+                                    [ngClass]="{'active': activeButton === 'totalEarnings'}">Ganancias Totales</button>
+                                <button class="btn btn-outline-info m-1"     
+                                 (click)="onButtonClick('productSold')"
+                                    [ngClass]="{'active': activeButton === 'productSold'}">Productos Vendidos</button>
+                                <button class="btn btn-outline-info m-1"
+                                 (click)="onButtonClick('categoriesSold')"
+                                    [ngClass]="{'active': activeButton === 'categoriesSold'}">Categorías Vendidas</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="input-group mb-2 w-50">
-                <span class="input-group-text">Hasta</span>
-                <input type="date" class="form-control" id="finalDate" name="finalDate" placeholder="Ingrese fecha"
-                    aria-label="Ingrese fecha de final" aria-describedby="addFinalDate" />
+            <div *ngIf="buttonClicked" class="row mb-1">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body p-2 pb-0">
+                            <h5 class="card-title fs-6">Seleccione un periodo</h5>
+                            <div class="d-flex flex-wrap justify-content-between align-items-center">
+                                <div class="btn-group mb-2" role="group" aria-label="Periodo de tiempo">
+                                    <input type="radio" class="btn-check" name="timePeriod" id="btn30"
+                                        value="30" (change)="onPeriodChange('30')" [checked]="selectedPeriod === '30'">
+                                    <label class="btn btn-outline-primary" for="btn30">30 días</label>
+                                    <input type="radio" class="btn-check" name="timePeriod" id="btn60"
+                                        value="60" (change)="onPeriodChange('60')" [checked]="selectedPeriod === '60'">
+                                    <label class="btn btn-outline-primary" for="btn60">60 días</label>
+                                    <input type="radio" class="btn-check" name="timePeriod" id="btn90"
+                                        value="90" (change)="onPeriodChange('90')" [checked]="selectedPeriod === '90'">
+                                    <label class="btn btn-outline-primary" for="btn90">90 días</label>
+                                    <input type="radio" class="btn-check" name="timePeriod" id="btn6"
+                                        value="6" (change)="onPeriodChange('6')" [checked]="selectedPeriod === '6'">
+                                    <label class="btn btn-outline-primary" for="btn6">6 meses</label>
+                                    <input type="radio" class="btn-check" name="timePeriod" id="btn1"
+                                        value="1" (change)="onPeriodChange('1')" [checked]="selectedPeriod === '1'">
+                                    <label class="btn btn-outline-primary" for="btn1">1 año</label>
+                                </div>
+                                <div class="d-flex flex-lg-row flex-column">
+                                    <div class="input-group me-2 mb-2">
+                                        <span class="input-group-text">Desde</span>
+                                        <input type="date" class="form-control" id="startDate" name="startDate"
+                                        [(ngModel)]="starDateInput" (change)="selectedPeriod = ''">
+                                    </div>
+                                    <div class="input-group me-2 mb-2">
+                                        <span class="input-group-text">Hasta</span>
+                                        <input type="date" class="form-control" id="finalDate" name="finalDate"
+                                        [(ngModel)]="endDateInput" (change)="selectedPeriod = ''">
+                                    </div>
+                                    <button [disabled]="starDateInput === '' && endDateInput === ''" 
+                                    class="btn btn-primary mb-2" (click)="callMethod('manual')">Filtrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <button class="btn btn-success ms-2 m-2">Filtrar</button>
-        </form>
-    </div>
-    <button *ngIf="buttonClicked" class="btn btn-close my-1" (click)="buttonClicked = false"></button>
-    <div class="d-flex flex-row justify-content-around align-items-center text-center mt-4" style="height: 200px;">
-        <div class="mx-3">GRÁFICOS</div>
-        <div class="table-responsive text-center p-2 pt-0 mx-3" style="max-height: 325px">
-            <table class="table table-hover">
-                <thead class="table-info">
-                    <tr>
-                        <th scope="col" class="position-sticky top-0">#</th>
-                        <th scope="col" class="position-sticky top-0">X</th>
-                    </tr>
-                </thead>
-                <tbody class="table-group-divider text-center align-middle">
-                    <tr *ngFor="let item of dailySaleCountList">
-                        <th scope="row">{{item.date}}</th>
-                        <td>{{item.sale}}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="row flex-grow-1">
+                <div class="col-md-8 mb-3">
+                    <div class="card">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Gráfico de Datos</h5>
+                            <div class="flex-grow-1" style="min-height: 200px;">
+                                <!-- Aquí iría el gráfico -->
+                                <p class="text-center text-muted">Gráfico de datos</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body d-flex flex-column" style="max-height: calc(100vh - 100px);">
+                            <h5 class="card-title">Resumen de Datos</h5>
+                            <div class="table-responsive flex-grow-1">
+                                <table class="table table-sm table-hover">
+                                    <thead class="table-info text-center">
+                                        <tr>
+                                            <th scope="col" class="position-sticky top-0">Fecha</th>
+                                            <th scope="col" class="position-sticky top-0">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-group-divider text-center align-middle">
+                                        <tr *ngFor="let item of dailySaleCountList">
+                                            <th scope="row">{{item.date}}</th>
+                                            <td>{{item.sale}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
