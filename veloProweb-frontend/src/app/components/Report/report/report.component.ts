@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ReportServiceService } from '../../../services/Report/report-service.service';
 import { subDays, subMonths, subYears, format } from 'date-fns';
 import { RouterModule } from '@angular/router';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ReportDTO } from '../../../models/DTO/Report/report-dto';
-
+import ApexCharts from 'apexcharts';
 
 @Component({
   selector: 'app-report',
@@ -15,8 +15,10 @@ import { ReportDTO } from '../../../models/DTO/Report/report-dto';
   templateUrl: './report.component.html',
   styleUrl: './report.component.css'
 })
-export class ReportComponent implements OnInit {
+export class ReportComponent implements OnInit, AfterViewInit {
 
+  @ViewChild('chart') chartElement!: ElementRef;
+  chart!: ApexCharts;
   buttonClicked: boolean = false;
   selectedPeriod: string = '';
   startDate: string = '';
@@ -25,17 +27,25 @@ export class ReportComponent implements OnInit {
   endDateInput: string = '';
   dailySaleCountList: ReportDTO[] = [];
   activeButton: string = '';
+  total: string = '';
+  highestDay: string = '';
+  lowestDay: string = '';
 
   constructor(
     private reportService: ReportServiceService,
     private notification: NotificationService
   ) { }
 
+
+  ngAfterViewInit(): void {
+    this.initChart();
+  }
+
   ngOnInit(): void {
     this.buttonClicked = false;
   }
 
-  onButtonClick(button: string): void{
+  onButtonClick(button: string): void {
     this.activeButton = button;
     this.buttonClicked = true;
     this.selectedPeriod = '';
@@ -73,17 +83,18 @@ export class ReportComponent implements OnInit {
   }
 
   callMethod(mode: string): void {
-    if(mode === 'manual'){
+    if (mode === 'manual') {
       this.startDate = format(this.starDateInput, 'yyyy-MM-dd');
       this.endDate = format(this.endDateInput, 'yyyy-MM-dd');
       if (this.startDate > this.endDate) {
-        this.notification.showWarningToast('La fecha de inicio debe ser menor que la fecha de fin.','top', 3000);
+        this.notification.showWarningToast('La fecha de inicio debe ser menor que la fecha de fin.', 'top', 3000);
         return;
       }
+      this.selectedPeriod = 'manual'
     }
-    
+
     if (this.startDate === '' || this.endDate === '') {
-      this.notification.showWarningToast('Fechas no disponibles','top', 3000);
+      this.notification.showWarningToast('Fechas no disponibles', 'top', 3000);
       return;
     }
 
@@ -111,14 +122,173 @@ export class ReportComponent implements OnInit {
     }
   }
 
-  getDailySale(): void{
+  getDailySale(): void {
     this.reportService.getDailySale(this.startDate, this.endDate).subscribe({
-      next:(list)=>{
+      next: (list) => {
         this.dailySaleCountList = list;
+        const total = this.dailySaleCountList.reduce((sum, item) => sum + item.sale, 0);
+        this.total = total >= 1 ? total + ' ventas' : total + ' venta';
+        const highestDay = this.dailySaleCountList.reduce((max, item) => (item.sale > max.sale ? item : max), this.dailySaleCountList[0]);
+        this.highestDay = highestDay ? this.formatDate(highestDay.date) + '\n(' + highestDay.sale + ' ventas)' : 'Sin datos';
+        const lowestDay = this.dailySaleCountList.reduce((max, item) => (item.sale < max.sale ? item : max), this.dailySaleCountList[0]);
+        this.lowestDay = lowestDay ? this.formatDate(lowestDay.date) + '\n(' + lowestDay.sale + ' ventas)' : 'Sin datos';
+
+        if (this.selectedPeriod === 'manual') {
+          const start = new Date(this.startDate);
+          const end = new Date(this.endDate);
+          const diffTime = Math.abs(end.getTime() - start.getTime());
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          if (diffDays <= 60) {
+            this.selectedPeriod = '30';
+          } else if (diffDays <= 90) {
+            this.selectedPeriod = '90';
+          } else if (diffDays <= 180) {
+            this.selectedPeriod = '6';
+          } else if (diffDays <= 365) {
+            this.selectedPeriod = '1';
+          } else {
+            this.selectedPeriod = 'annual';
+          }
+        }
+        console.log('lista: ', this.dailySaleCountList);
+        if(this.dailySaleCountList.length > 0){
+          switch (this.selectedPeriod) {
+            case '30':
+              this.updateChart(this.dailySaleCountList.map(item => item.sale), this.dailySaleCountList.map(item => this.formatDate(item.date)), this.dailySaleCountList, "Ventas", "Cantidad de Ventas diarias");
+              break;
+            case '60':
+            case '90':
+            case '6':
+            case '1':
+              const groupedByMonth = this.groupByMonth(this.dailySaleCountList);
+              console.log('Grouped By Month:', groupedByMonth);
+              this.updateChart(groupedByMonth.map(item => item.sale), groupedByMonth.map(item => item.date), groupedByMonth, "Ventas", "Cantidad de Ventas Mensual");
+              break;
+            case 'annual':
+              const groupedByYear = this.groupByYear(this.dailySaleCountList);
+              this.updateChart(groupedByYear.map(item => item.total), groupedByYear.map(item => item.year), groupedByYear, "Ventas", "Cantidad de Ventas por año");
+              break;
+            default:
+              break;
+          }
+        }
       }, error: (error: Error) => {
-      console.error(error.message); 
+        console.error(error.message);
       }
     });
   }
 
+  groupByMonth(list: ReportDTO[]): { date: string, sale: number }[] {
+    const grouped: { [key: string]: number } = {};
+
+    list.forEach(item => {
+        const date = new Date(item.date);
+        const monthYear = `${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`; 
+
+        if (!grouped[monthYear]) {
+            grouped[monthYear] = 0;
+        }
+        grouped[monthYear] += item.sale;
+    });
+
+    return Object.entries(grouped).map(([date, sale]) => ({ date, sale }));
+}
+
+  groupByYear(data: ReportDTO[]): any[] {
+    const groupedData: { [key: string]: number } = {};
+
+    data.forEach(item => {
+      const year = new Date(item.date).getFullYear();
+      if (!groupedData[year]) {
+        groupedData[year] = 0;
+      }
+      groupedData[year] += item.sale;
+    });
+
+    return Object.entries(groupedData).map(([year, total]) => ({
+      year,
+      total
+    }));
+  }
+
+  initChart(): void {
+    const options = {
+        series: [{ name: "", data: [] }],
+        chart: { type: "bar", height: "100%", width: "100%" },
+        plotOptions: {
+            bar: {
+                distributed: true,
+                horizontal: false,
+                columnWidth: "50%"
+            }
+        },
+        colors: ['#008FFB', '#00E396', '#FEB019'], // Colores personalizados para las barras
+        xaxis: {
+            categories: [],
+            labels: {
+                style: {
+                    colors: '#fff', // Color blanco para los labels
+                    fontWeight: 'bold' // Texto en negrita
+                }
+            }
+        },
+        dataLabels: {
+            enabled: true,
+            style: {
+                colors: ['#fff'] // Color blanco para los labels
+            }
+        },
+        title: {
+            text: "",
+            align: "center",
+            style: {
+                color: '#fff' // Color blanco para el título
+            }
+        },
+        tooltip: {
+            theme: 'dark', // Tema oscuro para el tooltip
+            style: {
+                fontSize: '14px',
+                background: '#333', // Color de fondo del tooltip
+                color: '#fff' // Color del texto en el tooltip
+            },
+            x: {
+                show: true,
+                formatter: undefined
+            },
+            y: {
+                formatter: (val: number) => `Ventas: ${val}`,
+                title: {
+                    formatter: () => ''
+                }
+            }
+        },
+        legend: {
+            show: false
+        }
+    };
+
+    this.chart = new ApexCharts(this.chartElement.nativeElement, options);
+    this.chart.render();
+  }
+
+  updateChart(serie: number[], categories: string[] = [], list: ReportDTO[], legend: string, title: string): void {
+    this.chart.updateOptions({
+      series: [{ name: legend, data: serie }],
+      xaxis: { categories: categories },
+      title: { text: title, align: "center" }
+    });
+  }
+
+  private formatDate(dateString: string): string {
+    
+    const date = new Date(dateString + 'T00:00:00Z'); 
+
+    if (isNaN(date.getTime())) {
+        console.error(`Invalid Date: ${dateString}`);
+        return 'Invalid Date';
+    }
+
+    return `${date.getUTCDate().toString().padStart(2, '0')}-${(date.getUTCMonth() + 1).toString().padStart(2, '0')}-${date.getUTCFullYear()}`;
+  }
 }
