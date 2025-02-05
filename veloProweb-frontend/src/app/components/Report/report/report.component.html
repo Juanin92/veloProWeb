@@ -3,13 +3,16 @@
         <div class="col-12 d-flex flex-column">
             <div class="row mb-1">
                 <div class="col-md-4 mb-2">
-                    <a class="btn btn-sm btn-primary w-100" [routerLink]="['/compras-reporte']" target="_blank">Ventas</a>
+                    <a class="btn btn-sm btn-primary w-100" [routerLink]="['/compras-reporte']"
+                        target="_blank">Ventas</a>
                 </div>
                 <div class="col-md-4 mb-2">
-                    <a class="btn btn-sm btn-primary w-100" [routerLink]="['/ventas-reporte']" target="_blank">Compras</a>
+                    <a class="btn btn-sm btn-primary w-100" [routerLink]="['/ventas-reporte']"
+                        target="_blank">Compras</a>
                 </div>
                 <div class="col-md-4 mb-2">
-                    <a class="btn btn-sm btn-primary w-100" [routerLink]="['/registro-producto']" target="_blank">Kardex</a>
+                    <a class="btn btn-sm btn-primary w-100" [routerLink]="['/registro-producto']"
+                        target="_blank">Kardex</a>
                 </div>
             </div>
             <div class="row mb-1">
@@ -18,24 +21,19 @@
                         <div class="card-body p-2 pb-0">
                             <h5 class="card-title fs-6">Seleccione los datos a mostrar</h5>
                             <div class="d-flex flex-wrap justify-content-between">
-                                <button class="btn btn-outline-info m-1" 
-                                    (click)="onButtonClick('totalSale')"
+                                <button class="btn btn-outline-info m-1" (click)="onButtonClick('totalSale')"
                                     [ngClass]="{'active': activeButton === 'totalSale'}">Total de Ventas</button>
-                                <button class="btn btn-outline-info m-1"
-                                     (click)="onButtonClick('amountSale')"
+                                <button class="btn btn-outline-info m-1" (click)="onButtonClick('amountSale')"
                                     [ngClass]="{'active': activeButton === 'amountSale'}">Monto Total de Ventas</button>
-                                <button class="btn btn-outline-info m-1"
-                                 (click)="onButtonClick('averageSale')"
+                                <button class="btn btn-outline-info m-1" (click)="onButtonClick('averageSale')"
                                     [ngClass]="{'active': activeButton === 'averageSale'}">Promedio de venta</button>
-                                <button class="btn btn-outline-info m-1"
-                                 (click)="onButtonClick('totalEarnings')"
+                                <button class="btn btn-outline-info m-1" (click)="onButtonClick('totalEarnings')"
                                     [ngClass]="{'active': activeButton === 'totalEarnings'}">Ganancias Totales</button>
-                                <button class="btn btn-outline-info m-1"     
-                                 (click)="onButtonClick('productSold')"
+                                <button class="btn btn-outline-info m-1" (click)="onButtonClick('productSold')"
                                     [ngClass]="{'active': activeButton === 'productSold'}">Productos Vendidos</button>
-                                <button class="btn btn-outline-info m-1"
-                                 (click)="onButtonClick('categoriesSold')"
-                                    [ngClass]="{'active': activeButton === 'categoriesSold'}">Categorías Vendidas</button>
+                                <button class="btn btn-outline-info m-1" (click)="onButtonClick('categoriesSold')"
+                                    [ngClass]="{'active': activeButton === 'categoriesSold'}">Categorías
+                                    Vendidas</button>
                             </div>
                         </div>
                     </div>
@@ -48,35 +46,35 @@
                             <h5 class="card-title fs-6">Seleccione un periodo</h5>
                             <div class="d-flex flex-wrap justify-content-between align-items-center">
                                 <div class="btn-group mb-2" role="group" aria-label="Periodo de tiempo">
-                                    <input type="radio" class="btn-check" name="timePeriod" id="btn30"
-                                        value="30" (change)="onPeriodChange('30')" [checked]="selectedPeriod === '30'">
+                                    <input type="radio" class="btn-check" name="timePeriod" id="btn30" value="30"
+                                        (change)="onPeriodChange('30')" [checked]="selectedPeriod === '30'">
                                     <label class="btn btn-outline-primary" for="btn30">30 días</label>
-                                    <input type="radio" class="btn-check" name="timePeriod" id="btn60"
-                                        value="60" (change)="onPeriodChange('60')" [checked]="selectedPeriod === '60'">
+                                    <input type="radio" class="btn-check" name="timePeriod" id="btn60" value="60"
+                                        (change)="onPeriodChange('60')" [checked]="selectedPeriod === '60'">
                                     <label class="btn btn-outline-primary" for="btn60">60 días</label>
-                                    <input type="radio" class="btn-check" name="timePeriod" id="btn90"
-                                        value="90" (change)="onPeriodChange('90')" [checked]="selectedPeriod === '90'">
+                                    <input type="radio" class="btn-check" name="timePeriod" id="btn90" value="90"
+                                        (change)="onPeriodChange('90')" [checked]="selectedPeriod === '90'">
                                     <label class="btn btn-outline-primary" for="btn90">90 días</label>
-                                    <input type="radio" class="btn-check" name="timePeriod" id="btn6"
-                                        value="6" (change)="onPeriodChange('6')" [checked]="selectedPeriod === '6'">
+                                    <input type="radio" class="btn-check" name="timePeriod" id="btn6" value="6"
+                                        (change)="onPeriodChange('6')" [checked]="selectedPeriod === '6'">
                                     <label class="btn btn-outline-primary" for="btn6">6 meses</label>
-                                    <input type="radio" class="btn-check" name="timePeriod" id="btn1"
-                                        value="1" (change)="onPeriodChange('1')" [checked]="selectedPeriod === '1'">
+                                    <input type="radio" class="btn-check" name="timePeriod" id="btn1" value="1"
+                                        (change)="onPeriodChange('1')" [checked]="selectedPeriod === '1'">
                                     <label class="btn btn-outline-primary" for="btn1">1 año</label>
                                 </div>
                                 <div class="d-flex flex-lg-row flex-column">
                                     <div class="input-group me-2 mb-2">
                                         <span class="input-group-text">Desde</span>
                                         <input type="date" class="form-control" id="startDate" name="startDate"
-                                        [(ngModel)]="starDateInput" (change)="selectedPeriod = ''">
+                                            [(ngModel)]="starDateInput" (change)="selectedPeriod = ''">
                                     </div>
                                     <div class="input-group me-2 mb-2">
                                         <span class="input-group-text">Hasta</span>
                                         <input type="date" class="form-control" id="finalDate" name="finalDate"
-                                        [(ngModel)]="endDateInput" (change)="selectedPeriod = ''">
+                                            [(ngModel)]="endDateInput" (change)="selectedPeriod = ''">
                                     </div>
-                                    <button [disabled]="starDateInput === '' && endDateInput === ''" 
-                                    class="btn btn-primary mb-2" (click)="callMethod('manual')">Filtrar</button>
+                                    <button [disabled]="starDateInput === '' && endDateInput === ''"
+                                        class="btn btn-primary mb-2" (click)="callMethod('manual')">Filtrar</button>
                                 </div>
                             </div>
                         </div>
@@ -84,36 +82,72 @@
                 </div>
             </div>
             <div class="row flex-grow-1">
-                <div class="col-md-8 mb-3">
-                    <div class="card">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">Gráfico de Datos</h5>
-                            <div class="flex-grow-1" style="min-height: 200px;">
-                                <!-- Aquí iría el gráfico -->
-                                <p class="text-center text-muted">Gráfico de datos</p>
-                            </div>
+            <div class="col-md-8 mb-3">
+                <div class="card shadow-lg rounded-3" style="height: calc(100vh - 270px);">
+                    <div class="card-body d-flex flex-column h-100">
+                        <h5 class="card-title d-flex align-items-center justify-content-between mb-3">
+                            Gráfico de Datos
+                            <button *ngIf="dailySaleCountList.length > 0" class="btn btn-sm btn-info p-1" data-bs-toggle="modal"
+                                data-bs-target="#modalTable">+ info
+                            </button>
+                        </h5>
+                        <div class="flex-grow-1 h-100">
+                            <div #chart></div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <div class="card">
-                        <div class="card-body d-flex flex-column" style="max-height: calc(100vh - 100px);">
+            </div>
+                <div class="col-md-4 d-flex flex-column">
+                    <div class="card shadow-lg rounded-3 flex-grow-1 mt-1" style="max-height: calc(100vh - 280px);">
+                        <div class="card-body d-flex flex-column">
                             <h5 class="card-title">Resumen de Datos</h5>
-                            <div class="table-responsive flex-grow-1">
-                                <table class="table table-sm table-hover">
-                                    <thead class="table-info text-center">
-                                        <tr>
-                                            <th scope="col" class="position-sticky top-0">Fecha</th>
-                                            <th scope="col" class="position-sticky top-0">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="table-group-divider text-center align-middle">
-                                        <tr *ngFor="let item of dailySaleCountList">
-                                            <th scope="row">{{item.date}}</th>
-                                            <td>{{item.sale}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div class="row g-3 justify-content-around h-100">
+                                <div class="col-12 col-md-6">
+                                    <div *ngIf="highestDay !== ''"
+                                        class="card bg-success text-white shadow-lg rounded-3 h-100">
+                                        <div class="card-body text-center d-flex flex-column justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <i class="bi bi-calendar2-check display-6 me-2"></i>
+                                                <!-- <h6 class="card-title mb-0">Mejor Día</h6> -->
+                                            </div>
+                                            <p class="card-text fw-bold fs-6 mt-2">{{highestDay}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div *ngIf="total !== ''"
+                                        class="card bg-primary text-white shadow-lg rounded-3 h-100">
+                                        <div class="card-body text-center d-flex flex-column justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <i class="bi bi-cash-stack display-6 me-2"></i>
+                                                <!-- <h6 class="card-title mb-0">Ventas Totales</h6> -->
+                                            </div>
+                                            <p class="card-text fw-bold fs-6 mt-2">{{total}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="card bg-warning text-white shadow-lg rounded-3 h-100">
+                                        <div class="card-body text-center d-flex flex-column justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <i class="bi bi-graph-up-arrow display-6 me-2"></i>
+                                                <h6 class="card-title mb-0">Tendencia</h6>
+                                            </div>
+                                            <p class="card-text fw-bold fs-6 mt-2">growth</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div *ngIf="lowestDay !== ''" class="card bg-danger shadow-lg rounded-3 h-100">
+                                        <div class="card-body text-center d-flex flex-column justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <i class="bi bi-people-fill display-6 me-2"></i>
+                                                <!-- <h6 class="card-title mb-0">Peor Día</h6> -->
+                                            </div>
+                                            <p class="card-text fw-bold fs-6 mt-2">{{lowestDay}}</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -122,4 +156,41 @@
         </div>
     </div>
 </div>
-
+<!-- MODAL TABLE -->
+<div class="modal fade" id="modalTable" tabindex="-1" aria-labelledby="modalTableLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-info text-white border-bottom-0 py-1">
+                <h3 class="modal-title fs-5 w-100 text-center" id="modalTableLabel">Detalle Completo</h3>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card border-0 rounded-0 rounded-bottom">
+                    <div class="card-body p-4">
+                        <div class="table-responsive" style="max-height: 60vh;">
+                            <table class="table table-hover table-striped align-middle mb-0">
+                                <thead class="table-primary text-center sticky-top">
+                                    <tr>
+                                        <th scope="col" class="py-3">Fecha</th>
+                                        <th scope="col" class="py-3">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-center">
+                                    <tr *ngFor="let item of dailySaleCountList">
+                                        <td class="py-3">{{ item.date | date:'dd/MM/yyyy' }}</td>
+                                        <td class="py-3">
+                                            <span class="badge bg-success rounded-pill px-3 py-2">
+                                                {{ item.sale }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
