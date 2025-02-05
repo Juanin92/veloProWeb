@@ -3,6 +3,7 @@
         "kardex",
         "renderizar",
         "Swal",
-        "sweetalert"
+        "sweetalert",
+        "xaxis"
     ]
 }
