@@ -33,4 +33,26 @@ export class ReportServiceService {
         })
       );
   }
+
+  getAverageTotalSaleDaily(startDate: string, endDate: string): Observable<ReportDTO[]>{
+    const params = new HttpParams().set('startDate', startDate).set('endDate', endDate);
+    return this.http.get<ReportDTO[]>(`${this.apiUrl}/promedio_ventas`, { params })
+      .pipe(
+        catchError((error) => {
+          const errorMessage = error.error.message;
+          return throwError(() => new Error(errorMessage));
+        })
+      );
+  }
+
+  getEarningSale(startDate: string, endDate: string): Observable<ReportDTO[]>{
+    const params = new HttpParams().set('startDate', startDate).set('endDate', endDate);
+    return this.http.get<ReportDTO[]>(`${this.apiUrl}/ganancias_ventas`, { params })
+      .pipe(
+        catchError((error) => {
+          const errorMessage = error.error.message;
+          return throwError(() => new Error(errorMessage));
+        })
+      );
+  }
 }
