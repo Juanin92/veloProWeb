@@ -7,11 +7,11 @@ import java.time.LocalDate;
 
 @Data
 public class DailySaleEarningDTO {
-    private LocalDate saleDTO;
+    private LocalDate date;
     private int profit;
 
     public DailySaleEarningDTO(LocalDate localDate, BigDecimal profit) {
-        this.saleDTO = localDate;
+        this.date = localDate;
         this.profit = profit != null ? profit.intValue() : 0;
     }
 }
