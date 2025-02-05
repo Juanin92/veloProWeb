@@ -102,8 +102,8 @@ export class ReportComponent implements OnInit, AfterViewInit {
       case 'totalSale':
         this.getDailySale();
         break;
-      case 'totalAmount':
-        // this.getTotalAmount(); 
+      case 'amountSale':
+        this.getTotalSaleDaily();
         break;
       case 'averageSale':
         // this.getAverageSale(); 
@@ -123,15 +123,26 @@ export class ReportComponent implements OnInit, AfterViewInit {
   }
 
   getDailySale(): void {
+    const key = 'sale';
     this.reportService.getDailySale(this.startDate, this.endDate).subscribe({
       next: (list) => {
-        this.dailySaleCountList = list;
-        const total = this.dailySaleCountList.reduce((sum, item) => sum + item.sale, 0);
+        this.dailySaleCountList = (list as any[]).map(item => ({
+          date: item.date,
+          values: { [key]: item.sale }
+        }));
+        console.log('lista:',list);
+        console.log('listaDTO :',this.dailySaleCountList);
+        console.log('key ', key);
+        const total = this.dailySaleCountList.reduce((sum, item) => sum + item.values[key], 0);
         this.total = total >= 1 ? total + ' ventas' : total + ' venta';
-        const highestDay = this.dailySaleCountList.reduce((max, item) => (item.sale > max.sale ? item : max), this.dailySaleCountList[0]);
-        this.highestDay = highestDay ? this.formatDate(highestDay.date) + '\n(' + highestDay.sale + ' ventas)' : 'Sin datos';
-        const lowestDay = this.dailySaleCountList.reduce((max, item) => (item.sale < max.sale ? item : max), this.dailySaleCountList[0]);
-        this.lowestDay = lowestDay ? this.formatDate(lowestDay.date) + '\n(' + lowestDay.sale + ' ventas)' : 'Sin datos';
+        const highestDay = this.dailySaleCountList.reduce((max, item) => (item.values[key] > max.values[key] ? item : max), this.dailySaleCountList[0]);
+        this.highestDay = highestDay ? this.formatDate(highestDay.date) + '\n(' + highestDay.values[key] + ' ventas)' : 'Sin datos';
+        const lowestDay = this.dailySaleCountList.reduce((max, item) => (item.values[key] < max.values[key] ? item : max), this.dailySaleCountList[0]);
+        this.lowestDay = lowestDay ? this.formatDate(lowestDay.date) + '\n(' + lowestDay.values[key] + ' ventas)' : 'Sin datos';
+        console.log('mejor:', this.highestDay);
+        console.log('total:', this.total);
+        console.log('total const:', total);
+        console.log('peor:', this.lowestDay);
 
         if (this.selectedPeriod === 'manual') {
           const start = new Date(this.startDate);
@@ -150,22 +161,22 @@ export class ReportComponent implements OnInit, AfterViewInit {
             this.selectedPeriod = 'annual';
           }
         }
-        console.log('lista: ', this.dailySaleCountList);
         if(this.dailySaleCountList.length > 0){
           switch (this.selectedPeriod) {
             case '30':
-              this.updateChart(this.dailySaleCountList.map(item => item.sale), this.dailySaleCountList.map(item => this.formatDate(item.date)), this.dailySaleCountList, "Ventas", "Cantidad de Ventas diarias");
+              this.updateChart(this.dailySaleCountList.map(item => item.values[key]), this.dailySaleCountList.map(item => this.formatDate(item.date)), this.dailySaleCountList, "Ventas", "Cantidad de Ventas diarias");
               break;
             case '60':
             case '90':
             case '6':
             case '1':
-              const groupedByMonth = this.groupByMonth(this.dailySaleCountList);
-              console.log('Grouped By Month:', groupedByMonth);
-              this.updateChart(groupedByMonth.map(item => item.sale), groupedByMonth.map(item => item.date), groupedByMonth, "Ventas", "Cantidad de Ventas Mensual");
+              const groupedByMonth = this.groupByMonth(this.dailySaleCountList, key);
+              this.updateChart(groupedByMonth.map(item => item.value), groupedByMonth.map(item => item.date), groupedByMonth.map(item => ({
+                date: item.date,
+                values: { [key]: item.value }})), "Ventas", "Cantidad de Ventas Mensual");
               break;
             case 'annual':
-              const groupedByYear = this.groupByYear(this.dailySaleCountList);
+              const groupedByYear = this.groupByYear(this.dailySaleCountList, key);
               this.updateChart(groupedByYear.map(item => item.total), groupedByYear.map(item => item.year), groupedByYear, "Ventas", "Cantidad de Ventas por año");
               break;
             default:
@@ -178,7 +189,74 @@ export class ReportComponent implements OnInit, AfterViewInit {
     });
   }
 
-  groupByMonth(list: ReportDTO[]): { date: string, sale: number }[] {
+  getTotalSaleDaily(): void {
+      const key = 'sum';
+      this.reportService.getTotalSaleDaily(this.startDate, this.endDate).subscribe({
+        next: (list) => {
+          this.dailySaleCountList = (list as any[]).map(item => ({
+            date: item.date,
+            values: { [key]: item.sum }
+          }));
+          console.log('lista:',list);
+        console.log('listaDTO :',this.dailySaleCountList);
+        console.log('key ', key);
+        const total = this.dailySaleCountList.reduce((sum, item) => sum + item.values[key], 0);
+        this.total = '$' + total;
+        const highestDay = this.dailySaleCountList.reduce((max, item) => (item.values[key] > max.values[key] ? item : max), this.dailySaleCountList[0]);
+        this.highestDay = highestDay ? this.formatDate(highestDay.date) + '\n($' + highestDay.values[key] + ')' : 'Sin datos';
+        const lowestDay = this.dailySaleCountList.reduce((max, item) => (item.values[key] < max.values[key] ? item : max), this.dailySaleCountList[0]);
+        this.lowestDay = lowestDay ? this.formatDate(lowestDay.date) + '\n($' + lowestDay.values[key] + ')' : 'Sin datos';
+        console.log('mejor:', this.highestDay);
+        console.log('total:', this.total);
+        console.log('total const:', total);
+        console.log('peor:', this.lowestDay);
+  
+          if (this.selectedPeriod === 'manual') {
+            const start = new Date(this.startDate);
+            const end = new Date(this.endDate);
+            const diffTime = Math.abs(end.getTime() - start.getTime());
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            if (diffDays <= 60) {
+              this.selectedPeriod = '30';
+            } else if (diffDays <= 90) {
+              this.selectedPeriod = '90';
+            } else if (diffDays <= 180) {
+              this.selectedPeriod = '6';
+            } else if (diffDays <= 365) {
+              this.selectedPeriod = '1';
+            } else {
+              this.selectedPeriod = 'annual';
+            }
+          }
+          if(this.dailySaleCountList.length > 0){
+            switch (this.selectedPeriod) {
+              case '30':
+                this.updateChart(this.dailySaleCountList.map(item => item.values[key]), this.dailySaleCountList.map(item => this.formatDate(item.date)), this.dailySaleCountList, "$", "Monto total de Ventas diarias");
+                break;
+              case '60':
+              case '90':
+              case '6':
+              case '1':
+                const groupedByMonth = this.groupByMonth(this.dailySaleCountList, key);
+                this.updateChart(groupedByMonth.map(item => item.value), groupedByMonth.map(item => item.date), groupedByMonth.map(item => ({
+                  date: item.date,
+                  values: { [key]: item.value }})), "$", "Monto total de Ventas mensual");
+                break;
+              case 'annual':
+                const groupedByYear = this.groupByYear(this.dailySaleCountList, key);
+                this.updateChart(groupedByYear.map(item => item.total), groupedByYear.map(item => item.year), groupedByYear, "$", "Monto total de Ventas por año");
+                break;
+              default:
+                break;
+            }
+          }
+        }, error: (error: Error) => {
+          console.error(error.message);
+        }
+      });
+    }
+
+  groupByMonth(list: ReportDTO[], key: string): { date: string, value: number }[] {
     const grouped: { [key: string]: number } = {};
 
     list.forEach(item => {
@@ -188,13 +266,13 @@ export class ReportComponent implements OnInit, AfterViewInit {
         if (!grouped[monthYear]) {
             grouped[monthYear] = 0;
         }
-        grouped[monthYear] += item.sale;
+        grouped[monthYear] += item.values[key];
     });
 
-    return Object.entries(grouped).map(([date, sale]) => ({ date, sale }));
+    return Object.entries(grouped).map(([date, value]) => ({ date, value }));
 }
 
-  groupByYear(data: ReportDTO[]): any[] {
+  groupByYear(data: ReportDTO[], key: string): any[] {
     const groupedData: { [key: string]: number } = {};
 
     data.forEach(item => {
@@ -202,7 +280,7 @@ export class ReportComponent implements OnInit, AfterViewInit {
       if (!groupedData[year]) {
         groupedData[year] = 0;
       }
-      groupedData[year] += item.sale;
+      groupedData[year] += item.values[key];
     });
 
     return Object.entries(groupedData).map(([year, total]) => ({
