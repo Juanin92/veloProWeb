@@ -25,7 +25,7 @@ export class ReportComponent implements OnInit, AfterViewInit {
   starDateInput: string = '';
   endDate: string = '';
   endDateInput: string = '';
-  dailySaleCountList: ReportDTO[] = [];
+  reportList: ReportDTO[] = [];
   activeButton: string = '';
   total: string = '';
   highestDay: string = '';
@@ -46,6 +46,7 @@ export class ReportComponent implements OnInit, AfterViewInit {
   }
 
   onButtonClick(button: string): void {
+    this.resetData();
     this.activeButton = button;
     this.buttonClicked = true;
     this.selectedPeriod = '';
@@ -106,10 +107,10 @@ export class ReportComponent implements OnInit, AfterViewInit {
         this.getTotalSaleDaily();
         break;
       case 'averageSale':
-        // this.getAverageSale(); 
+        this.getAverageTotalSaleDaily(); 
         break;
       case 'totalEarnings':
-        // this.getTotalEarnings(); 
+        this.getEarningSale();
         break;
       case 'productsSold':
         // this.getProductsSold(); 
@@ -123,26 +124,17 @@ export class ReportComponent implements OnInit, AfterViewInit {
   }
 
   getDailySale(): void {
-    const key = 'sale';
     this.reportService.getDailySale(this.startDate, this.endDate).subscribe({
       next: (list) => {
-        this.dailySaleCountList = (list as any[]).map(item => ({
+        this.reportList = (list as any[]).map(item => ({
           date: item.date,
-          values: { [key]: item.sale }
+          values: { ['sale']: item.sale }
         }));
-        console.log('lista:',list);
-        console.log('listaDTO :',this.dailySaleCountList);
-        console.log('key ', key);
-        const total = this.dailySaleCountList.reduce((sum, item) => sum + item.values[key], 0);
+        const total = this.reportList.reduce((sum, item) => sum + item.values['sale'], 0);
         this.total = total >= 1 ? total + ' ventas' : total + ' venta';
-        const highestDay = this.dailySaleCountList.reduce((max, item) => (item.values[key] > max.values[key] ? item : max), this.dailySaleCountList[0]);
-        this.highestDay = highestDay ? this.formatDate(highestDay.date) + '\n(' + highestDay.values[key] + ' ventas)' : 'Sin datos';
-        const lowestDay = this.dailySaleCountList.reduce((max, item) => (item.values[key] < max.values[key] ? item : max), this.dailySaleCountList[0]);
-        this.lowestDay = lowestDay ? this.formatDate(lowestDay.date) + '\n(' + lowestDay.values[key] + ' ventas)' : 'Sin datos';
-        console.log('mejor:', this.highestDay);
-        console.log('total:', this.total);
-        console.log('total const:', total);
-        console.log('peor:', this.lowestDay);
+        const highestDay = this.reportList.reduce((max, item) => (item.values['sale'] > max.values['sale'] ? item : max), this.reportList[0]);
+        this.highestDay = highestDay ? this.formatDate(highestDay.date) + '\n(' + highestDay.values['sale'] + ' ventas)' : 'Sin datos';
+        const lowestDay = this.reportList.reduce((max, item) => (item.values['sale'] < max.values['sale'] ? item : max), this.reportList[0]);
 
         if (this.selectedPeriod === 'manual') {
           const start = new Date(this.startDate);
@@ -161,22 +153,22 @@ export class ReportComponent implements OnInit, AfterViewInit {
             this.selectedPeriod = 'annual';
           }
         }
-        if(this.dailySaleCountList.length > 0){
+        if(this.reportList.length > 0){
           switch (this.selectedPeriod) {
             case '30':
-              this.updateChart(this.dailySaleCountList.map(item => item.values[key]), this.dailySaleCountList.map(item => this.formatDate(item.date)), this.dailySaleCountList, "Ventas", "Cantidad de Ventas diarias");
+              this.updateChart(this.reportList.map(item => item.values['sale']), this.reportList.map(item => this.formatDate(item.date)), this.reportList, "Ventas", "Cantidad de Ventas diarias");
               break;
             case '60':
             case '90':
             case '6':
             case '1':
-              const groupedByMonth = this.groupByMonth(this.dailySaleCountList, key);
+              const groupedByMonth = this.groupByMonth(this.reportList, 'sale');
               this.updateChart(groupedByMonth.map(item => item.value), groupedByMonth.map(item => item.date), groupedByMonth.map(item => ({
                 date: item.date,
-                values: { [key]: item.value }})), "Ventas", "Cantidad de Ventas Mensual");
+                values: { ['sale']: item.value }})), "Ventas", "Cantidad de Ventas Mensual");
               break;
             case 'annual':
-              const groupedByYear = this.groupByYear(this.dailySaleCountList, key);
+              const groupedByYear = this.groupByYear(this.reportList, 'sale');
               this.updateChart(groupedByYear.map(item => item.total), groupedByYear.map(item => item.year), groupedByYear, "Ventas", "Cantidad de Ventas por año");
               break;
             default:
@@ -190,26 +182,18 @@ export class ReportComponent implements OnInit, AfterViewInit {
   }
 
   getTotalSaleDaily(): void {
-      const key = 'sum';
       this.reportService.getTotalSaleDaily(this.startDate, this.endDate).subscribe({
         next: (list) => {
-          this.dailySaleCountList = (list as any[]).map(item => ({
+          this.reportList = (list as any[]).map(item => ({
             date: item.date,
-            values: { [key]: item.sum }
+            values: { ['sum']: item.sum }
           }));
-          console.log('lista:',list);
-        console.log('listaDTO :',this.dailySaleCountList);
-        console.log('key ', key);
-        const total = this.dailySaleCountList.reduce((sum, item) => sum + item.values[key], 0);
+        const total = this.reportList.reduce((sum, item) => sum + item.values['sum'], 0);
         this.total = '$' + total;
-        const highestDay = this.dailySaleCountList.reduce((max, item) => (item.values[key] > max.values[key] ? item : max), this.dailySaleCountList[0]);
-        this.highestDay = highestDay ? this.formatDate(highestDay.date) + '\n($' + highestDay.values[key] + ')' : 'Sin datos';
-        const lowestDay = this.dailySaleCountList.reduce((max, item) => (item.values[key] < max.values[key] ? item : max), this.dailySaleCountList[0]);
-        this.lowestDay = lowestDay ? this.formatDate(lowestDay.date) + '\n($' + lowestDay.values[key] + ')' : 'Sin datos';
-        console.log('mejor:', this.highestDay);
-        console.log('total:', this.total);
-        console.log('total const:', total);
-        console.log('peor:', this.lowestDay);
+        const highestDay = this.reportList.reduce((max, item) => (item.values['sum'] > max.values['sum'] ? item : max), this.reportList[0]);
+        this.highestDay = highestDay ? this.formatDate(highestDay.date) + '\n($' + highestDay.values['sum'] + ')' : 'Sin datos';
+        const lowestDay = this.reportList.reduce((max, item) => (item.values['sum'] < max.values['sum'] ? item : max), this.reportList[0]);
+        this.lowestDay = lowestDay ? this.formatDate(lowestDay.date) + '\n($' + lowestDay.values['sum'] + ')' : 'Sin datos';
   
           if (this.selectedPeriod === 'manual') {
             const start = new Date(this.startDate);
@@ -228,22 +212,22 @@ export class ReportComponent implements OnInit, AfterViewInit {
               this.selectedPeriod = 'annual';
             }
           }
-          if(this.dailySaleCountList.length > 0){
+          if(this.reportList.length > 0){
             switch (this.selectedPeriod) {
               case '30':
-                this.updateChart(this.dailySaleCountList.map(item => item.values[key]), this.dailySaleCountList.map(item => this.formatDate(item.date)), this.dailySaleCountList, "$", "Monto total de Ventas diarias");
+                this.updateChart(this.reportList.map(item => item.values['sum']), this.reportList.map(item => this.formatDate(item.date)), this.reportList, "$", "Monto total de Ventas diarias");
                 break;
               case '60':
               case '90':
               case '6':
               case '1':
-                const groupedByMonth = this.groupByMonth(this.dailySaleCountList, key);
+                const groupedByMonth = this.groupByMonth(this.reportList, 'sum');
                 this.updateChart(groupedByMonth.map(item => item.value), groupedByMonth.map(item => item.date), groupedByMonth.map(item => ({
                   date: item.date,
-                  values: { [key]: item.value }})), "$", "Monto total de Ventas mensual");
+                  values: { ['sum']: item.value }})), "$", "Monto total de Ventas mensual");
                 break;
               case 'annual':
-                const groupedByYear = this.groupByYear(this.dailySaleCountList, key);
+                const groupedByYear = this.groupByYear(this.reportList, 'sum');
                 this.updateChart(groupedByYear.map(item => item.total), groupedByYear.map(item => item.year), groupedByYear, "$", "Monto total de Ventas por año");
                 break;
               default:
@@ -254,7 +238,125 @@ export class ReportComponent implements OnInit, AfterViewInit {
           console.error(error.message);
         }
       });
-    }
+  }
+
+  getAverageTotalSaleDaily(): void {
+      this.reportService.getAverageTotalSaleDaily(this.startDate, this.endDate).subscribe({
+        next: (list) => {
+          this.reportList = (list as any[]).map(item => ({
+            date: item.date,
+            values: { ['avg']: item.avg }
+          }));
+        const total = this.reportList.reduce((sum, item) => sum + item.values['avg'], 0);
+        this.total = '$' + total;
+        const highestDay = this.reportList.reduce((max, item) => (item.values['avg'] > max.values['avg'] ? item : max), this.reportList[0]);
+        this.highestDay = highestDay ? this.formatDate(highestDay.date) + '\n($' + highestDay.values['avg'] + ')' : 'Sin datos';
+        const lowestDay = this.reportList.reduce((max, item) => (item.values['avg'] < max.values['avg'] ? item : max), this.reportList[0]);
+        this.lowestDay = lowestDay ? this.formatDate(lowestDay.date) + '\n($' + lowestDay.values['avg'] + ')' : 'Sin datos';
+  
+          if (this.selectedPeriod === 'manual') {
+            const start = new Date(this.startDate);
+            const end = new Date(this.endDate);
+            const diffTime = Math.abs(end.getTime() - start.getTime());
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            if (diffDays <= 60) {
+              this.selectedPeriod = '30';
+            } else if (diffDays <= 90) {
+              this.selectedPeriod = '90';
+            } else if (diffDays <= 180) {
+              this.selectedPeriod = '6';
+            } else if (diffDays <= 365) {
+              this.selectedPeriod = '1';
+            } else {
+              this.selectedPeriod = 'annual';
+            }
+          }
+          if(this.reportList.length > 0){
+            switch (this.selectedPeriod) {
+              case '30':
+                this.updateChart(this.reportList.map(item => item.values['avg']), this.reportList.map(item => this.formatDate(item.date)), this.reportList, "$", "Monto promedio de Ventas diarias");
+                break;
+              case '60':
+              case '90':
+              case '6':
+              case '1':
+                const groupedByMonth = this.groupByMonth(this.reportList, 'avg');
+                this.updateChart(groupedByMonth.map(item => item.value), groupedByMonth.map(item => item.date), groupedByMonth.map(item => ({
+                  date: item.date,
+                  values: { ['avg']: item.value }})), "$", "Monto promedio de Ventas mensual");
+                break;
+              case 'annual':
+                const groupedByYear = this.groupByYear(this.reportList, 'avg');
+                this.updateChart(groupedByYear.map(item => item.total), groupedByYear.map(item => item.year), groupedByYear, "$", "Monto promedio de Ventas por año");
+                break;
+              default:
+                break;
+            }
+          }
+        }, error: (error: Error) => {
+          console.error(error.message);
+        }
+      });
+  }
+
+  getEarningSale(): void {
+    this.reportService.getEarningSale(this.startDate, this.endDate).subscribe({
+      next: (list) => {
+        this.reportList = (list as any[]).map(item => ({
+          date: item.date,
+          values: { ['profit']: item.profit }
+        }));
+      const total = this.reportList.reduce((sum, item) => sum + item.values['profit'], 0);
+      this.total = '$' + total;
+      const highestDay = this.reportList.reduce((max, item) => (item.values['profit'] > max.values['profit'] ? item : max), this.reportList[0]);
+      this.highestDay = highestDay ? this.formatDate(highestDay.date) + '\n($' + highestDay.values['profit'] + ')' : 'Sin datos';
+      const lowestDay = this.reportList.reduce((max, item) => (item.values['profit'] < max.values['profit'] ? item : max), this.reportList[0]);
+      this.lowestDay = lowestDay ? this.formatDate(lowestDay.date) + '\n($' + lowestDay.values['profit'] + ')' : 'Sin datos';
+
+        if (this.selectedPeriod === 'manual') {
+          const start = new Date(this.startDate);
+          const end = new Date(this.endDate);
+          const diffTime = Math.abs(end.getTime() - start.getTime());
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          if (diffDays <= 60) {
+            this.selectedPeriod = '30';
+          } else if (diffDays <= 90) {
+            this.selectedPeriod = '90';
+          } else if (diffDays <= 180) {
+            this.selectedPeriod = '6';
+          } else if (diffDays <= 365) {
+            this.selectedPeriod = '1';
+          } else {
+            this.selectedPeriod = 'annual';
+          }
+        }
+        if(this.reportList.length > 0){
+          switch (this.selectedPeriod) {
+            case '30':
+              this.updateChart(this.reportList.map(item => item.values['profit']), this.reportList.map(item => this.formatDate(item.date)), this.reportList, "$", "Ganancias de Ventas diarias");
+              break;
+            case '60':
+            case '90':
+            case '6':
+            case '1':
+              const groupedByMonth = this.groupByMonth(this.reportList, 'profit');
+              this.updateChart(groupedByMonth.map(item => item.value), groupedByMonth.map(item => item.date), groupedByMonth.map(item => ({
+                date: item.date,
+                values: { ['profit']: item.value }})), "$", "Ganancias de Ventas mensual");
+              break;
+            case 'annual':
+              const groupedByYear = this.groupByYear(this.reportList, 'profit');
+              this.updateChart(groupedByYear.map(item => item.total), groupedByYear.map(item => item.year), groupedByYear, "$", "Ganancias de Ventas por año");
+              break;
+            default:
+              break;
+          }
+        }
+      }, error: (error: Error) => {
+        console.error(error.message);
+      }
+    });
+}
 
   groupByMonth(list: ReportDTO[], key: string): { date: string, value: number }[] {
     const grouped: { [key: string]: number } = {};
@@ -356,6 +458,77 @@ export class ReportComponent implements OnInit, AfterViewInit {
       xaxis: { categories: categories },
       title: { text: title, align: "center" }
     });
+  }
+
+  resetChart(): void {
+    const options = {
+        series: [{ name: "", data: [] }],
+        chart: { type: "bar", height: "100%", width: "100%" },
+        plotOptions: {
+            bar: {
+                distributed: true,
+                horizontal: false,
+                columnWidth: "50%"
+            }
+        },
+        colors: ['#008FFB', '#00E396', '#FEB019'],
+        xaxis: {
+            categories: [],
+            labels: {
+                style: {
+                    colors: '#fff',
+                    fontWeight: 'bold'
+                }
+            }
+        },
+        dataLabels: {
+            enabled: true,
+            style: {
+                colors: ['#fff']
+            }
+        },
+        title: {
+            text: "",
+            align: "center",
+            style: {
+                color: '#fff'
+            }
+        },
+        tooltip: {
+            theme: 'dark',
+            style: {
+                fontSize: '14px',
+                background: '#333',
+                color: '#fff'
+            },
+            x: {
+                show: true,
+                formatter: undefined
+            },
+            y: {
+                formatter: (val: number) => `Ventas: ${val}`,
+                title: {
+                    formatter: () => ''
+                }
+            }
+        },
+        legend: {
+            show: false
+        }
+    };
+
+    // Reinicializa la variable chart con una nueva instancia de ApexCharts
+    this.chart = new ApexCharts(this.chartElement.nativeElement, options);
+    this.chart.render(); // Vuelve a renderizar el gráfico
+  }
+
+
+  resetData(): void{
+    this.reportList.splice(0, this.reportList.length);
+    this.resetChart();
+    this.total = '';
+    this.highestDay = '';
+    this.lowestDay = '';
   }
 
   private formatDate(dateString: string): string {
