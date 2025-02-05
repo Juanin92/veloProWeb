@@ -1,4 +1,4 @@
 export interface ReportDTO {
     date: string;
-    sale: number;
+    values: { [key: string]: number };
 }
