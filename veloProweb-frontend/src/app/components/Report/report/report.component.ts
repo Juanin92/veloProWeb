@@ -30,6 +30,7 @@ export class ReportComponent implements OnInit, AfterViewInit {
   total: string = '';
   highestDay: string = '';
   lowestDay: string = '';
+  trend: string = '';
 
   constructor(
     private reportService: ReportServiceService,
@@ -137,6 +138,15 @@ export class ReportComponent implements OnInit, AfterViewInit {
         this.highestDay = highestDay ? this.formatDate(highestDay.date) + '\n(' + highestDay.values['sale'] + ' ventas)' : 'Sin datos';
         const lowestDay = this.reportList.reduce((max, item) => (item.values['sale'] < max.values['sale'] ? item : max), this.reportList[0]);
         this.lowestDay = lowestDay ? this.formatDate(lowestDay.date) + '\n(' + lowestDay.values['sale'] + ' ventas)' : 'Sin datos';
+        if (this.reportList.length > 7) { // Asegurarse de que haya suficientes datos
+          const recentSales = this.reportList.slice(-7).reduce((sum, item) => sum + item.values['sale'], 0);
+          const previousSales = this.reportList.slice(-14, -7).reduce((sum, item) => sum + item.values['sale'], 0);
+          const growth = recentSales - previousSales;
+      
+          this.trend = growth > 0 ? 'increase' : growth < 0 ? 'decrease' : '';
+        } else {
+            this.trend = '';
+        }
 
         if (this.selectedPeriod === 'manual') {
           const start = new Date(this.startDate);

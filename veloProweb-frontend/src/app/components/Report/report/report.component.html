@@ -109,7 +109,6 @@
                                         class="card bg-success text-white shadow-lg rounded-3 h-100">
                                         <div class="card-body text-center d-flex flex-column justify-content-center">
                                             <div class="d-flex align-items-center justify-content-center">
-                                                <!-- <h6 class="card-title mb-0">Mejor Día</h6> -->
                                             </div>
                                             <p class="card-text fw-bold fs-6 mt-2">{{highestDay}}</p>
                                         </div>
@@ -120,19 +119,18 @@
                                         class="card bg-primary text-white shadow-lg rounded-3 h-100">
                                         <div class="card-body text-center d-flex flex-column justify-content-center">
                                             <div class="d-flex align-items-center justify-content-center">
-                                                <!-- <h6 class="card-title mb-0">Ventas Totales</h6> -->
                                             </div>
                                             <p class="card-text fw-bold fs-6 mt-2">{{total}}</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <div class="card bg-warning text-white shadow-lg rounded-3 h-100">
+                                    <div *ngIf="trend !== ''" class="card bg-warning text-white shadow-lg rounded-3 h-100">
                                         <div class="card-body text-center d-flex flex-column justify-content-center">
                                             <div class="d-flex align-items-center justify-content-center">
-                                                <h6 class="card-title mb-0">Tendencia</h6>
+                                                <img *ngIf="trend === 'increase'" src="/assets/icons/iconIncrease.png" alt="increase-icon" width="40" height="40">
+                                                <img *ngIf="trend === 'decrease'" src="/assets/icons/iconDecrease.png" alt="decrease-icon" width="40" height="40">
                                             </div>
-                                            <p class="card-text fw-bold fs-6 mt-2">growth</p>
                                         </div>
                                     </div>
                                 </div>
@@ -140,7 +138,6 @@
                                     <div *ngIf="lowestDay !== ''" class="card bg-danger shadow-lg rounded-3 h-100">
                                         <div class="card-body text-center d-flex flex-column justify-content-center">
                                             <div class="d-flex align-items-center justify-content-center">
-                                                <!-- <h6 class="card-title mb-0">Peor Día</h6> -->
                                             </div>
                                             <p class="card-text fw-bold fs-6 mt-2">{{lowestDay}}</p>
                                         </div>
