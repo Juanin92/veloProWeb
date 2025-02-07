@@ -1,9 +1,6 @@
 package com.veloProWeb.Service.Report;
 
-import com.veloProWeb.Model.DTO.Report.DailySaleAvgDTO;
-import com.veloProWeb.Model.DTO.Report.DailySaleCountDTO;
-import com.veloProWeb.Model.DTO.Report.DailySaleEarningDTO;
-import com.veloProWeb.Model.DTO.Report.DailySaleSumDTO;
+import com.veloProWeb.Model.DTO.Report.*;
 import com.veloProWeb.Repository.ReportRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -116,6 +113,45 @@ public class ReportService implements IReportService{
                 dtoList.add(new DailySaleEarningDTO(date.toLocalDate(), profit));
             }
             return dtoList;
+        }
+    }
+
+    @Override
+    public List<ProductReportDTO> getMostProductSale(LocalDate start, LocalDate end) {
+        try{
+            Date startDate = Date.valueOf(start);
+            Date endDate = Date.valueOf(end);
+            List<Object[]> results = reportRepo.findMostProductSale(endDate, startDate);
+            List<ProductReportDTO> dtoList = new ArrayList<>();
+            for (Object[] result : results) {
+                Long id = (Long) result[0];
+                String brand = (String) result[1];
+                String description = (String) result[2];
+                BigDecimal total = (BigDecimal) result[3];
+                dtoList.add(new ProductReportDTO(id, brand, description, null, total));
+            }
+            return dtoList;
+        }catch (Exception e){
+            throw new IllegalArgumentException("Debe ingresar fechas válidas en los campos");
+        }
+    }
+
+    @Override
+    public List<ProductReportDTO> getMostCategorySale(LocalDate start, LocalDate end) {
+        try{
+            Date startDate = Date.valueOf(start);
+            Date endDate = Date.valueOf(end);
+            List<Object[]> results = reportRepo.findMostCategorySale(endDate, startDate);
+            List<ProductReportDTO> dtoList = new ArrayList<>();
+            for (Object[] result : results) {
+                Long id = (Long) result[0];
+                String name = (String) result[1];
+                BigDecimal total = (BigDecimal) result[2];
+                dtoList.add(new ProductReportDTO(id, null, null, name, total));
+            }
+            return dtoList;
+        }catch (Exception e){
+            throw new IllegalArgumentException("Debe ingresar fechas válidas en los campos");
         }
     }
 }
