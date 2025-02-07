@@ -1,9 +1,6 @@
 package com.veloProWeb.Controller.Report;
 
-import com.veloProWeb.Model.DTO.Report.DailySaleAvgDTO;
-import com.veloProWeb.Model.DTO.Report.DailySaleCountDTO;
-import com.veloProWeb.Model.DTO.Report.DailySaleEarningDTO;
-import com.veloProWeb.Model.DTO.Report.DailySaleSumDTO;
+import com.veloProWeb.Model.DTO.Report.*;
 import com.veloProWeb.Service.Report.IReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -90,6 +87,42 @@ public class ReportController {
     public ResponseEntity<Object> getEarningSale(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate){
         try{
             List<DailySaleEarningDTO> dtoList = reportService.getEarningSale(startDate, endDate);
+            return ResponseEntity.ok(dtoList);
+        }catch (IllegalArgumentException e){
+            Map<String, String> response = new HashMap<>();
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    /**
+     * Obtener los productos más vendidos en un rango de fechas.
+     * @param startDate - Fecha de inicio del rango (inclusive).
+     * @param endDate - Fecha de fin del rango (inclusive).
+     * @return - ResponseEntity Lista de objetos DTO o mensaje de excepción
+     */
+    @GetMapping("/producto_ventas")
+    public ResponseEntity<Object> getMostProductSale(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate){
+        try{
+            List<ProductReportDTO> dtoList = reportService.getMostProductSale(startDate, endDate);
+            return ResponseEntity.ok(dtoList);
+        }catch (IllegalArgumentException e){
+            Map<String, String> response = new HashMap<>();
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    /**
+     * Obtener las categorías más vendidas en un rango de fechas.
+     * @param startDate - Fecha de inicio del rango (inclusive).
+     * @param endDate - Fecha de fin del rango (inclusive).
+     * @return - ResponseEntity Lista de objetos DTO o mensaje de excepción
+     */
+    @GetMapping("/categoria_ventas")
+    public ResponseEntity<Object> getMostCategorySale(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate){
+        try{
+            List<ProductReportDTO> dtoList = reportService.getMostCategorySale(startDate, endDate);
             return ResponseEntity.ok(dtoList);
         }catch (IllegalArgumentException e){
             Map<String, String> response = new HashMap<>();
