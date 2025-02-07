@@ -116,6 +116,13 @@ public class ReportService implements IReportService{
         }
     }
 
+    /**
+     * Obtiene lista de los productos más vendidos
+     * @param start - Fecha de inicio del rango (inclusive).
+     * @param end - Fecha de fin del rango (inclusive).
+     * @return - Lista de objetos DTO
+     * @throws IllegalArgumentException Si la fecha de inicio es posterior a la fecha de fin.
+     */
     @Override
     public List<ProductReportDTO> getMostProductSale(LocalDate start, LocalDate end) {
         if (start.isAfter(end)) {
@@ -136,6 +143,13 @@ public class ReportService implements IReportService{
         }
     }
 
+    /**
+     * Obtiene lista de las categorías más vendidas
+     * @param start - Fecha de inicio del rango (inclusive).
+     * @param end - Fecha de fin del rango (inclusive).
+     * @return - Lista de objetos DTO
+     * @throws IllegalArgumentException Si la fecha de inicio es posterior a la fecha de fin.
+     */
     @Override
     public List<ProductReportDTO> getMostCategorySale(LocalDate start, LocalDate end) {
         if (start.isAfter(end)) {
