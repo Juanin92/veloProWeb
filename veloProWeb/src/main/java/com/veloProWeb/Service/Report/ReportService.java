@@ -118,40 +118,40 @@ public class ReportService implements IReportService{
 
     @Override
     public List<ProductReportDTO> getMostProductSale(LocalDate start, LocalDate end) {
-        try{
+        if (start.isAfter(end)) {
+            throw new IllegalArgumentException("La fecha de inicio no puede ser posterior a la fecha de fin.");
+        }else{
             Date startDate = Date.valueOf(start);
             Date endDate = Date.valueOf(end);
-            List<Object[]> results = reportRepo.findMostProductSale(endDate, startDate);
+            List<Object[]> results = reportRepo.findMostProductSale(startDate, endDate);
             List<ProductReportDTO> dtoList = new ArrayList<>();
             for (Object[] result : results) {
                 Long id = (Long) result[0];
                 String brand = (String) result[1];
                 String description = (String) result[2];
-                BigDecimal total = (BigDecimal) result[3];
+                BigDecimal total = (BigDecimal) result[4];
                 dtoList.add(new ProductReportDTO(id, brand, description, null, total));
             }
             return dtoList;
-        }catch (Exception e){
-            throw new IllegalArgumentException("Debe ingresar fechas válidas en los campos");
         }
     }
 
     @Override
     public List<ProductReportDTO> getMostCategorySale(LocalDate start, LocalDate end) {
-        try{
+        if (start.isAfter(end)) {
+            throw new IllegalArgumentException("La fecha de inicio no puede ser posterior a la fecha de fin.");
+        }else{
             Date startDate = Date.valueOf(start);
             Date endDate = Date.valueOf(end);
-            List<Object[]> results = reportRepo.findMostCategorySale(endDate, startDate);
+            List<Object[]> results = reportRepo.findMostCategorySale(startDate, endDate);
             List<ProductReportDTO> dtoList = new ArrayList<>();
             for (Object[] result : results) {
                 Long id = (Long) result[0];
-                String name = (String) result[1];
-                BigDecimal total = (BigDecimal) result[2];
-                dtoList.add(new ProductReportDTO(id, null, null, name, total));
+                String categoryName = (String) result[3];
+                BigDecimal total = (BigDecimal) result[4];
+                dtoList.add(new ProductReportDTO(id, null, null, categoryName, total));
             }
             return dtoList;
-        }catch (Exception e){
-            throw new IllegalArgumentException("Debe ingresar fechas válidas en los campos");
         }
     }
 }
