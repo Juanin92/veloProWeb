@@ -87,6 +87,10 @@ export class ReportComponent implements OnInit, AfterViewInit {
     if (mode === 'manual') {
       this.startDate = this.starDateInput;
       this.endDate = this.endDateInput;
+      if(this.endDate > Date.now().toString()){
+        this.notification.showWarningToast('La fecha de final aun no hay registros.', 'top', 3000);
+        return;
+      }
       if (this.startDate > this.endDate) {
         this.notification.showWarningToast('La fecha de inicio debe ser menor que la fecha de fin.', 'top', 3000);
         return;
