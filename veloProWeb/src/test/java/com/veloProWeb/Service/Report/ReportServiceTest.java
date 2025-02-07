@@ -1,9 +1,6 @@
 package com.veloProWeb.Service.Report;
 
-import com.veloProWeb.Model.DTO.Report.DailySaleAvgDTO;
-import com.veloProWeb.Model.DTO.Report.DailySaleCountDTO;
-import com.veloProWeb.Model.DTO.Report.DailySaleEarningDTO;
-import com.veloProWeb.Model.DTO.Report.DailySaleSumDTO;
+import com.veloProWeb.Model.DTO.Report.*;
 import com.veloProWeb.Repository.ReportRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,8 +17,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -125,7 +121,7 @@ public class ReportServiceTest {
         List<DailySaleEarningDTO> results = reportService.getEarningSale(startDate, end);
         assertEquals(2, results.size());
         assertEquals(10, results.get(0).getProfit());
-        assertEquals(startDate, results.get(0).getSaleDTO());
+        assertEquals(startDate, results.get(0).getDate());
         assertEquals(15, results.get(1).getProfit());
         verify(reportRepo, times(1)).findEarningPerDay(Date.valueOf(startDate), Date.valueOf(end));
     }
@@ -134,6 +130,58 @@ public class ReportServiceTest {
         LocalDate invalidStart = LocalDate.of(2025, 1, 15);
 
         Exception exception = assertThrows(IllegalArgumentException.class,() -> reportService.getEarningSale(invalidStart, end));
+        assertEquals("La fecha de inicio no puede ser posterior a la fecha de fin.", exception.getMessage());
+        verifyNoInteractions(reportRepo);
+    }
+
+    //Prueba para obtener los productos más vendidos
+    @ParameterizedTest
+    @CsvSource({"2024-12-12","2024-11-12","2024-10-12","2024-07-12","2024-01-12","2022-11-12","2025-01-12"})
+    public void getMostProductSale_valid(LocalDate startDate){
+        Object[] result1 = {1L, "Brand Test", "Test description 1", null, BigDecimal.valueOf(20)};
+        Object[] result2 = {2L, "Brand Test 2", "Test description 2", null, BigDecimal.valueOf(5)};
+        List<Object[]> mockResults = Arrays.asList(result1, result2);
+        when(reportRepo.findMostProductSale(Date.valueOf(startDate), Date.valueOf(end))).thenReturn(mockResults);
+
+        List<ProductReportDTO> results = reportService.getMostProductSale(startDate, end);
+        assertEquals(2, results.size());
+        assertEquals(1L, results.get(0).getId());
+        assertEquals("Brand Test", results.get(0).getBrand());
+        assertEquals("Test description 2", results.get(1).getDescription());
+        assertEquals(5, results.get(1).getTotal());
+        assertNull(results.get(0).getCategoryName());
+        verify(reportRepo, times(1)).findMostProductSale(Date.valueOf(startDate), Date.valueOf(end));
+    }
+    @Test
+    public void getMostProductSale_invalidDates(){
+        LocalDate invalidStart = LocalDate.of(2025, 1, 15);
+        Exception exception = assertThrows(IllegalArgumentException.class,() -> reportService.getMostProductSale(invalidStart, end));
+        assertEquals("La fecha de inicio no puede ser posterior a la fecha de fin.", exception.getMessage());
+        verifyNoInteractions(reportRepo);
+    }
+
+    //Prueba para obtener las categorías más vendidas
+    @ParameterizedTest
+    @CsvSource({"2024-12-12","2024-11-12","2024-10-12","2024-07-12","2024-01-12","2022-11-12","2025-01-12"})
+    public void getMostCategorySale_valid(LocalDate startDate){
+        Object[] result1 = {1L, null, null, "Category Test", BigDecimal.valueOf(20)};
+        Object[] result2 = {2L, null, null, "Category Test 2", BigDecimal.valueOf(5)};
+        List<Object[]> mockResults = Arrays.asList(result1, result2);
+        when(reportRepo.findMostCategorySale(Date.valueOf(startDate), Date.valueOf(end))).thenReturn(mockResults);
+
+        List<ProductReportDTO> results = reportService.getMostCategorySale(startDate, end);
+        assertEquals(2, results.size());
+        assertEquals(1L, results.get(0).getId());
+        assertEquals("Category Test 2", results.get(1).getCategoryName());
+        assertEquals(5, results.get(1).getTotal());
+        assertNull(results.get(0).getBrand());
+        assertNull(results.get(0).getDescription());
+        verify(reportRepo, times(1)).findMostCategorySale(Date.valueOf(startDate), Date.valueOf(end));
+    }
+    @Test
+    public void getMostCategorySale_invalidDates(){
+        LocalDate invalidStart = LocalDate.of(2025, 1, 15);
+        Exception exception = assertThrows(IllegalArgumentException.class,() -> reportService.getMostCategorySale(invalidStart, end));
         assertEquals("La fecha de inicio no puede ser posterior a la fecha de fin.", exception.getMessage());
         verifyNoInteractions(reportRepo);
     }
