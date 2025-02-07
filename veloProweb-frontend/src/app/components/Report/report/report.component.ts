@@ -131,7 +131,7 @@ export class ReportComponent implements OnInit, AfterViewInit {
           values: { ['sale']: item.sale }
         }));
         if (this.selectedPeriod === 'manual') {
-          this.calculateSelectedPeriod();
+          this.calculateSelectedPeriodManual();
         }
         this.updateChartData('sale', 'Ventas', 'Cantidad de Ventas');
         this.calculateSummary('sale');
@@ -150,7 +150,7 @@ export class ReportComponent implements OnInit, AfterViewInit {
           values: { ['sum']: item.sum }
         }));
         if (this.selectedPeriod === 'manual') {
-          this.calculateSelectedPeriod();
+          this.calculateSelectedPeriodManual();
         }
         this.updateChartData('sum', '$', 'Monto total de Ventas', this.formatCLP);
         this.calculateSummary('sum', this.formatCLP);
@@ -170,7 +170,7 @@ export class ReportComponent implements OnInit, AfterViewInit {
         }));
 
         if (this.selectedPeriod === 'manual') {
-          this.calculateSelectedPeriod();
+          this.calculateSelectedPeriodManual();
         }
         this.updateChartData('avg', '$', 'Monto Promedio de Ventas', this.formatCLP);
         this.calculateSummary('avg', this.formatCLP);
@@ -190,7 +190,7 @@ export class ReportComponent implements OnInit, AfterViewInit {
         }));
 
         if (this.selectedPeriod === 'manual') {
-          this.calculateSelectedPeriod();
+          this.calculateSelectedPeriodManual();
         }
         this.updateChartData('profit', '$', 'Ganancias de Ventas', this.formatCLP);
         this.calculateSummary('profit', this.formatCLP);
@@ -257,7 +257,7 @@ export class ReportComponent implements OnInit, AfterViewInit {
     }));
   }
 
-  private calculateSelectedPeriod(): void {
+  private calculateSelectedPeriodManual(): void {
     const start = new Date(this.startDate);
     const end = new Date(this.endDate);
     const diffTime = Math.abs(end.getTime() - start.getTime());
