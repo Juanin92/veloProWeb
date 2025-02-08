@@ -138,8 +138,8 @@ public class ReportServiceTest {
     @ParameterizedTest
     @CsvSource({"2024-12-12","2024-11-12","2024-10-12","2024-07-12","2024-01-12","2022-11-12","2025-01-12"})
     public void getMostProductSale_valid(LocalDate startDate){
-        Object[] result1 = {1L, "Brand Test", "Test description 1", null, BigDecimal.valueOf(20)};
-        Object[] result2 = {2L, "Brand Test 2", "Test description 2", null, BigDecimal.valueOf(5)};
+        Object[] result1 = {1L, "Brand Test", "Test description 1", BigDecimal.valueOf(20)};
+        Object[] result2 = {2L, "Brand Test 2", "Test description 2", BigDecimal.valueOf(5)};
         List<Object[]> mockResults = Arrays.asList(result1, result2);
         when(reportRepo.findMostProductSale(Date.valueOf(startDate), Date.valueOf(end))).thenReturn(mockResults);
 
@@ -164,8 +164,8 @@ public class ReportServiceTest {
     @ParameterizedTest
     @CsvSource({"2024-12-12","2024-11-12","2024-10-12","2024-07-12","2024-01-12","2022-11-12","2025-01-12"})
     public void getMostCategorySale_valid(LocalDate startDate){
-        Object[] result1 = {1L, null, null, "Category Test", BigDecimal.valueOf(20)};
-        Object[] result2 = {2L, null, null, "Category Test 2", BigDecimal.valueOf(5)};
+        Object[] result1 = {1L, "Category Test", BigDecimal.valueOf(20)};
+        Object[] result2 = {2L, "Category Test 2", BigDecimal.valueOf(5)};
         List<Object[]> mockResults = Arrays.asList(result1, result2);
         when(reportRepo.findMostCategorySale(Date.valueOf(startDate), Date.valueOf(end))).thenReturn(mockResults);
 
