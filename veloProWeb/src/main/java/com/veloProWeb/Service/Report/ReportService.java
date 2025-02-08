@@ -136,7 +136,7 @@ public class ReportService implements IReportService{
                 Long id = (Long) result[0];
                 String brand = (String) result[1];
                 String description = (String) result[2];
-                BigDecimal total = (BigDecimal) result[4];
+                BigDecimal total = (BigDecimal) result[3];
                 dtoList.add(new ProductReportDTO(id, brand, description, null, total));
             }
             return dtoList;
@@ -161,8 +161,8 @@ public class ReportService implements IReportService{
             List<ProductReportDTO> dtoList = new ArrayList<>();
             for (Object[] result : results) {
                 Long id = (Long) result[0];
-                String categoryName = (String) result[3];
-                BigDecimal total = (BigDecimal) result[4];
+                String categoryName = (String) result[1];
+                BigDecimal total = (BigDecimal) result[2];
                 dtoList.add(new ProductReportDTO(id, null, null, categoryName, total));
             }
             return dtoList;
