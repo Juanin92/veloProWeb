@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ReportDTO } from '../../../models/DTO/Report/report-dto';
 import { ChartService } from '../../../utils/chart.service';
+import { ProductReportDTO } from '../../../models/DTO/Report/product-report-dto';
 
 @Component({
   selector: 'app-report',
@@ -25,6 +26,7 @@ export class ReportComponent implements OnInit, AfterViewInit {
   endDate: string = '';
   endDateInput: string = '';
   reportList: ReportDTO[] = [];
+  productReportList: ProductReportDTO[] = [];
   activeButton: string = '';
   total: string = '';
   highestDay: string = '';
@@ -87,7 +89,7 @@ export class ReportComponent implements OnInit, AfterViewInit {
     if (mode === 'manual') {
       this.startDate = this.starDateInput;
       this.endDate = this.endDateInput;
-      if(this.endDate > Date.now().toString()){
+      if(new Date(this.endDate).getTime() > Date.now()){
         this.notification.showWarningToast('La fecha de fin no puede ser posterior a la fecha actual.', 'top', 3000);
         return;
       }
@@ -116,11 +118,11 @@ export class ReportComponent implements OnInit, AfterViewInit {
       case 'totalEarnings':
         this.getEarningSale();
         break;
-      case 'productsSold':
-        // this.getProductsSold(); 
+      case 'productSold':
+        this.getProductsSold(); 
         break;
       case 'categoriesSold':
-        // this.getCategoriesSold();
+        this.getCategoriesSold();
         break;
       default:
         break;
@@ -205,6 +207,34 @@ export class ReportComponent implements OnInit, AfterViewInit {
     });
   }
 
+  getProductsSold(): void{
+    this.reportService.getMostProductSale(this.startDate, this.endDate).subscribe({
+      next:(list) => {
+        this.productReportList = list;
+        if (this.selectedPeriod === 'manual') {
+          this.calculateSelectedPeriodManual();
+        }
+        this.updateChartData('productSale', 'Producto', 'Productos Más Vendidos');
+      }, error: (error: Error) => {
+        console.error(error.message);
+      }
+    });
+  }
+
+  getCategoriesSold(): void{
+    this.reportService.getMostCategorySale(this.startDate, this.endDate).subscribe({
+      next:(list) => {
+        this.productReportList = list;
+        if (this.selectedPeriod === 'manual') {
+          this.calculateSelectedPeriodManual();
+        }
+        this.updateChartData('categoriesSale', 'Categoría', 'Categorías Más Vendidas');
+      }, error: (error: Error) => {
+        console.error(error.message);
+      }
+    });
+  }
+
   private updateChartData(key: string, legend: string, title: string, formatFunction?: (value: number) => string): void {
     if (this.reportList.length > 0) {
       switch (this.selectedPeriod) {
@@ -224,6 +254,13 @@ export class ReportComponent implements OnInit, AfterViewInit {
           break;
         default:
           break;
+      }
+    }
+    if (this.productReportList.length > 0){
+      if(key === 'productSale'){
+        this.chartService.updateChart(this.productReportList.map(item => item.total), this.productReportList.map(item => item.brand!), legend, title,);
+      }else{
+        this.chartService.updateChart(this.productReportList.map(item => item.total), this.productReportList.map(item => item.categoryName!), legend, title,);
       }
     }
   }
@@ -348,6 +385,7 @@ export class ReportComponent implements OnInit, AfterViewInit {
 
   private resetData(): void {
     this.reportList.splice(0, this.reportList.length);
+    this.productReportList.splice(0, this.productReportList.length);
     this.chartService.resetChart(this.chartElement);
     this.total = '';
     this.highestDay = '';
@@ -355,6 +393,7 @@ export class ReportComponent implements OnInit, AfterViewInit {
     this.startDate = '';
     this.endDate = '';
     this.trend = '';
+    this.activeButton = '';
   }
 
   private formatDate(dateString: string): string {
