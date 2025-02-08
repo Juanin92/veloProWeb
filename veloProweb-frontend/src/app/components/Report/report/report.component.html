@@ -105,12 +105,15 @@
                             <h5 class="card-title">Resumen de Datos</h5>
                             <div class="row g-3 justify-content-around h-100">
                                 <div class="col-12 col-md-6">
-                                    <div *ngIf="highestDay !== ''"
+                                    <div *ngIf="highestDay !== '' || productReportList.length > 0"
                                         class="card bg-success text-white shadow-lg rounded-3 h-100">
                                         <div class="card-body text-center d-flex flex-column justify-content-center">
                                             <div class="d-flex align-items-center justify-content-center">
                                             </div>
-                                            <p class="card-text fw-bold fs-6 mt-2">{{highestDay}}</p>
+                                            <p *ngIf="highestDay !== ''" class="card-text fw-bold fs-6 mt-2">{{highestDay}}</p>
+                                            <p *ngIf="activeButton === 'productSold'" class="card-text fw-bold fs-6 mt-2">{{productReportList[0].description}}</p>
+                                            <p *ngIf="activeButton === 'categoriesSold'" class="card-text fw-bold fs-6 mt-2">{{productReportList[0].categoryName}}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -121,6 +124,17 @@
                                             <div class="d-flex align-items-center justify-content-center">
                                             </div>
                                             <p class="card-text fw-bold fs-6 mt-2">{{total}}</p>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="productReportList.length > 0" class="card bg-danger shadow-lg rounded-3 h-100">
+                                        <div class="card-body text-center d-flex flex-column justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                            </div>
+                                                <p *ngIf="activeButton === 'productSold'" class="card-text fw-bold fs-6 mt-2">
+                                                    {{productReportList[productReportList.length - 1].description}}</p>
+                                                <p *ngIf="activeButton === 'categoriesSold'" class="card-text fw-bold fs-6 mt-2">
+                                                    {{productReportList[productReportList.length - 1].categoryName}}
+                                                </p>
                                         </div>
                                     </div>
                                 </div>
