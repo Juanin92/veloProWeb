@@ -34,6 +34,9 @@ export class KardexComponent implements OnInit, AfterViewInit{
     this.getAllKardex();
   }
 
+  /**
+   * Obtiene una lista de reportes de productos
+   */
   getAllKardex(): void{
     this.kardexService.getAllKardex().subscribe({
       next:(list) =>{
@@ -46,6 +49,10 @@ export class KardexComponent implements OnInit, AfterViewInit{
     });
   }
 
+  /**
+   * Descarga de datos de la lista (reportes) en un archivo excel
+   * Transforma la lista filtrada a un formato y datos necesarios a mostrar
+   */
   downloadExcel(): void{
     const transformedData = this.filteredKardexList.map(item => ({
       id: item.id,
@@ -61,6 +68,10 @@ export class KardexComponent implements OnInit, AfterViewInit{
     this.excelService.generateExcel(transformedData, 'Registro-Productos');
   }
 
+  /**
+   *Filtra las registro según el texto ingresado en el campo de búsqueda.
+   *Busca coincidencias en el tipos de movimientos y descripción de los productos.
+   */
   searchFilterRegisters(): void{
     if (this.textFilter.trim() === '') {
       this.filteredKardexList = this.kardexList;
@@ -71,6 +82,11 @@ export class KardexComponent implements OnInit, AfterViewInit{
     }
   }
 
+  /**
+   * Asigna una clase de color a un tipo de movimiento.
+   * @param movementType - Tipo de movimiento
+   * @returns - Clase bootstrap correspondiente al color del movimiento
+   */
   colorToMovementTypes(movementType: string): string{
     switch (movementType) {
       case 'AJUSTE': return 'text-bg-warning';
