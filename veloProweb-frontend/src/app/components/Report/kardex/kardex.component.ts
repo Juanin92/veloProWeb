@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TooltipService } from '../../../utils/tooltip.service';
 import { MovementsType } from '../../../models/enum/movements-type';
+import { ExcelService } from '../../../utils/excel.service';
 
 @Component({
   selector: 'app-kardex',
@@ -22,6 +23,7 @@ export class KardexComponent implements OnInit, AfterViewInit{
   constructor(
     private kardexService: KardexServiceService,
     private tooltip: TooltipService,
+    private excelService: ExcelService
   ){}
 
   ngAfterViewInit(): void {
@@ -42,6 +44,22 @@ export class KardexComponent implements OnInit, AfterViewInit{
         console.log('Registro no encontrado', error);
       }
     });
+  }
+
+  downloadExcel(): void{
+    const transformedData = this.filteredKardexList.map(item => ({
+      id: item.id,
+      fecha: item.date,
+      descripcion: item.product.description,
+      stock: item.stock,
+      precio: item.price,
+      movimiento: item.movementsType,
+      cantidad: item.quantity,
+      usuario: item.user.name + ' ' + item.user.surname,
+      observacion: item.comment
+    }));
+    this.excelService.generateExcel(transformedData, 'Registro-Productos');
+    console.log('lista: ', this.filteredKardexList);
   }
 
   searchFilterRegisters(): void{
