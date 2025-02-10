@@ -148,6 +148,7 @@
                 (keydown.enter)="disableEdit(purchaseDetail, 'price')"
                 class="form-control form-control-sm mx-auto"
                 style="width: 60px"
+                required
               />
             </td>
             <td>{{ purchaseDetail.tax | currency : "CLP" : "$" : "1.0-0" }}</td>
@@ -166,6 +167,7 @@
                 (keydown.enter)="disableEdit(purchaseDetail, 'quantity')"
                 class="form-control form-control-sm mx-auto"
                 style="width: 60px"
+                required
               />
             </td>
             <td>
@@ -176,8 +178,8 @@
                 <img
                   src="/assets/icons/iconCancel.png"
                   alt="activar"
-                  width="30"
-                  height="30"
+                  width="24"
+                  height="24"
                   class="img-fluid"
                 />
               </button>
