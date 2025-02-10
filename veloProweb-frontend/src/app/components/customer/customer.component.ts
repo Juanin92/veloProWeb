@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
 import { Customer } from '../../models/Entity/Customer/customer.model';
 import { CustomerService } from '../../services/customer/customer.service';
 import { CommonModule, NgStyle } from '@angular/common';
@@ -32,12 +32,15 @@ export class CustomerComponent implements OnInit, AfterViewInit {
     private customerHelper: CustomerHelperServiceService,
     private notification: NotificationService,
     private tooltipService: TooltipService,
-    private modalService: ModalService) {
+    private modalService: ModalService,
+    private renderer: Renderer2) {
     this.selectedCustomer = customerHelper.createEmptyCustomer();
   }
 
   ngAfterViewInit(): void {
-    this.tooltipService.initializeTooltips();
+    this.renderer.listen('document', 'mouseover', () => {
+      this.tooltipService.initializeTooltips();
+    });
   }
 
   ngOnInit(): void {
