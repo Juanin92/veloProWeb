@@ -10,6 +10,7 @@ import { SupplierService } from '../../../services/Purchase/supplier.service';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { firstValueFrom } from 'rxjs';
 import { DetailPurchaseRequestDTO } from '../../../models/DTO/detail-purchase-request-dto';
+import { ExcelService } from '../../../utils/excel.service';
 
 @Component({
   selector: 'app-purchase-report',
@@ -33,7 +34,8 @@ export class PurchaseReportComponent implements OnInit, AfterViewInit {
     private supplierService: SupplierService,
     private notification: NotificationService,
     private tooltip: TooltipService,
-    private renderer: Renderer2) { }
+    private renderer: Renderer2,
+    private excelService: ExcelService) { }
 
   ngAfterViewInit(): void {
     this.renderer.listen('document', 'mouseover', () => {
@@ -139,6 +141,21 @@ export class PurchaseReportComponent implements OnInit, AfterViewInit {
     this.startDate = '';
     this.finalDate = '';
     this.filteredPurchaseList = this.purchaseList;
+  }
+
+  /**
+   * Descarga de datos de la lista (reportes) en un archivo excel
+   * Transforma la lista filtrada a un formato y datos necesarios a mostrar
+   */
+  downloadExcel(): void{
+    const transformedData = this.filteredPurchaseList.map(item => ({
+      fecha: item.date,
+      documento: item.documentType + '-' + item.document,
+      iva: item.tax,
+      total: item.purchaseTotal,
+      proveedor: item.supplier?.name,
+    }));
+    this.excelService.generateExcel(transformedData, 'Reporte-Compras');
   }
 
   /**

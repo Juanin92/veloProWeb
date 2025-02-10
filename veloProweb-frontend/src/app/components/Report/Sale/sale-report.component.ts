@@ -7,6 +7,7 @@ import { SaleRequestDTO } from '../../../models/DTO/sale-request-dto';
 import { DetailSaleRequestDTO } from '../../../models/DTO/detail-sale-request-dto';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { TooltipService } from '../../../utils/tooltip.service';
+import { ExcelService } from '../../../utils/excel.service';
 
 @Component({
   selector: 'app-sale-report',
@@ -34,7 +35,8 @@ export class SaleReportComponent implements OnInit, AfterViewInit {
     private saleService: SaleService,
     private notification: NotificationService,
     private tooltip: TooltipService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private excelService: ExcelService
   ) { }
 
   ngAfterViewInit(): void {
@@ -140,6 +142,22 @@ export class SaleReportComponent implements OnInit, AfterViewInit {
     this.finalDate = '';
     this.filteredSaleList = this.saleList;
     this.tooltip.initializeTooltips();
+  }
+
+  /**
+   * Descarga de datos de la lista (reportes) en un archivo excel
+   * Transforma la lista filtrada a un formato y datos necesarios a mostrar
+   */
+  downloadExcel(): void{
+    const transformedData = this.filteredSaleList.map(item => ({
+      documento: item.document,
+      fecha: item.date,
+      MetodoPago: item.paymentMethod,
+      iva: item.tax,
+      total: item.totalSale,
+      observacion: item.comment
+    }));
+    this.excelService.generateExcel(transformedData, 'Reporte-ventas');
   }
 
   /**
