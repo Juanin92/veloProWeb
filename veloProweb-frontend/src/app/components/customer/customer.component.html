@@ -39,7 +39,7 @@
             </div>
         </div>
     </div>
-    <div class="text-center p-2 pt-0 table-responsive" style="max-height: calc(100vh - 220px);">
+    <div class="text-center p-2 pt-0 table-responsive" style="max-height: calc(100vh - 210px);">
         <table class="table table-hover">
             <thead class="table-light">
                 <tr>
@@ -51,7 +51,7 @@
                     <th scope="col" class="position-sticky top-0">Deuda</th>
                     <th scope="col" class="position-sticky top-0">Estado</th>
                     <th scope="col" class="position-sticky top-0">Cuenta</th>
-                    <th scope="col" class="position-sticky top-0">Acción</th>
+                    <th scope="col" class="position-sticky top-0 bg-light" style="z-index: 1020;">Acción</th>
                 </tr>
             </thead>
             <tbody class="table-group-divider text-center align-middle">
@@ -65,11 +65,31 @@
                     <td [ngStyle]="{'background-color': statusColor(customer.status)}"></td>
                     <td>{{getStatusAccount(customer.account)}}</td>
                     <td>
-                        <div>
-                            <button *ngIf="customer.debt > 0" class="btn btn-sm btn-success m-1" data-bs-toggle="modal" data-bs-target="#paymentCustomer" (click)="openModalCustomer(customer)"><img src="/assets/icons/btnPayIcon.png" alt="pago" width="30" height="30" class="img-fluid"></button>
-                            <button  class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#updateCustomer" (click)="openModalCustomer(customer)"><img src="/assets/icons/btnEditIcon.png" alt="editar" width="30" height="30" class="img-fluid"></button>
-                            <button *ngIf="customer.debt === 0 && customer.account" class="btn btn-sm btn-danger m-1" (click)="deleteCustomer(customer)" ><img src="/assets/icons/btnDeleteIcon.png" alt="borrar" width="30" height="30" class="img-fluid"></button>
+                        <div class="btn-group" role="group" aria-label="Acciones de cliente">
+                            <button *ngIf="customer.debt > 0" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#paymentCustomer" (click)="openModalCustomer(customer)">
+                                <img src="/assets/icons/btnPayIcon.png" alt="pago" width="24" height="24" class="img-fluid"
+                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Pago de Deuda">
+                            </button>
+                            <button  class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#updateCustomer" (click)="openModalCustomer(customer)">
+                                <img src="/assets/icons/btnEditIcon.png" alt="editar" width="24" height="24" class="img-fluid"
+                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Actualizar Datos">
+                            </button>
+                            <button *ngIf="customer.debt === 0 && customer.account" class="btn btn-danger btn-sm" (click)="deleteCustomer(customer)" >
+                                <img src="/assets/icons/btnDeleteIcon.png" alt="borrar" width="24" height="24" class="img-fluid"
+                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
+                            </button>
                         </div>
+                        <!-- <div>
+                            <button *ngIf="customer.debt > 0" class="btn btn-sm btn-success m-1" data-bs-toggle="modal"
+                                data-bs-target="#paymentCustomer" (click)="openModalCustomer(customer)"><img src="/assets/icons/btnPayIcon.png"
+                                    alt="pago" width="24" height="24" class="img-fluid"></button>
+                            <button class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#updateCustomer"
+                                (click)="openModalCustomer(customer)"><img src="/assets/icons/btnEditIcon.png" alt="editar" width="24"
+                                    height="24" class="img-fluid"></button>
+                            <button *ngIf="customer.debt === 0 && customer.account" class="btn btn-sm btn-danger m-1"
+                                (click)="deleteCustomer(customer)"><img src="/assets/icons/btnDeleteIcon.png" alt="borrar" width="24"
+                                    height="24" class="img-fluid"></button>
+                        </div> -->
                     </td>
                 </tr>
             </tbody>
