@@ -27,6 +27,8 @@ export class SettingComponent implements OnInit{
     emailSecurityApp: '',
     address: ''
   };
+  access: boolean = false;
+  pass: string = '';
 
   constructor(
     private recordService: RecordService,
@@ -69,5 +71,14 @@ export class SettingComponent implements OnInit{
         }
       }
     });
+  }
+
+  getAccessHistory(): void{
+    const key = 1234;
+    if (this.pass === key.toString()) {
+      this.access = true;
+    }else{
+      console.log('Acceso denegado');
+    }
   }
 }
