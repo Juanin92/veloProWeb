@@ -21,6 +21,7 @@ export class SupplierComponent implements OnInit {
   status: boolean = false; //Estado para mostrar el formulario de creación
   updateStatus: boolean = false; //Estado para mostrar el formulario de actualización
   validator = SupplierValidator;
+  touchedFields: Record<string, boolean> = {};
 
   constructor(
     private supplierService: SupplierService,
@@ -110,6 +111,7 @@ export class SupplierComponent implements OnInit {
     this.updateStatus = false;
     this.selectedSupplier = null;
     this.newSupplier = this.initializeSupplier();
+    this.touchedFields = {};
   }
 
   /**
