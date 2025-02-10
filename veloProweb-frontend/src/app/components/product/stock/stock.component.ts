@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
 import { ProductService } from '../../../services/Product/product.service';
 import { Product } from '../../../models/Entity/Product/product.model';
 import { CommonModule, NgStyle } from '@angular/common';
@@ -11,6 +11,7 @@ import { RouterModule } from '@angular/router';
 import { StatusProduct } from '../../../models/enum/status-product';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ModalService } from '../../../utils/modal.service';
+import { TooltipService } from '../../../utils/tooltip.service';
 
 @Component({
   selector: 'app-stock',
@@ -19,7 +20,7 @@ import { ModalService } from '../../../utils/modal.service';
   templateUrl: './stock.component.html',
   styleUrl: './stock.component.css'
 })
-export class StockComponent implements OnInit {
+export class StockComponent implements OnInit, AfterViewInit {
 
   products: Product[] = [];
   filteredProducts: Product[] = [];
@@ -31,8 +32,17 @@ export class StockComponent implements OnInit {
     private stockService: ProductService,
     private helper: ProductHelperService,
     private notification: NotificationService,
-    public modalService: ModalService) {
+    public modalService: ModalService,
+    private tooltipService: TooltipService,
+    private renderer: Renderer2) {
     this.selectedProduct = helper.createEmptyProduct();
+  }
+
+
+  ngAfterViewInit(): void {
+    this.renderer.listen('document', 'mouseover', () => {
+      this.tooltipService.initializeTooltips();
+    });
   }
 
   /**
