@@ -35,6 +35,7 @@ export class AddProductComponent implements OnInit {
   unitList: UnitProductModel[] = [];
   categoryList: Category[] = [];
   subcategoryList: Subcategory[] = [];
+  touchedFields: Record<string, boolean> = {};
   @Output() productAdded = new EventEmitter<void>(); 
 
   constructor(
@@ -63,6 +64,7 @@ export class AddProductComponent implements OnInit {
     this.getAllBrands();
     this.getAllUnits();
     this.getAllCategories();
+    this.touchedFields = {};
   }
 
   /**
@@ -187,5 +189,6 @@ export class AddProductComponent implements OnInit {
     this.subcategorySelected = null;
     this.unitSelected = null;
     this.subcategoryList = [];
+    this.touchedFields = {};
   }
 }

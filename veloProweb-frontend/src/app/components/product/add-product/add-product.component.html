@@ -12,7 +12,8 @@
                         <div class="form-floating mb-3 m-2 w-100">
                             <p *ngIf="brandList.length === 0">Sin marcas disponibles.</p>
                             <select *ngIf="brandList.length !== 0" class="form-select w-auto" name="brand" aria-label="Seleccione marca"
-                            (change)="addToDescription(brandSelected?.name); updateNewProductFields()" [(ngModel)]="brandSelected" 
+                            (change)="addToDescription(brandSelected?.name); updateNewProductFields()" 
+                            [(ngModel)]="brandSelected"
                             [ngClass]="{'is-invalid': !validator.isFieldValid(newProduct, 'brand'), 'is-valid': validator.isFieldValid(newProduct, 'brand')}">
                                 <option [ngValue]="null" selected disabled>Marca</option>
                                 <option *ngFor="let brand of brandList" [ngValue]="brand">{{brand.name}}</option>
@@ -62,7 +63,8 @@
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="description" placeholder="Ingrese una descripción general" name="description"
                         [(ngModel)]="newProduct.description"
-                        [ngClass]="{'is-invalid': !validator.isFieldValid(newProduct, 'description'), 'is-valid': validator.isFieldValid(newProduct, 'description')}" required />
+                        (keydown)="touchedFields['description'] = true"
+                        [ngClass]="{'is-invalid':touchedFields['description'] && !validator.isFieldValid(newProduct, 'description'), 'is-valid':touchedFields['description']  && validator.isFieldValid(newProduct, 'description')}" required />
                         <label for="description" class="form-label">Descripción</label>
                         <div *ngIf="!validator.isFieldValid(newProduct,'description')" class="invalid-feedback">
                             Debe ingresar una descripción del producto
