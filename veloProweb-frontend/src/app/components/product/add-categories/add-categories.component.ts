@@ -29,6 +29,7 @@ export class AddCategoriesComponent implements OnInit{
   newUnit: UnitProductModel;
   validator = ProductValidator;
   categoryList: Category[] = [];
+  touchedFields: Record<string, boolean> = {};
 
   constructor(
     private brandService: BrandService,
@@ -150,5 +151,6 @@ export class AddCategoriesComponent implements OnInit{
     this.newSubcategory = this.helper.createEmptySubcategory();
     this.newUnit = this.helper.createEmptyUnit();
     this.category = null;
+    this.touchedFields = {};
   }
 }

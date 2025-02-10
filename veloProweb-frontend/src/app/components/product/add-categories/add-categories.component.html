@@ -12,8 +12,10 @@
                             <div class="form-floating mb-3 m-2 w-100 d-flex flex-row">
                                 <div class="input-group mb-3  ms-5 me-5">
                                     <input type="text" class="form-control ms-5" id="brand" name="brand" placeholder="Ingrese una marca"
-                                        aria-label="Ingrese una marca" aria-describedby="addBrand" [(ngModel)]="newBrand.name"
-                                        [ngClass]="{'is-invalid': !validator.validateBrand(newBrand), 'is-valid': validator.validateBrand(newBrand)}"
+                                        aria-label="Ingrese una marca" aria-describedby="addBrand" 
+                                        [(ngModel)]="newBrand.name"
+                                        (keydown)="touchedFields['brand'] = true"
+                                        [ngClass]="{'is-invalid':touchedFields['brand'] && !validator.validateBrand(newBrand), 'is-valid':touchedFields['brand'] && validator.validateBrand(newBrand)}"
                                         required>
                                     <button [disabled]="!validator.validateBrand(newBrand)" class="btn btn-outline-success ms-1" type="button" id="addBrand"
                                         (click)="createBrand()">Ingresar</button>
@@ -27,8 +29,10 @@
                             <div class="form-floating mb-3 m-2 w-100 d-flex flex-row">
                                 <div class="input-group mb-3  ms-5 me-5">
                                     <input type="text" class="form-control ms-5" id="category" name="category" placeholder="Ingrese una categoría"
-                                        aria-label="Ingrese una categoría" aria-describedby="addCategory" [(ngModel)]="newCategory.name"
-                                        [ngClass]="{'is-invalid': !validator.validateCategory(newCategory), 'is-valid': validator.validateCategory(newCategory)}"
+                                        aria-label="Ingrese una categoría" aria-describedby="addCategory" 
+                                        [(ngModel)]="newCategory.name"
+                                        (keydown)="touchedFields['category'] = true"
+                                        [ngClass]="{'is-invalid':touchedFields['category'] && !validator.validateCategory(newCategory), 'is-valid':touchedFields['category'] && validator.validateCategory(newCategory)}"
                                         required>
                                     <button [disabled]="!validator.validateCategory(newCategory)" class="btn btn-outline-success ms-1" type="button" id="addCategory"
                                         (click)="createCategory()">Ingresar</button>
@@ -48,8 +52,10 @@
                                     </select>
                                     <input [disabled]="!category" type="text" class="form-control" id="subcategory" name="subcategory"
                                         placeholder="Ingrese una subcategoría" aria-label="Ingrese una subcategoría"
-                                        aria-describedby="addSubcategory" [(ngModel)]="newSubcategory.name"
-                                        [ngClass]="{'is-invalid': !validator.validateSubcategory(newSubcategory), 'is-valid': validator.validateSubcategory(newSubcategory)}"
+                                        aria-describedby="addSubcategory" 
+                                        [(ngModel)]="newSubcategory.name"
+                                        (keydown)="touchedFields['subcategory'] = true"
+                                        [ngClass]="{'is-invalid':touchedFields['subcategory'] && !validator.validateSubcategory(newSubcategory), 'is-valid':touchedFields['subcategory'] && validator.validateSubcategory(newSubcategory)}"
                                         required>
                                     <button [disabled]="!validator.validateSubcategory(newSubcategory)" class="btn btn-outline-success ms-1" type="button" id="addSubcategory" 
                                         (click)="createSubcategory()">Ingresar</button>
@@ -63,8 +69,10 @@
                             <div class="form-floating mb-3 m-2 w-100 d-flex flex-row">
                                 <div class="input-group mb-3 ms-5 me-5">
                                     <input type="text" class="form-control ms-5" id="unit" name="unit" placeholder="Ingrese una Unidad de medida"
-                                        aria-label="Ingrese una Unidad de medida" aria-describedby="addUnit" [(ngModel)]="newUnit.nameUnit"
-                                        [ngClass]="{'is-invalid': !validator.validateUnit(newUnit), 'is-valid': validator.validateUnit(newUnit)}"
+                                        aria-label="Ingrese una Unidad de medida" aria-describedby="addUnit" 
+                                        [(ngModel)]="newUnit.nameUnit"
+                                        (keydown)="touchedFields['unit'] = true"
+                                        [ngClass]="{'is-invalid':touchedFields['unit'] && !validator.validateUnit(newUnit), 'is-valid':touchedFields['unit'] && validator.validateUnit(newUnit)}"
                                         required>
                                     <button [disabled]="!validator.validateUnit(newUnit)" class="btn btn-outline-success ms-1" type="button" id="addUnit" 
                                         (click)="createUnit()">Ingresar</button>
