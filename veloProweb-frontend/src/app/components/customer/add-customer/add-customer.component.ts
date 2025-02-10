@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Customer } from '../../../models/Entity/Customer/customer.model';
 import { CustomerService } from '../../../services/customer/customer.service';
@@ -6,7 +6,6 @@ import { CustomerValidator } from '../../../validation/customer-validator';
 import { CommonModule } from '@angular/common';
 import { CustomerHelperServiceService } from '../../../services/customer/customer-helper-service.service';
 import { NotificationService } from '../../../utils/notification-service.service';
-import { ProductHelperService } from '../../../services/Product/product-helper.service';
 import { ModalService } from '../../../utils/modal.service';
 
 @Component({
@@ -21,6 +20,7 @@ export class AddCustomerComponent {
   newCustomer: Customer;
   customerValidator = CustomerValidator; // Validador de para los datos del cliente.
   @Output() customerAdded = new EventEmitter<void>();
+  touchedFields: Record<string, boolean> = {}; //Campo tocado en el DOM 
 
   constructor(
     private customerService: CustomerService,
@@ -29,6 +29,7 @@ export class AddCustomerComponent {
     public modalService: ModalService) {
     //Se inicializa la variable con valores vacíos mediante el helper
     this.newCustomer = customerHelper.createEmptyCustomer();
+    this.touchedFields = {};
   }
 
   /**
@@ -62,5 +63,6 @@ export class AddCustomerComponent {
    */
   resetCustomerForm(): void{
     this.newCustomer = this.customerHelper.createEmptyCustomer();
+    this.touchedFields = {};
   }
 }

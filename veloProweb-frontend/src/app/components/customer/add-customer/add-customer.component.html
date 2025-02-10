@@ -11,7 +11,8 @@
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="name" placeholder="Ingrese nombre" name="name"
                             [(ngModel)]="newCustomer.name"
-                            [ngClass]="{'is-invalid': !customerValidator.isFieldValid(newCustomer, 'name'), 'is-valid': customerValidator.isFieldValid(newCustomer, 'name')}" required />
+                            (keydown)="touchedFields['name'] = true"
+                            [ngClass]="{'is-invalid': touchedFields['name'] && !customerValidator.isFieldValid(newCustomer, 'name'), 'is-valid': touchedFields['name'] && customerValidator.isFieldValid(newCustomer, 'name')}" required />
                         <label for="name" class="form-label">Nombre</label>
                         <div *ngIf="!customerValidator.isFieldValid(newCustomer,'name')" class="invalid-feedback">
                             Nombre no válido debe tener al menos 3 letras.
@@ -20,7 +21,8 @@
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="surname" placeholder="Ingrese apellidos"
                             name="surname" [(ngModel)]="newCustomer.surname"
-                            [ngClass]="{'is-invalid': !customerValidator.isFieldValid(newCustomer,'surname'), 'is-valid': customerValidator.isFieldValid(newCustomer, 'surname')}"
+                            (keydown)="touchedFields['surname'] = true"
+                            [ngClass]="{'is-invalid': touchedFields['surname'] && !customerValidator.isFieldValid(newCustomer,'surname'), 'is-valid': touchedFields['surname'] && customerValidator.isFieldValid(newCustomer, 'surname')}"
                             required />
                         <label for="surname" class="form-label">Apellidos</label>
                         <div *ngIf="!customerValidator.isFieldValid(newCustomer,'surname')" class="invalid-feedback">
@@ -29,8 +31,9 @@
                     </div>
                     <div class="form-floating mb-3">
                         <input type="tel" class="form-control" id="phone" placeholder="Ingrese número de teléfono"
-                            value="+569 " name="phone" [(ngModel)]="newCustomer.phone"
-                            [ngClass]="{'is-invalid': !customerValidator.isFieldValid(newCustomer,'phone'), 'is-valid': customerValidator.isFieldValid(newCustomer, 'phone')}"
+                            value="+569 " name="phone" [(ngModel)]="newCustomer.phone" 
+                            (keydown)="touchedFields['phone'] = true"
+                            [ngClass]="{'is-invalid': touchedFields['phone'] && !customerValidator.isFieldValid(newCustomer,'phone'), 'is-valid': touchedFields['phone'] && customerValidator.isFieldValid(newCustomer, 'phone')}"
                             required />
                         <label for="phone" class="form-label">Número de Teléfono</label>
                         <div *ngIf="!customerValidator.isFieldValid(newCustomer,'phone')" class="invalid-feedback">
@@ -40,8 +43,9 @@
                     <div class="form-floating mb-1">
                         <input type="email" class="form-control" id="email" placeholder="Ingrese email" name="email"
                             [(ngModel)]="newCustomer.email"
-                            [ngClass]="{'is-invalid': !customerValidator.isFieldValid(newCustomer,'email'), 'is-valid': customerValidator.isFieldValid(newCustomer, 'email')}" />
-                        <label for="email" class="form-label">Correo Electrónico</label>
+                            (keydown)="touchedFields['email'] = true"
+                            [ngClass]="{'is-invalid': touchedFields['email'] && !customerValidator.isFieldValid(newCustomer,'email'), 'is-valid':touchedFields['email'] && customerValidator.isFieldValid(newCustomer, 'email')}" />
+                        <label for="email" class="form-label">Correo Electrónico (opcional)</label>
                         <div *ngIf="!customerValidator.isFieldValid(newCustomer,'email')" class="invalid-feedback">
                             Email no válido (example&commat;test.com)
                         </div>
