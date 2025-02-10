@@ -23,6 +23,7 @@ export class UserComponent implements OnInit{
   roles: string[] = Object.values(Role);
   user: User;
   selectedUser: User | null = null;
+  touchedFields: Record<string, boolean> = {};
 
   roleLabels: { [key: string]: string } = {
     [Role.MASTER]: 'Maestro',
@@ -62,6 +63,7 @@ export class UserComponent implements OnInit{
     this.addUserButton = false;
     this.showForm =  false;
     this.initializeUser();
+    this.touchedFields = {};
   }
 
   initializeUser(): User {

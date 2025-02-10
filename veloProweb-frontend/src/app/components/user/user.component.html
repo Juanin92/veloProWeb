@@ -76,7 +76,8 @@
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="rut" placeholder="Rut" name="rut" 
                                     [(ngModel)]="user.rut"
-                                    [ngClass]="{'is-invalid': !validator.isFieldValid(user, 'rut'), 'is-valid': validator.isFieldValid(user, 'rut')}" required>
+                                    (keydown)="touchedFields['rut'] = true"
+                                    [ngClass]="{'is-invalid':touchedFields['rut'] && !validator.isFieldValid(user, 'rut'), 'is-valid':touchedFields['rut'] && validator.isFieldValid(user, 'rut')}" required>
                                     <label for="rut">Rut</label>
                                     <div *ngIf="!validator.isFieldValid(user,'rut')" class="invalid-feedback">
                                         Formato Incorrecto (Sin puntos, solo guión).
@@ -88,7 +89,8 @@
                                     <input type="text" class="form-control" id="name" placeholder="Nombre"
                                         name="name" 
                                         [(ngModel)]="user.name"
-                                        [ngClass]="{'is-invalid': !validator.isFieldValid(user, 'name'), 'is-valid': validator.isFieldValid(user, 'name')}" required>
+                                        (keydown)="touchedFields['name'] = true"
+                                        [ngClass]="{'is-invalid':touchedFields['name'] && !validator.isFieldValid(user, 'name'), 'is-valid':touchedFields['name'] && validator.isFieldValid(user, 'name')}" required>
                                     <label for="name">Nombre</label>
                                     <div *ngIf="!validator.isFieldValid(user,'name')" class="invalid-feedback">
                                         Nombre no válido debe tener al menos 3 letras.
@@ -99,7 +101,8 @@
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="surname" placeholder="Apellido" name="surname" 
                                     [(ngModel)]="user.surname"
-                                    [ngClass]="{'is-invalid': !validator.isFieldValid(user, 'surname'), 'is-valid': validator.isFieldValid(user, 'surname')}" required>
+                                    (keydown)="touchedFields['surname'] = true"
+                                    [ngClass]="{'is-invalid':touchedFields['surname'] && !validator.isFieldValid(user, 'surname'), 'is-valid':touchedFields['surname'] && validator.isFieldValid(user, 'surname')}" required>
                                     <label for="surname">Apellido</label>
                                     <div *ngIf="!validator.isFieldValid(user,'surname')" class="invalid-feedback">
                                         Apellido no válido debe tener al menos 3 letras.
@@ -111,7 +114,8 @@
                                     <input type="email" class="form-control" id="email" placeholder="Email"
                                         name="email"
                                         [(ngModel)]="user.email"
-                                        [ngClass]="{'is-invalid': !validator.isFieldValid(user, 'email'), 'is-valid': validator.isFieldValid(user, 'email')}" required>
+                                        (keydown)="touchedFields['email'] = true"
+                                        [ngClass]="{'is-invalid':touchedFields['email'] && !validator.isFieldValid(user, 'email'), 'is-valid':touchedFields['email'] && validator.isFieldValid(user, 'email')}" required>
                                     <label for="email">Email</label>
                                     <div *ngIf="!validator.isFieldValid(user,'email')" class="invalid-feedback">
                                         Email no válido (example&commat;test.com)
@@ -122,7 +126,8 @@
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="username" placeholder="Nombre usuario" name="username"
                                         [(ngModel)]="user.username"
-                                        [ngClass]="{'is-invalid': !validator.isFieldValid(user, 'username'), 'is-valid': validator.isFieldValid(user, 'username')}" required>
+                                        (keydown)="touchedFields['username'] = true"
+                                        [ngClass]="{'is-invalid':touchedFields['username'] && !validator.isFieldValid(user, 'username'), 'is-valid':touchedFields['username'] && validator.isFieldValid(user, 'username')}" required>
                                     <label for="username">Username</label>
                                     <div *ngIf="!validator.isFieldValid(user,'username')" class="invalid-feedback">
                                         Nombre de Usuario no válido debe tener al menos 3 letras.
@@ -134,7 +139,8 @@
                                     <input type="password" class="form-control" id="password" placeholder="Contraseña"
                                         name="password" 
                                         [(ngModel)]="user.password"
-                                        [ngClass]="{'is-invalid': !validator.isFieldValid(user, 'password'), 'is-valid': validator.isFieldValid(user, 'password')}" required>
+                                        (keydown)="touchedFields['password'] = true"
+                                        [ngClass]="{'is-invalid':touchedFields['password'] && !validator.isFieldValid(user, 'password'), 'is-valid':touchedFields['password'] && validator.isFieldValid(user, 'password')}" required>
                                     <label for="password">Contraseña</label>
                                     <div *ngIf="!validator.isFieldValid(user,'password')" class="invalid-feedback">
                                         Contraseña debe tener 7 0 más caracteres.
