@@ -59,7 +59,6 @@ export class KardexComponent implements OnInit, AfterViewInit{
       observacion: item.comment
     }));
     this.excelService.generateExcel(transformedData, 'Registro-Productos');
-    console.log('lista: ', this.filteredKardexList);
   }
 
   searchFilterRegisters(): void{
