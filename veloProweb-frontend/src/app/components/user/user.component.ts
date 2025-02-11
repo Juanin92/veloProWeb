@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
 import { UserService } from '../../services/User/user.service';
 import { User } from '../../models/Entity/user';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserValidator } from '../../validation/user-validator';
 import { Role } from '../../models/enum/role';
+import { TooltipService } from '../../utils/tooltip.service';
 
 @Component({
   selector: 'app-user',
@@ -13,10 +14,10 @@ import { Role } from '../../models/enum/role';
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })
-export class UserComponent implements OnInit{
+export class UserComponent implements OnInit, AfterViewInit{
 
   userList: User[] = [];
-  addUserButton: boolean = false;
+  addUserButton: boolean = true;
   showForm: boolean = false;
   existingMasterUser: boolean = true;
   validator = UserValidator;
@@ -33,8 +34,17 @@ export class UserComponent implements OnInit{
     [Role.SELLER]: 'Vendedor'
   };
 
-  constructor(private userService: UserService){
+  constructor(
+    private userService: UserService,
+    private tooltipService: TooltipService,
+    private renderer: Renderer2){
     this.user = this.initializeUser();
+  }
+
+  ngAfterViewInit(): void {
+    this.renderer.listen('document', 'mouseover', () => {
+      this.tooltipService.initializeTooltips();
+    });
   }
 
   ngOnInit(): void {
@@ -60,7 +70,7 @@ export class UserComponent implements OnInit{
   }
 
   resetForms(): void{
-    this.addUserButton = false;
+    this.addUserButton = true;
     this.showForm =  false;
     this.initializeUser();
     this.touchedFields = {};
