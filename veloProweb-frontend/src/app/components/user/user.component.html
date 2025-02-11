@@ -161,7 +161,11 @@
                             </div>
                         </div>
                         <div class="text-center mt-3">
-                            <button [disabled]="!validator.validateForm(user)" type="submit" class="btn btn-success">Guardar</button>
+                            <button *ngIf="addUserButton" [disabled]="!validator.validateForm(user)" type="submit" 
+                                class="btn btn-success"
+                                (click)="createUser()">Guardar</button>
+                            <button *ngIf="!addUserButton" [disabled]="!validator.validateForm(user)" type="submit" class="btn btn-success"
+                                (click)="updateUser()">Actualizar</button>
                             <button type="button" 
                             class="btn btn-secondary ms-2"
                                 (click)="resetForms()">Cancelar</button>
