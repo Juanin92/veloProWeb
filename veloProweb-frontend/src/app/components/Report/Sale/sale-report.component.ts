@@ -1,4 +1,4 @@
-import { AfterViewChecked, AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
 import { Sale } from '../../../models/Entity/Sale/sale';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,6 +8,7 @@ import { DetailSaleRequestDTO } from '../../../models/DTO/detail-sale-request-dt
 import { NotificationService } from '../../../utils/notification-service.service';
 import { TooltipService } from '../../../utils/tooltip.service';
 import { ExcelService } from '../../../utils/excel.service';
+import { PdfService } from '../../../utils/pdf.service';
 
 @Component({
   selector: 'app-sale-report',
@@ -36,7 +37,8 @@ export class SaleReportComponent implements OnInit, AfterViewInit {
     private notification: NotificationService,
     private tooltip: TooltipService,
     private renderer: Renderer2,
-    private excelService: ExcelService
+    private excelService: ExcelService,
+    private pdfService: PdfService
   ) { }
 
   ngAfterViewInit(): void {
@@ -94,11 +96,16 @@ export class SaleReportComponent implements OnInit, AfterViewInit {
 
   /**
    * Obtiene los detalles de una venta seleccionado y actualiza sus propiedades
+   * realiza una petición asíncrona para obtener los detalles de la venta
+   * y los asigna a las propiedades relevantes.
    * @param sale - Venta seleccionada
+   * @returns {Promise<void>} - Una promesa que se resuelve cuando se han obtenido y asignado
+   * los datos detallados de la venta.
    */
-  getSaleDetailsData(sale: Sale): void {
-    this.saleSelected = sale;
-    this.saleService.getDetailSale(this.saleSelected.id).subscribe({
+  getSaleDetailsData(sale: Sale): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.saleSelected = sale;
+     this.saleService.getDetailSale(this.saleSelected.id).subscribe({
       next: (list) => {
         this.saleDetailList = list;
         if (this.saleDetailList.length > 0) {
@@ -106,10 +113,13 @@ export class SaleReportComponent implements OnInit, AfterViewInit {
           this.notificationSale = this.saleDetailList[0].notification;
           this.statusTicket = this.saleDetailList[0].ticketStatus;
         }
+        resolve();
       },
       error: (error) => {
         console.log('Error al obtener detalles de la venta: ', error);
+        reject(error);
       }
+    });
     });
   }
 
@@ -142,6 +152,33 @@ export class SaleReportComponent implements OnInit, AfterViewInit {
     this.finalDate = '';
     this.filteredSaleList = this.saleList;
     this.tooltip.initializeTooltips();
+  }
+
+  /**
+   * Imprimir una boleta de venta.
+   * primero obtiene los datos detallados de la venta y luego genera un PDF
+   * @param sale - Venta a imprimir
+   * @returns {Promise<void>} - Una promesa que se resuelve cuando se ha generado el PDF.
+   */
+  async printSale(sale: Sale): Promise<void> {
+    await this.getSaleDetailsData(sale);
+  
+    const saleDetails = {
+      document: sale.document,
+      customer: this.customerSale,
+      date: sale.date,
+      paymentMethod: sale.paymentMethod,
+      totalSale: sale.totalSale,
+      discount: sale.discount,
+      tax: sale.tax,
+      comment: sale.comment,
+      items: this.saleDetailList.map(detail => ({
+        quantity: detail.quantity,
+        description: detail.descriptionProduct,
+        price: detail.price
+      }))
+    };
+    this.pdfService.generatePDF(saleDetails);
   }
 
   /**
