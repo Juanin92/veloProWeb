@@ -21,14 +21,14 @@ export class UserService {
   }
 
   updateUser(user: User): Observable<{message: string}>{
-    return this.httpClient.post<{message: string}>(`${this.apiUrl}/editar-usuario`, user);
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/editar-usuario`, user);
   }
 
   deleteUser(user: User): Observable<{message: string}>{
-    return this.httpClient.post<{message: string}>(`${this.apiUrl}/eliminar-usuario`, user);
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/eliminar-usuario`, user);
   }
 
   activeUser(user: User): Observable<{message: string}>{
-    return this.httpClient.post<{message: string}>(`${this.apiUrl}/activar-usuario`, user);
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/activar-usuario`, user);
   }
 }
