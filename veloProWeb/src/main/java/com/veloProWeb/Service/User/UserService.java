@@ -29,6 +29,7 @@ public class UserService implements IUserService {
             throw new IllegalArgumentException("Usuario Existente: Ya hay existe el usuario");
         } else {
             validator.validate(user);
+            user.setId(null);
             user.setStatus(true);
             user.setDate(LocalDate.now());
             user.setName(user.getName().substring(0, 1).toUpperCase() + user.getName().substring(1));
