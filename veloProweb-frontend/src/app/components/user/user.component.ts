@@ -53,6 +53,10 @@ export class UserComponent implements OnInit, AfterViewInit {
     this.getUsers();
   }
 
+  /**
+   * Obtiene la lista de usuarios 
+   * verifica si existe un usuario con el rol de MASTER.
+   */
   getUsers(): void {
     this.userService.getListUsers().subscribe({
       next: (list) => {
@@ -65,12 +69,20 @@ export class UserComponent implements OnInit, AfterViewInit {
     });
   }
 
+  /**
+   * Establece el usuario seleccionado, muestra el formulario de edición,
+   * Oculta botón de agregar usuario.
+   * @param selectedUser 
+   */
   getSelectedUser(selectedUser: User): void {
     this.user = selectedUser;
     this.showForm = true;
     this.addUserButton = false;
   }
 
+  /**
+   * Crea un nuevo usuario después de validar el formulario.
+   */
   createUser(): void{
     if (this.validator.validateForm(this.user)) {
       const newUser = this.user;
@@ -91,6 +103,9 @@ export class UserComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+   * Actualiza un usuario existente después de validar el formulario.
+   */
   updateUser(): void {
     if (this.user && this.validator.validateForm(this.user)) {
       const updateUser = { ...this.user };
@@ -109,6 +124,10 @@ export class UserComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+   * Activa un usuario seleccionado
+   * @param selectedUser - usuario que se desea activar.
+   */
   activateUser(selectedUser: User): void {
     if(selectedUser){
       this.userService.activeUser(selectedUser).subscribe({
@@ -125,6 +144,10 @@ export class UserComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+   * Elimina un usuario seleccionado después de la confirmación del usuario.
+   * @param selectedUser - usuario que se desea eliminar.
+   */
   deleteUser(selectedUser: User): void {
     if (selectedUser) {
       this.notification.showConfirmation(
@@ -150,6 +173,9 @@ export class UserComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+   * Restablece los formularios y los campos relacionados con el usuario.
+   */
   resetForms(): void {
     this.addUserButton = true;
     this.showForm = false;
@@ -157,6 +183,10 @@ export class UserComponent implements OnInit, AfterViewInit {
     this.touchedFields = {};
   }
 
+  /**
+   * Inicializa un nuevo objeto de usuario con valores predeterminados.
+   * @returns - Usuario inicializado.
+   */
   initializeUser(): User {
     return this.user = {
       id: 0,
