@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { UserValidator } from '../../validation/user-validator';
 import { Role } from '../../models/enum/role';
 import { TooltipService } from '../../utils/tooltip.service';
+import { NotificationService } from '../../utils/notification-service.service';
 
 @Component({
   selector: 'app-user',
@@ -14,7 +15,7 @@ import { TooltipService } from '../../utils/tooltip.service';
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })
-export class UserComponent implements OnInit, AfterViewInit{
+export class UserComponent implements OnInit, AfterViewInit {
 
   userList: User[] = [];
   addUserButton: boolean = true;
@@ -36,8 +37,9 @@ export class UserComponent implements OnInit, AfterViewInit{
 
   constructor(
     private userService: UserService,
+    private notification: NotificationService,
     private tooltipService: TooltipService,
-    private renderer: Renderer2){
+    private renderer: Renderer2) {
     this.user = this.initializeUser();
   }
 
@@ -51,44 +53,87 @@ export class UserComponent implements OnInit, AfterViewInit{
     this.getUsers();
   }
 
-  getUsers(): void{
+  getUsers(): void {
     this.userService.getListUsers().subscribe({
-      next: (list) =>{
+      next: (list) => {
         this.userList = list;
         this.existingMasterUser = !this.userList.some(user => user.role === Role.MASTER);
       },
-      error: (error) =>{
+      error: (error) => {
         console.log("Error, no se encontró una registro de usuarios");
       }
     });
   }
 
-  getSelectedUser(selectedUser: User): void{
+  getSelectedUser(selectedUser: User): void {
     this.user = selectedUser;
     this.showForm = true;
     this.addUserButton = false;
   }
 
-  resetForms(): void{
+  activateUser(selectedUser: User): void {
+    if(selectedUser){
+      this.userService.activeUser(selectedUser).subscribe({
+        next: (response) => {
+          console.log("Usuario Activado");
+          const message = response?.message;
+          this.notification.showSuccessToast(message, 'top', 3000);
+          this.getUsers();
+        }, error: (error) => {
+          const message = error.error?.message || error.error?.error;
+          console.log('Error al activar usuario: ', message);
+          this.notification.showErrorToast(`Error al activar al usuario \n${message}`, 'top', 5000);
+        }
+      });
+    }
+  }
+
+  deleteUser(selectedUser: User): void {
+    if (selectedUser) {
+      this.notification.showConfirmation(
+        "¿Estas seguro?",
+        "No podrás revertir la acción!",
+        "Si eliminar!",
+        "Cancelar"
+      ).then((result) => {
+        if (result.isConfirmed) {
+          this.userService.deleteUser(selectedUser).subscribe({
+            next: (response) => {
+              console.log('Usuario eliminado exitosamente:', response);
+              const message = response?.message;
+              this.notification.showSuccessToast(message, 'top', 3000);
+              this.getUsers();
+            }, error: (error) => {
+              const message = error.error?.message || error.error?.error;
+              console.log('Error al eliminar cliente: ', message);
+              this.notification.showErrorToast(`Error al eliminar usuario \n${message}`, 'top', 5000);
+            }
+          });
+        }
+      });
+    }
+  }
+
+  resetForms(): void {
     this.addUserButton = true;
-    this.showForm =  false;
+    this.showForm = false;
     this.initializeUser();
     this.touchedFields = {};
   }
 
   initializeUser(): User {
-      return this.user = {
-        id: 0,
-        date: '',
-        name: '',
-        surname: '',
-        username: '',
-        rut: '',
-        email: '',
-        password: '',
-        token: '',
-        status: true,
-        role: null
-      };
+    return this.user = {
+      id: 0,
+      date: '',
+      name: '',
+      surname: '',
+      username: '',
+      rut: '',
+      email: '',
+      password: '',
+      token: '',
+      status: true,
+      role: null
+    };
   }
 }
