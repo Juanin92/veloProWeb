@@ -54,7 +54,7 @@ public class UserController {
      * @param user - Usuario con los datos actualizados
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
-    @PostMapping("/editar-usuario")
+    @PutMapping("/editar-usuario")
     public ResponseEntity<Map<String, String>> updateUser(@RequestBody User user){
         Map<String, String> response =  new HashMap<>();
         try{
@@ -72,7 +72,7 @@ public class UserController {
      * @param user - Usuario que se desea eliminar
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
-    @PostMapping("/eliminar-usuario")
+    @PutMapping("/eliminar-usuario")
     public ResponseEntity<Map<String, String>> deleteUser(@RequestBody User user){
         Map<String, String> response =  new HashMap<>();
         try{
@@ -90,7 +90,7 @@ public class UserController {
      * @param user - Usuario que se desea activar
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
-    @PostMapping("/activar-usuario")
+    @PutMapping("/activar-usuario")
     public ResponseEntity<Map<String, String>> activeUser(@RequestBody User user){
         Map<String, String> response =  new HashMap<>();
         try{
