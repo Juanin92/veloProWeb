@@ -72,7 +72,8 @@
                                     <img src="/assets/icons/iconAdd.png" alt="Más información" width="24" height="24"
                                         data-bs-toggle="tooltip" data-bs-placement="top" title="Más información">
                                 </button>
-                                <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimir">
+                                <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimir"
+                                    (click)="printSale(sale)">
                                     <img src="/assets/icons/iconPrint.png" alt="Imprimir" width="24" height="24">
                                 </button>
                                 <button *ngIf="sale.status" class="btn btn-outline-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top"
