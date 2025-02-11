@@ -71,13 +71,50 @@ export class UserComponent implements OnInit, AfterViewInit {
     this.addUserButton = false;
   }
 
+  createUser(): void{
+    if (this.validator.validateForm(this.user)) {
+      const newUser = this.user;
+      this.userService.addUser(newUser).subscribe({
+        next: (response) =>{
+          console.log('Usuario agregado exitosamente:', response);
+          this.notification.showSuccessToast(response.message, 'top', 3000);
+          this.getUsers();
+          this.resetForms();
+        }, error:(error) => {
+          const message = error.error?.message || error.error?.error;
+          console.error('Error al agregar el usuario:', error);
+          this.notification.showErrorToast(`Error al agregar usuario \n${message}`, 'top', 5000);
+        }
+      });
+    }else {
+      this.notification.showWarning('Formulario incompleto', 'Por favor, complete correctamente todos los campos obligatorios.');
+    }
+  }
+
+  updateUser(): void {
+    if (this.user && this.validator.validateForm(this.user)) {
+      const updateUser = { ...this.user };
+      this.userService.updateUser(updateUser).subscribe({
+        next: (response) =>{
+          console.log('Se actualizo el cliente: ', updateUser);
+          this.notification.showSuccessToast(response.message, 'top', 3000);
+          this.getUsers();
+          this.resetForms();
+        }, error: (error) => {
+          const message = error.error?.message || error.error?.error;
+          this.notification.showErrorToast(`Error al actualizar usuario \n${message}`, 'top', 5000);
+          console.log('Error al actualizar usuario: ', message);
+        }
+      });
+    }
+  }
+
   activateUser(selectedUser: User): void {
     if(selectedUser){
       this.userService.activeUser(selectedUser).subscribe({
         next: (response) => {
           console.log("Usuario Activado");
-          const message = response?.message;
-          this.notification.showSuccessToast(message, 'top', 3000);
+          this.notification.showSuccessToast(response.message, 'top', 3000);
           this.getUsers();
         }, error: (error) => {
           const message = error.error?.message || error.error?.error;
@@ -100,8 +137,7 @@ export class UserComponent implements OnInit, AfterViewInit {
           this.userService.deleteUser(selectedUser).subscribe({
             next: (response) => {
               console.log('Usuario eliminado exitosamente:', response);
-              const message = response?.message;
-              this.notification.showSuccessToast(message, 'top', 3000);
+              this.notification.showSuccessToast(response.message, 'top', 3000);
               this.getUsers();
             }, error: (error) => {
               const message = error.error?.message || error.error?.error;
