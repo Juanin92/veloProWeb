@@ -41,9 +41,9 @@
                                         <button class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar info"
                                         (click)="getSelectedUser(user)"><img src="/assets/icons/btnEditIcon.png" alt="editar" width="15" height="15" class="img-fluid"></button>
                                         <button *ngIf="user.status" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"
-                                        ><img src="/assets/icons/btnDeleteIcon.png" alt="borrar" width="15" height="15" class="img-fluid"></button>
+                                        (click)="deleteUser(user)"><img src="/assets/icons/btnDeleteIcon.png" alt="borrar" width="15" height="15" class="img-fluid"></button>
                                         <button *ngIf="!user.status" class="btn btn-success btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Activar"
-                                        ><img src="/assets/icons/iconOn.png" alt="activar" width="15" height="15" class="img-fluid"></button>
+                                        (click)="activateUser(user)"><img src="/assets/icons/iconOn.png" alt="activar" width="15" height="15" class="img-fluid"></button>
                                     </td>
                                 </tr>
                             </tbody>
