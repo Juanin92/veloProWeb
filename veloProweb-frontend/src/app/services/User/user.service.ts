@@ -12,22 +12,46 @@ export class UserService {
   
   constructor(private httpClient: HttpClient) { }
 
+  /**
+   * Obtiene una lista de todos los usuarios desde el endpoint
+   * @returns observable que emite una lista de usuarios
+   */
   getListUsers(): Observable<User[]>{
     return this.httpClient.get<User[]>(this.apiUrl);
   }
 
+  /**
+   * Agregar un  nuevo usuario 
+   * @param user - usuario a agregar
+   * @returns Observable que emite un mensaje de confirmación
+   */
   addUser(user: User): Observable<{message: string}>{
     return this.httpClient.post<{message: string}>(`${this.apiUrl}/nuevo-usuario`, user);
   }
 
+  /**
+   * Actualiza los datos de un usuario existente
+   * @param user - usuario con la nueva información
+   * @returns - Observable que emite un mensaje de confirmación
+   */
   updateUser(user: User): Observable<{message: string}>{
     return this.httpClient.put<{message: string}>(`${this.apiUrl}/editar-usuario`, user);
   }
 
+  /**
+   * Elimina (desactiva) un usuario
+   * @param user - usuario seleccionado
+   * @returns - Observable que emite un mensaje de confirmación
+   */
   deleteUser(user: User): Observable<{message: string}>{
     return this.httpClient.put<{message: string}>(`${this.apiUrl}/eliminar-usuario`, user);
   }
 
+  /**
+   * Activa un usuario 
+   * @param user - usuario seleccionado
+   * @returns - Observable que emite un mensaje de confirmación
+   */
   activeUser(user: User): Observable<{message: string}>{
     return this.httpClient.put<{message: string}>(`${this.apiUrl}/activar-usuario`, user);
   }
