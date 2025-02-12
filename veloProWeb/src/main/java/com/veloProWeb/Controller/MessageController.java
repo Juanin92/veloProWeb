@@ -1,0 +1,68 @@
+package com.veloProWeb.Controller;
+
+import com.veloProWeb.Model.Entity.Message;
+import com.veloProWeb.Service.IMessageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/mensajes")
+@CrossOrigin(origins = "http://localhost:4200")
+public class MessageController {
+
+    @Autowired private IMessageService messageService;
+
+    @GetMapping()
+    public ResponseEntity<List<Message>> getMessagesByUser(@RequestParam Long userId){
+        try{
+            return ResponseEntity.ok(messageService.getMessageByUser(userId));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @PutMapping()
+    public ResponseEntity<Map<String, String>> isReadMessage(@RequestBody Message message){
+        Map<String, String> response = new HashMap<>();
+        try{
+            response.put("message","Mensaje leído");
+            messageService.isReadMessage(message.getId(), message.getContext());
+            return ResponseEntity.ok(response);
+        }catch (Exception e){
+            response.put("error", "No se pudo realizar la acción");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    @PutMapping("eliminar")
+    public ResponseEntity<Map<String, String>> isDeleteMessage(@RequestBody Message message){
+        Map<String, String> response = new HashMap<>();
+        try{
+            response.put("message","Mensaje Borrado");
+            messageService.isDeleteMessage(message.getId(), message.getContext());
+            return ResponseEntity.ok(response);
+        }catch (Exception e){
+            response.put("error", "No se pudo realizar la acción");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    @PostMapping()
+    public ResponseEntity<Map<String,String>> sendMessage(@RequestBody Message message){
+        Map<String, String> response = new HashMap<>();
+        try{
+            response.put("message","Mensaje Enviado");
+            messageService.sendMessage(message);
+            return ResponseEntity.ok(response);
+        }catch (Exception e){
+            response.put("error", "No se pudo realizar la acción");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+}
