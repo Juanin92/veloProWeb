@@ -9,10 +9,19 @@
           </span>
         </div>
         <p class="fw-bold m-0 d-none d-lg-block">{{currentDate}}</p>
-        <div class="search">
-          <span class="icon d-flex align-items-center">
+        <div class="search dropdown">
+          <button class="btn btn-outline-info border-0 dropdown-toggle" type="button" id="userDropdown"
+            aria-expanded="false" #userDropdown (click)="toggleDropdown()">
             <img src="/assets/icons/usercircle.png" alt="user-profile" width="30" height="30" />
-          </span>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="userDropdown">
+            <li><a class="dropdown-item" href="#">Modificar Datos</a></li>
+            <li><a class="dropdown-item" href="#">Mensajes</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="#">Cerrar Sesión</a></li>
+          </ul>
         </div>
       </div>
     </div>
