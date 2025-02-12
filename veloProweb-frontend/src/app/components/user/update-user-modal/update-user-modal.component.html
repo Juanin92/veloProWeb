@@ -1,0 +1,83 @@
+<div class="modal fade" id="updateUser" tabindex="-1" aria-labelledby="updateUser" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h3 class="modal-title fs-4 fw-bold text-white w-100 text-center">Actualización de Perfil</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-0">
+                <form>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control-plaintext" id="role" [value]="user.role"
+                                    readonly>
+                                <label for="role" class="text-muted">Rol</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control-plaintext" id="rut" [value]="user.rut" readonly>
+                                <label for="rut" class="text-muted">RUT</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control-plaintext" id="name" [value]="user.name"
+                                    readonly>
+                                <label for="name" class="text-muted">Nombre</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control-plaintext" id="surname" [value]="user.surname"
+                                    readonly>
+                                <label for="surname" class="text-muted">Apellido</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <input type="email" class="form-control" id="email" placeholder="Email" name="email"
+                                    [(ngModel)]="user.email" required>
+                                <label for="email">Email</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="username" placeholder="Nombre usuario"
+                                    name="username" [(ngModel)]="user.username" required>
+                                <label for="username">Nombre de usuario</label>
+                            </div>
+                        </div>
+                        <div  class="col-12">
+                            <div class="form-check form-switch">
+                                <input #changePasswordCheckbox class="form-check-input" type="checkbox" id="changePassword"
+                                    (change)="isChangePassword($event)">
+                                <label class="form-check-label" for="changePassword">Cambiar contraseña</label>
+                            </div>
+                        </div>
+                        <div *ngIf="changePassword" class="col-md-6">
+                            <div class="form-floating">
+                                <input type="password" class="form-control" id="password" placeholder="Nueva Contraseña"
+                                    name="password" aria-describedby="passwordHelpInline">
+                                <label for="password">Nueva Contraseña</label>
+                            </div>
+                        </div>
+                        <div *ngIf="changePassword" class="col-md-6">
+                            <div class="form-floating">
+                                <input type="password" class="form-control" id="confirmPassword"
+                                    placeholder="Confirmar Contraseña" name="confirmPassword" aria-describedby="passwordHelpInline">
+                                <label for="confirmPassword">Confirmar Contraseña</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button type="submit" class="btn btn-warning px-4 py-2">Actualizar</button>
+                <button type="button" class="btn btn-outline-secondary px-4 py-2"
+                    data-bs-dismiss="modal" (click)="resetModalUser()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
