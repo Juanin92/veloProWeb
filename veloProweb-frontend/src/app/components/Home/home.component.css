@@ -1,0 +1,14 @@
+.card-body {
+    max-height: 200px;
+    overflow-y: auto;
+    transition: max-height 0.3s ease-out;
+}
+.card-body.expanded {
+    max-height: 500px;
+}
+.expand-btn {
+    transition: transform 0.3s ease-out;
+}
+.expand-btn i {
+    transition: transform 0.3s ease-out;
+}
