@@ -5,11 +5,12 @@ import { DatePipe } from '@angular/common';
 import { LocalDataService } from './services/local-data.service';
 import { LocalData } from './models/Entity/local-data';
 import * as bootstrap from 'bootstrap';
+import { UpdateUserModalComponent } from "./components/user/update-user-modal/update-user-modal.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MenuComponent],
+  imports: [RouterOutlet, MenuComponent, UpdateUserModalComponent],
   providers: [DatePipe],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
