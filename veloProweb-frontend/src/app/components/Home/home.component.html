@@ -1,8 +1,161 @@
-<div class="container-fluid min-vh-100 d-flex flex-column align-items-center justify-content-center">
-    <div class="text-center">
-        <h1 class="fw-bold fs-1">BIENVENIDO</h1>
-        <p class="fs-3">31-01-2025</p>
-        <p class="fs-3">22:32</p>
+<div class="container-fluid min-vh-100 d-flex flex-column justify-content-start justify-content-md-center py-3 py-md-0">
+    <div class="row w-100 justify-content-center g-4">
+        <div class="col-md-6 mb-3 mb-md-4">
+            <div class="card bg-dark-subtle border-0 rounded-4 shadow-lg h-100 overflow-hidden">
+                 <div class="card-header bg-primary text-white rounded-top-4 d-flex justify-content-between align-items-center">
+                        <h2 class="card-title mb-0 fs-4">Mensajes y Notificaciones</h2>
+                    <button class="btn btn-sm btn-outline-light expand-btn" (click)="toggleCardExpand('notification')">
+                        <i class="bi" [ngClass]="{'bi-chevron-down': !expanded.notification, 'bi-chevron-up': expanded.notification}">
+                        </i>
+                    </button>
+                </div>
+                <div [ngClass]="{'show': expanded.notification, 'collapse': !expanded.notification}">
+                    <div class="card-body d-flex flex-column" [ngClass]="{'expanded': expanded.notification}">
+                        <div class="flex-grow-1 overflow-auto mb-3">
+                            <ul class="list-group list-group-flush">
+                                <li
+                                    class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-primary">
+                                    <span>Nuevo pedido #1234</span>
+                                    <button class="btn btn-sm btn-outline-success rounded-pill">Procesar</button>
+                                </li>
+                                <li
+                                    class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-primary">
+                                    <span>Stock bajo: Producto A</span>
+                                    <button class="btn btn-sm btn-outline-warning rounded-pill">Reabastecer</button>
+                                </li>
+                                <li
+                                    class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-primary">
+                                    <span>Consulta del cliente: Juan</span>
+                                    <button class="btn btn-sm btn-outline-info rounded-pill">Responder</button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="mt-auto">
+                            <select class="form-select mb-2 bg-dark text-light rounded-pill">
+                                <option selected>Seleccionar destinatario</option>
+                                <option value="1">Equipo de Ventas</option>
+                                <option value="2">Almacén</option>
+                                <option value="3">Atención al Cliente</option>
+                            </select>
+                            <div class="input-group">
+                                <input type="text" class="form-control bg-dark text-light rounded-pill rounded-end"
+                                    placeholder="Escribe tu mensaje...">
+                                <button class="btn btn-primary rounded-pill rounded-start">Enviar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-dark-subtle border-0 rounded-4 shadow-lg h-100 overflow-hidden">
+                <div class="card-header bg-success text-white rounded-top-4 d-flex justify-content-between align-items-center">
+                    <h2 class="card-title mb-0 fs-4">Gestión de Despachos</h2>
+                    <button class="btn btn-sm btn-outline-light expand-btn" (click)="toggleCardExpand('dispatch')">
+                        <i class="bi" [ngClass]="{'bi-chevron-down': !expanded.dispatch, 'bi-chevron-up': expanded.dispatch}">
+                        </i>
+                    </button>
+                </div>
+                <div [ngClass]="{'show': expanded.dispatch, 'collapse': !expanded.dispatch}">
+                    <div class="card-body d-flex flex-column" [ngClass]="{'expanded': expanded.dispatch}">
+                        <div class="flex-grow-1 overflow-auto">
+                            <ul class="list-group list-group-flush">
+                                <li
+                                    class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-success">
+                                    <span>Despacho #5678 - En Preparación</span>
+                                    <div>
+                                        <button class="btn btn-sm btn-outline-warning rounded-pill me-1">Modificar</button>
+                                        <button class="btn btn-sm btn-outline-danger rounded-pill me-1">Cancelar</button>
+                                        <button class="btn btn-sm btn-outline-success rounded-pill">Enviar</button>
+                                    </div>
+                                </li>
+                                <li
+                                    class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-success">
+                                    <span>Despacho #5679 - Listo para Envío</span>
+                                    <div>
+                                        <button class="btn btn-sm btn-outline-warning rounded-pill me-1">Modificar</button>
+                                        <button class="btn btn-sm btn-outline-danger rounded-pill me-1">Cancelar</button>
+                                        <button class="btn btn-sm btn-outline-success rounded-pill">Enviar</button>
+                                    </div>
+                                </li>
+                                <li
+                                    class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-success">
+                                    <span>Despacho #5680 - En Tránsito</span>
+                                    <div>
+                                        <button class="btn btn-sm btn-outline-info rounded-pill me-1">Rastrear</button>
+                                        <button class="btn btn-sm btn-outline-success rounded-pill">Confirmar
+                                            Entrega</button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-dark-subtle border-0 rounded-4 shadow-lg h-100 overflow-hidden">
+                <div class="card-header bg-warning text-dark rounded-top-4 d-flex justify-content-between align-items-center">
+                    <h2 class="card-title mb-0 fs-4">Tareas Pendientes</h2>
+                    <button class="btn btn-sm btn-outline-light expand-btn" (click)="toggleCardExpand('task')">
+                        <i class="bi" [ngClass]="{'bi-chevron-down': !expanded.task, 'bi-chevron-up': expanded.task}">
+                        </i>
+                    </button>
+                </div>
+                <div [ngClass]="{'show': expanded.task, 'collapse': !expanded.task}">
+                    <div class="card-body d-flex flex-column" [ngClass]="{'expanded': expanded.task}">
+                        <ul class="list-group list-group-flush">
+                            <li
+                                class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-warning">
+                                <span>Actualizar catálogo de productos</span>
+                                <button class="btn btn-sm btn-outline-success rounded-pill">Completar</button>
+                            </li>
+                            <li
+                                class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-warning">
+                                <span>Contactar proveedor de Producto X</span>
+                                <button class="btn btn-sm btn-outline-success rounded-pill">Completar</button>
+                            </li>
+                            <li
+                                class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-warning">
+                                <span>Revisar inventario de temporada</span>
+                                <button class="btn btn-sm btn-outline-success rounded-pill">Completar</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-dark-subtle border-0 rounded-4 shadow-lg h-100 overflow-hidden">
+                <div class="card-header bg-danger text-white rounded-top-4 d-flex justify-content-between align-items-center">
+                    <h2 class="card-title mb-0 fs-4">Alertas de Inventario</h2>
+                    <button class="btn btn-sm btn-outline-light expand-btn" (click)="toggleCardExpand('alert')">
+                        <i class="bi" [ngClass]="{'bi-chevron-down': !expanded.alert, 'bi-chevron-up': expanded.alert}">
+                        </i>
+                    </button>
+                </div>
+                <div [ngClass]="{'show': expanded.alert, 'collapse': !expanded.alert}">
+                    <div class="card-body d-flex flex-column" [ngClass]="{'expanded': expanded.alert}">
+                        <ul class="list-group list-group-flush">
+                            <li
+                                class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-danger">
+                                <span>Producto A - Stock Bajo (5 unidades)</span>
+                                <button class="btn btn-sm btn-outline-primary rounded-pill">Reabastecer</button>
+                            </li>
+                            <li
+                                class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-danger">
+                                <span>Producto B - Próximo a Vencer</span>
+                                <button class="btn btn-sm btn-outline-warning rounded-pill">Revisar</button>
+                            </li>
+                            <li
+                                class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-danger">
+                                <span>Producto C - Sin Stock</span>
+                                <button class="btn btn-sm btn-outline-primary rounded-pill">Reabastecer</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-
