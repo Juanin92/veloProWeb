@@ -16,18 +16,33 @@ public class MessageService implements IMessageService{
     @Autowired private MessageRepo messageRepo;
     @Autowired private UserRepo userRepo;
 
+    /**
+     * Obtiene todos los mensajes del sistema
+     * @return - Lista con todos los mensajes
+     */
     @Override
     public List<Message> getAllMessages() {
         return messageRepo.findAll();
     }
 
+    /**
+     * Obtener mensajes de un usuario específico
+     * Verifica que el usuario exista
+     * @param userID - Identificador del usuario
+     * @return - Lista de mensajes del usuario
+     */
     @Override
     public List<Message> getMessageByUser(Long userID) {
         User user = userRepo.findById(userID).orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
         return messageRepo.findByUserID(user.getId());
     }
 
-
+    /**
+     * Dejar el mensaje como visto en el registro.
+     * Verifica que el mensaje exista y que si existe sus mensajes coincidan
+     * @param id - Identificador del mensaje
+     * @param context - Cadena contiene el mensaje
+     */
     @Override
     public void isReadMessage(Long id, String context) {
         Message message = getMessageById(id);
@@ -43,6 +58,12 @@ public class MessageService implements IMessageService{
         }
     }
 
+    /**
+     * Eliminar el mensaje en el registro.
+     * Verifica que el mensaje exista y que si existe sus mensajes coincidan
+     * @param id - Identificador del mensaje
+     * @param context - Cadena contiene el mensaje
+     */
     @Override
     public void isDeleteMessage(Long id, String context) {
         Message message = getMessageById(id);
@@ -58,6 +79,10 @@ public class MessageService implements IMessageService{
         }
     }
 
+    /**
+     * Enviar mensaje entre usuarios
+     * @param message - Objeto con los datos necesarios
+     */
     @Override
     public void sendMessage(Message message) {
         message.setId(null);
@@ -70,6 +95,11 @@ public class MessageService implements IMessageService{
         messageRepo.save(message);
     }
 
+    /**
+     * Buscar un mensaje por su identificador
+     * @param id - Identificador del mensaje
+     * @return - Si encuentra el objeto un Mensaje o valor nulo en el caso contrario
+     */
     private Message getMessageById(Long id){
         return messageRepo.findById(id).orElse(null);
     }
