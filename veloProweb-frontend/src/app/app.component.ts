@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MenuComponent } from "./components/menu/menu.component";
 import { DatePipe } from '@angular/common';
 import { LocalDataService } from './services/local-data.service';
 import { LocalData } from './models/Entity/local-data';
+import * as bootstrap from 'bootstrap';
 
 @Component({
   selector: 'app-root',
@@ -13,18 +14,32 @@ import { LocalData } from './models/Entity/local-data';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent{
+export class AppComponent implements AfterViewInit{
   
   title = 'veloProweb-frontend';
   isMenuActive: boolean = true;
   currentDate: string = '';
   localData: LocalData | null = null;
+  @ViewChild('userDropdown') dropdownButton!: ElementRef;
+  dropdownInstance!: bootstrap.Dropdown;
 
   constructor(
     private datePipe: DatePipe, 
     private localDataService: LocalDataService){
     this.getDate();
     this.loadDataFromLocalStorage();
+  }
+
+  ngAfterViewInit(): void {
+    if (this.dropdownButton) {
+      this.dropdownInstance = new bootstrap.Dropdown(this.dropdownButton.nativeElement);
+    }
+  }
+
+  toggleDropdown() {
+    if (this.dropdownInstance) {
+      this.dropdownInstance.toggle();
+    }
   }
 
   toggleMenu(): void {
