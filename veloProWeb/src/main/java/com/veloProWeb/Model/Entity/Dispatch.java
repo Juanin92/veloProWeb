@@ -23,6 +23,10 @@ public class Dispatch {
     @Temporal(TemporalType.DATE)
     @CreatedDate
     private LocalDate created;
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @Temporal(TemporalType.DATE)
+    @CreatedDate
+    private LocalDate deliveryDate;
 
     @ManyToOne
     @JoinColumn(name = "sale_id", nullable = false)
