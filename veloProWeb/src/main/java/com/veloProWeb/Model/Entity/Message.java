@@ -26,8 +26,8 @@ public class Message {
 
     @ManyToOne
     @JoinColumn(name = "sender_id", nullable = false)
-    private User sender_User;
+    private User senderUser;
     @ManyToOne
     @JoinColumn(name = "receiver_id", nullable = false)
-    private User receiver_User;
+    private User receiverUser;
 }
