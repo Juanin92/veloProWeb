@@ -7,6 +7,8 @@ import { CashRegister } from '../../models/Entity/cash-register';
 import { CashRegisterService } from '../../services/Sale/cash-register.service';
 import { LocalDataService } from '../../services/local-data.service';
 import { LocalData } from '../../models/Entity/local-data';
+import { UserService } from '../../services/User/user.service';
+import { User } from '../../models/Entity/user';
 
 @Component({
   selector: 'app-setting',
@@ -19,6 +21,7 @@ export class SettingComponent implements OnInit{
 
   recordList: Record[] = [];
   cashRegistersList: CashRegister[] = [];
+  userList: User[] = [];
   data: LocalData = {
     id: 0,
     name: '',
@@ -32,6 +35,7 @@ export class SettingComponent implements OnInit{
 
   constructor(
     private recordService: RecordService,
+    private userService: UserService,
     private cashRegisterService: CashRegisterService,
     private localDataService: LocalDataService){}
 
@@ -39,6 +43,17 @@ export class SettingComponent implements OnInit{
     this.getRecords();
     this.getCashRegisters();
     this.getData();
+    this.getUsers();
+  }
+
+  getUsers(): void{
+    this.userService.getListUsers().subscribe({
+      next: (list) =>{ 
+        this.userList = list;
+      }, error: (error)=>{
+        console.log('Error al obtener la lista ', error);
+      }
+    });
   }
 
   getRecords(): void{
