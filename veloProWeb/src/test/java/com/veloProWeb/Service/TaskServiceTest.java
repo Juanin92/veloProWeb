@@ -38,13 +38,13 @@ public class TaskServiceTest {
         task4 = new Task(3L, "Test 1", true, LocalDate.now(), new User());
     }
 
-    //Prueba para obtener una lista de tarea de un usuario
+    //Prueba para obtener una lista de tareas de un usuario
     @Test
     public void getTaskByUser_valid(){
         List<Task> tasks = Arrays.asList(task,task2,task3,task4);
         List<Task> taskListFiltered = Arrays.asList(task, task3);
         when(taskRepo.findAll()).thenReturn(tasks);
-        List<Task> result = taskService.getTaskByUser(user);
+        List<Task> result = taskService.getTaskByUser(user.getId());
 
         verify(taskRepo, times(1)).findAll();
         assertEquals(2, result.size());
