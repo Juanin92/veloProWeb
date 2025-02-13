@@ -34,7 +34,7 @@ public class MessageService implements IMessageService{
     @Override
     public List<Message> getMessageByUser(Long userID) {
         User user = userRepo.findById(userID).orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
-        return messageRepo.findByUserID(user.getId());
+        return messageRepo.findByReceiverUser(user);
     }
 
     /**
@@ -90,8 +90,8 @@ public class MessageService implements IMessageService{
         message.setCreated(LocalDate.now());
         message.setRead(false);
         message.setDelete(false);
-        message.setReceiver_User(message.getReceiver_User());
-        message.setSender_User(message.getSender_User());
+        message.setReceiverUser(message.getReceiverUser());
+        message.setSenderUser(message.getSenderUser());
         messageRepo.save(message);
     }
 
