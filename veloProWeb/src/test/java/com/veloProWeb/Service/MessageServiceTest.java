@@ -43,8 +43,8 @@ public class MessageServiceTest {
         message.setDelete(false);
         message.setCreated(LocalDate.now());
         message.setContext("Prueba 1");
-        message.setSender_User(userSender);
-        message.setReceiver_User(userReceiver);
+        message.setSenderUser(userSender);
+        message.setReceiverUser(userReceiver);
 
         message2 = new Message();
         message2.setId(1L);
@@ -52,8 +52,8 @@ public class MessageServiceTest {
         message2.setDelete(false);
         message2.setCreated(LocalDate.now());
         message2.setContext("Prueba 2");
-        message2.setSender_User(userReceiver);
-        message2.setReceiver_User(userSender);
+        message2.setSenderUser(userReceiver);
+        message2.setReceiverUser(userSender);
     }
 
     //Prueba para obtener todos los mensajes en el sistema
@@ -74,7 +74,7 @@ public class MessageServiceTest {
         when(messageService.getMessageByUser(userSender.getId())).thenReturn(messageList);
 
         List<Message> result = messageService.getMessageByUser(userSender.getId());
-        verify(messageRepo).findByUserID(userSender.getId());
+        verify(messageRepo).findByReceiverUser(userSender);
         assertEquals(messageList, result);
     }
     @Test
@@ -82,7 +82,7 @@ public class MessageServiceTest {
         when(userRepo.findById(3L)).thenReturn(Optional.empty());
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() -> messageService.getMessageByUser(3L));
 
-        verify(messageRepo, never()).findByUserID(userSender.getId());
+        verify(messageRepo, never()).findByReceiverUser(userSender);
         assertEquals("Usuario no encontrado", e.getMessage());
     }
 
@@ -153,7 +153,7 @@ public class MessageServiceTest {
 
         verify(messageRepo, times(1)).save(message);
         assertEquals("Prueba 1", message.getContext());
-        assertEquals(1L, message.getSender_User().getId());
-        assertEquals(2L, message.getReceiver_User().getId());
+        assertEquals(1L, message.getSenderUser().getId());
+        assertEquals(2L, message.getReceiverUser().getId());
     }
 }
