@@ -6,7 +6,7 @@ import com.veloProWeb.Model.Entity.User.User;
 import java.util.List;
 
 public interface ITaskService {
-    List<Task> getTaskByUser(User user);
+    List<Task> getTaskByUser(Long userID);
     void createTask(Task task);
     void completeTask(Long taskID);
 }
