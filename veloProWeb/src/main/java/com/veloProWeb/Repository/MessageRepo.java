@@ -1,7 +1,7 @@
 package com.veloProWeb.Repository;
 
-import com.veloProWeb.Model.Entity.Message;
-import com.veloProWeb.Model.Entity.User;
+import com.veloProWeb.Model.Entity.User.Message;
+import com.veloProWeb.Model.Entity.User.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

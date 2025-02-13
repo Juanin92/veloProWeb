@@ -1,9 +1,7 @@
-package com.veloProWeb.Model.Entity;
+package com.veloProWeb.Model.Entity.User;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -11,23 +9,25 @@ import java.time.LocalDate;
 
 @Entity
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Table(name = "tasks")
-public class Task {
+@Table(name = "messages")
+public class Message {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String description;
-    private boolean status;
+    private String context;
 
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     @Temporal(TemporalType.DATE)
     @CreatedDate
     private LocalDate created;
+    private boolean isRead;
+    private boolean isDelete;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "sender_id", nullable = false)
+    private User senderUser;
+    @ManyToOne
+    @JoinColumn(name = "receiver_id", nullable = false)
+    private User receiverUser;
 }

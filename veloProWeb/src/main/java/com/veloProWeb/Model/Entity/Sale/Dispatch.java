@@ -1,6 +1,5 @@
-package com.veloProWeb.Model.Entity;
+package com.veloProWeb.Model.Entity.Sale;
 
-import com.veloProWeb.Model.Entity.Sale.Sale;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

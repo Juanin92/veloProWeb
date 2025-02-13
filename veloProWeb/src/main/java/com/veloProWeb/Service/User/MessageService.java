@@ -1,9 +1,10 @@
-package com.veloProWeb.Service;
+package com.veloProWeb.Service.User;
 
-import com.veloProWeb.Model.Entity.Message;
-import com.veloProWeb.Model.Entity.User;
+import com.veloProWeb.Model.Entity.User.Message;
+import com.veloProWeb.Model.Entity.User.User;
 import com.veloProWeb.Repository.MessageRepo;
 import com.veloProWeb.Repository.UserRepo;
+import com.veloProWeb.Service.User.Interface.IMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class MessageService implements IMessageService{
+public class MessageService implements IMessageService {
 
     @Autowired private MessageRepo messageRepo;
     @Autowired private UserRepo userRepo;

@@ -1,6 +1,6 @@
-package com.veloProWeb.Service;
+package com.veloProWeb.Service.User.Interface;
 
-import com.veloProWeb.Model.Entity.Alert;
+import com.veloProWeb.Model.Entity.User.Alert;
 import com.veloProWeb.Model.Entity.Product.Product;
 
 import java.util.List;

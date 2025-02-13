@@ -1,6 +1,6 @@
-package com.veloProWeb.Service;
+package com.veloProWeb.Service.Sale.Interface;
 
-import com.veloProWeb.Model.Entity.Dispatch;
+import com.veloProWeb.Model.Entity.Sale.Dispatch;
 
 import java.util.List;
 

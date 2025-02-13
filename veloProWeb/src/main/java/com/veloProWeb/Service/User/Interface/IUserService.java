@@ -1,6 +1,6 @@
 package com.veloProWeb.Service.User.Interface;
 
-import com.veloProWeb.Model.Entity.User;
+import com.veloProWeb.Model.Entity.User.User;
 
 import java.util.List;
 

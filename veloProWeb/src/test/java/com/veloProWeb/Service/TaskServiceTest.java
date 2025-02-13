@@ -1,8 +1,9 @@
 package com.veloProWeb.Service;
 
-import com.veloProWeb.Model.Entity.Task;
-import com.veloProWeb.Model.Entity.User;
+import com.veloProWeb.Model.Entity.User.Task;
+import com.veloProWeb.Model.Entity.User.User;
 import com.veloProWeb.Repository.TaskRepo;
+import com.veloProWeb.Service.User.TaskService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

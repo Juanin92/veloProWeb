@@ -1,7 +1,5 @@
 package com.veloProWeb.Controller.Product;
 
-import com.veloProWeb.Model.Entity.Product.CategoryProduct;
-import com.veloProWeb.Model.Entity.Product.SubcategoryProduct;
 import com.veloProWeb.Model.Entity.Product.UnitProduct;
 import com.veloProWeb.Service.Product.Interfaces.IUnitService;
 import org.springframework.beans.factory.annotation.Autowired;

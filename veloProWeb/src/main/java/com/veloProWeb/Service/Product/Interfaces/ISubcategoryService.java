@@ -1,6 +1,5 @@
 package com.veloProWeb.Service.Product.Interfaces;
 
-import com.veloProWeb.Model.Entity.Product.CategoryProduct;
 import com.veloProWeb.Model.Entity.Product.SubcategoryProduct;
 
 import java.util.List;

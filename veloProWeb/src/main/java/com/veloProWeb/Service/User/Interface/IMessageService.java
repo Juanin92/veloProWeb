@@ -1,6 +1,6 @@
-package com.veloProWeb.Service;
+package com.veloProWeb.Service.User.Interface;
 
-import com.veloProWeb.Model.Entity.Message;
+import com.veloProWeb.Model.Entity.User.Message;
 
 import java.util.List;
 

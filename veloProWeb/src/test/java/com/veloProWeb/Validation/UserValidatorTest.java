@@ -1,6 +1,6 @@
 package com.veloProWeb.Validation;
 
-import com.veloProWeb.Model.Entity.User;
+import com.veloProWeb.Model.Entity.User.User;
 import com.veloProWeb.Model.Enum.Rol;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

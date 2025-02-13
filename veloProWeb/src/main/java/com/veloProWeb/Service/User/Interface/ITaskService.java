@@ -1,7 +1,7 @@
-package com.veloProWeb.Service;
+package com.veloProWeb.Service.User.Interface;
 
-import com.veloProWeb.Model.Entity.Task;
-import com.veloProWeb.Model.Entity.User;
+import com.veloProWeb.Model.Entity.User.Task;
+import com.veloProWeb.Model.Entity.User.User;
 
 import java.util.List;
 

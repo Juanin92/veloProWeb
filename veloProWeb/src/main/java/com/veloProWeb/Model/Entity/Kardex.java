@@ -1,6 +1,7 @@
 package com.veloProWeb.Model.Entity;
 
 import com.veloProWeb.Model.Entity.Product.Product;
+import com.veloProWeb.Model.Entity.User.User;
 import com.veloProWeb.Model.Enum.MovementsType;
 import jakarta.persistence.*;
 import lombok.Data;

@@ -1,7 +1,8 @@
-package com.veloProWeb.Service;
+package com.veloProWeb.Service.Sale;
 
-import com.veloProWeb.Model.Entity.Dispatch;
+import com.veloProWeb.Model.Entity.Sale.Dispatch;
 import com.veloProWeb.Repository.DispatchRepo;
+import com.veloProWeb.Service.Sale.Interface.IDispatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class DispatchService implements IDispatchService{
+public class DispatchService implements IDispatchService {
 
     @Autowired private DispatchRepo dispatchRepo;
     private final Map<Integer, String> statusMap = new HashMap<>();

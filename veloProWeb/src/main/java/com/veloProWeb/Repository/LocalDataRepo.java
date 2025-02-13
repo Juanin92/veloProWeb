@@ -1,6 +1,6 @@
 package com.veloProWeb.Repository;
 
-import com.veloProWeb.Model.Entity.LocalData;
+import com.veloProWeb.Model.Entity.User.LocalData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

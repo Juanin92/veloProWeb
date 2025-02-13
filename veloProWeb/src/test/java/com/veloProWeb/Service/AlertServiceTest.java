@@ -1,8 +1,9 @@
 package com.veloProWeb.Service;
 
-import com.veloProWeb.Model.Entity.Alert;
+import com.veloProWeb.Model.Entity.User.Alert;
 import com.veloProWeb.Model.Entity.Product.Product;
 import com.veloProWeb.Repository.AlertRepo;
+import com.veloProWeb.Service.User.AlertService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

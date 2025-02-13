@@ -1,9 +1,10 @@
 package com.veloProWeb.Service;
 
-import com.veloProWeb.Model.Entity.Message;
-import com.veloProWeb.Model.Entity.User;
+import com.veloProWeb.Model.Entity.User.Message;
+import com.veloProWeb.Model.Entity.User.User;
 import com.veloProWeb.Repository.MessageRepo;
 import com.veloProWeb.Repository.UserRepo;
+import com.veloProWeb.Service.User.MessageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

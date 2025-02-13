@@ -1,6 +1,5 @@
-package com.veloProWeb.Model.Entity;
+package com.veloProWeb.Model.Entity.User;
 
-import com.veloProWeb.Model.Entity.Product.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,14 +13,14 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "alerts")
-public class Alert {
+@Table(name = "tasks")
+public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String description;
-    private String status;
+    private boolean status;
 
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     @Temporal(TemporalType.DATE)
@@ -29,6 +28,6 @@ public class Alert {
     private LocalDate created;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

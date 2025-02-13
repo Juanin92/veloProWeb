@@ -1,8 +1,9 @@
 package com.veloProWeb.Service;
 
-import com.veloProWeb.Model.Entity.Dispatch;
+import com.veloProWeb.Model.Entity.Sale.Dispatch;
 import com.veloProWeb.Model.Entity.Sale.Sale;
 import com.veloProWeb.Repository.DispatchRepo;
+import com.veloProWeb.Service.Sale.DispatchService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,8 +1,9 @@
-package com.veloProWeb.Service;
+package com.veloProWeb.Service.User;
 
-import com.veloProWeb.Model.Entity.Alert;
+import com.veloProWeb.Model.Entity.User.Alert;
 import com.veloProWeb.Model.Entity.Product.Product;
 import com.veloProWeb.Repository.AlertRepo;
+import com.veloProWeb.Service.User.Interface.IAlertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class AlertService implements IAlertService{
+public class AlertService implements IAlertService {
 
     @Autowired private AlertRepo alertRepo;
     private final Map<Integer, String> statusMap = new HashMap<>();

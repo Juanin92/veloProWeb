@@ -1,6 +1,6 @@
 package com.veloProWeb.Service.User;
 
-import com.veloProWeb.Model.Entity.User;
+import com.veloProWeb.Model.Entity.User.User;
 import com.veloProWeb.Repository.UserRepo;
 import com.veloProWeb.Service.User.Interface.IUserService;
 import com.veloProWeb.Validation.UserValidator;

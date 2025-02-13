@@ -1,6 +1,6 @@
 package com.veloProWeb.Service.User;
 
-import com.veloProWeb.Model.Entity.LocalData;
+import com.veloProWeb.Model.Entity.User.LocalData;
 import com.veloProWeb.Repository.LocalDataRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

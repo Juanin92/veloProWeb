@@ -1,6 +1,6 @@
 package com.veloProWeb.Repository;
 
-import com.veloProWeb.Model.Entity.Dispatch;
+import com.veloProWeb.Model.Entity.Sale.Dispatch;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,7 @@
-package com.veloProWeb.Controller;
+package com.veloProWeb.Controller.User;
 
-import com.veloProWeb.Model.Entity.Message;
-import com.veloProWeb.Service.IMessageService;
+import com.veloProWeb.Model.Entity.User.Message;
+import com.veloProWeb.Service.User.Interface.IMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.veloProWeb.Controller;
+package com.veloProWeb.Controller.User;
 
 import com.veloProWeb.Model.Entity.Record;
 import com.veloProWeb.Service.Record.IRecordService;

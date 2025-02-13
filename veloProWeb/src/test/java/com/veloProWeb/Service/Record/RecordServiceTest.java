@@ -1,7 +1,7 @@
 package com.veloProWeb.Service.Record;
 
 import com.veloProWeb.Model.Entity.Record;
-import com.veloProWeb.Model.Entity.User;
+import com.veloProWeb.Model.Entity.User.User;
 import com.veloProWeb.Repository.RecordRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

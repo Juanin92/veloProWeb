@@ -1,8 +1,9 @@
-package com.veloProWeb.Service;
+package com.veloProWeb.Service.User;
 
-import com.veloProWeb.Model.Entity.Task;
-import com.veloProWeb.Model.Entity.User;
+import com.veloProWeb.Model.Entity.User.Task;
+import com.veloProWeb.Model.Entity.User.User;
 import com.veloProWeb.Repository.TaskRepo;
+import com.veloProWeb.Service.User.Interface.ITaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class TaskService implements ITaskService{
+public class TaskService implements ITaskService {
 
     @Autowired private TaskRepo taskRepo;
 

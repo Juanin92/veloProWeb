@@ -1,5 +1,6 @@
 package com.veloProWeb.Model.Entity;
 
+import com.veloProWeb.Model.Entity.User.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;

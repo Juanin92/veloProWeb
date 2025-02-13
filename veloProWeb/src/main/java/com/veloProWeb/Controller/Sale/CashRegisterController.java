@@ -1,7 +1,6 @@
 package com.veloProWeb.Controller.Sale;
 
 import com.veloProWeb.Model.Entity.Sale.CashRegister;
-import com.veloProWeb.Service.Sale.CashRegisterService;
 import com.veloProWeb.Service.Sale.Interface.ICashRegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;

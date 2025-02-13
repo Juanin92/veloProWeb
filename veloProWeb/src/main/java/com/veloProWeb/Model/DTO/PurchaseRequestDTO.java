@@ -1,7 +1,5 @@
 package com.veloProWeb.Model.DTO;
 
-import com.veloProWeb.Model.Entity.Purchase.PurchaseDetail;
-import com.veloProWeb.Model.Entity.Purchase.Supplier;
 import lombok.Data;
 
 import java.time.LocalDate;
