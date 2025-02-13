@@ -2,7 +2,9 @@ package com.veloProWeb.Model.Entity;
 
 import com.veloProWeb.Model.Entity.Sale.Sale;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -10,6 +12,8 @@ import java.time.LocalDate;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "dispatches")
 public class Dispatch {
 
