@@ -12,6 +12,11 @@
                 </button>
             </li>
             <li class="nav-item">
+                <button class="nav-link" id="tab-company" data-bs-toggle="tab" data-bs-target="#content-tasks">
+                    Tareas
+                </button>
+            </li>
+            <li class="nav-item">
                 <button class="nav-link" id="tab-record" data-bs-toggle="tab" data-bs-target="#content-record">
                     Historial
                 </button>
@@ -104,6 +109,26 @@
                                 <button type="submit" class="btn btn-success">Guardar</button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="content-tasks">
+                <div class="card shadow h-100">
+                    <div class="card-body d-flex flex-column p-3" style="height: 100%;">
+                        <h5 class="text-center mb-2">Tareas</h5>
+                        <div class="form-floating mb-3 m-2 w-auto">
+                            <select class="form-select w-auto" aria-label="Seleccione usuario" name="userSelected" required>
+                                <option [ngValue]="null" selected disabled>Seleccione Usuario</option>
+                                <option *ngFor="let user of userList">{{user.name + ' ' + user.surname}}</option>
+                            </select>
+                        </div>
+                        <div class="form-floating mb-3 w-auto">
+                            <textarea class="form-control" id="taskText" style="height: 100px" required></textarea>
+                            <label for="taskText" class="form-label">Descripción de la Tarea:</label>
+                        </div>
+                        <div class="d-grid">
+                            <button class="btn btn-primary" type="button">Enviar</button>
+                        </div>
                     </div>
                 </div>
             </div>
