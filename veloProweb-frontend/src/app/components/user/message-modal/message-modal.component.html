@@ -1,1 +1,26 @@
-<p>message-modal works!</p>
+<div class="modal fade" id="newMessageModal" tabindex="-1" aria-labelledby="newMessageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title" id="newMessageModalLabel">Nuevo Mensaje</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <select class="form-select mb-2 bg-dark text-light rounded-pill">
+                    <option selected>Seleccionar destinatario</option>
+                    <option value="1">Equipo de Ventas</option>
+                    <option value="2">Almacén</option>
+                    <option value="3">Atención al Cliente</option>
+                </select>
+                <div class="input-group">
+                    <input type="text" class="form-control bg-dark text-light rounded-pill rounded-end"
+                        placeholder="Escribe tu mensaje...">
+                    <button class="btn btn-primary rounded-pill rounded-start">
+                        <i class="bi bi-send"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
