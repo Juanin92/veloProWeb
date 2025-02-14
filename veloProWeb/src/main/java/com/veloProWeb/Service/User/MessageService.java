@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,9 +35,21 @@ public class MessageService implements IMessageService {
      * @return - Lista de mensajes del usuario
      */
     @Override
-    public List<Message> getMessageByUser(Long userID) {
+    public List<MessageDTO> getMessageByUser(Long userID) {
         User user = userRepo.findById(userID).orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
-        return messageRepo.findByReceiverUser(user);
+        List<MessageDTO> messageDTOList = new ArrayList<>();
+        for (Message message: messageRepo.findByReceiverUser(user)){
+            MessageDTO dto = new MessageDTO();
+            dto.setId(message.getId());
+            dto.setContext(message.getContext());
+            dto.setCreated(message.getCreated());
+            dto.setRead(message.isRead());
+            dto.setDelete(message.isDelete());
+            dto.setReceiverUser(message.getReceiverUser().getId());
+            dto.setSenderUser(message.getSenderUser().getId());
+            messageDTOList.add(dto);
+        }
+        return messageDTOList;
     }
 
     /**
