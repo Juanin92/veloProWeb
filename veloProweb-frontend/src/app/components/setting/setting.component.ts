@@ -9,6 +9,9 @@ import { LocalDataService } from '../../services/local-data.service';
 import { LocalData } from '../../models/Entity/local-data';
 import { UserService } from '../../services/User/user.service';
 import { User } from '../../models/Entity/user';
+import { TaskService } from '../../services/User/task.service';
+import { Task } from '../../models/Entity/task';
+import { NotificationService } from '../../utils/notification-service.service';
 
 @Component({
   selector: 'app-setting',
@@ -22,6 +25,7 @@ export class SettingComponent implements OnInit{
   recordList: Record[] = [];
   cashRegistersList: CashRegister[] = [];
   userList: User[] = [];
+  task: Task;
   data: LocalData = {
     id: 0,
     name: '',
@@ -37,7 +41,11 @@ export class SettingComponent implements OnInit{
     private recordService: RecordService,
     private userService: UserService,
     private cashRegisterService: CashRegisterService,
-    private localDataService: LocalDataService){}
+    private localDataService: LocalDataService,
+    private taskService: TaskService,
+    private notification: NotificationService){
+      this.task = this.initializeTask();
+    }
 
   ngOnInit(): void {
     this.getRecords();
@@ -94,6 +102,41 @@ export class SettingComponent implements OnInit{
       this.access = true;
     }else{
       console.log('Acceso denegado');
+    }
+  }
+
+  createNewTask(task: Task): void {
+    console.log('Tarea:', task);
+    if (!task.description || !task.user) {
+      this.notification.showWarningToast('Faltan datos', 'top', 3000);
+      return;
+    }
+    this.taskService.createTask(task).subscribe({
+      next: (response) => {
+        const message = response.message;
+        this.notification.showSuccessToast(message, 'top', 3000);
+        this.resetTask();
+      },
+      error: (error) => {
+        const message = error.error?.message || error.error?.error;
+        console.error('Error: ', message); 
+        this.notification.showErrorToast(message, 'top', 3000);
+      }
+    });
+  }
+
+  resetTask(): void{
+    this.task.description = '';
+    this.task.user = null;
+  }
+
+  private initializeTask(): Task{
+    return {
+      id: 0,
+      description: '',
+      status: true,
+      created: '',
+      user: null,
     }
   }
 }
