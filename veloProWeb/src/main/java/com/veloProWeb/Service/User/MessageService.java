@@ -31,6 +31,7 @@ public class MessageService implements IMessageService {
     /**
      * Obtener mensajes de un usuario específico
      * Verifica que el usuario exista
+     * Filtra la lista de mensajes para que no contenga mensajes borrados
      * @param userID - Identificador del usuario
      * @return - Lista de mensajes del usuario
      */
@@ -49,7 +50,9 @@ public class MessageService implements IMessageService {
             dto.setSenderUser(message.getSenderUser().getId());
             messageDTOList.add(dto);
         }
-        return messageDTOList;
+        return messageDTOList.stream()
+                .filter(message -> !message.isDelete())
+                .toList();
     }
 
     /**
