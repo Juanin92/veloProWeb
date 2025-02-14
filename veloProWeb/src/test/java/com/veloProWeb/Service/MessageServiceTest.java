@@ -73,11 +73,11 @@ public class MessageServiceTest {
     public void getMessageByUser_valid(){
         List<Message> messageList = Collections.singletonList(message);
         when(userRepo.findById(1L)).thenReturn(Optional.of(userSender));
-        when(messageService.getMessageByUser(userSender.getId())).thenReturn(messageList);
+        when(messageRepo.findByReceiverUser(userSender)).thenReturn(messageList);
 
-        List<Message> result = messageService.getMessageByUser(userSender.getId());
+        List<MessageDTO> dtoList = messageService.getMessageByUser(userSender.getId());
         verify(messageRepo).findByReceiverUser(userSender);
-        assertEquals(messageList, result);
+        assertEquals(messageList.size(), dtoList.size());
     }
     @Test
     public void getMessageByUser_invalid(){
