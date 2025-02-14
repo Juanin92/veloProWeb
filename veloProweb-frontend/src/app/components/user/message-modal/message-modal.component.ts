@@ -22,8 +22,8 @@ export class MessageModalComponent implements OnInit{
   message: Message = {
     id: 0,
     context: '',
-    isRead: false,
-    isDelete: false,
+    read: false,
+    delete: false,
     senderUser: 0,
     receiverUser: 0
   };
@@ -75,11 +75,12 @@ export class MessageModalComponent implements OnInit{
   }
 
   isReadMessage(message: Message): void{
-    if(message.isRead && message.isDelete){
+    if(!message.read && !message.delete){
       this.messageService.readMessage(message).subscribe({
         next:(response)=>{
           const message = response.message;
           console.log('Ok: ', message);
+          this.getMessages();
         },error: (error)=>{
           const message = error.error?.error || error.error.message;
           console.log('Error: ', message);
@@ -91,7 +92,7 @@ export class MessageModalComponent implements OnInit{
   }
 
   isDeleteMessage(message: Message): void{
-    if(!message.isRead){
+    if(!message.read){
       this.messageService.deleteMessage(message).subscribe({
         next:(response)=>{
           const message = response.message;
