@@ -20,7 +20,7 @@ public class MessageController {
     @Autowired private IMessageService messageService;
 
     @GetMapping()
-    public ResponseEntity<List<Message>> getMessagesByUser(@RequestParam Long userId){
+    public ResponseEntity<List<MessageDTO>> getMessagesByUser(@RequestParam Long userId){
         try{
             return ResponseEntity.ok(messageService.getMessageByUser(userId));
         }catch (Exception e){
