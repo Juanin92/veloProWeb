@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { TaskService } from '../../services/User/task.service';
 import { Task } from '../../models/Entity/task';
+import { MessageModalComponent } from "../user/message-modal/message-modal.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MessageModalComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
