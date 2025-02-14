@@ -29,7 +29,7 @@ public class MessageController {
     }
 
     @PutMapping()
-    public ResponseEntity<Map<String, String>> isReadMessage(@RequestBody Message message){
+    public ResponseEntity<Map<String, String>> isReadMessage(@RequestBody MessageDTO message){
         Map<String, String> response = new HashMap<>();
         try{
             response.put("message","Mensaje leído");
@@ -42,7 +42,7 @@ public class MessageController {
     }
 
     @PutMapping("eliminar")
-    public ResponseEntity<Map<String, String>> isDeleteMessage(@RequestBody Message message){
+    public ResponseEntity<Map<String, String>> isDeleteMessage(@RequestBody MessageDTO message){
         Map<String, String> response = new HashMap<>();
         try{
             response.put("message","Mensaje Borrado");
