@@ -20,6 +20,11 @@ public class TaskController {
     @Autowired private ITaskService taskService;
     @Autowired private IUserService userService;
 
+    /**
+     * Obtiene tareas asignadas de un usuario
+     * @param userId - Identificador del usuario
+     * @return - ResponseEntity con una lista de tareas
+     */
     @GetMapping()
     public ResponseEntity<List<Task>> getTasks(@RequestParam Long userId){
         try{
@@ -29,6 +34,11 @@ public class TaskController {
         }
     }
 
+    /**
+     * Crea tareas asignadas
+     * @param task - Objeto con los datos necesarios para crear la tarea
+     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
+     */
     @PostMapping
     public ResponseEntity<Map<String, String>> createTask(@RequestBody Task task){
         HashMap<String, String> response = new HashMap<>();
@@ -42,6 +52,11 @@ public class TaskController {
         }
     }
 
+    /**
+     * Deja como completada una tarea
+     * @param taskID - Identificador de la tarea seleccionada
+     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
+     */
     @PutMapping
     public ResponseEntity<Map<String, String>> completeTask(@RequestParam Long taskID){
         HashMap<String, String> response = new HashMap<>();
