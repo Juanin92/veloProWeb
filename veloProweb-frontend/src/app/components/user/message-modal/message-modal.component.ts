@@ -97,9 +97,12 @@ export class MessageModalComponent implements OnInit{
     if(message.read){
       this.messageService.deleteMessage(message).subscribe({
         next:(response)=>{
-          const message = response.message;
-          console.log('Ok: ', message);
-          this.getMessages();
+          const messageResponse = response.message;
+          console.log('Ok: ', messageResponse);
+          message.delete = true;
+          setTimeout(() => {
+            this.getMessages();
+          }, 3000);
         },error: (error)=>{
           const message = error.error?.error || error.error.message;
           console.log('Error: ', message);
