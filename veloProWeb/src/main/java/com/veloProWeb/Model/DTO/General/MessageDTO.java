@@ -13,8 +13,8 @@ public class MessageDTO {
     private Long id;
     private String context;
     private LocalDate created;
-    private boolean isRead;
-    private boolean isDelete;
+    private boolean read;
+    private boolean delete;
     private Long senderUser;
     private Long receiverUser;
 }
