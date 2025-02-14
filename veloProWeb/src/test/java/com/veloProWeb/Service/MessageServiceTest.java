@@ -1,5 +1,6 @@
 package com.veloProWeb.Service;
 
+import com.veloProWeb.Model.DTO.General.MessageDTO;
 import com.veloProWeb.Model.Entity.User.Message;
 import com.veloProWeb.Model.Entity.User.User;
 import com.veloProWeb.Repository.MessageRepo;
@@ -150,9 +151,12 @@ public class MessageServiceTest {
     //Prueba para enviar mensaje
     @Test
     public void sendMessage_valid(){
-        messageService.sendMessage(message);
+        MessageDTO dto = new MessageDTO(null, "Prueba 1", null,false, false, userSender.getId(), userReceiver.getId());
+        when(userRepo.findById(dto.getSenderUser())).thenReturn(Optional.of(userSender));
+        when(userRepo.findById(dto.getReceiverUser())).thenReturn(Optional.of(userReceiver));
+        messageService.sendMessage(dto);
 
-        verify(messageRepo, times(1)).save(message);
+        verify(messageRepo, times(1)).save(any(Message.class));
         assertEquals("Prueba 1", message.getContext());
         assertEquals(1L, message.getSenderUser().getId());
         assertEquals(2L, message.getReceiverUser().getId());
