@@ -1,8 +1,8 @@
 export interface Message {
     id: number,
     context: string,
-    isRead: boolean,
-    isDelete: boolean,
+    read: boolean,
+    delete: boolean,
     senderUser: number,
     receiverUser: number,
 }
