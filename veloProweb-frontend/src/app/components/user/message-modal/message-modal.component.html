@@ -10,10 +10,11 @@
         <li *ngFor="let message of messageList"
             class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-primary">
             <span>{{message.context}}</span>
-            <button *ngIf="!message.isRead" class="btn btn-sm btn-outline-success border-0 rounded-pill">
+            <button *ngIf="!message.read" class="btn btn-sm btn-outline-success border-0 rounded-pill"
+                (click)="isReadMessage(message)">
                 <i class="bi bi-check-all"></i>
             </button>
-            <button *ngIf="message.isRead" class="btn btn-sm btn-outline-danger border-0 rounded-pill">
+            <button *ngIf="message.read" class="btn btn-sm btn-outline-danger rounded-pill">
                 <i class="bi bi-trash"></i>
             </button>
         </li>
