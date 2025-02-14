@@ -1,5 +1,6 @@
 package com.veloProWeb.Service.User;
 
+import com.veloProWeb.Model.DTO.General.MessageDTO;
 import com.veloProWeb.Model.Entity.User.Message;
 import com.veloProWeb.Model.Entity.User.User;
 import com.veloProWeb.Repository.MessageRepo;
@@ -81,18 +82,23 @@ public class MessageService implements IMessageService {
     }
 
     /**
-     * Enviar mensaje entre usuarios
-     * @param message - Objeto con los datos necesarios
+     * Crea y Envia mensaje entre usuarios
+     * Verifica que los usuarios receptor y destinatario existan
+     * @param dto - Objeto DTO con los datos necesarios
      */
     @Override
-    public void sendMessage(Message message) {
+    public void sendMessage(MessageDTO dto) {
+        User receiverUser = userRepo.findById(dto.getReceiverUser()).orElseThrow(() -> new IllegalArgumentException("Destinatario no encontrado"));
+        User senderUser = userRepo.findById(dto.getSenderUser()).orElseThrow(() -> new IllegalArgumentException("Receptor no encontrado"));
+
+        Message message =  new Message();
         message.setId(null);
-        message.setContext(message.getContext());
+        message.setContext(dto.getContext());
         message.setCreated(LocalDate.now());
         message.setRead(false);
         message.setDelete(false);
-        message.setReceiverUser(message.getReceiverUser());
-        message.setSenderUser(message.getSenderUser());
+        message.setReceiverUser(receiverUser);
+        message.setSenderUser(senderUser);
         messageRepo.save(message);
     }
 
