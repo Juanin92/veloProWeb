@@ -1,5 +1,6 @@
 package com.veloProWeb.Controller.User;
 
+import com.veloProWeb.Model.DTO.General.MessageDTO;
 import com.veloProWeb.Model.Entity.User.Message;
 import com.veloProWeb.Service.User.Interface.IMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,7 @@ public class MessageController {
     }
 
     @PostMapping()
-    public ResponseEntity<Map<String,String>> sendMessage(@RequestBody Message message){
+    public ResponseEntity<Map<String,String>> sendMessage(@RequestBody MessageDTO message){
         Map<String, String> response = new HashMap<>();
         try{
             response.put("message","Mensaje Enviado");
