@@ -14,7 +14,8 @@
                 (click)="isReadMessage(message)">
                 <i class="bi bi-check-all"></i>
             </button>
-            <button *ngIf="message.read" class="btn btn-sm btn-outline-danger rounded-pill">
+            <button *ngIf="message.read" class="btn btn-sm btn-outline-danger rounded-pill"
+                (click)="isDeleteMessage(message)">
                 <i class="bi bi-trash"></i>
             </button>
         </li>
