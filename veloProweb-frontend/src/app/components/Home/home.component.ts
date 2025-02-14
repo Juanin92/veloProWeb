@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { TaskService } from '../../services/User/task.service';
 import { Task } from '../../models/Entity/task';
 import { MessageModalComponent } from "../user/message-modal/message-modal.component";
+import { Message } from '../../models/Entity/message';
 
 @Component({
   selector: 'app-home',
@@ -14,6 +15,7 @@ import { MessageModalComponent } from "../user/message-modal/message-modal.compo
 export class HomeComponent implements OnInit {
 
   taskList: Task[] = [];
+  messageList: Message[] = [];
   expanded = {
     notification: false,
     dispatch: false,
@@ -35,6 +37,10 @@ export class HomeComponent implements OnInit {
         console.log('Error obtener tareas, ', error);
       }
     });
+  }
+
+  getMessagesUpdated(messages: Message[]): void{
+    this.messageList = messages;
   }
 
   completeTask(task: Task) {
