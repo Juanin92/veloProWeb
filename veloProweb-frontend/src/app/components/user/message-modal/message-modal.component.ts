@@ -42,7 +42,8 @@ export class MessageModalComponent implements OnInit{
     this.messageService.getMessages(1).subscribe({
       next:(list)=>{
         this.messageList = list;
-        this.messagesUpdated.emit(this.messageList);
+        const filteredList = list.filter(message => !message.read)
+        this.messagesUpdated.emit(filteredList);
       }
     });
   }
@@ -92,11 +93,12 @@ export class MessageModalComponent implements OnInit{
   }
 
   isDeleteMessage(message: Message): void{
-    if(!message.read){
+    if(message.read){
       this.messageService.deleteMessage(message).subscribe({
         next:(response)=>{
           const message = response.message;
           console.log('Ok: ', message);
+          this.getMessages();
         },error: (error)=>{
           const message = error.error?.error || error.error.message;
           console.log('Error: ', message);
