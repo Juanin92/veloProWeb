@@ -12,7 +12,7 @@
                 </button>
             </li>
             <li class="nav-item">
-                <button class="nav-link" id="tab-company" data-bs-toggle="tab" data-bs-target="#content-tasks">
+                <button (click)="resetTask()" class="nav-link" id="tab-company" data-bs-toggle="tab" data-bs-target="#content-tasks">
                     Tareas
                 </button>
             </li>
@@ -70,9 +70,9 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="form-floating">
-                                        <input type="text" class="form-control" id="name" placeholder="Ingrese nombre de la empresa"
-                                            name="name" [(ngModel)]="data.name" required />
-                                        <label for="name" class="form-label">Nombre Empresa</label>
+                                        <input type="text" class="form-control" id="nameCompany" placeholder="Ingrese nombre de la empresa"
+                                            name="nameCompany" [(ngModel)]="data.name" required />
+                                        <label for="nameCompany" class="form-label">Nombre Empresa</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -84,9 +84,9 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating">
-                                        <input type="email" class="form-control" id="email" placeholder="Ingrese email"
-                                            name="email" [(ngModel)]="data.email" required/>
-                                        <label for="email" class="form-label">Correo Electrónico</label>
+                                        <input type="email" class="form-control" id="emailCompany" placeholder="Ingrese email"
+                                            name="emailCompany" [(ngModel)]="data.email" required/>
+                                        <label for="emailCompany" class="form-label">Correo Electrónico</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -117,17 +117,28 @@
                     <div class="card-body d-flex flex-column p-3" style="height: 100%;">
                         <h5 class="text-center mb-2">Tareas</h5>
                         <div class="form-floating mb-3 m-2 w-auto">
-                            <select class="form-select w-auto" aria-label="Seleccione usuario" name="userSelected" required>
+                            <select class="form-select w-auto" aria-label="Seleccione usuario" name="userSelected"
+                                [(ngModel)]="task.user"
+                                [ngClass]="{'is-invalid':!task.user, 'is-valid':task.user}" required>
                                 <option [ngValue]="null" selected disabled>Seleccione Usuario</option>
-                                <option *ngFor="let user of userList">{{user.name + ' ' + user.surname}}</option>
+                                <option *ngFor="let user of userList" [ngValue]="user">{{user.name + ' ' + user.surname}}</option>
                             </select>
+                            <div *ngIf="!task.user" class="invalid-feedback">
+                                Debe seleccionar usuario
+                            </div>
                         </div>
                         <div class="form-floating mb-3 w-auto">
-                            <textarea class="form-control" id="taskText" style="height: 100px" required></textarea>
+                            <textarea class="form-control" id="taskText" style="height: 100px" 
+                               [(ngModel)]="task.description" 
+                               [ngClass]="{'is-invalid':!task.description, 'is-valid':task.description}" required></textarea>
                             <label for="taskText" class="form-label">Descripción de la Tarea:</label>
+                            <div *ngIf="!task.description" class="invalid-feedback">
+                                Debe ingresar una descripción
+                            </div>
                         </div>
                         <div class="d-grid">
-                            <button class="btn btn-primary" type="button">Enviar</button>
+                            <button class="btn btn-primary" type="button"
+                            (click)="createNewTask(task)">Enviar</button>
                         </div>
                     </div>
                 </div>
