@@ -1,22 +1,48 @@
+<div class="mt-auto">
+    <button class="btn btn-outline-primary btn-sm rounded-pill" data-bs-toggle="modal"
+        data-bs-target="#newMessageModal">
+        <i class="bi bi-plus-lg"></i>
+    </button>
+</div>
+<div class="flex-grow-1 overflow-auto mb-3">
+    <p *ngIf="messageList.length === 0" class="fw-bold fs-5 text-center">No existen mensajes</p>
+    <ul class="list-group list-group-flush">
+        <li *ngFor="let message of messageList"
+            class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-primary">
+            <span>{{message.context}}</span>
+            <button *ngIf="!message.isRead" class="btn btn-sm btn-outline-success rounded-pill">
+                <i class="bi bi-check-all"></i>
+            </button>
+            <button *ngIf="message.isRead" class="btn btn-sm btn-outline-danger rounded-pill">
+                <i class="bi bi-trash"></i>
+            </button>
+        </li>
+    </ul>
+</div>
+<!-- MODAL SEND MESSAGE -->
 <div class="modal fade" id="newMessageModal" tabindex="-1" aria-labelledby="newMessageModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content bg-dark text-light">
             <div class="modal-header border-secondary">
                 <h5 class="modal-title" id="newMessageModalLabel">Nuevo Mensaje</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
+                    aria-label="Close" (click)="resetModal()"></button>
             </div>
             <div class="modal-body">
-                <select class="form-select mb-2 bg-dark text-light rounded-pill">
-                    <option selected>Seleccionar destinatario</option>
-                    <option value="1">Equipo de Ventas</option>
-                    <option value="2">Almacén</option>
-                    <option value="3">Atención al Cliente</option>
+                <select class="form-select mb-2 bg-dark text-light rounded-pill" aria-label="Seleccione usuario" name="userSelected"
+                                [(ngModel)]="message.receiverUser"
+                                [ngClass]="{'is-invalid':!message.receiverUser, 'is-valid':message.receiverUser}" required>
+                    <option [ngValue]="0" selected disabled>Seleccionar destinatario</option>
+                    <option *ngFor="let user of userList" [ngValue]="user.id">{{user.name + ' ' + user.surname}}</option>
+                    <div *ngIf="!message.receiverUser" class="invalid-feedback">
+                        Debe seleccionar destinatario
+                    </div>
                 </select>
                 <div class="input-group">
                     <input type="text" class="form-control bg-dark text-light rounded-pill rounded-end"
-                        placeholder="Escribe tu mensaje...">
-                    <button class="btn btn-primary rounded-pill rounded-start">
+                        placeholder="Escribe tu mensaje..."
+                        [(ngModel)]="message.context">
+                    <button [disabled]="!message.context" class="btn btn-primary rounded-pill rounded-start" (click)="sendMessage(message)">
                         <i class="bi bi-send"></i>
                     </button>
                 </div>
