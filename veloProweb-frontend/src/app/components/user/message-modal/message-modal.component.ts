@@ -67,6 +67,7 @@ export class MessageModalComponent implements OnInit{
       next: (response)=>{
         const message = response.message;
         this.notification.showSuccessToast(message, 'top', 3000);
+        this.resetModal();
       },error: (error)=>{
         const message = error.error?.error || error.error?.message;
         console.log('Error: ',message);
