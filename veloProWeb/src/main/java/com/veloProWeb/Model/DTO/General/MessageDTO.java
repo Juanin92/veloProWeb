@@ -17,4 +17,5 @@ public class MessageDTO {
     private boolean delete;
     private Long senderUser;
     private Long receiverUser;
+    private String senderName;
 }

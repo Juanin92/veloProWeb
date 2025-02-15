@@ -48,6 +48,7 @@ public class MessageService implements IMessageService {
             dto.setDelete(message.isDelete());
             dto.setReceiverUser(message.getReceiverUser().getId());
             dto.setSenderUser(message.getSenderUser().getId());
+            dto.setSenderName(user.getName() + " " + user.getSurname());
             messageDTOList.add(dto);
         }
         return messageDTOList.stream()
