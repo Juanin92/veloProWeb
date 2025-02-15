@@ -6,11 +6,12 @@ import { LocalDataService } from './services/local-data.service';
 import { LocalData } from './models/Entity/local-data';
 import * as bootstrap from 'bootstrap';
 import { UpdateUserModalComponent } from "./components/user/update-user-modal/update-user-modal.component";
+import { MessageModalComponent } from "./components/user/message-modal/message-modal.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MenuComponent, UpdateUserModalComponent],
+  imports: [RouterOutlet, MenuComponent, UpdateUserModalComponent, MessageModalComponent],
   providers: [DatePipe],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
