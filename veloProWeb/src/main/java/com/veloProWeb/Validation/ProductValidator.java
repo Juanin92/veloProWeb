@@ -30,6 +30,17 @@ public class ProductValidator {
     }
 
     /**
+     * Válida el monto del umbral, lanzará una excepción:
+     * Si el monto es menor o igual a 0
+     * @param number - valor del monto
+     */
+    public void validateThreshold(int number){
+        if (number <= 0){
+            throw new IllegalArgumentException("Cantidad de ser mayor a 0");
+        }
+    }
+
+    /**
      * Válida el precio de venta, lanzará una excepción:
      * Si el monto es menor o igual 0
      * @param salePrice - valor del monto
