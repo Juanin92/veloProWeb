@@ -3,13 +3,22 @@ package com.veloProWeb.Service.Product;
 import com.veloProWeb.Model.Entity.Product.Product;
 import com.veloProWeb.Model.Enum.StatusProduct;
 import com.veloProWeb.Repository.Product.ProductRepo;
+import com.veloProWeb.Service.Report.IkardexService;
+import com.veloProWeb.Service.User.Interface.IAlertService;
 import com.veloProWeb.Validation.ProductValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -20,6 +29,8 @@ public class ProductServiceTest {
     @InjectMocks private ProductService productService;
     @Mock private ProductRepo productRepo;
     @Mock private ProductValidator validator;
+    @Mock private IAlertService alertService;
+    @Mock private IkardexService kardexService;
     private Product product;
 
     @BeforeEach
@@ -112,5 +123,55 @@ public class ProductServiceTest {
         product.setId(1L);
         productService.getProductById(product.getId());
         verify(productRepo).findById(product.getId());
+    }
+
+    //Prueba para verificar las alertas creadas o cuáles se deben crear para cada situación
+    @Test
+    public void checkAndCreateAlertsByProduct_validNoStock(){
+        product.setStock(0);
+        product.setThreshold(3);
+        product.setDescription("Product 1");
+        List<Product> products = Collections.singletonList(product);
+        String noStockDescription = "Sin Stock (" + product.getDescription() + " )";
+        when(productRepo.findAll()).thenReturn(products);
+        when(alertService.isAlertActive(product, noStockDescription)).thenReturn(false);
+        productService.checkAndCreateAlertsByProduct();
+
+        verify(productRepo, times(1)).findAll();
+        verify(alertService, times(1)).isAlertActive(product, noStockDescription);
+        verify(alertService, times(1)).createAlert(product, noStockDescription);
+        verify(kardexService, times(1)).checkLowSales(product);
+    }
+    @Test
+    public void checkAndCreateAlertsByProduct_validCriticalStock(){
+        product.setStock(10);
+        product.setThreshold(15);
+        product.setDescription("Product 1");
+        List<Product> products = Collections.singletonList(product);
+        String criticalStockDescription = "Stock Crítico (" + product.getDescription() + " - " + product.getStock() + " unidades)";
+        when(productRepo.findAll()).thenReturn(products);
+        when(alertService.isAlertActive(product, criticalStockDescription)).thenReturn(false);
+        productService.checkAndCreateAlertsByProduct();
+
+        verify(productRepo, times(1)).findAll();
+        verify(alertService, times(1)).isAlertActive(product, criticalStockDescription);
+        verify(alertService, times(1)).createAlert(product, criticalStockDescription);
+        verify(kardexService, times(1)).checkLowSales(product);
+    }
+    @Test
+    public void checkAndCreateAlertsByProduct_validWithAlertActive(){
+        product.setStock(0);
+        product.setThreshold(15);
+        product.setDescription("Product 1");
+        List<Product> products = Collections.singletonList(product);
+        String noStockDescription = "Sin Stock (" + product.getDescription() + " )";
+        when(productRepo.findAll()).thenReturn(products);
+        when(alertService.isAlertActive(product, noStockDescription)).thenReturn(true);
+        productService.checkAndCreateAlertsByProduct();
+
+        verify(productRepo, times(1)).findAll();
+        verify(alertService, times(1)).isAlertActive(product, noStockDescription);
+        verify(alertService, never()).createAlert(product, noStockDescription);
+        verify(kardexService, times(1)).checkLowSales(product);
     }
 }
