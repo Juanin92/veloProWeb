@@ -22,9 +22,11 @@ export class MessageModalComponent implements OnInit{
   message: Message = {
     id: 0,
     context: '',
+    created: '',
     read: false,
     delete: false,
     senderUser: 0,
+    senderName: '',
     receiverUser: 0
   };
 
