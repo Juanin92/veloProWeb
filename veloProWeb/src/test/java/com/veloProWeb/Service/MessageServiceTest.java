@@ -151,7 +151,7 @@ public class MessageServiceTest {
     //Prueba para enviar mensaje
     @Test
     public void sendMessage_valid(){
-        MessageDTO dto = new MessageDTO(null, "Prueba 1", null,false, false, userSender.getId(), userReceiver.getId());
+        MessageDTO dto = new MessageDTO(null, "Prueba 1", null,false, false, userSender.getId(), userReceiver.getId(), "senderName");
         when(userRepo.findById(dto.getSenderUser())).thenReturn(Optional.of(userSender));
         when(userRepo.findById(dto.getReceiverUser())).thenReturn(Optional.of(userReceiver));
         messageService.sendMessage(dto);
