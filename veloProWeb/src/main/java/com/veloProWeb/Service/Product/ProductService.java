@@ -50,10 +50,12 @@ public class ProductService implements IProductService {
         if (product.getStock() > 0){
             product.setStatus(true);
             product.setStatusProduct(StatusProduct.DISPONIBLE);
+            product.setThreshold(product.getThreshold());
             productRepo.save(product);
         }else {
             product.setStatus(false);
             product.setStatusProduct(StatusProduct.NODISPONIBLE);
+            product.setThreshold(product.getThreshold());
             productRepo.save(product);
         }
     }
