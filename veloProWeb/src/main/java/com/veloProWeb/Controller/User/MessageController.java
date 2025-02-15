@@ -23,7 +23,7 @@ public class MessageController {
     public ResponseEntity<List<MessageDTO>> getMessagesByUser(@RequestParam Long userId){
         try{
             return ResponseEntity.ok(messageService.getMessageByUser(userId));
-        }catch (Exception e){
+        }catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
@@ -35,8 +35,8 @@ public class MessageController {
             response.put("message","Mensaje leído");
             messageService.isReadMessage(message.getId(), message.getContext());
             return ResponseEntity.ok(response);
-        }catch (Exception e){
-            response.put("error", "No se pudo realizar la acción");
+        }catch (IllegalArgumentException e){
+            response.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
@@ -48,8 +48,8 @@ public class MessageController {
             response.put("message","Mensaje Borrado");
             messageService.isDeleteMessage(message.getId(), message.getContext());
             return ResponseEntity.ok(response);
-        }catch (Exception e){
-            response.put("error", "No se pudo realizar la acción");
+        }catch (IllegalArgumentException e){
+            response.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
@@ -61,8 +61,8 @@ public class MessageController {
             response.put("message","Mensaje Enviado");
             messageService.sendMessage(message);
             return ResponseEntity.ok(response);
-        }catch (Exception e){
-            response.put("error", "No se pudo realizar la acción");
+        }catch (IllegalArgumentException e){
+            response.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }

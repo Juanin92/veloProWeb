@@ -29,7 +29,7 @@ public class TaskController {
     public ResponseEntity<List<Task>> getTasks(@RequestParam Long userId){
         try{
             return ResponseEntity.ok(taskService.getTaskByUser(userId));
-        }catch (Exception e){
+        }catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
@@ -46,7 +46,7 @@ public class TaskController {
             response.put("message", "Tarea asignada correctamente");
             taskService.createTask(task);
             return ResponseEntity.ok(response);
-        }catch (Exception e){
+        }catch (IllegalArgumentException e){
             response.put("Error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
@@ -64,7 +64,7 @@ public class TaskController {
             response.put("message", "Tarea Completada");
             taskService.completeTask(taskID);
             return ResponseEntity.ok(response);
-        }catch (Exception e){
+        }catch (IllegalArgumentException e){
             response.put("Error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }

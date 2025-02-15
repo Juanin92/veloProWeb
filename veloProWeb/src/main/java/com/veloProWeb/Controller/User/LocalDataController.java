@@ -30,7 +30,7 @@ public class LocalDataController {
             localDataService.saveData(data);
             response.put("message", "Información registrada");
             return ResponseEntity.ok(response);
-        }catch (Exception e){
+        }catch (IllegalArgumentException e){
             response.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
@@ -43,7 +43,7 @@ public class LocalDataController {
             localDataService.updateData(data);
             response.put("message", "Información actualizada");
             return ResponseEntity.ok(response);
-        }catch (Exception e){
+        }catch (IllegalArgumentException e){
             response.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
