@@ -27,7 +27,7 @@ public class ProductValidatorTest {
 
     @BeforeEach
     void setUp(){
-        product = new Product(1l, "Descripción", 1000, 2000, 15, true, StatusProduct.DISPONIBLE, brand, unit, subcategory, category, new ArrayList<>());
+        product = new Product(1l, "Descripción", 1000, 2000, 15,3, true, StatusProduct.DISPONIBLE, brand, unit, subcategory, category, new ArrayList<>());
     }
 
     @Test
@@ -86,6 +86,14 @@ public class ProductValidatorTest {
     @ValueSource(ints = {0, -1})
     public void validateStock_invalid(int value){
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validateStock(value));
+        assertEquals("Cantidad de ser mayor a 0", exception.getMessage());
+    }
+
+    //Prueba para validar monto del umbral crítico del producto
+    @ParameterizedTest
+    @ValueSource(ints = {0, -1})
+    public void validateThreshold_invalid(int value){
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validateThreshold(value));
         assertEquals("Cantidad de ser mayor a 0", exception.getMessage());
     }
 
