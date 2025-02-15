@@ -34,6 +34,7 @@ public class ProductService implements IProductService {
         product.setBuyPrice(0);
         product.setSalePrice(0);
         product.setStock(0);
+        product.setThreshold(0);
         productRepo.save(product);
         kardexService.addKardex(product, 0, "Creación Producto", MovementsType.AJUSTE);
     }
