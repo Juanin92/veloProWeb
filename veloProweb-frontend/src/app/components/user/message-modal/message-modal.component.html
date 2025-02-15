@@ -8,7 +8,8 @@
     <p *ngIf="messageList.length === 0" class="fw-bold fs-5 text-center">No existen mensajes</p>
     <ul class="list-group list-group-flush">
         <li *ngFor="let message of messageList"
-            class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-primary">
+            class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-primary"
+            [ngClass]="{'bg-danger text-white': message.delete, 'bg-dark-subtle': !message.delete}">
             <span [ngClass]="{'text-decoration-line-through': message.delete}">{{message.context}}</span>
             <button *ngIf="!message.read" class="btn btn-sm btn-outline-success border-0 rounded-pill"
                 (click)="isReadMessage(message)">
