@@ -10,7 +10,13 @@
         <li *ngFor="let message of messageList"
             class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-primary"
             [ngClass]="{'bg-danger text-white': message.delete, 'bg-dark-subtle': !message.delete}">
-            <span [ngClass]="{'text-decoration-line-through': message.delete}">{{message.context}}</span>
+            <div>
+                <span [ngClass]="{'text-decoration-line-through': message.delete}">{{message.context}}</span>
+                <div class="text-muted small">
+                    <strong>{{message.senderName}}</strong> - <small>({{message.created | date: 'dd-MM-yyy'}})</small>
+                </div>
+            </div>
+            <!-- <span [ngClass]="{'text-decoration-line-through': message.delete}">{{message.context}}</span> -->
             <button *ngIf="!message.read" class="btn btn-sm btn-outline-success border-0 rounded-pill"
                 (click)="isReadMessage(message)">
                 <i class="bi bi-check-all"></i>
