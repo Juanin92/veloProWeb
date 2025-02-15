@@ -4,15 +4,16 @@ import { TaskService } from '../../services/User/task.service';
 import { Task } from '../../models/Entity/task';
 import { MessageModalComponent } from "../user/message-modal/message-modal.component";
 import { Message } from '../../models/Entity/message';
+import { TaskComponent } from "../setting/task/task.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, MessageModalComponent],
+  imports: [CommonModule, MessageModalComponent, TaskComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent{
 
   taskList: Task[] = [];
   messageList: Message[] = [];
@@ -25,38 +26,12 @@ export class HomeComponent implements OnInit {
 
   constructor(private taskService: TaskService) { }
 
-  ngOnInit(): void {
-    this.getTasks();
-  }
-
-  getTasks(): void {
-    this.taskService.getTasks(1).subscribe({
-      next: (list) => {
-        this.taskList = list;
-      }, error: (error) => {
-        console.log('Error obtener tareas, ', error);
-      }
-    });
-  }
-
   getMessagesUpdated(messages: Message[]): void{
     this.messageList = messages;
   }
 
-  completeTask(task: Task) {
-    task.status = false;
-    this.taskService.completeTask(task.id).subscribe({
-      next:(response)=>{
-        const message = response.message;
-        console.log('Ok: ',message);
-      }, error: (error)=>{
-        const message = error.error?.message || error.error?.error;
-        console.log('Error: ',message);
-      }
-    });
-    setTimeout(() => {
-      this.taskList = this.taskList.filter(t => t !== task);
-    }, 3000);
+  getTasksUpdated(tasks: Task[]): void{
+    this.taskList = tasks;
   }
 
   toggleCardExpand(section: 'notification' | 'dispatch' | 'task' | 'alert'): void {
