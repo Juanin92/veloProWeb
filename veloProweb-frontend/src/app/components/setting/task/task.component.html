@@ -1,0 +1,11 @@
+<p *ngIf="taskList.length === 0" class="fw-bold fs-5 text-center">No existen tareas asignadas</p>
+<ul class="list-group list-group-flush">
+    <li *ngFor="let task of taskList"
+        class="list-group-item d-flex justify-content-between align-items-center border-bottom border-warning"
+        [ngClass]="{'bg-success text-white': !task.status}">
+        <span [ngClass]="{'text-decoration-line-through': !task.status}">{{task.description}}</span>
+        <button class="btn btn-sm btn-success rounded-circle" (click)="completeTask(task)">
+            <i class="bi bi-check-lg"></i>
+        </button>
+    </li>
+</ul>
