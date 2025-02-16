@@ -36,10 +36,13 @@ export class AlertComponent implements OnInit{
     this.alertService.getAlerts().subscribe({
       next:(list)=>{
         this.alertList = list;
-        this.alertsUpdated.emit(this.alertList);
+        const filteredList = this.alertList.filter(a => a.status.includes('Alerta'));
+        this.alertsUpdated.emit(filteredList);
       },error: (error)=>{
         console.log('Error al obtener alertas: ', error.error?.error);
       }
     });
   }
+
+  
 }
