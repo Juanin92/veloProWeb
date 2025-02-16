@@ -82,17 +82,6 @@
                 <div [ngClass]="{'show': expanded.task, 'collapse': !expanded.task}">
                     <div class="card-body d-flex flex-column" [ngClass]="{'expanded': expanded.task}">
                         <app-task (taskUpdated)="getTasksUpdated($event)"></app-task>
-                        <!-- <p *ngIf="taskList.length === 0" class="fw-bold fs-5 text-center">No existen tareas asignadas</p>
-                        <ul class="list-group list-group-flush">
-                            <li *ngFor="let task of taskList"
-                                class="list-group-item d-flex justify-content-between align-items-center border-bottom border-warning"
-                                [ngClass]="{'bg-success text-white': !task.status}">
-                                <span [ngClass]="{'text-decoration-line-through': !task.status}">{{task.description}}</span>
-                                <button class="btn btn-sm btn-success rounded-circle" (click)="completeTask(task)">
-                                    <i class="bi bi-check-lg"></i>
-                                </button>
-                            </li>
-                        </ul> -->
                     </div>
                 </div>
             </div>
@@ -108,7 +97,8 @@
                 </div>
                 <div [ngClass]="{'show': expanded.alert, 'collapse': !expanded.alert}">
                     <div class="card-body d-flex flex-column" [ngClass]="{'expanded': expanded.alert}">
-                        <ul class="list-group list-group-flush">
+                        <app-alert (alertsUpdated)="getAlertUpdated($event)"></app-alert>
+                        <!-- <ul class="list-group list-group-flush">
                             <li
                                 class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-danger">
                                 <span>Producto A - Stock Bajo (5 unidades)</span>
@@ -124,7 +114,7 @@
                                 <span>Producto C - Sin Stock</span>
                                 <button class="btn btn-sm btn-outline-primary rounded-pill">Reabastecer</button>
                             </li>
-                        </ul>
+                        </ul> -->
                     </div>
                 </div>
             </div>
