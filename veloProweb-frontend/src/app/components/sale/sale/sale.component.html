@@ -14,9 +14,13 @@
           height="30"
           class="img-fluid"
           data-bs-toggle="tooltip"
-          data-bs-placement="auto"
+          data-bs-placement="bottom"
           data-bs-title="Seleccionar Productos"
         />
+      </button>
+      <button *ngIf="saleDetailList.length" class="btn btn-outline-success btn-sm border-0 rounded shadow-sm ms-1" data-bs-toggle="modal"
+        data-bs-target="#createDispatch">
+        <i class="bi bi-truck"></i> Despacho
       </button>
     </div>
     <div class="col-md-4 col-12 text-center">
