@@ -8,7 +8,7 @@ import { AlertModel } from '../../models/Entity/alert-model';
 })
 export class AlertService {
 
-  private apiUrl = 'http://localhost:8080/data';
+  private apiUrl = 'http://localhost:8080/alertas';
 
   constructor(private httpClient: HttpClient) { }
 
