@@ -1,23 +1,16 @@
 <ul class="list-group list-group-flush">
     <li *ngFor="let alert of alertList"
-        class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-danger">
-        <span>{{alert.description}}</span>
-        <button class="btn btn-sm btn-outline-warning rounded-pill">Pendiente</button>
-        <button class="btn btn-sm btn-outline-success rounded-pill">Revisado</button>
+        class="list-group-item d-flex justify-content-between align-items-center border-bottom border-danger">
+        <span>
+            <i *ngIf="alert.description.includes('Sin Stock')" class="bi bi-x-circle-fill text-danger"></i>
+            <i *ngIf="alert.description.includes('Stock Crítico')"
+                class="bi bi-exclamation-circle-fill text-warning"></i>
+            <i *ngIf="alert.description.includes('sin Ventas')" class="bi bi-cart-x-fill text-info"></i>
+            {{alert.description}}
+        </span>
+        <div class="d-flex flex-row">
+            <button class="btn btn-sm btn-outline-warning rounded-pill"><i class="bi bi-hourglass-split"></i></button>
+            <button class="btn btn-sm btn-outline-success rounded-pill"><i class="bi bi-check2-square"></i></button>
+        </div>
     </li>
-    <!-- <li
-        class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-danger">
-        <span>Producto A - Stock Bajo (5 unidades)</span>
-        <button class="btn btn-sm btn-outline-primary rounded-pill">Reabastecer</button>
-    </li>
-    <li
-        class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-danger">
-        <span>Producto B - Próximo a Vencer</span>
-        <button class="btn btn-sm btn-outline-warning rounded-pill">Revisar</button>
-    </li>
-    <li
-        class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-danger">
-        <span>Producto C - Sin Stock</span>
-        <button class="btn btn-sm btn-outline-primary rounded-pill">Reabastecer</button>
-    </li> -->
 </ul>
