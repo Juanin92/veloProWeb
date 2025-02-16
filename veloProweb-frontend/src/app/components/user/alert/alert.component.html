@@ -9,8 +9,14 @@
             {{alert.description}}
         </span>
         <div class="d-flex flex-row">
-            <button class="btn btn-sm btn-outline-warning rounded-pill"><i class="bi bi-hourglass-split"></i></button>
-            <button class="btn btn-sm btn-outline-success rounded-pill"><i class="bi bi-check2-square"></i></button>
+            <button class="btn btn-sm btn-outline-warning rounded-pill"
+                data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pendiente">
+                <i class="bi bi-hourglass-split"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-success rounded-pill"
+                data-bs-toggle="tooltip" data-bs-placement="bottom" title="Revisado">
+                <i class="bi bi-check2-square"></i>
+            </button>
         </div>
     </li>
 </ul>

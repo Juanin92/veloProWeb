@@ -3,6 +3,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AlertService } from '../../../services/User/alert.service';
 import { AlertModel } from '../../../models/Entity/alert-model';
+import { TooltipService } from '../../../utils/tooltip.service';
 
 @Component({
   selector: 'app-alert',
@@ -22,13 +23,15 @@ export class AlertComponent implements OnInit{
     created: ''
   }
   
-  constructor(private alertService: AlertService){}
+  constructor(
+    private alertService: AlertService,
+    private tooltip: TooltipService){}
 
   ngOnInit(): void {
     this.getAlerts();
+    this.tooltip.initializeTooltips();
   }
-
-  
+ 
   getAlerts(): void{
     this.alertService.getAlerts().subscribe({
       next:(list)=>{
