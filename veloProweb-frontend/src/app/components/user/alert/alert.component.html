@@ -1,1 +1,23 @@
-<p>alert works!</p>
+<ul class="list-group list-group-flush">
+    <li *ngFor="let alert of alertList"
+        class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-danger">
+        <span>{{alert.description}}</span>
+        <button class="btn btn-sm btn-outline-warning rounded-pill">Pendiente</button>
+        <button class="btn btn-sm btn-outline-success rounded-pill">Revisado</button>
+    </li>
+    <!-- <li
+        class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-danger">
+        <span>Producto A - Stock Bajo (5 unidades)</span>
+        <button class="btn btn-sm btn-outline-primary rounded-pill">Reabastecer</button>
+    </li>
+    <li
+        class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-danger">
+        <span>Producto B - Próximo a Vencer</span>
+        <button class="btn btn-sm btn-outline-warning rounded-pill">Revisar</button>
+    </li>
+    <li
+        class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-danger">
+        <span>Producto C - Sin Stock</span>
+        <button class="btn btn-sm btn-outline-primary rounded-pill">Reabastecer</button>
+    </li> -->
+</ul>
