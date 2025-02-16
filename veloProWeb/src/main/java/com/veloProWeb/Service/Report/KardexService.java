@@ -4,6 +4,7 @@ import com.veloProWeb.Model.Entity.Kardex;
 import com.veloProWeb.Model.Entity.Product.Product;
 import com.veloProWeb.Model.Enum.MovementsType;
 import com.veloProWeb.Repository.KardexRepo;
+import com.veloProWeb.Service.User.Interface.IAlertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Service
 public class KardexService implements IkardexService{
     @Autowired private KardexRepo kardexRepo;
+    @Autowired private IAlertService alertService;
 
     /**
      * Crea un registro/movimiento de productos (Kardex)
@@ -42,5 +44,33 @@ public class KardexService implements IkardexService{
     @Override
     public List<Kardex> getAll() {
         return kardexRepo.findAll();
+    }
+
+    /**
+     * Verifica las ventas bajas de un producto en un período de 90 días y crea una alerta.
+     * Recupera la lista de movimientos de Kardex para el producto desde la fecha calculada.
+     * Compara las entradas y salidas para determinar si hay una diferencia que indique bajas ventas.
+     * Crea una alerta si la diferencia es mayor a la mitad de las entradas y no existe una alerta activa para el producto.
+     * @param product - Producto a verificar sus ventas
+     */
+    @Override
+    public void checkLowSales(Product product) {
+        LocalDate days = LocalDate.now().minusDays(90);
+        List<Kardex> kardexList = kardexRepo.findByProductAndDateAfter(product, days);
+
+        int totalEntries = 0;
+        int totalExits = 0;
+        for (Kardex kardex : kardexList){
+            if (kardex.getMovementsType().equals(MovementsType.ENTRADA)){
+                totalEntries = kardex.getQuantity();
+            } else if (kardex.getMovementsType().equals(MovementsType.SALIDA)) {
+                totalExits = kardex.getQuantity();
+            }
+        }
+        int difference = totalEntries - totalExits;
+        String description = "Producto sin Ventas (+ 90 días), " + product.getDescription();
+        if (difference > (totalEntries / 2) && !alertService.isAlertActive(product, description)){
+            alertService.createAlert(product, description);
+        }
     }
 }

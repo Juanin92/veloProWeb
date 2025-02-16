@@ -9,4 +9,5 @@ import java.util.List;
 public interface IkardexService {
     void addKardex(Product product, int quantity, String comment, MovementsType moves);
     List<Kardex> getAll();
+    void checkLowSales(Product product);
 }
