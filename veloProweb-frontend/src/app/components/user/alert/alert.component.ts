@@ -44,5 +44,19 @@ export class AlertComponent implements OnInit{
     });
   }
 
-  
+  changeStatusAlert(alert: AlertModel, action: number): void{
+    this.alertService.handleStatusAlert(alert, action).subscribe({
+      next:(response)=>{
+        const message = response.message;
+        console.log('Ok: ', message);
+        alert.status = action === 2 ? 'Revisado' : 'Pendiente';
+        setTimeout(() => {
+          this.getAlerts();
+        }, 3000);
+      }, error: (error)=>{
+        const message = error.error?.message || error.error?.error;
+        console.log('Error: ', message);
+      }
+    });
+  }
 }
