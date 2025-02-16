@@ -1,10 +1,10 @@
 import { Sale } from "./sale";
 
 export interface Dispatch {
-    id: string,
+    id: number,
     trackingNumber: string,
     status: string,
     created: string,
     deliveryDate: string,
-    sale: Sale,
+    sale: Sale | null,
 }
