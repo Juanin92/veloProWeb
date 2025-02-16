@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface AlertRepo extends JpaRepository<Alert, Long> {
-    List<Alert> findByProductAndDescriptionAndStatus(Product product, String description, List<String> status);
+    List<Alert> findByProductAndDescriptionAndStatusIn(Product product, String description, List<String> status);
 }

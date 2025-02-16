@@ -98,7 +98,7 @@ public class AlertService implements IAlertService {
     @Override
     public boolean isAlertActive(Product product, String description) {
         List<String> status = Arrays.asList(statusMap.get(1),statusMap.get(3));
-        List<Alert> alerts = alertRepo.findByProductAndDescriptionAndStatus(product, description, status);
+        List<Alert> alerts = alertRepo.findByProductAndDescriptionAndStatusIn(product, description, status);
         return !alerts.isEmpty();
     }
 }

@@ -116,20 +116,20 @@ public class AlertServiceTest {
     public void isAlertActive_validTrue(){
         List<Alert> alerts = Collections.singletonList(alert);
         List<String> status = Arrays.asList("Alerta", "Pendiente");
-        when(alertRepo.findByProductAndDescriptionAndStatus(new Product(), "Test 1", status)).thenReturn(alerts);
+        when(alertRepo.findByProductAndDescriptionAndStatusIn(new Product(), "Test 1", status)).thenReturn(alerts);
 
         boolean result = alertService.isAlertActive(new Product(), "Test 1");
-        verify(alertRepo, times(1)).findByProductAndDescriptionAndStatus(new Product(), "Test 1", status);
+        verify(alertRepo, times(1)).findByProductAndDescriptionAndStatusIn(new Product(), "Test 1", status);
         assertTrue(result);
     }
     @Test
     public void isAlertActive_validFalse(){
         List<Alert> alerts = Collections.emptyList();
         List<String> status = Arrays.asList("Alerta", "Pendiente");
-        when(alertRepo.findByProductAndDescriptionAndStatus(new Product(), "Test 6", status)).thenReturn(alerts);
+        when(alertRepo.findByProductAndDescriptionAndStatusIn(new Product(), "Test 6", status)).thenReturn(alerts);
 
         boolean result = alertService.isAlertActive(new Product(), "Test 6");
-        verify(alertRepo, times(1)).findByProductAndDescriptionAndStatus(new Product(), "Test 6", status);
+        verify(alertRepo, times(1)).findByProductAndDescriptionAndStatusIn(new Product(), "Test 6", status);
         assertFalse(result);
     }
 }
