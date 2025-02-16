@@ -14,4 +14,5 @@ public interface IProductService {
     void active(Product product);
     void updateStockPurchase(Product product, int price, int quantity);
     void updateStockSale(Product product, int quantity);
+    void checkAndCreateAlertsByProduct();
 }

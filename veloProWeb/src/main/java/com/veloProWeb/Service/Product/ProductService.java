@@ -6,8 +6,10 @@ import com.veloProWeb.Model.Enum.StatusProduct;
 import com.veloProWeb.Repository.Product.ProductRepo;
 import com.veloProWeb.Service.Product.Interfaces.IProductService;
 import com.veloProWeb.Service.Report.IkardexService;
+import com.veloProWeb.Service.User.Interface.IAlertService;
 import com.veloProWeb.Validation.ProductValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +20,7 @@ public class ProductService implements IProductService {
     @Autowired private ProductRepo productRepo;
     @Autowired private ProductValidator validator;
     @Autowired private IkardexService kardexService;
+    @Autowired private IAlertService alertService;
 
     /**
      * Creación de un nuevo producto
@@ -99,6 +102,29 @@ public class ProductService implements IProductService {
     }
 
     /**
+     * Verifica y crea alertas para cada producto en intervalos regulares.
+     * Crea una alerta si no hay stock disponible o umbral bajo y no existe ya una alerta activa.
+     * Llama al servicio de Kardex para verificar y manejar las bajas ventas del producto.
+     * @Scheduled - Está programado para actuar cada 6 hr automáticamente
+     */
+    @Override
+    @Scheduled(fixedRate = 21600000)
+    public void checkAndCreateAlertsByProduct() {
+        List<Product> products =  productRepo.findAll();
+        for (Product product : products){
+            String noStockDescription = "Sin Stock (" + product.getDescription() + " )";
+            if (product.getStock() == 0 && !alertService.isAlertActive(product, noStockDescription)){
+                alertService.createAlert(product, noStockDescription);
+            }
+            String criticalStockDescription = "Stock Crítico (" + product.getDescription() + " - " + product.getStock() + " unidades)";
+            if (product.getStock() < product.getThreshold() && !alertService.isAlertActive(product, criticalStockDescription) ) {
+                alertService.createAlert(product, criticalStockDescription);
+            }
+            kardexService.checkLowSales(product);
+        }
+    }
+
+    /**
      * Cambia el estado del producto como Descontinuado
      * Asigna un estado negativo al producto para no estar disponible para ventas
      * @param product - producto a eliminar
@@ -129,4 +155,6 @@ public class ProductService implements IProductService {
     public Product getProductById(Long id) {
         return productRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("No ha seleccionado un producto registrado"));
     }
+
+
 }
