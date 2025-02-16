@@ -5,11 +5,13 @@ import { Task } from '../../models/Entity/task';
 import { MessageModalComponent } from "../user/message-modal/message-modal.component";
 import { Message } from '../../models/Entity/message';
 import { TaskComponent } from "../setting/task/task.component";
+import { AlertComponent } from "../user/alert/alert.component";
+import { AlertModel } from '../../models/Entity/alert-model';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, MessageModalComponent, TaskComponent],
+  imports: [CommonModule, MessageModalComponent, TaskComponent, AlertComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -17,6 +19,7 @@ export class HomeComponent{
 
   taskList: Task[] = [];
   messageList: Message[] = [];
+  alertList: AlertModel[] = [];
   expanded = {
     notification: false,
     dispatch: false,
@@ -32,6 +35,10 @@ export class HomeComponent{
 
   getTasksUpdated(tasks: Task[]): void{
     this.taskList = tasks;
+  }
+
+  getAlertUpdated(alerts: AlertModel[]): void{
+    this.alertList = alerts;
   }
 
   toggleCardExpand(section: 'notification' | 'dispatch' | 'task' | 'alert'): void {
