@@ -8,6 +8,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -21,6 +23,8 @@ public class Dispatch {
     private Long id;
     private String trackingNumber;
     private String status;
+    private String address;
+    private String comment;
 
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     @Temporal(TemporalType.DATE)
@@ -31,7 +35,6 @@ public class Dispatch {
     @CreatedDate
     private LocalDate deliveryDate;
 
-    @ManyToOne
-    @JoinColumn(name = "sale_id", nullable = false)
-    private Sale sale;
+    @OneToMany(mappedBy = "dispatch", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SaleDetail> saleDetails = new ArrayList<>();
 }
