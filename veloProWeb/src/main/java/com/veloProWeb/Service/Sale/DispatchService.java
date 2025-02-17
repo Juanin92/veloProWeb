@@ -45,7 +45,7 @@ public class DispatchService implements IDispatchService {
     @Override
     public void createDispatch(Dispatch dispatch) {
         if (dispatch != null) {
-            if (dispatch.getSale() != null){
+            if (dispatch.getSaleDetails() != null){
                 dispatch.setId(null);
                 dispatch.setTrackingNumber("#" + dispatch.getId() + 1);
                 dispatch.setCreated(LocalDate.now());
