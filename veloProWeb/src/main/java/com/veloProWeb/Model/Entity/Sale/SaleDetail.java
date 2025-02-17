@@ -23,4 +23,8 @@ public class SaleDetail {
     @ManyToOne
     @JoinColumn(name = "id_product", nullable = false)
     private Product product;
+
+    @ManyToOne
+    @JoinColumn(name = "dispatch_id")
+    private Dispatch dispatch;
 }
