@@ -1,12 +1,13 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { DispatchService } from '../../../services/Sale/dispatch.service';
 import { Dispatch } from '../../../models/Entity/Sale/dispatch';
-import { Sale } from '../../../models/Entity/Sale/sale';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dispatch',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, FormsModule],
   templateUrl: './dispatch.component.html',
   styleUrl: './dispatch.component.css'
 })
@@ -20,6 +21,7 @@ export class DispatchComponent implements OnInit{
     status: '',
     address: '',
     comment: '',
+    customer: '',
     created: '',
     deliveryDate: '',
     saleDetail: null,
