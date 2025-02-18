@@ -25,6 +25,7 @@ public class Dispatch {
     private String status;
     private String address;
     private String comment;
+    private String customer;
 
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     @Temporal(TemporalType.DATE)
