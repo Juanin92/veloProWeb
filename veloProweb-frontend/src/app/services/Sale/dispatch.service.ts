@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Dispatch } from '../../models/Entity/Sale/dispatch';
+import { DetailSaleRequestDTO } from '../../models/DTO/detail-sale-request-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,12 @@ export class DispatchService {
       params:{
         dispatchID: dispatchID.toString(),
         action: action.toString()}
+    });
+  }
+
+  getDetailSale(idDispatch: number): Observable<DetailSaleRequestDTO[]>{
+    return this.http.get<DetailSaleRequestDTO[]>(`${this.apiUrl}/detalles`, {
+      params: {idSale: idDispatch.toString()}
     });
   }
 }
