@@ -61,11 +61,11 @@
                         </div>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="description" placeholder="Ingrese una descripción general" name="description"
+                        <input type="text" class="form-control" id="descriptionAddProduct" placeholder="Ingrese una descripción general" name="description"
                         [(ngModel)]="newProduct.description"
                         (keydown)="touchedFields['description'] = true"
                         [ngClass]="{'is-invalid':touchedFields['description'] && !validator.isFieldValid(newProduct, 'description'), 'is-valid':touchedFields['description']  && validator.isFieldValid(newProduct, 'description')}" required />
-                        <label for="description" class="form-label">Descripción</label>
+                        <label for="descriptionAddProduct" class="form-label">Descripción</label>
                         <div *ngIf="!validator.isFieldValid(newProduct,'description')" class="invalid-feedback">
                             Debe ingresar una descripción del producto
                         </div>

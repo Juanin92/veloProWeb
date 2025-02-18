@@ -9,43 +9,43 @@
                 <div class="modal-body" [hidden]="!selectedCustomer.account">
                     <form #form="ngForm">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="name" placeholder="Ingrese nombre" name="name"
+                            <input type="text" class="form-control" id="nameUpdateCustomer" placeholder="Ingrese nombre" name="name"
                                 [(ngModel)]="selectedCustomer.name"
                                 [ngClass]="{'is-invalid': !customerValidator.isFieldValid(selectedCustomer, 'name')}"
                                 [disabled]="selectedCustomer.debt > 0" required />
-                            <label for="name" class="form-label">Nombre</label>
+                            <label for="nameUpdateCustomer" class="form-label">Nombre</label>
                             <div *ngIf="!customerValidator.isFieldValid(selectedCustomer, 'name')" cl
                                 class="invalid-feedback">
                                 Nombre no válido debe tener al menos 3 letras.
                             </div>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="surname" placeholder="Ingrese apellidos"
+                            <input type="text" class="form-control" id="surnameUpdateCustomer" placeholder="Ingrese apellidos"
                                 name="surname" [(ngModel)]="selectedCustomer.surname"
                                 [ngClass]="{'is-invalid': !customerValidator.isFieldValid(selectedCustomer, 'surname')}"
                                 [disabled]="selectedCustomer.debt > 0" required />
-                            <label for="surname" class="form-label">Apellidos</label>
+                            <label for="surnameUpdateCustomer" class="form-label">Apellidos</label>
                             <div *ngIf="!customerValidator.isFieldValid(selectedCustomer, 'surname')"
                                 class="invalid-feedback">
                                 Apellido no válido debe tener al menos 3 letras.
                             </div>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="tel" class="form-control" id="phone" placeholder="Ingrese número de teléfono"
+                            <input type="tel" class="form-control" id="phoneUpdateCustomer" placeholder="Ingrese número de teléfono"
                                 value="+569 " name="phone" [(ngModel)]="selectedCustomer.phone"
                                 [ngClass]="{'is-invalid': !customerValidator.isFieldValid(selectedCustomer, 'phone')}"
                                 required />
-                            <label for="phone" class="form-label">Número de Teléfono</label>
+                            <label for="phoneUpdateCustomer" class="form-label">Número de Teléfono</label>
                             <div *ngIf="!customerValidator.isFieldValid(selectedCustomer, 'phone')"
                                 class="invalid-feedback">
                                 Teléfono no válido (+569 12345678).
                             </div>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="email" placeholder="Ingrese email" name="email"
+                            <input type="email" class="form-control" id="emailUpdateCustomer" placeholder="Ingrese email" name="email"
                                 [(ngModel)]="selectedCustomer.email"
                                 [ngClass]="{'is-invalid': !customerValidator.isFieldValid(selectedCustomer, 'email')}" />
-                            <label for="email" class="form-label">Correo Electrónico</label>
+                            <label for="emailUpdateCustomer" class="form-label">Correo Electrónico</label>
                             <div *ngIf="!customerValidator.isFieldValid(selectedCustomer, 'email')"
                                 class="invalid-feedback">
                                 Email no válido (example&commat;test.com)
