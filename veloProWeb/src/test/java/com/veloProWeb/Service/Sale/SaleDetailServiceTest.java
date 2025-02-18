@@ -5,12 +5,15 @@ import com.veloProWeb.Model.DTO.DetailSaleRequestDTO;
 import com.veloProWeb.Model.Entity.Customer.Customer;
 import com.veloProWeb.Model.Entity.Customer.TicketHistory;
 import com.veloProWeb.Model.Entity.Product.Product;
+import com.veloProWeb.Model.Entity.Sale.Dispatch;
 import com.veloProWeb.Model.Entity.Sale.Sale;
 import com.veloProWeb.Model.Entity.Sale.SaleDetail;
+import com.veloProWeb.Model.Enum.MovementsType;
 import com.veloProWeb.Repository.Customer.TicketHistoryRepo;
 import com.veloProWeb.Repository.Sale.SaleDetailRepo;
 import com.veloProWeb.Service.Customer.CustomerService;
 import com.veloProWeb.Service.Product.ProductService;
+import com.veloProWeb.Service.Report.KardexService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +22,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +39,8 @@ public class SaleDetailServiceTest {
     @Mock private SaleService saleService;
     @Mock private ProductService productService;
     @Mock private CustomerService customerService;
+    @Mock private KardexService kardexService;
+    @Mock private DispatchService dispatchService;
     private DetailSaleDTO detailSaleDTO;
     private DetailSaleRequestDTO detailSaleRequestDTO;
     private SaleDetail saleDetail;
@@ -41,6 +48,7 @@ public class SaleDetailServiceTest {
     private Product product;
     private Customer customer;
     private TicketHistory ticketHistory;
+    private Dispatch dispatch;
 
     @BeforeEach
     void setUp(){
@@ -75,26 +83,31 @@ public class SaleDetailServiceTest {
         ticketHistory.setStatus(true);
         ticketHistory.setNotificationsDate(null);
         ticketHistory.setDocument("BO1");
+
+        dispatch = new Dispatch(1L,"#123", "En Preparación", "Calle 123",
+                "TEST", LocalDate.now(), null,new ArrayList<>());
     }
 
     //Prueba para crear un detalle de venta
     @Test
-    public void createSaleDetails_valid(){
+    public void createSaleDetailsToSale_valid(){
         List<DetailSaleDTO> dtoList = Collections.singletonList(detailSaleDTO);
         when(productService.getProductById(detailSaleDTO.getIdProduct())).thenReturn(product);
-        saleDetailService.createSaleDetails(dtoList, sale);
+        saleDetailService.createSaleDetailsToSale(dtoList, sale);
         ArgumentCaptor<SaleDetail> saleDetailCaptor = ArgumentCaptor.forClass(SaleDetail.class);
         verify(saleDetailRepo).save(saleDetailCaptor.capture());
         SaleDetail savedSaleDetail = saleDetailCaptor.getValue();
         assertEquals(1, savedSaleDetail.getQuantity());
         assertEquals(product, savedSaleDetail.getProduct());
         verify(productService).updateStockSale(product, detailSaleDTO.getQuantity());
+        verify(kardexService).addKardex(savedSaleDetail.getProduct(), savedSaleDetail.getQuantity(),
+                "Venta / " + sale.getDocument(), MovementsType.SALIDA);
     }
     @Test
-    public void createSaleDetails_productNotFound(){
+    public void createSaleDetailsToSale_productNotFound(){
         List<DetailSaleDTO> dtoList = Collections.singletonList(detailSaleDTO);
         when(productService.getProductById(detailSaleDTO.getIdProduct())).thenThrow(new IllegalArgumentException("No ha seleccionado un producto registrado"));
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> saleDetailService.createSaleDetails(dtoList, sale));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> saleDetailService.createSaleDetailsToSale(dtoList, sale));
 
         assertEquals( "No ha seleccionado un producto registrado", exception.getMessage());
         verify(saleDetailRepo, never()).save(any(SaleDetail.class));
@@ -114,7 +127,7 @@ public class SaleDetailServiceTest {
 
     //Prueba para obtener una lista de DTO con detalle de ventas
     @Test
-    public void getSaleDetails_validWithCustomer(){
+    public void getSaleDetailsToSale_validWithCustomer(){
         saleDetail.setProduct(product);
         sale.setCustomer(customer);
         saleDetail.setSale(sale);
@@ -126,7 +139,7 @@ public class SaleDetailServiceTest {
         when(customerService.getCustomerById(20L)).thenReturn(customer);
         when(ticketHistoryRepo.findByCustomerId(20L)).thenReturn(ticketHistoryList);
 
-        List<DetailSaleRequestDTO> result = saleDetailService.getSaleDetails(1L);
+        List<DetailSaleRequestDTO> result = saleDetailService.getSaleDetailsToSale(1L);
         assertNotNull(result);
         assertEquals(1, result.size());
         DetailSaleRequestDTO dto = result.getFirst();
@@ -143,7 +156,7 @@ public class SaleDetailServiceTest {
         verify(ticketHistoryRepo).findByCustomerId(20L);
     }
     @Test
-    public void getSaleDetails_validWithoutCustomer(){
+    public void getSaleDetailsToSale_validWithoutCustomer(){
         saleDetail.setProduct(product);
         sale.setCustomer(null);
         saleDetail.setSale(sale);
@@ -151,7 +164,7 @@ public class SaleDetailServiceTest {
         when(saleDetailRepo.findBySaleId(1L)).thenReturn(saleDetails);
         when(saleService.getSaleById(1L)).thenReturn(Optional.of(sale));
 
-        List<DetailSaleRequestDTO> result = saleDetailService.getSaleDetails(1L);
+        List<DetailSaleRequestDTO> result = saleDetailService.getSaleDetailsToSale(1L);
         assertNotNull(result);
         assertEquals(1, result.size());
         DetailSaleRequestDTO dto = result.getFirst();
@@ -166,5 +179,43 @@ public class SaleDetailServiceTest {
         verify(saleService).getSaleById(1L);
         verify(customerService, never()).getCustomerById(20L);
         verify(ticketHistoryRepo, never()).findByCustomerId(20L);
+    }
+
+    //Prueba para crear detalle de venta para un despacho
+    @Test
+    public void createSaleDetailsToDispatch_valid(){
+        List<DetailSaleDTO> detailSaleDTOS = Collections.singletonList(detailSaleDTO);
+        when(productService.getProductById(2L)).thenReturn(product);
+        saleDetailService.createSaleDetailsToDispatch(detailSaleDTOS, dispatch);
+
+        ArgumentCaptor<SaleDetail> detailArgumentCaptor = ArgumentCaptor.forClass(SaleDetail.class);
+        verify(saleDetailRepo, times(1)).save(detailArgumentCaptor.capture());
+        SaleDetail saleDetailSaved = detailArgumentCaptor.getValue();
+        assertEquals(product, saleDetailSaved.getProduct());
+        assertEquals(dispatch, saleDetailSaved.getDispatch());
+    }
+
+    //Prueba para obtener una lista de DTO con detalle de ventas de un despacho
+    @Test
+    public void getSaleDetailsToDispatch_valid(){
+        saleDetail.setProduct(product);
+        saleDetail.setDispatch(dispatch);
+        List<SaleDetail> saleDetails = Collections.singletonList(saleDetail);
+        when(saleDetailRepo.findByDispatchId(1L)).thenReturn(saleDetails);
+        when(dispatchService.getDispatchById(dispatch.getId())).thenReturn(Optional.of(dispatch));
+
+        List<DetailSaleRequestDTO> result = saleDetailService.getSaleDetailsToDispatch(1L);
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        DetailSaleRequestDTO dto = result.getFirst();
+        assertEquals(2, dto.getQuantity());
+        assertEquals(100, dto.getPrice());
+        assertEquals("Prueba descripción", dto.getDescriptionProduct());
+        assertFalse(dto.isTicketStatus());
+        assertNull(dto.getNotification());
+        assertNull(dto.getCustomer());
+
+        verify(saleDetailRepo, times(1)).findByDispatchId(1L);
+        verify(dispatchService, times(1)).getDispatchById(1L);
     }
 }
