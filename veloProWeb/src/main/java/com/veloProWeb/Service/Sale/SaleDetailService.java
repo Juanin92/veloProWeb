@@ -5,6 +5,7 @@ import com.veloProWeb.Model.DTO.DetailSaleRequestDTO;
 import com.veloProWeb.Model.Entity.Customer.Customer;
 import com.veloProWeb.Model.Entity.Customer.TicketHistory;
 import com.veloProWeb.Model.Entity.Product.Product;
+import com.veloProWeb.Model.Entity.Sale.Dispatch;
 import com.veloProWeb.Model.Entity.Sale.Sale;
 import com.veloProWeb.Model.Entity.Sale.SaleDetail;
 import com.veloProWeb.Model.Enum.MovementsType;
@@ -13,6 +14,7 @@ import com.veloProWeb.Repository.Sale.SaleDetailRepo;
 import com.veloProWeb.Service.Customer.Interfaces.ICustomerService;
 import com.veloProWeb.Service.Product.Interfaces.IProductService;
 import com.veloProWeb.Service.Report.IkardexService;
+import com.veloProWeb.Service.Sale.Interface.IDispatchService;
 import com.veloProWeb.Service.Sale.Interface.ISaleDetailService;
 import com.veloProWeb.Service.Sale.Interface.ISaleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +34,10 @@ public class SaleDetailService implements ISaleDetailService {
     @Autowired private ICustomerService customerService;
     @Autowired private ISaleService saleService;
     @Autowired private IkardexService kardexService;
+    @Autowired private IDispatchService dispatchService;
 
     /**
-     * Crear detalle de ventas proporcionadas
+     * Crear detalle de ventas proporcionadas para una venta
      * Busca el producto correspondiente en el sistema utilizando por ID.
      * Actualiza el stock del producto mediante el servicio de Producto
      * Crea un registro del movimiento del producto
@@ -43,7 +46,7 @@ public class SaleDetailService implements ISaleDetailService {
      * @throws IllegalArgumentException Si no se encuentra un producto con el ID proporcionado en alguno de los detalles.
      */
     @Override
-    public void createSaleDetails(List<DetailSaleDTO> dtoList, Sale sale) {
+    public void createSaleDetailsToSale(List<DetailSaleDTO> dtoList, Sale sale) {
         for (DetailSaleDTO dto : dtoList) {
             Product product = productService.getProductById(dto.getIdProduct());
             SaleDetail saleDetail = new SaleDetail();
@@ -53,6 +56,7 @@ public class SaleDetailService implements ISaleDetailService {
             saleDetail.setTax((int) (product.getSalePrice() * 0.19));
             saleDetail.setTotal((int) ((product.getSalePrice() * 1.19) * 2));
             saleDetail.setSale(sale);
+            saleDetail.setDispatch(null);
             saleDetail.setProduct(product);
             saleDetailRepo.save(saleDetail);
             productService.updateStockSale(product, saleDetail.getQuantity());
@@ -78,7 +82,7 @@ public class SaleDetailService implements ISaleDetailService {
      * @return - Lista de DTO con detalles de la venta
      */
     @Override
-    public List<DetailSaleRequestDTO> getSaleDetails(Long idSale) {
+    public List<DetailSaleRequestDTO> getSaleDetailsToSale(Long idSale) {
         List<DetailSaleRequestDTO> saleRequestDTOS = new ArrayList<>();
         List<SaleDetail> saleDetails = saleDetailRepo.findBySaleId(idSale);
         Optional<Sale> sale = saleService.getSaleById(idSale);
@@ -106,6 +110,54 @@ public class SaleDetailService implements ISaleDetailService {
                 dto.setCustomer(customerNames);
                 dto.setTicketStatus(status);
                 dto.setNotification(notification);
+                saleRequestDTOS.add(dto);
+            }
+        }
+        return saleRequestDTOS;
+    }
+
+    /**
+     * Crear detalle de ventas proporcionadas para un despacho.
+     * Busca el producto correspondiente en el sistema utilizando por ID.
+     * @param dtoList - Lista de objetos DTO que contienen los detalles de la venta.
+     * @param dispatch - Objeto que representa el despacho asociado a los detalles.
+     */
+    @Override
+    public void createSaleDetailsToDispatch(List<DetailSaleDTO> dtoList, Dispatch dispatch) {
+        for (DetailSaleDTO dto : dtoList) {
+            Product product = productService.getProductById(dto.getIdProduct());
+            SaleDetail saleDetail = new SaleDetail();
+            saleDetail.setId(null);
+            saleDetail.setQuantity(dto.getQuantity());
+            saleDetail.setPrice((int) (product.getSalePrice() * 1.19));
+            saleDetail.setTax((int) (product.getSalePrice() * 0.19));
+            saleDetail.setTotal((int) ((product.getSalePrice() * 1.19) * 2));
+            saleDetail.setSale(null);
+            saleDetail.setDispatch(dispatch);
+            saleDetail.setProduct(product);
+            saleDetailRepo.save(saleDetail);
+        }
+    }
+
+    /**
+     * Obtener detalle de venta de un despacho específico.
+     * @param idDispatch - Identificador del despacho.
+     * @return - Lista de DTO con detalles de la venta
+     */
+    @Override
+    public List<DetailSaleRequestDTO> getSaleDetailsToDispatch(Long idDispatch) {
+        List<DetailSaleRequestDTO> saleRequestDTOS = new ArrayList<>();
+        List<SaleDetail> saleDetails = saleDetailRepo.findByDispatchId(idDispatch);
+        Optional<Dispatch> dispatch = dispatchService.getDispatchById(idDispatch);
+        if (dispatch.isPresent()){
+            for (SaleDetail saleDetail : saleDetails){
+                DetailSaleRequestDTO dto = new DetailSaleRequestDTO();
+                dto.setQuantity(saleDetail.getQuantity());
+                dto.setPrice(saleDetail.getPrice());
+                dto.setDescriptionProduct(saleDetail.getProduct().getDescription());
+                dto.setCustomer(null);
+                dto.setTicketStatus(false);
+                dto.setNotification(null);
                 saleRequestDTOS.add(dto);
             }
         }
