@@ -69,6 +69,7 @@ public class DispatchService implements IDispatchService {
             dispatch.setStatus(statusMap.get(1));
             dispatch.setAddress(dto.getAddress());
             dispatch.setComment(dto.getComment());
+            dispatch.setCustomer(dto.getCustomer());
             dispatch.setDeliveryDate(null);
             dispatchRepo.save(dispatch);
             return dispatch;
