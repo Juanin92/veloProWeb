@@ -37,7 +37,7 @@ public class SaleController {
         Map<String, String> response = new HashMap<>();
         try {
             Sale sale = saleService.createSale(dto);
-            saleDetailService.createSaleDetails(dto.getDetailList(), sale);
+            saleDetailService.createSaleDetailsToSale(dto.getDetailList(), sale);
             response.put("message", "Venta registrada correctamente!");
             return ResponseEntity.ok(response);
         }catch (IllegalArgumentException e){
@@ -76,7 +76,7 @@ public class SaleController {
     @GetMapping("/detalles")
     public ResponseEntity<List<DetailSaleRequestDTO>> getDetailSale(@RequestParam Long idSale){
         try{
-            return ResponseEntity.ok(saleDetailService.getSaleDetails(idSale));
+            return ResponseEntity.ok(saleDetailService.getSaleDetailsToSale(idSale));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
