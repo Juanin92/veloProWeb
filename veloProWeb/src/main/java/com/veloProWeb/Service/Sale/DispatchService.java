@@ -45,7 +45,7 @@ public class DispatchService implements IDispatchService {
                     detailSaleDTOSList.add(detailSaleDTO);
                 }
                 DispatchDTO dto = new DispatchDTO(dispatch.getId(), dispatch.getTrackingNumber(), dispatch.getStatus(),
-                        dispatch.getAddress(), dispatch.getComment(), dispatch.getCreated(), dispatch.getDeliveryDate(),
+                        dispatch.getAddress(), dispatch.getComment(), dispatch.getCustomer(), dispatch.getCreated(), dispatch.getDeliveryDate(),
                         detailSaleDTOSList);
                 dtoList.add(dto);
             }
