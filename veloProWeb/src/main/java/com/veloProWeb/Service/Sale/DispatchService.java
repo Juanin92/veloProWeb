@@ -1,15 +1,16 @@
 package com.veloProWeb.Service.Sale;
 
+import com.veloProWeb.Model.DTO.DetailSaleDTO;
+import com.veloProWeb.Model.DTO.DispatchDTO;
 import com.veloProWeb.Model.Entity.Sale.Dispatch;
+import com.veloProWeb.Model.Entity.Sale.SaleDetail;
 import com.veloProWeb.Repository.DispatchRepo;
 import com.veloProWeb.Service.Sale.Interface.IDispatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class DispatchService implements IDispatchService {
@@ -30,31 +31,47 @@ public class DispatchService implements IDispatchService {
      * @return - Lista filtrada de despachos
      */
     @Override
-    public List<Dispatch> getDispatches() {
+    public List<DispatchDTO> getDispatches() {
+        List<DispatchDTO> dtoList = new ArrayList<>();
         List<Dispatch> dispatchList = dispatchRepo.findAll();
-        return dispatchList.stream()
-                .filter(dispatch -> !dispatch.getStatus().equals("Eliminado"))
-                .toList();
+        for (Dispatch dispatch : dispatchList){
+            if (!dispatch.getStatus().equals("Eliminado")) {
+                List<DetailSaleDTO> detailSaleDTOSList = new ArrayList<>();
+                for(SaleDetail saleDetail : dispatch.getSaleDetails()){
+                    DetailSaleDTO detailSaleDTO = new DetailSaleDTO();
+                    detailSaleDTO.setId(saleDetail.getId());
+                    detailSaleDTO.setIdProduct(saleDetail.getProduct().getId());
+                    detailSaleDTO.setQuantity(saleDetail.getQuantity());
+                    detailSaleDTOSList.add(detailSaleDTO);
+                }
+                DispatchDTO dto = new DispatchDTO(dispatch.getId(), dispatch.getTrackingNumber(), dispatch.getStatus(),
+                        dispatch.getAddress(), dispatch.getComment(), dispatch.getCreated(), dispatch.getDeliveryDate(),
+                        detailSaleDTOSList);
+                dtoList.add(dto);
+            }
+        }
+        return dtoList;
     }
 
     /**
      * Creación de un despacho.
      * Verifica que el despacho no sea nulo y este contenga un objeto de Venta
-     * @param dispatch - Despacho con los datos necesarios
+     * @param dto - DTO Despacho con los datos necesarios
+     * @return - Objeto despacho con los datos necesario
      */
     @Override
-    public void createDispatch(Dispatch dispatch) {
-        if (dispatch != null) {
-            if (dispatch.getSaleDetails() != null){
-                dispatch.setId(null);
-                dispatch.setTrackingNumber("#" + dispatch.getId() + 1);
-                dispatch.setCreated(LocalDate.now());
-                dispatch.setStatus(statusMap.get(1));
-                dispatch.setDeliveryDate(null);
-                dispatchRepo.save(dispatch);
-            }else {
-                throw new IllegalArgumentException("Debe tener una venta asociada");
-            }
+    public Dispatch createDispatch(DispatchDTO dto) {
+        if (dto != null) {
+            Dispatch dispatch = new Dispatch();
+            dispatch.setId(null);
+            dispatch.setTrackingNumber("#" + dispatch.getId());
+            dispatch.setCreated(LocalDate.now());
+            dispatch.setStatus(statusMap.get(1));
+            dispatch.setAddress(dto.getAddress());
+            dispatch.setComment(dto.getComment());
+            dispatch.setDeliveryDate(null);
+            dispatchRepo.save(dispatch);
+            return dispatch;
         }else {
             throw new IllegalArgumentException("Despacho debe tener datos");
         }
@@ -97,6 +114,16 @@ public class DispatchService implements IDispatchService {
         }else{
             throw new IllegalArgumentException("No se encontró el despacho");
         }
+    }
+
+    /**
+     * Obtener un despacho por su identificador
+     * @param id - Identificador del despacho a buscar
+     * @return - Optional de despacho si se encuentra o null en el caso contrario
+     */
+    @Override
+    public Optional<Dispatch> getDispatchById(Long id) {
+        return dispatchRepo.findById(id);
     }
 
     /**
