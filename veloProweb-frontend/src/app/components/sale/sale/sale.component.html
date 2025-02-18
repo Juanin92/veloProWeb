@@ -18,8 +18,11 @@
           data-bs-title="Seleccionar Productos"
         />
       </button>
-      <button *ngIf="saleDetailList.length" class="btn btn-outline-success btn-sm border-0 rounded shadow-sm ms-1" data-bs-toggle="modal"
-        data-bs-target="#createDispatch">
+      <button *ngIf="saleDetailList.length" 
+        class="btn btn-outline-success btn-sm border-0 rounded shadow-sm ms-1" 
+        data-bs-toggle="modal"
+        data-bs-target="#dispatchModal"
+        >
         <i class="bi bi-truck"></i> Despacho
       </button>
     </div>
@@ -399,3 +402,5 @@
   [filterList]="true"
   (productSelected)="addSelectedProductToSaleDetailList($event)"
 ></app-product-list>
+<!-- MODAL DISPATCH -->
+<app-dispatch></app-dispatch>
