@@ -1,1 +1,96 @@
-<p>dispatch works!</p>
+<!-- Modal -->
+<div class="modal fade" id="dispatchModal" tabindex="-1" aria-labelledby="dispatchModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-center w-100">
+                    <h1 class="modal-title fs-3 w-100">Despacho </h1>
+                    <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive text-center p-1 pt-0 overflow-auto" style="max-height: calc(100vh - 330px)">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-info table-bordered sticky-top">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Descripción</th>
+                                    <th scope="col">Unidad</th>
+                                    <th scope="col">Precio</th>
+                                    <th scope="col">Cantidad</th>
+                                    <th scope="col">Total</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider align-middle">
+                                <tr>
+                                    <td>Dato 1</td>
+                                    <td>Dato 2</td>
+                                    <td>Dato 3</td>
+                                    <td>Dato 4</td>
+                                    <td>Dato 5</td>
+                                    <td>Dato 6</td>
+                                </tr>
+                                <!-- <tr *ngFor="let saleDetail of saleDetailList; let i = index">
+                                    <th scope="row">{{ i + 1 }}</th>
+                                    <td>{{ saleDetail.product.description }}</td>
+                                    <td>{{ saleDetail.product.unit.nameUnit }}</td>
+                                    <td>
+                                        {{ saleDetail.price | currency : "CLP" : "$" : "1.0-0" }}
+                                    </td>
+                                    <td>
+                                        <div *ngIf="!isEditing(saleDetail)" (click)="enableEdit(saleDetail)" class="editable-field">
+                                            {{ saleDetail.quantity }}
+                                        </div>
+                                        <input *ngIf="isEditing(saleDetail)" type="number" [(ngModel)]="saleDetail.quantity"
+                                            (blur)="disableEdit(saleDetail)" (keydown.enter)="disableEdit(saleDetail)"
+                                            class="form-control form-control-sm mx-auto" style="width: 80px" />
+                                    </td>
+                                    <td>
+                                        {{ saleDetail.total | currency : "CLP" : "$" : "1.0-0" }}
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-outline-danger btn-sm border-0" (click)="removeDetail(i)">
+                                            <img src="/assets/icons/iconCancel.png" alt="Eliminar" width="20" height="20"
+                                                class="img-fluid" />
+                                        </button>
+                                    </td>
+                                </tr> -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <form>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="customer" placeholder="Ingrese un cliente" 
+                                name="customer" [(ngModel)]="dispatch.customer"
+                                [ngClass]="{'is-invalid':!dispatch.customer, 'is-valid':dispatch.customer}" required />
+                            <label for="customer" class="form-label">Cliente</label>
+                            <div *ngIf="!dispatch.customer" class="invalid-feedback">
+                                Ingrese un cliente.
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="address" placeholder="Ingrese una dirección" name="address"
+                                [(ngModel)]="dispatch.address"
+                                [ngClass]="{'is-invalid':!dispatch.address, 'is-valid':dispatch.address}" required />
+                            <label for="address" class="form-label">Dirección</label>
+                            <div *ngIf="!dispatch.address" class="invalid-feedback">
+                                Ingrese una dirección de despacho.
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="comment" placeholder="Ingrese comentario".
+                                name="comment" [(ngModel)]="dispatch.comment"
+                                [ngClass]="{'is-invalid':!dispatch.comment, 'is-valid':dispatch.comment}" required />
+                            <label for="comment" class="form-label">Comentario</label>
+                            <div *ngIf="!dispatch.comment" class="invalid-feedback">
+                                Ingrese un comentario.
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="button" class="btn btn-success">Confirmar Despacho</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
