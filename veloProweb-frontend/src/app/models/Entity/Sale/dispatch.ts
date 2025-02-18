@@ -6,6 +6,7 @@ export interface Dispatch {
     status: string,
     address: string,
     comment: string,
+    customer: string,
     created: string,
     deliveryDate: string,
     saleDetail: SaleDetailDTO | null
