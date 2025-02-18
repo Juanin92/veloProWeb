@@ -13,11 +13,12 @@ import { CustomerService } from '../../../services/customer/customer.service';
 import { SaleService } from '../../../services/Sale/sale.service';
 import { SaleRequestDTO } from '../../../models/DTO/sale-request-dto';
 import { PaymentMethod } from '../../../models/enum/payment-method';
+import { DispatchComponent } from "../dispatch/dispatch.component";
 
 @Component({
   selector: 'app-sale',
   standalone: true,
-  imports: [FormsModule, CommonModule, ProductListComponent],
+  imports: [FormsModule, CommonModule, ProductListComponent, DispatchComponent],
   templateUrl: './sale.component.html',
   styleUrl: './sale.component.css'
 })
