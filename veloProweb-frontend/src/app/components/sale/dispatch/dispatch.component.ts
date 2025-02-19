@@ -1,8 +1,10 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DispatchService } from '../../../services/Sale/dispatch.service';
 import { Dispatch } from '../../../models/Entity/Sale/dispatch';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DetailSaleRequestDTO } from '../../../models/DTO/detail-sale-request-dto';
+import { SaleDetail } from '../../../models/Entity/Sale/sale-detail';
 
 @Component({
   selector: 'app-dispatch',
@@ -13,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class DispatchComponent implements OnInit{
 
+  @Input() saleDetailList: SaleDetail[] = [];
   @Output() dispatchUpdated = new EventEmitter<Dispatch[]>();
   dispatchList: Dispatch[] = [];
   dispatch: Dispatch = {
@@ -43,7 +46,13 @@ export class DispatchComponent implements OnInit{
     });
   }
 
-  createNewDispatch(): void{
+  createNewDispatch(dispatch: Dispatch): void{
     this.dispatchService.createDispatch(this.dispatch).subscribe();
+  }
+
+  resetModal(): void{
+    this.dispatch.address = '';
+    this.dispatch.comment = '';
+    this.dispatch.customer = '';
   }
 }
