@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { DetailSaleRequestDTO } from '../../../models/DTO/detail-sale-request-dto';
 import { SaleDetail } from '../../../models/Entity/Sale/sale-detail';
 import { SaleDetailDTO } from '../../../models/DTO/sale-detail-dto';
+import { TooltipService } from '../../../utils/tooltip.service';
 
 @Component({
   selector: 'app-dispatch',
@@ -32,9 +33,12 @@ export class DispatchComponent implements OnInit{
     saleDetail: null,
   }
 
-  constructor(private dispatchService: DispatchService){}
+  constructor(
+    private dispatchService: DispatchService,
+    private tooltip: TooltipService){}
 
   ngOnInit(): void {
+    this.tooltip.initializeTooltips();
     this.getDispatches();
   }
 
