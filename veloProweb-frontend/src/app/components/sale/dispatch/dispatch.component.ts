@@ -57,13 +57,6 @@ export class DispatchComponent implements OnInit{
       };
     });
     dispatch.saleDetail = this.saleDetailDTOList;
-    console.log('Lista normal:', this.saleDetailList);
-    console.log('Lista DTO:', this.saleDetailDTOList);
-    console.log('Despacho');
-    console.log('Cliente:', dispatch.customer);
-    console.log('Dirección:', dispatch.address);
-    console.log('Comentario:', dispatch.comment);
-    console.log('Despacho', dispatch);
     // this.dispatchService.createDispatch(this.dispatch).subscribe();
   }
 
