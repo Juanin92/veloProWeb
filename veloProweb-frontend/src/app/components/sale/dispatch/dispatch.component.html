@@ -1,3 +1,18 @@
+<div class="flex-grow-1 overflow-auto">
+    <p *ngIf="dispatchList.length === 0" class="fw-bold fs-5 text-center">No hay despachos</p>
+    <ul class="list-group list-group-flush">
+        <li 
+            class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-success">
+            <span>Despacho dispatch.trackingNumber - dispatch.status</span>
+            <div>
+                <button class="btn btn-sm btn-outline-info rounded-pill me-1"><i class="bi bi-truck"></i></button>
+                <button class="btn btn-sm btn-outline-success rounded-pill"><i class="bi bi-check-square"></i></button>
+                <button class="btn btn-sm btn-outline-danger rounded-pill me-1"><i class="bi bi-x"></i></button>
+            </div>
+        </li>
+    </ul>
+</div>
+<!-- MODAL DISPATCH -->
 <div class="modal fade" id="dispatchModal" tabindex="-1" aria-labelledby="dispatchModal" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
