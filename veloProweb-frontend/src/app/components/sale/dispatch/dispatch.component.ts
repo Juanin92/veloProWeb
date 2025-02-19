@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DetailSaleRequestDTO } from '../../../models/DTO/detail-sale-request-dto';
 import { SaleDetail } from '../../../models/Entity/Sale/sale-detail';
+import { SaleDetailDTO } from '../../../models/DTO/sale-detail-dto';
 
 @Component({
   selector: 'app-dispatch',
@@ -18,6 +19,7 @@ export class DispatchComponent implements OnInit{
   @Input() saleDetailList: SaleDetail[] = [];
   @Output() dispatchUpdated = new EventEmitter<Dispatch[]>();
   dispatchList: Dispatch[] = [];
+  saleDetailDTOList: SaleDetailDTO[] = [];
   dispatch: Dispatch = {
     id: 0,
     trackingNumber: '',
@@ -47,7 +49,22 @@ export class DispatchComponent implements OnInit{
   }
 
   createNewDispatch(dispatch: Dispatch): void{
-    this.dispatchService.createDispatch(this.dispatch).subscribe();
+    this.saleDetailDTOList = this.saleDetailList.map(saleDetail => {
+      return {
+        id: saleDetail.id,
+        idProduct: saleDetail.product.id,
+        quantity: saleDetail.quantity
+      };
+    });
+    dispatch.saleDetail = this.saleDetailDTOList;
+    console.log('Lista normal:', this.saleDetailList);
+    console.log('Lista DTO:', this.saleDetailDTOList);
+    console.log('Despacho');
+    console.log('Cliente:', dispatch.customer);
+    console.log('Dirección:', dispatch.address);
+    console.log('Comentario:', dispatch.comment);
+    console.log('Despacho', dispatch);
+    // this.dispatchService.createDispatch(this.dispatch).subscribe();
   }
 
   resetModal(): void{
