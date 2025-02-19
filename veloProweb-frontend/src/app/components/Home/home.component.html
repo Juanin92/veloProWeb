@@ -23,7 +23,11 @@
         <div class="col-md-6">
             <div class="card bg-dark-subtle border-0 rounded-4 shadow-lg h-100 overflow-hidden">
                 <div class="card-header bg-success text-white rounded-top-4 d-flex justify-content-between align-items-center">
-                    <h2 class="card-title mb-0 fs-4">Gestión de Despachos</h2>
+                    <h2 class="card-title mb-0 fs-4">Despachos
+                        <ng-container *ngIf="messageList.length">
+                            <span class="badge badge-sm rounded-pill bg-danger fs-6">{{messageList.length}}+</span>
+                        </ng-container>
+                    </h2>
                     <button class="btn btn-sm btn-outline-light expand-btn" (click)="toggleCardExpand('dispatch')">
                         <i class="bi" [ngClass]="{'bi-chevron-down': !expanded.dispatch, 'bi-chevron-up': expanded.dispatch}">
                         </i>
@@ -31,37 +35,7 @@
                 </div>
                 <div [ngClass]="{'show': expanded.dispatch, 'collapse': !expanded.dispatch}">
                     <div class="card-body d-flex flex-column" [ngClass]="{'expanded': expanded.dispatch}">
-                        <div class="flex-grow-1 overflow-auto">
-                            <ul class="list-group list-group-flush">
-                                <li
-                                    class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-success">
-                                    <span>Despacho #5678 - En Preparación</span>
-                                    <div>
-                                        <button class="btn btn-sm btn-outline-warning rounded-pill me-1">Modificar</button>
-                                        <button class="btn btn-sm btn-outline-danger rounded-pill me-1">Cancelar</button>
-                                        <button class="btn btn-sm btn-outline-success rounded-pill">Enviar</button>
-                                    </div>
-                                </li>
-                                <li
-                                    class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-success">
-                                    <span>Despacho #5679 - Listo para Envío</span>
-                                    <div>
-                                        <button class="btn btn-sm btn-outline-warning rounded-pill me-1">Modificar</button>
-                                        <button class="btn btn-sm btn-outline-danger rounded-pill me-1">Cancelar</button>
-                                        <button class="btn btn-sm btn-outline-success rounded-pill">Enviar</button>
-                                    </div>
-                                </li>
-                                <li
-                                    class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-success">
-                                    <span>Despacho #5680 - En Tránsito</span>
-                                    <div>
-                                        <button class="btn btn-sm btn-outline-info rounded-pill me-1">Rastrear</button>
-                                        <button class="btn btn-sm btn-outline-success rounded-pill">Confirmar
-                                            Entrega</button>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                        <app-dispatch></app-dispatch>
                     </div>
                 </div>
             </div>
@@ -69,7 +43,7 @@
         <div class="col-md-6">
             <div class="card bg-dark-subtle border-0 rounded-4 shadow-lg h-100 overflow-hidden">
                 <div class="card-header bg-warning text-dark rounded-top-4 d-flex justify-content-between align-items-center">
-                    <h2 class="card-title mb-0 fs-4 position-relative">Tareas Pendientes
+                    <h2 class="card-title mb-0 fs-4 position-relative">Tareas
                         <ng-container *ngIf="taskList.length">
                             <span class="badge badge-sm rounded-pill bg-danger fs-6">{{taskList.length}}+</span>
                         </ng-container>

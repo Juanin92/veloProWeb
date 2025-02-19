@@ -7,11 +7,12 @@ import { Message } from '../../models/Entity/message';
 import { TaskComponent } from "../setting/task/task.component";
 import { AlertComponent } from "../user/alert/alert.component";
 import { AlertModel } from '../../models/Entity/alert-model';
+import { DispatchComponent } from "../sale/dispatch/dispatch.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, MessageModalComponent, TaskComponent, AlertComponent],
+  imports: [CommonModule, MessageModalComponent, TaskComponent, AlertComponent, DispatchComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
