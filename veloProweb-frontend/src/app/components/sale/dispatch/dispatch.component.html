@@ -3,11 +3,14 @@
     <ul class="list-group list-group-flush">
         <li *ngFor="let dispatch of dispatchList"
             class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-success">
-            <span>Despacho {{dispatch.trackingNumber}} - {{dispatch.status}}</span>
+            <span>Despacho {{dispatch.trackingNumber}} - {{dispatch.status}} 
+                <button class="btn btn-sm btn-outline-primary border-0 ms-1" data-bs-toggle="tooltip" 
+                    data-bs-placement="bottom" title="+ info"><i class="bi bi-info-square"></i></button>
+            </span>
             <div>
                 <button class="btn btn-sm btn-outline-info rounded-pill me-1" data-bs-toggle="tooltip" 
                     data-bs-placement="bottom" title="En Ruta"><i class="bi bi-truck"></i></button>
-                <button class="btn btn-sm btn-outline-success rounded-pill" data-bs-toggle="tooltip" 
+                <button class="btn btn-sm btn-outline-success rounded-pill me-1" data-bs-toggle="tooltip" 
                     data-bs-placement="bottom" title="Entregado"><i class="bi bi-check-square"></i></button>
                 <button class="btn btn-sm btn-outline-danger rounded-pill me-1" data-bs-toggle="tooltip" 
                     data-bs-placement="bottom" title="Cancelar"><i class="bi bi-x"></i></button>
