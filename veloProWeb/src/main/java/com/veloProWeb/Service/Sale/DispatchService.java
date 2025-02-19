@@ -64,7 +64,7 @@ public class DispatchService implements IDispatchService {
         if (dto != null) {
             Dispatch dispatch = new Dispatch();
             dispatch.setId(null);
-            dispatch.setTrackingNumber("#" + dispatch.getId());
+            dispatch.setTrackingNumber("#" + dispatchRepo.count());
             dispatch.setCreated(LocalDate.now());
             dispatch.setStatus(statusMap.get(1));
             dispatch.setAddress(dto.getAddress());
