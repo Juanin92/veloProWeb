@@ -7,6 +7,7 @@ import { DetailSaleRequestDTO } from '../../../models/DTO/detail-sale-request-dt
 import { SaleDetail } from '../../../models/Entity/Sale/sale-detail';
 import { SaleDetailDTO } from '../../../models/DTO/sale-detail-dto';
 import { TooltipService } from '../../../utils/tooltip.service';
+import { NotificationService } from '../../../utils/notification-service.service';
 
 @Component({
   selector: 'app-dispatch',
@@ -35,7 +36,8 @@ export class DispatchComponent implements OnInit{
 
   constructor(
     private dispatchService: DispatchService,
-    private tooltip: TooltipService){}
+    private tooltip: TooltipService,
+    private notification: NotificationService){}
 
   ngOnInit(): void {
     this.tooltip.initializeTooltips();
@@ -61,7 +63,16 @@ export class DispatchComponent implements OnInit{
       };
     });
     dispatch.saleDetail = this.saleDetailDTOList;
-    // this.dispatchService.createDispatch(this.dispatch).subscribe();
+    this.dispatchService.createDispatch(this.dispatch).subscribe({
+      next:(response)=>{
+        const message = response.message;
+        this.notification.showSuccessToast(message, 'top', 3000);
+        this.resetModal();
+      },error: (error)=>{
+        const message = error.error?.error || error.error?.message;
+        this.notification.showErrorToast(message, 'top', 3000);
+      }
+    });
   }
 
   resetModal(): void{
