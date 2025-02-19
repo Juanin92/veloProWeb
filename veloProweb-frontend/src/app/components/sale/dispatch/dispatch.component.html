@@ -54,7 +54,8 @@
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button [disabled]="!dispatch.address && !dispatch.customer" type="button" class="btn btn-success">Confirmar</button>
+                <button (click)="createNewDispatch(dispatch)" [disabled]="!dispatch.address && !dispatch.customer" 
+                    type="button" class="btn btn-success">Confirmar</button>
                 <button (click)="resetModal()" type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
             </div>
         </div>
