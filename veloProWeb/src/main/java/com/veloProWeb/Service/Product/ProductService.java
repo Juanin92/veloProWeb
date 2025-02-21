@@ -125,17 +125,23 @@ public class ProductService implements IProductService {
     }
 
     /**
-     * Actualiza el estado del stock y reserva de un producto después de despacho creado.
-     * Resta la cantidad con el stock actual del producto.
-     * Suma la cantidad a la reserva del producto.
+     * Actualiza el estado del stock y reserva de un producto dependiendo del éxito del despacho.
+     * Si exitoso se resta el stock y se suma reservar del producto,
+     * si no suma el stock y resta la reserva del producto en caso contrario.
      * @param product - Producto seleccionado
      * @param quantity - cantidad a despachar
      */
     @Override
-    public void updateStockAndReserveDispatch(Product product, int quantity) {
-        product.setStock(product.getStock() - quantity);
-        product.setReserve(product.getReserve() + quantity);
-        update(product);
+    public void updateStockAndReserveDispatch(Product product, int quantity,boolean success) {
+        if (success) {
+            product.setStock(product.getStock() - quantity);
+            product.setReserve(product.getReserve() + quantity);
+            update(product);
+        }else{
+            product.setStock(product.getStock() + quantity);
+            product.setReserve(product.getReserve() - quantity);
+            update(product);
+        }
     }
 
     /**
