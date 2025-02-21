@@ -119,6 +119,7 @@ public class SaleDetailService implements ISaleDetailService {
     /**
      * Crear detalle de ventas proporcionadas para un despacho.
      * Busca el producto correspondiente en el sistema utilizando por ID.
+     * actualiza el stock y reserva del producto.
      * @param dtoList - Lista de objetos DTO que contienen los detalles de la venta.
      * @param dispatch - Objeto que representa el despacho asociado a los detalles.
      */
@@ -136,6 +137,7 @@ public class SaleDetailService implements ISaleDetailService {
             saleDetail.setDispatch(dispatch);
             saleDetail.setProduct(product);
             saleDetailRepo.save(saleDetail);
+            productService.updateStockAndReserveDispatch(product, saleDetail.getQuantity());
         }
     }
 
