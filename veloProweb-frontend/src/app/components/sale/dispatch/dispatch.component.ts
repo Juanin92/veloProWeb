@@ -51,6 +51,8 @@ export class DispatchComponent implements OnInit{
     this.dispatchService.getDispatches().subscribe({
       next:(list)=>{
         this.dispatchList = list;
+        this.dispatchUpdated.emit(list.filter(
+          dispatch => dispatch.status === 'En Preparación' || dispatch.status === 'En Ruta'));
       }, error: (error)=>{
         console.log('Error al obtener despachos', error.error?.error);
       }
