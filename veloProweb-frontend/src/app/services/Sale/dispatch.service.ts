@@ -31,7 +31,7 @@ export class DispatchService {
 
   getDetailSale(idDispatch: number): Observable<DetailSaleRequestDTO[]>{
     return this.http.get<DetailSaleRequestDTO[]>(`${this.apiUrl}/detalles`, {
-      params: {idSale: idDispatch.toString()}
+      params: {idDispatch: idDispatch.toString()}
     });
   }
 }
