@@ -177,12 +177,21 @@ public class ProductServiceTest {
 
     //Prueba para actualizar el stock y reserva de un producto después de un despacho
     @Test
-    public void updateStockAndReserveDispatch_valid(){
+    public void updateStockAndReserveDispatch_validSuccess(){
         product.setStock(30);
         product.setReserve(0);
-        productService.updateStockAndReserveDispatch(product, 10);
+        productService.updateStockAndReserveDispatch(product, 10, true);
         assertEquals(20, product.getStock());
         assertEquals(10, product.getReserve());
+        verify(productRepo).save(product);
+    }
+    @Test
+    public void updateStockAndReserveDispatch_validNoSuccess(){
+        product.setStock(30);
+        product.setReserve(10);
+        productService.updateStockAndReserveDispatch(product, 10, false);
+        assertEquals(40, product.getStock());
+        assertEquals(0, product.getReserve());
         verify(productRepo).save(product);
     }
 }
