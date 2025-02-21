@@ -85,11 +85,25 @@ export class DispatchComponent implements OnInit{
       next:(response)=>{
         const message = response.message;
         this.notification.showSuccessToast(message, 'top', 3000);
+        this.getDispatches();
         this.resetModal();
       },error: (error)=>{
         const message = error.error?.error || error.error?.message || error?.error;
         console.log("ERROR: ", message);
         this.notification.showErrorToast(message, 'top', 3000);
+      }
+    });
+  }
+
+  handleStatusDispatch(dispatch: Dispatch, action: number): void{
+    this.dispatchService.handleStatusDispatch(dispatch.id, action).subscribe({
+      next:(response)=>{
+        const message = response.message;
+        console.log('Cambio de estado del despacho, ', message);
+        this.getDispatches();
+      },error:(error)=>{
+        const message = error.error?.message || error.error?.error || error?.error;
+        console.log('Error estado del despacho, ', message);
       }
     });
   }
