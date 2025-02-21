@@ -91,9 +91,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="d-flex align-items-center justify-content-between w-100">
-                    <h1 class="modal-title fs-4 mb-0">
-                        <i class="bi bi-truck me-2"></i>
-                        Detalles del Despacho - <p class="mb-2 small fs-6 fw-lighter">({{selectedDispatch?.status}})</p>
+                    <h1 class="modal-title fs-4 mb-0 d-flex align-items-center gap-2">
+                        <i class="bi bi-truck"></i>
+                        <span>Detalles del Despacho</span>
+                        <span class="small fs-6 fw-lighter">({{selectedDispatch?.status}})</span>
                     </h1>
                     <button (click)="resetModal()" type="button" class="btn-close" aria-label="Close"
                         data-bs-dismiss="modal"></button>
@@ -138,7 +139,7 @@
                 </div>
                 <div class="card shadow">
                     <div class="card-body p-0">
-                        <div class="table-responsive" style="max-height: calc(100vh - 350px); min-height: 300px;">
+                        <div class="table-responsive" style="max-height: calc(100vh - 350px); min-height: 150px; height: auto;">
                             <table class="table table-hover table-striped mb-0">
                                 <thead>
                                     <tr class="bg-light">
