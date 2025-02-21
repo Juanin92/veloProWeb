@@ -27,7 +27,7 @@ public class ProductValidatorTest {
 
     @BeforeEach
     void setUp(){
-        product = new Product(1l, "Descripción", 1000, 2000, 15,3, true, StatusProduct.DISPONIBLE, brand, unit, subcategory, category, new ArrayList<>());
+        product = new Product(1l, "Descripción", 1000, 2000, 15, 0,3, true, StatusProduct.DISPONIBLE, brand, unit, subcategory, category, new ArrayList<>());
     }
 
     @Test

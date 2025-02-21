@@ -33,14 +33,14 @@ public class DispatchServiceTest {
 
     @BeforeEach
     void setUp(){
-        dispatchDeleted = new Dispatch(1L, "#1", "Eliminado","calle 1", "Test 1", LocalDate.now(),null, new ArrayList<>());
-        dispatchPreparation = new Dispatch(2L, "#2", "En Preparación", "calle 2", "Test 2", LocalDate.now(),null, new ArrayList<>());
-        dispatchRoute = new Dispatch(3L, "#3", "En Ruta","calle 3", "Test 3", LocalDate.now(),null, new ArrayList<>());
-        dispatchDelivery = new Dispatch(4L, "#4", "Entregado","calle 4", "Test 4", LocalDate.now(),LocalDate.now(), new ArrayList<>());
+        dispatchDeleted = new Dispatch(1L, "#1", "Eliminado","calle 1", "Test 1", "Cliente 1", LocalDate.now(),null, new ArrayList<>());
+        dispatchPreparation = new Dispatch(2L, "#2", "En Preparación", "calle 2", "Test 2", "Cliente 2", LocalDate.now(),null, new ArrayList<>());
+        dispatchRoute = new Dispatch(3L, "#3", "En Ruta","calle 3", "Test 3", "Cliente 3", LocalDate.now(),null, new ArrayList<>());
+        dispatchDelivery = new Dispatch(4L, "#4", "Entregado","calle 4", "Test 4", "Cliente 4", LocalDate.now(),LocalDate.now(), new ArrayList<>());
 
-        dispatchPreparationDTO = new DispatchDTO(2L, "#2", "En Preparación", "calle 2", "Test 2", LocalDate.now(),null, new ArrayList<>());
-        dispatchRouteDTO = new DispatchDTO(3L, "#3", "En Ruta","calle 3", "Test 3", LocalDate.now(),null, new ArrayList<>());
-        dispatchDeliveryDTO = new DispatchDTO(4L, "#4", "Entregado","calle 4", "Test 4", LocalDate.now(),LocalDate.now(), new ArrayList<>());
+        dispatchPreparationDTO = new DispatchDTO(2L, "#2", "En Preparación", "calle 2", "Test 2", "Cliente 1", LocalDate.now(),null, new ArrayList<>());
+        dispatchRouteDTO = new DispatchDTO(3L, "#3", "En Ruta","calle 3", "Test 3", "Cliente 2", LocalDate.now(),null, new ArrayList<>());
+        dispatchDeliveryDTO = new DispatchDTO(4L, "#4", "Entregado","calle 4", "Test 4", "Cliente 3", LocalDate.now(),LocalDate.now(), new ArrayList<>());
     }
 
     //Prueba para obtener los registro de los despachos
@@ -58,7 +58,7 @@ public class DispatchServiceTest {
     //Prueba para crear registro de despacho
     @Test
     public void createDispatch_valid(){
-        DispatchDTO dto = new DispatchDTO(null, null, null, "Calle Test", "TEST", null, null, new ArrayList<>());
+        DispatchDTO dto = new DispatchDTO(null, null, null, "Calle Test", "TEST", "Cliente", null, null, new ArrayList<>());
         Dispatch dispatch = dispatchService.createDispatch(dto);
         verify(dispatchRepo, times(1)).save(dispatch);
         assertEquals(dispatch.getStatus(), "En Preparación");

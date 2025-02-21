@@ -85,7 +85,7 @@ public class SaleDetailServiceTest {
         ticketHistory.setDocument("BO1");
 
         dispatch = new Dispatch(1L,"#123", "En Preparación", "Calle 123",
-                "TEST", LocalDate.now(), null,new ArrayList<>());
+                "TEST", "Cliente", LocalDate.now(), null,new ArrayList<>());
     }
 
     //Prueba para crear un detalle de venta
