@@ -17,7 +17,7 @@ public class SaleDetail {
     private int total;
 
     @ManyToOne
-    @JoinColumn(name = "id_sale", nullable = false)
+    @JoinColumn(name = "id_sale", nullable = true)
     private Sale sale;
 
     @ManyToOne
