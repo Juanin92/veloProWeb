@@ -9,5 +9,5 @@ export interface Dispatch {
     customer: string,
     created: string,
     deliveryDate: string,
-    saleDetail: SaleDetailDTO[] | null
+    detailSaleDTOS: SaleDetailDTO[] | null
 }
