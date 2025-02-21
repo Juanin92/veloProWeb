@@ -62,7 +62,7 @@ public class DispatchController {
     public ResponseEntity<List<DetailSaleRequestDTO>> getDetailSale(@RequestParam Long idDispatch){
         try{
             return ResponseEntity.ok(saleDetailService.getSaleDetailsToDispatch(idDispatch));
-        }catch (Exception e){
+        }catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
