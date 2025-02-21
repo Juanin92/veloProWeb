@@ -10,6 +10,7 @@ export interface Product {
     salePrice: number;
     buyPrice: number;
     stock: number;
+    reserve: number;
     status: boolean;
     statusProduct: StatusProduct;
     brand: Brand;

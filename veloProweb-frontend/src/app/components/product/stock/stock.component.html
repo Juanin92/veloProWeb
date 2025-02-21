@@ -80,6 +80,7 @@
           <th scope="col" class="position-sticky top-0">Compra</th>
           <th scope="col" class="position-sticky top-0">Venta</th>
           <th scope="col" class="position-sticky top-0">Stock</th>
+          <th scope="col" class="position-sticky top-0">Reserva</th>
           <th scope="col" class="position-sticky top-0">Estado</th>
           <th scope="col" class="position-sticky top-0 bg-light" style="z-index: 1020;">Acción</th>
         </tr>
@@ -95,6 +96,7 @@
           <td>{{ product.buyPrice | currency : "CLP" : "$" : "1.0-0" }}</td>
           <td>{{ product.salePrice | currency : "CLP" : "$" : "1.0-0" }}</td>
           <td>{{ product.stock }}</td>
+          <td>{{ product.reserve }}</td>
           <td
             [ngStyle]="{
               'background-color': statusColor(product.statusProduct)

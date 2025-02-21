@@ -23,6 +23,7 @@ export class ProductHelperService {
       salePrice: 0,
       buyPrice: 0,
       stock: 0,
+      reserve: 0,
       status: false,
       statusProduct: StatusProduct.UNAVAILABLE,
       brand: this.createEmptyBrand(),
