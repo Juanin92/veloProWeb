@@ -22,6 +22,8 @@ export class DispatchComponent implements OnInit{
   @Output() dispatchUpdated = new EventEmitter<Dispatch[]>();
   dispatchList: Dispatch[] = [];
   saleDetailDTOList: SaleDetailDTO[] = [];
+  saleDetailDispatchList: DetailSaleRequestDTO[] = [];
+  selectedDispatch: Dispatch | null = null;
   dispatch: Dispatch = {
     id: 0,
     trackingNumber: '',
@@ -31,7 +33,7 @@ export class DispatchComponent implements OnInit{
     customer: '',
     created: '',
     deliveryDate: '',
-    saleDetail: null,
+    detailSaleDTOS: null,
   }
 
   constructor(
@@ -54,6 +56,17 @@ export class DispatchComponent implements OnInit{
     });
   }
 
+  getSaleDetailToDispatch(dispatchValue: Dispatch): void{
+    this.dispatchService.getDetailSale(dispatchValue.id).subscribe({
+      next:(list) =>{
+        this.saleDetailDispatchList = list;
+        this.selectedDispatch = dispatchValue;
+      },error: (error)=>{
+        console.log('Error al obtener detalle del despacho, ', error?.error);
+      }
+    });
+  }
+
   createNewDispatch(dispatch: Dispatch): void{
     this.saleDetailDTOList = this.saleDetailList.map(saleDetail => {
       return {
@@ -62,14 +75,15 @@ export class DispatchComponent implements OnInit{
         quantity: saleDetail.quantity
       };
     });
-    dispatch.saleDetail = this.saleDetailDTOList;
-    this.dispatchService.createDispatch(this.dispatch).subscribe({
+    dispatch.detailSaleDTOS = this.saleDetailDTOList;
+    this.dispatchService.createDispatch(dispatch).subscribe({
       next:(response)=>{
         const message = response.message;
         this.notification.showSuccessToast(message, 'top', 3000);
         this.resetModal();
       },error: (error)=>{
-        const message = error.error?.error || error.error?.message;
+        const message = error.error?.error || error.error?.message || error?.error;
+        console.log("ERROR: ", message);
         this.notification.showErrorToast(message, 'top', 3000);
       }
     });
@@ -79,5 +93,6 @@ export class DispatchComponent implements OnInit{
     this.dispatch.address = '';
     this.dispatch.comment = '';
     this.dispatch.customer = '';
+    this.selectedDispatch = null;
   }
 }
