@@ -8,6 +8,7 @@ import { TaskComponent } from "../setting/task/task.component";
 import { AlertComponent } from "../user/alert/alert.component";
 import { AlertModel } from '../../models/Entity/alert-model';
 import { DispatchComponent } from "../sale/dispatch/dispatch.component";
+import { Dispatch } from '../../models/Entity/Sale/dispatch';
 
 @Component({
   selector: 'app-home',
@@ -21,6 +22,7 @@ export class HomeComponent{
   taskList: Task[] = [];
   messageList: Message[] = [];
   alertList: AlertModel[] = [];
+  dispatchList: Dispatch[] = [];
   expanded = {
     notification: false,
     dispatch: false,
@@ -40,6 +42,10 @@ export class HomeComponent{
 
   getAlertUpdated(alerts: AlertModel[]): void{
     this.alertList = alerts;
+  }
+
+  getDispatchUpdated(dispatches: Dispatch[]): void{
+    this.dispatchList = dispatches;
   }
 
   toggleCardExpand(section: 'notification' | 'dispatch' | 'task' | 'alert'): void {
