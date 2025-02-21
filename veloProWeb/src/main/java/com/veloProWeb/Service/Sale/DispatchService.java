@@ -103,8 +103,8 @@ public class DispatchService implements IDispatchService {
                     }
                     break;
                 case 4:
-                    //Verifica que solo cuando sea diferente "Eliminado" quede "Eliminado"
-                    if (!dispatch.getStatus().equals(statusMap.get(4))){
+                    // Verifica que solo cuando el estado sea diferente de "Eliminado" o "Entregado" quede "Eliminado"
+                    if (!dispatch.getStatus().equals(statusMap.get(4)) && !dispatch.getStatus().equals(statusMap.get(3))){
                         dispatch.setStatus(statusMap.get(4));
                     }
                     break;
