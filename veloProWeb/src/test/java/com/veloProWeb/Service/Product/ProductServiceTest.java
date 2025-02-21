@@ -174,4 +174,15 @@ public class ProductServiceTest {
         verify(alertService, never()).createAlert(product, noStockDescription);
         verify(kardexService, times(1)).checkLowSales(product);
     }
+
+    //Prueba para actualizar el stock y reserva de un producto después de un despacho
+    @Test
+    public void updateStockAndReserveDispatch_valid(){
+        product.setStock(30);
+        product.setReserve(0);
+        productService.updateStockAndReserveDispatch(product, 10);
+        assertEquals(20, product.getStock());
+        assertEquals(10, product.getReserve());
+        verify(productRepo).save(product);
+    }
 }
