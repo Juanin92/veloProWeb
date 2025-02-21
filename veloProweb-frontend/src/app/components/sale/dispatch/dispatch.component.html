@@ -4,8 +4,11 @@
         <li *ngFor="let dispatch of dispatchList"
             class="list-group-item bg-dark-subtle d-flex justify-content-between align-items-center border-bottom border-success">
             <span>Despacho {{dispatch.trackingNumber}} - {{dispatch.status}} 
-                <button class="btn btn-sm btn-outline-primary border-0 ms-1" data-bs-toggle="tooltip" 
-                    data-bs-placement="bottom" title="+ info"><i class="bi bi-info-square"></i></button>
+                <button class="btn btn-sm btn-outline-primary border-0 ms-1" data-bs-toggle="modal"
+                    data-bs-target="#dispatchDetailModal" (click)="getSaleDetailToDispatch(dispatch)">
+                    <i class="bi bi-info-square" data-bs-toggle="tooltip" 
+                        data-bs-placement="bottom" title="+ info"></i>
+                </button>
             </span>
             <div>
                 <button class="btn btn-sm btn-outline-info rounded-pill me-1" data-bs-toggle="tooltip" 
@@ -56,18 +59,18 @@
                 <form>
                     <div class="form-floating mb-2 mt-1">
                         <input type="text" class="form-control" id="customerModal" placeholder="Ingrese un cliente"
-                            name="customer" [(ngModel)]="dispatch.customer"
+                            name="customerModal" [(ngModel)]="dispatch.customer"
                             [ngClass]="{'is-invalid':!dispatch.customer, 'is-valid':dispatch.customer}" required />
                         <label for="customerModal" class="form-label">Cliente</label>
                     </div>
                     <div class="form-floating mb-2">
                         <input type="text" class="form-control" id="addressModal" placeholder="Ingrese una dirección"
-                            name="address" [(ngModel)]="dispatch.address"
+                            name="addressModal" [(ngModel)]="dispatch.address"
                             [ngClass]="{'is-invalid':!dispatch.address, 'is-valid':dispatch.address}" required />
                         <label for="addressModal" class="form-label">Dirección</label>
                     </div>
                     <div class="form-floating mb-0">
-                        <input type="text" class="form-control" id="commnetModal" placeholder="Ingrese un comentario" name="comment"
+                        <input type="text" class="form-control" id="commnetModal" placeholder="Ingrese un comentario" name="commentModal"
                             [(ngModel)]="dispatch.comment" [ngClass]="{'is-valid':dispatch.comment}"
                             required />
                         <label for="commentModal" class="form-label">Comentario</label>
@@ -78,6 +81,98 @@
                 <button (click)="createNewDispatch(dispatch)" [disabled]="!dispatch.address && !dispatch.customer" 
                     type="button" class="btn btn-success">Confirmar</button>
                 <button (click)="resetModal()" type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- MODAL DISPATCH DETAILS -->
+<div class="modal fade" id="dispatchDetailModal" tabindex="-1" aria-labelledby="dispatchDetailModal">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="d-flex align-items-center justify-content-between w-100">
+                    <h1 class="modal-title fs-4 mb-0">
+                        <i class="bi bi-truck me-2"></i>
+                        Detalles del Despacho - <p class="mb-2 small fs-6 fw-lighter">({{selectedDispatch?.status}})</p>
+                    </h1>
+                    <button (click)="resetModal()" type="button" class="btn-close" aria-label="Close"
+                        data-bs-dismiss="modal"></button>
+                </div>
+            </div>
+            <div class="modal-body p-3">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body py-2">
+                                <h6 class="card-title mb-2 fw-bold">
+                                    <i class="bi bi-person me-1"></i>Cliente
+                                </h6>
+                                <div class="ps-3">
+                                    <p class="mb-2 small fw-lighter">{{selectedDispatch?.customer}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body py-2">
+                                <h6 class="card-title mb-2 fw-bold">
+                                    <i class="bi bi-geo-alt me-1"></i>Entrega ({{selectedDispatch?.created | date: 'dd-MM-yyy'}})
+                                </h6>
+                                <div class="ps-3">
+                                    <p class="mb-2 small">{{selectedDispatch?.address}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body py-2">
+                                <h6 class="card-title mb-2 fw-bold">
+                                    <i class="bi bi-chat-left-text me-1"></i>Comentarios
+                                </h6>
+                                <p class="ps-3 mb-0 small">{{selectedDispatch?.comment || 'Sin comentarios'}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card shadow">
+                    <div class="card-body p-0">
+                        <div class="table-responsive" style="max-height: calc(100vh - 350px); min-height: 300px;">
+                            <table class="table table-hover table-striped mb-0">
+                                <thead>
+                                    <tr class="bg-light">
+                                        <th scope="col" class="text-center" style="width: 60px">#</th>
+                                        <th scope="col">Descripción</th>
+                                        <th scope="col" class="text-end" style="width: 120px">Precio</th>
+                                        <th scope="col" class="text-center" style="width: 100px">Cantidad</th>
+                                        <th scope="col" class="text-end" style="width: 120px">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let saleDetail of saleDetailDispatchList; let i = index">
+                                        <td class="text-center">{{ i + 1 }}</td>
+                                        <td>{{saleDetail.descriptionProduct}}</td>
+                                        <td class="text-end">{{saleDetail.price | currency : "CLP" : "$" : "1.0-0"}}
+                                        </td>
+                                        <td class="text-center">{{saleDetail.quantity}}</td>
+                                        <td class="text-end">{{saleDetail.price * saleDetail.quantity | currency : "CLP"
+                                            : "$" : "1.0-0"}}</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot class="table-light fw-bold">
+                                    <tr>
+                                        <td colspan="3"></td>
+                                        <td class="text-end">Total:</td>
+                                        <td class="text-end">
+                                            {{10000 | currency : "CLP" : "$" : "1.0-0"}}
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
