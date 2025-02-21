@@ -137,7 +137,7 @@ public class SaleDetailService implements ISaleDetailService {
             saleDetail.setDispatch(dispatch);
             saleDetail.setProduct(product);
             saleDetailRepo.save(saleDetail);
-            productService.updateStockAndReserveDispatch(product, saleDetail.getQuantity());
+            productService.updateStockAndReserveDispatch(product, saleDetail.getQuantity(), true);
         }
     }
 
