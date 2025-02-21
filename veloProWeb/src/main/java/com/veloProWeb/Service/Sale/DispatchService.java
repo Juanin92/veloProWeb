@@ -5,6 +5,7 @@ import com.veloProWeb.Model.DTO.DispatchDTO;
 import com.veloProWeb.Model.Entity.Sale.Dispatch;
 import com.veloProWeb.Model.Entity.Sale.SaleDetail;
 import com.veloProWeb.Repository.DispatchRepo;
+import com.veloProWeb.Service.Product.Interfaces.IProductService;
 import com.veloProWeb.Service.Sale.Interface.IDispatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.*;
 public class DispatchService implements IDispatchService {
 
     @Autowired private DispatchRepo dispatchRepo;
+    @Autowired private IProductService productService;
     private final Map<Integer, String> statusMap = new HashMap<>();
 
     public DispatchService(){
@@ -106,6 +108,9 @@ public class DispatchService implements IDispatchService {
                     // Verifica que solo cuando el estado sea diferente de "Eliminado" o "Entregado" quede "Eliminado"
                     if (!dispatch.getStatus().equals(statusMap.get(4)) && !dispatch.getStatus().equals(statusMap.get(3))){
                         dispatch.setStatus(statusMap.get(4));
+                        for (SaleDetail saleDetail : dispatch.getSaleDetails()){
+                            productService.updateStockAndReserveDispatch(saleDetail.getProduct(), saleDetail.getQuantity(), false);
+                        }
                     }
                     break;
                 default:
