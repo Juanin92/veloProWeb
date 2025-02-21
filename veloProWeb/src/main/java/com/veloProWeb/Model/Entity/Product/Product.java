@@ -23,6 +23,7 @@ public class Product {
     private int salePrice;
     private int buyPrice;
     private int stock;
+    private int reserve;
     private int threshold;
     private boolean status;
     @Enumerated(EnumType.STRING)
