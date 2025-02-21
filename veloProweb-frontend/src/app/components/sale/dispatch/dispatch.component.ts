@@ -24,6 +24,7 @@ export class DispatchComponent implements OnInit{
   saleDetailDTOList: SaleDetailDTO[] = [];
   saleDetailDispatchList: DetailSaleRequestDTO[] = [];
   selectedDispatch: Dispatch | null = null;
+  totalSum: number = 0;
   dispatch: Dispatch = {
     id: 0,
     trackingNumber: '',
@@ -61,6 +62,7 @@ export class DispatchComponent implements OnInit{
       next:(list) =>{
         this.saleDetailDispatchList = list;
         this.selectedDispatch = dispatchValue;
+        this.saleDetailDispatchList.map(value => this.totalSum += (value.price * value.quantity));
       },error: (error)=>{
         console.log('Error al obtener detalle del despacho, ', error?.error);
       }
@@ -94,5 +96,6 @@ export class DispatchComponent implements OnInit{
     this.dispatch.comment = '';
     this.dispatch.customer = '';
     this.selectedDispatch = null;
+    this.totalSum = 0;
   }
 }
