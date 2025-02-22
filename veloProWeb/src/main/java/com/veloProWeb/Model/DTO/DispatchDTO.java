@@ -18,6 +18,7 @@ public class DispatchDTO {
     private String address;
     private String comment;
     private String customer;
+    private boolean hasSale;
     private LocalDate created;
     private LocalDate deliveryDate;
     private List<DetailSaleDTO> detailSaleDTOS = new ArrayList<>();
