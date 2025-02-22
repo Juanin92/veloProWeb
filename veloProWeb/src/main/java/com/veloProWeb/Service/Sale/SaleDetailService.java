@@ -54,7 +54,7 @@ public class SaleDetailService implements ISaleDetailService {
             saleDetail.setQuantity(dto.getQuantity());
             saleDetail.setPrice((int) (product.getSalePrice() * 1.19));
             saleDetail.setTax((int) (product.getSalePrice() * 0.19));
-            saleDetail.setTotal((int) ((product.getSalePrice() * 1.19) * 2));
+            saleDetail.setTotal((int) ((product.getSalePrice() * 1.19) * dto.getQuantity()));
             saleDetail.setSale(sale);
             saleDetail.setDispatch(null);
             saleDetail.setProduct(product);
@@ -132,7 +132,7 @@ public class SaleDetailService implements ISaleDetailService {
             saleDetail.setQuantity(dto.getQuantity());
             saleDetail.setPrice((int) (product.getSalePrice() * 1.19));
             saleDetail.setTax((int) (product.getSalePrice() * 0.19));
-            saleDetail.setTotal((int) ((product.getSalePrice() * 1.19) * 2));
+            saleDetail.setTotal((int) ((product.getSalePrice() * 1.19) * dto.getQuantity()));
             saleDetail.setSale(null);
             saleDetail.setDispatch(dispatch);
             saleDetail.setProduct(product);
