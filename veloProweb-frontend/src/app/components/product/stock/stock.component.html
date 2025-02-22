@@ -1,73 +1,105 @@
 <div class="container-fluid d-flex flex-column p-1">
-  <div class="p-0 pb-0">
-    <div
-      class="d-flex flex-lg-row flex-column justify-content-between m-2 mb-3"
-    >
-      <button
-        type="button"
-        class="btn btn-outline-light btn-lg ms-2"
-        data-bs-toggle="modal"
-        data-bs-target="#addProduct"
-        (click)="modalService.openModal()"
-      >
-        <p class="fw-bold fs-4 m-0">Producto</p>
-      </button>
-      <button
-        type="button"
-        class="btn btn-outline-light btn-lg"
-        data-bs-toggle="modal"
-        data-bs-target="#categoriesModal"
-      >
-        <p class="fw-bold fs-4 m-0">Categorías</p>
-      </button>
-      <a
-        type="button"
-        class="btn btn-outline-light btn-lg"
-        [routerLink]="['/proveedores']"
-      >
-        <p class="fw-bold fs-4 m-0">Proveedor</p>
-      </a>
-      <a 
-        type="button" 
-        class="btn btn-outline-light btn-lg me-2"
-        [routerLink]="['/compras']"
-        target="_blank">
-        <p class="fw-bold fs-4 m-0">Compras</p>
-      </a>
-    </div>
-    <div class="d-flex flex-lg-row flex-column m-1 align-items-center justify-content-between position-relative">
-      <div class="order-lg-0 order-2 d-flex flex-column align-items-start">
-        <div class="form-floating mb-1">
-          <input
-            id="searchProduct"
-            [(ngModel)]="textFilter"
-            (ngModelChange)="searchFilterCustomer()"
-            type="text"
-            class="form-control form-control-lg"
-            aria-label="buscar producto filtrado"
-            aria-describedby="inputGroup-sizing-md"
-            placeholder="Ingrese un valor"
-          />
-          <label for="searchProduct" class="form-label">Búsqueda Rápida</label>
+  <div class="p-3">
+    <div class="container-fluid p-0">
+      <!-- Vista Desktop -->
+      <div class="row g-3 d-none d-lg-flex align-items-center">
+        <div class="col-3">
+          <div class="form-floating">
+            <input id="searchProduct" [(ngModel)]="textFilter" (ngModelChange)="searchFilterCustomer()" type="text"
+              class="form-control form-control-lg" aria-label="buscar producto filtrado"
+              aria-describedby="inputGroup-sizing-md" placeholder="Ingrese un valor" />
+            <label for="searchProduct" class="form-label">Búsqueda Rápida</label>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="d-flex justify-content-center gap-4 bg-dark rounded-3 py-2 px-4">
+            <div class="d-flex align-items-center">
+              <span class="badge px-3 py-2 text-black" style="background-color: rgb(40, 238, 40);">Disponible</span>
+            </div>
+            <div class="d-flex align-items-center">
+              <span class="badge bg-info px-3 py-2 text-black">No Disponible</span>
+            </div>
+            <div class="d-flex align-items-center">
+              <span class="badge px-3 py-2 text-black bg-danger">Descontinuado</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-3 text-end">
+          <div class="d-grid gap-2">
+            <div class="d-flex gap-2">
+              <button type="button" class="btn btn-outline-light btn-sm w-50 fw-bold text-uppercase"
+                data-bs-toggle="modal" data-bs-target="#addProduct">
+                <i class="bi bi-box-seam me-1"></i> Producto
+              </button>
+              <button type="button" class="btn btn-outline-light btn-sm w-50 fw-bold text-uppercase"
+                data-bs-toggle="modal" data-bs-target="#categoriesModal">
+                <i class="bi bi-tags me-1"></i> Categorías
+              </button>
+            </div>
+            <div class="d-flex gap-2">
+              <a type="button" class="btn btn-outline-light btn-sm w-50 fw-bold text-uppercase"
+                [routerLink]="['/proveedores']">
+                <i class="bi bi-buildings me-1"></i> Proveedor
+              </a>
+              <a type="button" class="btn btn-outline-light btn-sm w-50 fw-bold text-uppercase"
+                [routerLink]="['/compras']" target="_blank">
+                <i class="bi bi-bag me-1"></i> Compras
+              </a>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="border border-1 border-white p-1 mb-2 mt-0 my-4 d-flex flex-row position-absolute start-50 translate-middle-x">
-        <div class="m-1">
-          <span class="mt-1 d-inline-block ms-4" style="width: 15px;height: 15px;background-color: rgb(40, 238, 40);"></span>
-          <p class="ms-1 mb-0 fw-semibold">Disponible</p>
+      <!-- Vista Mobile -->
+      <div class="d-lg-none">
+        <div class="d-grid gap-2">
+          <div class="row row-cols-2 g-2 justify-content-center">
+            <div class="col">
+              <button type="button" class="btn btn-outline-light btn-sm w-100 shadow-sm rounded-pill"
+                data-bs-toggle="modal" data-bs-target="#addProduct">
+                <p class="fw-bold fs-6 m-0"><i class="bi bi-box-seam"></i>Producto</p>
+              </button>
+            </div>
+            <div class="col">
+              <button type="button" class="btn btn-outline-light btn-sm w-100 shadow-sm rounded-pill"
+                data-bs-toggle="modal" data-bs-target="#categoriesModal">
+                <p class="fw-bold fs-6 m-0"><i class="bi bi-tags"></i>Categorías</p>
+              </button>
+            </div>
+            <div class="col">
+              <a type="button" class="btn btn-outline-light btn-sm w-100 shadow-sm rounded-pill"
+                [routerLink]="['/proveedores']">
+                <p class="fw-bold fs-6 m-0"><i class="bi bi-buildings"></i>Proveedor</p>
+              </a>
+            </div>
+            <div class="col">
+              <a type="button" class="btn btn-outline-light btn-sm w-100 shadow-sm rounded-pill"
+                [routerLink]="['/compras']" target="_blank">
+                <p class="fw-bold fs-6 m-0"><i class="bi bi-bag"></i>Compras</p>
+              </a>
+            </div>
+          </div>
         </div>
-        <div class="m-1">
-          <span class="mt-1 d-inline-block ms-5" style="width: 15px;height: 15px;background-color: rgb(9, 180, 237);"></span>
-          <p class="ms-1 mb-0 fw-semibold">No Disponible</p>
+        <div class="bg-dark-subtle rounded-3 p-3 mb-3">
+          <div class="d-flex flex-wrap justify-content-center gap-2 bg-dark">
+            <span class="badge px-3 py-2 text-black" style="background-color: rgb(40, 238, 40);">Disponible</span>
+            <span class="badge px-3 py-2 text-black bg-info">No Disponible</span>
+            <span class="badge px-3 py-2 text-black bg-danger">Descontinuado</span>
+          </div>
         </div>
-        <div class="m-1">
-          <span class="mt-1 d-inline-block ms-5" style="width: 15px;height: 15px;background-color: red"></span>
-          <p class="ms-1 mb-0 fw-semibold">Descontinuado</p>
+        <div class="row g-2 align-items-center">
+          <div class="col">
+            <div class="form-floating">
+              <input id="searchProductMobile" [(ngModel)]="textFilter" (ngModelChange)="searchFilterCustomer()"
+                type="text" class="form-control" aria-label="buscar producto filtrado"
+                aria-describedby="inputGroup-sizing-md" placeholder="Ingrese un valor" />
+              <label for="searchProduct" class="form-label">Búsqueda Rápida</label>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="text-center p-2 pt-0 table-responsive" style="max-height: calc(100vh - 200px);">
+  <div class="text-center p-2 pt-0 table-responsive" style="max-height: calc(100vh - 180px);">
     <table class="table table-hover">
       <thead class="table-light">
         <tr>
@@ -97,60 +129,29 @@
           <td>{{ product.salePrice | currency : "CLP" : "$" : "1.0-0" }}</td>
           <td>{{ product.stock }}</td>
           <td>{{ product.reserve }}</td>
-          <td
-            [ngStyle]="{
+          <td [ngStyle]="{
               'background-color': statusColor(product.statusProduct)
-            }"
-          ></td>
+            }"></td>
           <td>
             <div class="btn-group" role="group" aria-label="Acciones de productos">
-              <button
-                *ngIf="
+              <button *ngIf="
                   product.statusProduct === statusProduct.AVAILABLE ||
                   product.statusProduct === statusProduct.UNAVAILABLE && 
                   product.buyPrice !== 0
-                "
-                class="btn btn-sm btn-warning"
-                data-bs-toggle="modal"
-                data-bs-target="#updateProduct"
-              >
-                <img
-                  src="/assets/icons/btnEditIcon.png"
-                  alt="editar"
-                  width="24"
-                  height="24"
-                  class="img-fluid"
-                  (click)="openModalProduct(product)"
-                  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar info"
-                />
+                " class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#updateProduct">
+                <img src="/assets/icons/btnEditIcon.png" alt="editar" width="24" height="24" class="img-fluid"
+                  (click)="openModalProduct(product)" data-bs-toggle="tooltip" data-bs-placement="top"
+                  title="Editar info" />
               </button>
-              <button
-                *ngIf="product.statusProduct === statusProduct.UNAVAILABLE"
-                (click)="deleteProduct(product)"
-                class="btn btn-sm btn-danger"
-              >
-                <img
-                  src="/assets/icons/btnDeleteIcon.png"
-                  alt="borrar"
-                  width="24"
-                  height="24"
-                  class="img-fluid"
-                  data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"
-                />
+              <button *ngIf="product.statusProduct === statusProduct.UNAVAILABLE" (click)="deleteProduct(product)"
+                class="btn btn-sm btn-danger">
+                <img src="/assets/icons/btnDeleteIcon.png" alt="borrar" width="24" height="24" class="img-fluid"
+                  data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" />
               </button>
-              <button
-                *ngIf="product.statusProduct === statusProduct.DISCONTINUED"
-                (click)="activateProduct(product)"
-                class="btn btn-sm btn-outline-success border-0"
-              >
-                <img
-                  src="/assets/icons/iconOn.png"
-                  alt="activar"
-                  width="24"
-                  height="24"
-                  class="img-fluid"
-                  data-bs-toggle="tooltip" data-bs-placement="top" title="Activar"
-                />
+              <button *ngIf="product.statusProduct === statusProduct.DISCONTINUED" (click)="activateProduct(product)"
+                class="btn btn-sm btn-outline-success border-0">
+                <img src="/assets/icons/iconOn.png" alt="activar" width="24" height="24" class="img-fluid"
+                  data-bs-toggle="tooltip" data-bs-placement="top" title="Activar" />
               </button>
             </div>
           </td>
