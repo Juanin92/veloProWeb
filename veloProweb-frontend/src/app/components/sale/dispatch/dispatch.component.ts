@@ -32,6 +32,7 @@ export class DispatchComponent implements OnInit{
     address: '',
     comment: '',
     customer: '',
+    hasSale: false,
     created: '',
     deliveryDate: '',
     detailSaleDTOS: null,
@@ -121,6 +122,7 @@ export class DispatchComponent implements OnInit{
       descriptionProduct: 'Despacho',
       quantity: 1,
       price: 1000,
+      tax: 0,
       customer: '',
       notification: '',
       ticketStatus: true
