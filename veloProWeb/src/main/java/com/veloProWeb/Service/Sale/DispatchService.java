@@ -47,8 +47,8 @@ public class DispatchService implements IDispatchService {
                     detailSaleDTOSList.add(detailSaleDTO);
                 }
                 DispatchDTO dto = new DispatchDTO(dispatch.getId(), dispatch.getTrackingNumber(), dispatch.getStatus(),
-                        dispatch.getAddress(), dispatch.getComment(), dispatch.getCustomer(), dispatch.getCreated(), dispatch.getDeliveryDate(),
-                        detailSaleDTOSList);
+                        dispatch.getAddress(), dispatch.getComment(), dispatch.getCustomer(), dispatch.isHasSale(),
+                        dispatch.getCreated(), dispatch.getDeliveryDate(), detailSaleDTOSList);
                 dtoList.add(dto);
             }
         }
@@ -73,6 +73,7 @@ public class DispatchService implements IDispatchService {
             dispatch.setComment(dto.getComment());
             dispatch.setCustomer(dto.getCustomer());
             dispatch.setDeliveryDate(null);
+            dispatch.setHasSale(false);
             dispatchRepo.save(dispatch);
             return dispatch;
         }else {
@@ -102,6 +103,10 @@ public class DispatchService implements IDispatchService {
                     if (dispatch.getStatus().equals(statusMap.get(1)) || dispatch.getStatus().equals(statusMap.get(2))){
                         dispatch.setStatus(statusMap.get(3));
                         dispatch.setDeliveryDate(LocalDate.now());
+                        for (SaleDetail saleDetail : dispatch.getSaleDetails()){
+                            //Actualiza stock y reserva de los productos del despacho
+                            productService.updateStockAndReserveDispatch(saleDetail.getProduct(), saleDetail.getQuantity(), false);
+                        }
                     }
                     break;
                 case 4:
