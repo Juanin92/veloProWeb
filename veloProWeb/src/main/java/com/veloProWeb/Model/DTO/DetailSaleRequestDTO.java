@@ -9,6 +9,7 @@ public class DetailSaleRequestDTO {
     private String descriptionProduct;
     private int quantity;
     private int price;
+    private int tax;
     private String customer;
     private LocalDate notification;
     private boolean ticketStatus;

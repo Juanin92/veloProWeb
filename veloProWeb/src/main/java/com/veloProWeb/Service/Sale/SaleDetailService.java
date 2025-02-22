@@ -156,6 +156,7 @@ public class SaleDetailService implements ISaleDetailService {
                 DetailSaleRequestDTO dto = new DetailSaleRequestDTO();
                 dto.setQuantity(saleDetail.getQuantity());
                 dto.setPrice(saleDetail.getPrice());
+                dto.setTax(saleDetail.getTax());
                 dto.setDescriptionProduct(saleDetail.getProduct().getDescription());
                 dto.setCustomer(null);
                 dto.setTicketStatus(false);
