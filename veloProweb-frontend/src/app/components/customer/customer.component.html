@@ -1,41 +1,73 @@
 <div class="container-fluid d-flex flex-column p-1">
-    <div class="p-0 pb-0">
-        <p class="text-center fw-bold fs-2 m-0">Total Dinero: {{totalDebts | currency:'CLP':'$':'1.0-0'}}</p>
-        <div class="d-flex flex-lg-row flex-column justify-content-between position-relative">
-            <div class="order-lg-0 order-2 p-1 mb-2 align-content-start">
-                <div class="form-floating mb-1">
-                    <input id="searchProduct" [(ngModel)]="textFilter" (ngModelChange)="searchFilterCustomer()" type="text"
-                        class="form-control form-control-lg" aria-label="buscar producto filtrado"
-                        aria-describedby="inputGroup-sizing-md" placeholder="Ingrese un valor" />
-                    <label for="searchProduct" class="form-label">Búsqueda Rápida</label>
+    <div class="p-3">
+        <div class="text-center d-flex flex-lg-row flex-column justify-content-center">
+            <h2 class="fs-2 fw-bold me-2">Total Dinero: </h2>
+            <div class="d-inline-block bg-success text-white px-2 py-1 rounded-3 shadow-sm">
+                <span class="fs-4">{{totalDebts | currency:'CLP':'$':'1.0-0'}}</span>
+            </div>
+        </div>
+        <div class="container-fluid p-0">
+            <!-- Vista Desktop -->
+            <div class="row g-3 d-none d-lg-flex align-items-center">
+                <div class="col-3">
+                    <div class="form-floating">
+                        <input id="searchProduct" [(ngModel)]="textFilter" (ngModelChange)="searchFilterCustomer()"
+                            type="text" class="form-control form-control-lg" placeholder="Ingrese un valor"
+                            aria-label="buscar producto filtrado" />
+                        <label for="searchProduct">Búsqueda Rápida</label>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="d-flex justify-content-center gap-4 bg-dark-subtle rounded-3 py-2 px-4">
+                        <div class="d-flex align-items-center">
+                            <span class="badge px-3 py-2 text-black" style="background-color: rgb(40, 238, 40);">Pagada</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-danger px-3 py-2 text-black">Pendiente</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="badge px-3 py-2 text-black" style="background-color: #09b4ed;">Parcial</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="badge px-3 py-2 text-black" style="background-color: #1500ff;">Vencida</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3 text-end">
+                    <button class="btn btn-outline-success border-0" data-bs-toggle="modal" data-bs-target="#addCustomer"
+                        data-bs-placement="auto" data-bs-title="Crear nuevo cliente">
+                        <img src="/assets/icons/iconAddUser.png" alt="Agregar cliente" width="60" height="60"
+                            class="img-fluid">
+                    </button>
                 </div>
             </div>
-            <div class="border border-1 border-white p-1 mb-2 mt-2 my-4 d-flex flex-row position-absolute start-50 translate-middle-x">
-                <div class="m-2">
-                    <span class="mt-1 d-inline-block ms-3" style="width: 15px;height: 15px;background-color: rgb(40, 238, 40);"></span>
-                    <p class="ms-1 mb-0">Pagada</p>
+            <!-- Vista Mobile -->
+            <div class="d-lg-none">
+                <div class="bg-dark-subtle rounded-3 p-3 mb-3">
+                    <div class="d-flex flex-wrap justify-content-center gap-2 bg-dark-subtle">
+                        <span class="badge px-3 py-2 text-black" style="background-color: rgb(40, 238, 40);">Pagada</span>
+                        <span class="badge bg-danger px-3 py-2 text-black">Pendiente</span>
+                        <span class="badge px-3 py-2 text-black" style="background-color: #09b4ed;">Parcial</span>
+                        <span class="badge px-3 py-2 text-black" style="background-color: #1500ff;">Vencida</span>
+                    </div>
                 </div>
-                <div class="m-2">
-                    <span class="mt-1 d-inline-block ms-4" style="width: 15px;height: 15px;background-color: red;"></span>
-                    <p class="ms-1 mb-0">Pendiente</p>
+                <div class="row g-2 align-items-center">
+                    <div class="col">
+                        <div class="form-floating">
+                            <input id="searchProductMobile" [(ngModel)]="textFilter"
+                                (ngModelChange)="searchFilterCustomer()" type="text" class="form-control"
+                                placeholder="Ingrese un valor" aria-label="buscar producto filtrado" />
+                            <label for="searchProductMobile">Búsqueda Rápida</label>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-outline-success border-0" data-bs-toggle="modal"
+                            data-bs-target="#addCustomer" data-bs-placement="auto" data-bs-title="Crear nuevo cliente">
+                            <img src="/assets/icons/iconAddUser.png" alt="Agregar cliente" width="40" height="40"
+                                class="img-fluid">
+                        </button>
+                    </div>
                 </div>
-                <div class="m-2">
-                    <span class="mt-1 d-inline-block ms-3" style="width: 15px;height: 15px;background-color: rgb(9, 180, 237);"></span>
-                    <p class="ms-1 mb-0">Parcial</p>
-                </div>
-                <div class="m-2">
-                    <span class="mt-1 d-inline-block ms-4" style="width: 15px;height: 15px;background-color: rgb(21, 0, 255);"></span>
-                    <p class="ms-1 mb-0">Vencida</p>
-                </div>
-            </div>
-            <div class="order-lg-2 order-1 m-2 mt-0 align-content-end" 
-                data-bs-toggle="tooltip"
-                data-bs-placement="auto"
-                data-bs-title="Crear nuevo cliente" >
-                <button class="btn btn-outline-success border-0 m-2 mt-1" 
-                data-bs-toggle="modal"
-                data-bs-target="#addCustomer" 
-            ><img src="/assets/icons/iconAddUser.png" alt="Agregar_cliente"  width="60" height="60" class="d-inline-block img-fluid"></button>
             </div>
         </div>
     </div>
@@ -44,8 +76,7 @@
             <thead class="table-light">
                 <tr>
                     <th scope="col" class="position-sticky top-0">#</th>
-                    <th scope="col" class="position-sticky top-0">Nombre</th>
-                    <th scope="col" class="position-sticky top-0">Apellidos</th>
+                    <th scope="col" class="position-sticky top-0">Cliente</th>
                     <th scope="col" class="position-sticky top-0">Email</th>
                     <th scope="col" class="position-sticky top-0">Teléfono</th>
                     <th scope="col" class="position-sticky top-0">Deuda</th>
@@ -57,13 +88,21 @@
             <tbody class="table-group-divider text-center align-middle">
                 <tr *ngFor="let customer of filteredCustomers">
                     <th scope="row">{{customer.id}}</th>
-                    <td>{{customer.name}}</td>
-                    <td>{{customer.surname}}</td>
+                    <td>
+                        <div class="d-flex flex-column">
+                            <span class="fw-bold">{{customer.name}}</span>
+                            <span class="text-muted small">{{customer.surname}}</span>
+                        </div>
+                    </td>
                     <td>{{getEmailEmpty(customer.email)}}</td>
                     <td>{{customer.phone}}</td>
                     <td>{{customer.debt | currency: 'CLP':'$':'1.0-0'}}</td>
                     <td [ngStyle]="{'background-color': statusColor(customer.status)}"></td>
-                    <td>{{getStatusAccount(customer.account)}}</td>
+                    <td>
+                        <span class="badge" [class.bg-success]="customer.account" [class.bg-danger]="!customer.account">
+                            {{getStatusAccount(customer.account)}}
+                        </span>
+                    </td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Acciones de cliente">
                             <button *ngIf="customer.debt > 0" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#paymentCustomer" (click)="openModalCustomer(customer)">
