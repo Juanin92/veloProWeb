@@ -1,5 +1,5 @@
 <div class="modal fade" id="paymentCustomer" tabindex="-1" aria-labelledby="paymentCustomer" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header text-center w-100">
         <h5 class="modal-title text-center w-100">Pago de Deuda</h5>
@@ -7,24 +7,38 @@
       </div>
       <div class="modal-body">
         <div class="container-fluid">
-          <div class="d-flex flex-row justify-content-between text-center">
-            <div class="m-2">
-              <p class="m-0">Deuda Total</p>
-              <p class="text-danger">
-                {{ totalDebt | currency : "CLP" : "$" : "1.0-0" }}
-              </p>
-            </div>
-            <div class="m-2">
-              <p class="m-0">Deuda a Pagar</p>
-              <p>{{ debtValue | currency : "CLP" : "$" : "1.0-0" }}</p>
-            </div>
-            <div class="m-2">
-              <p class="m-0">Abonado</p>
-              <p class="text-success">
-                {{ paymentValue | currency : "CLP" : "$" : "1.0-0" }}
-              </p>
+        <div class="row g-2 mb-4">
+          <div class="col-4">
+            <div class="card border border-danger">
+              <div class="card-body p-2 text-center">
+                <small class="d-block text-danger mb-1">Deuda Total</small>
+                <span class="fs-6 fw-bold text-danger">
+                  {{ totalDebt | currency : "CLP" : "$" : "1.0-0" }}
+                </span>
+              </div>
             </div>
           </div>
+          <div class="col-4">
+            <div class="card border border-primary">
+              <div class="card-body p-2 text-center">
+                <small class="d-block text-primary mb-1">A Pagar</small>
+                <span class="fs-6 fw-bold text-primary">
+                  {{ debtValue | currency : "CLP" : "$" : "1.0-0" }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="card border border-success">
+              <div class="card-body p-2 text-center">
+                <small class="d-block text-success mb-1">Abonado</small>
+                <span class="fs-6 fw-bold text-success">
+                  {{ paymentValue | currency : "CLP" : "$" : "1.0-0" }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
           <div class="d-flex flex-row justify-content-between text-center">
             <div class="m-3">
               <div *ngFor="let ticket of tickets; let i = index">
