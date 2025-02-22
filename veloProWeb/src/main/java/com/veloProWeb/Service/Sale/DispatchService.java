@@ -109,6 +109,7 @@ public class DispatchService implements IDispatchService {
                     if (!dispatch.getStatus().equals(statusMap.get(4)) && !dispatch.getStatus().equals(statusMap.get(3))){
                         dispatch.setStatus(statusMap.get(4));
                         for (SaleDetail saleDetail : dispatch.getSaleDetails()){
+                            //Actualiza stock y reserva del producto eliminado del despacho
                             productService.updateStockAndReserveDispatch(saleDetail.getProduct(), saleDetail.getQuantity(), false);
                         }
                     }
