@@ -1,7 +1,7 @@
-<div class="contianer-fluid d-flex flex-lg-row flex-column p-1">
-    <div class="table-responsive text-center p-5 pt-0 h-100 w-50" style="max-height: calc(100vh - 200px);">
+<div class="container-fluid d-flex flex-lg-row flex-column p-3">
+    <div class="table-responsive text-center w-100 w-lg-50 mb-3">
         <table class="table table-hover">
-            <thead class="table-warning">
+            <thead class="table-info">
                 <tr>
                     <th scope="col" class="position-sticky top-0">#</th>
                     <th scope="col" class="position-sticky top-0">Empresa</th>
@@ -9,8 +9,8 @@
                 </tr>
             </thead>
             <tbody class="table-group-divider text-center align-middle">
-                <tr *ngFor="let supplier of suppliers" (click)="getSelectedSupplier(supplier)" 
-                [class.table-active]="supplier === selectedSupplier">
+                <tr *ngFor="let supplier of suppliers" (click)="getSelectedSupplier(supplier)"
+                    [class.table-active]="supplier === selectedSupplier">
                     <th scope="row">{{supplier.id}}</th>
                     <td>{{supplier.name}}</td>
                     <td>{{supplier.rut}}</td>
@@ -18,65 +18,66 @@
             </tbody>
         </table>
     </div>
-    <div class="ps-5 w-50">
-        <div class="d-flex justify-content-center">
+    <div class="ps-lg-5 w-100 w-lg-50">
+        <div class="d-flex justify-content-center mb-3">
             <button class="btn btn-primary m-2" (click)="openFormat(true)">Agregar</button>
             <button *ngIf="selectedSupplier" class="btn btn-warning m-2" (click)="openUpdateForm()">Actualizar</button>
         </div>
-        <div *ngIf="selectedSupplier" class="d-flex flex-column mb-3 m-2 text-center">
-            <label class="fs-1">{{selectedSupplier.name}}</label>
-            <label class="fs-2">{{selectedSupplier.rut}}</label>
-            <label class="fs-2">{{selectedSupplier.email}}</label>
-            <label class="fs-2">{{selectedSupplier.phone}}</label>
+        <div *ngIf="selectedSupplier" class="card mb-3">
+            <div class="card-body text-center">
+                <h5 class="card-title">{{selectedSupplier.name}}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{selectedSupplier.rut}}</h6>
+                <p class="card-text">{{selectedSupplier.email}}</p>
+                <p class="card-text">{{selectedSupplier.phone}}</p>
+            </div>
         </div>
-        <div *ngIf="status" class="form-floating mb-3 m-2 d-flex flex-column">
+        <div *ngIf="status" class="form-floating mb-3">
             <form>
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Ingrese nombre de la empresa" 
-                         [(ngModel)]="newSupplier.name" 
-                         (keydown)="touchedFields['name'] = true"
-                         [ngClass]="{'is-invalid':touchedFields['name'] && !validator.isFieldValid(newSupplier, 'name'), 'is-valid':touchedFields['name'] && validator.isFieldValid(newSupplier, 'name')}" 
-                         required/>
-                        <label for="name" class="form-label">Nombre de la empresa</label>
-                        <div *ngIf="!validator.isFieldValid(newSupplier,'name')" class="invalid-feedback">
-                            Nombre de empresa no válido debe tener al menos 3 letras.
-                        </div>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="rut" name="rut" placeholder="Ingrese rut" 
-                        [(ngModel)]="newSupplier.rut" 
-                        (keydown)="touchedFields['rut'] = true"
-                        [ngClass]="{'is-invalid':touchedFields['rut'] && !validator.isFieldValid(newSupplier, 'rut'), 'is-valid':touchedFields['rut'] && validator.isFieldValid(newSupplier, 'rut')}" 
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="name" name="name"
+                        placeholder="Ingrese nombre de la empresa" [(ngModel)]="newSupplier.name"
+                        (keydown)="touchedFields['name'] = true"
+                        [ngClass]="{'is-invalid':touchedFields['name'] && !validator.isFieldValid(newSupplier, 'name'), 'is-valid':touchedFields['name'] && validator.isFieldValid(newSupplier, 'name')}"
                         required />
-                        <label for="rut" class="form-label">Rut</label>
-                        <div *ngIf="!validator.isFieldValid(newSupplier,'rut')" class="invalid-feedback">
-                            Rut no válido, debe tener formato (Ej: xxxxxxx-x).
-                        </div>
+                    <label for="name" class="form-label">Nombre de la empresa</label>
+                    <div *ngIf="!validator.isFieldValid(newSupplier,'name')" class="invalid-feedback">
+                        Nombre de empresa no válido debe tener al menos 3 letras.
                     </div>
-                    <div class="form-floating mb-3">
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Ingrese email"
-                        [(ngModel)]="newSupplier.email" 
-                        (keydown)="touchedFields['email'] = true"
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="rut" name="rut" placeholder="Ingrese rut"
+                        [(ngModel)]="newSupplier.rut" (keydown)="touchedFields['rut'] = true"
+                        [ngClass]="{'is-invalid':touchedFields['rut'] && !validator.isFieldValid(newSupplier, 'rut'), 'is-valid':touchedFields['rut'] && validator.isFieldValid(newSupplier, 'rut')}"
+                        required />
+                    <label for="rut" class="form-label">Rut</label>
+                    <div *ngIf="!validator.isFieldValid(newSupplier,'rut')" class="invalid-feedback">
+                        Rut no válido, debe tener formato (Ej: xxxxxxx-x).
+                    </div>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Ingrese email"
+                        [(ngModel)]="newSupplier.email" (keydown)="touchedFields['email'] = true"
                         [ngClass]="{'is-invalid':touchedFields['email'] && !validator.isFieldValid(newSupplier, 'email'), 'is-valid':touchedFields['email'] && validator.isFieldValid(newSupplier, 'email')}" />
-                        <label for="email" class="form-label">Correo Electrónico</label>
-                        <div *ngIf="!validator.isFieldValid(newSupplier,'email')" class="invalid-feedback">
-                            Email no válido (Ej: example&commat;test.com)
-                        </div>
+                    <label for="email" class="form-label">Correo Electrónico</label>
+                    <div *ngIf="!validator.isFieldValid(newSupplier,'email')" class="invalid-feedback">
+                        Email no válido (Ej: example&commat;test.com)
                     </div>
-                    <div class="form-floating mb-3">
-                        <input type="tel" class="form-control" id="phone" name="phone" 
-                        placeholder="Ingrese número de teléfono" value="+569 " 
-                        [(ngModel)]="newSupplier.phone" 
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="tel" class="form-control" id="phone" name="phone"
+                        placeholder="Ingrese número de teléfono" value="+569 " [(ngModel)]="newSupplier.phone"
                         (keydown)="touchedFields['phone'] = true"
-                        [ngClass]="{'is-invalid':touchedFields['phone'] && !validator.isFieldValid(newSupplier, 'phone'), 'is-valid':touchedFields['phone'] && validator.isFieldValid(newSupplier, 'phone')}" required/>
-                        <label for="phone" class="form-label">Número de Teléfono</label>
-                        <div *ngIf="!validator.isFieldValid(newSupplier,'phone')" class="invalid-feedback">
-                            Teléfono no válido (+569 12345678).
-                        </div>
+                        [ngClass]="{'is-invalid':touchedFields['phone'] && !validator.isFieldValid(newSupplier, 'phone'), 'is-valid':touchedFields['phone'] && validator.isFieldValid(newSupplier, 'phone')}"
+                        required />
+                    <label for="phone" class="form-label">Número de Teléfono</label>
+                    <div *ngIf="!validator.isFieldValid(newSupplier,'phone')" class="invalid-feedback">
+                        Teléfono no válido (+569 12345678).
                     </div>
+                </div>
             </form>
             <div class="d-flex justify-content-center">
-                <button [disabled]="!validator.validateForm(newSupplier)" *ngIf="!updateStatus" class="btn btn-success m-2" (click)="createSupplier()">Registrar</button>
+                <button [disabled]="!validator.validateForm(newSupplier)" *ngIf="!updateStatus"
+                    class="btn btn-success m-2" (click)="createSupplier()">Registrar</button>
                 <button *ngIf="updateStatus" class="btn btn-warning m-2" (click)="updateSupplier()">Actualizar</button>
                 <button class="btn btn-danger m-2" (click)="openFormat(false)">Cancelar</button>
             </div>
