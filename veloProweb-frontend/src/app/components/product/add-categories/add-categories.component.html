@@ -1,88 +1,78 @@
-<div class="modal fade" id="categoriesModal" tabindex="-1" aria-labelledby="categoriesModal" aria-hidden="true" 
+<div class="modal fade" id="categoriesModal" tabindex="-1" aria-labelledby="categoriesModal" aria-hidden="true"
     (hidden.bs.modal)="resetForms()">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header text-center w-100">
-                <h1 class="modal-title fs-3 w-100">Crear datos adicionales</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content bg-dark-subtle text-light">
+            <div class="modal-header text-center w-100 border-0">
+                <h1 class="modal-title fs-4 w-100">Crear datos adicionales</h1>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                    <div class="d-flex flex-column ">
-                        <form>
-                            <div class="form-floating mb-3 m-2 w-100 d-flex flex-row">
-                                <div class="input-group mb-3  ms-5 me-5">
-                                    <input type="text" class="form-control ms-5" id="brand" name="brand" placeholder="Ingrese una marca"
-                                        aria-label="Ingrese una marca" aria-describedby="addBrand" 
-                                        [(ngModel)]="newBrand.name"
-                                        (keydown)="touchedFields['brand'] = true"
-                                        [ngClass]="{'is-invalid':touchedFields['brand'] && !validator.validateBrand(newBrand), 'is-valid':touchedFields['brand'] && validator.validateBrand(newBrand)}"
-                                        required>
-                                    <button [disabled]="!validator.validateBrand(newBrand)" class="btn btn-outline-success ms-1" type="button" id="addBrand"
-                                        (click)="createBrand()">Ingresar</button>
-                                    <div *ngIf="!validator.validateBrand(newBrand)" class="invalid-feedback ms-5">
-                                        Debe ingresar un valor válido
-                                    </div>
-                                </div>
+                <div class="d-flex flex-column gap-3">
+                    <form>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="brand" name="brand"
+                                placeholder="Ingrese una marca" [(ngModel)]="newBrand.name"
+                                (keydown)="touchedFields['brand'] = true"
+                                [ngClass]="{'is-invalid': touchedFields['brand'] && !validator.validateBrand(newBrand), 'is-valid': touchedFields['brand'] && validator.validateBrand(newBrand)}"
+                                required>
+                            <button [disabled]="!validator.validateBrand(newBrand)" class="btn btn-outline-success"
+                                type="button" (click)="createBrand()">Ingresar</button>
+                            <div *ngIf="!validator.validateBrand(newBrand)" class="invalid-feedback">
+                                Debe ingresar un valor válido
                             </div>
-                        </form>
-                        <form>
-                            <div class="form-floating mb-3 m-2 w-100 d-flex flex-row">
-                                <div class="input-group mb-3  ms-5 me-5">
-                                    <input type="text" class="form-control ms-5" id="category" name="category" placeholder="Ingrese una categoría"
-                                        aria-label="Ingrese una categoría" aria-describedby="addCategory" 
-                                        [(ngModel)]="newCategory.name"
-                                        (keydown)="touchedFields['category'] = true"
-                                        [ngClass]="{'is-invalid':touchedFields['category'] && !validator.validateCategory(newCategory), 'is-valid':touchedFields['category'] && validator.validateCategory(newCategory)}"
-                                        required>
-                                    <button [disabled]="!validator.validateCategory(newCategory)" class="btn btn-outline-success ms-1" type="button" id="addCategory"
-                                        (click)="createCategory()">Ingresar</button>
-                                    <div *ngIf="!validator.validateCategory(newCategory)" class="invalid-feedback ms-5">
-                                        Debe ingresar un valor válido (no dígitos)
-                                    </div>
-                                </div>
+                        </div>
+                    </form>
+                    <form>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="category" name="category"
+                                placeholder="Ingrese una categoría" [(ngModel)]="newCategory.name"
+                                (keydown)="touchedFields['category'] = true"
+                                [ngClass]="{'is-invalid': touchedFields['category'] && !validator.validateCategory(newCategory), 'is-valid': touchedFields['category'] && validator.validateCategory(newCategory)}"
+                                required>
+                            <button [disabled]="!validator.validateCategory(newCategory)"
+                                class="btn btn-outline-success" type="button"
+                                (click)="createCategory()">Ingresar</button>
+                            <div *ngIf="!validator.validateCategory(newCategory)" class="invalid-feedback">
+                                Debe ingresar un valor válido (no dígitos)
                             </div>
-                        </form>
-                        <form>
-                            <div class="form-floating mb-3 m-2 w-100 d-flex flex-row">
-                                <div class="input-group mb-3 ms-5 me-5">
-                                    <select class="form-select form-select-sm me-2" name="category" aria-label="Seleccione categoría"
-                                    [(ngModel)]="category" style="max-width: 150px;">
-                                        <option [ngValue]="null" selected disabled>Categoría</option>
-                                        <option *ngFor="let category of categoryList" [ngValue]="category">{{category.name}}</option>
-                                    </select>
-                                    <input [disabled]="!category" type="text" class="form-control" id="subcategory" name="subcategory"
-                                        placeholder="Ingrese una subcategoría" aria-label="Ingrese una subcategoría"
-                                        aria-describedby="addSubcategory" 
-                                        [(ngModel)]="newSubcategory.name"
-                                        (keydown)="touchedFields['subcategory'] = true"
-                                        [ngClass]="{'is-invalid':touchedFields['subcategory'] && !validator.validateSubcategory(newSubcategory), 'is-valid':touchedFields['subcategory'] && validator.validateSubcategory(newSubcategory)}"
-                                        required>
-                                    <button [disabled]="!validator.validateSubcategory(newSubcategory)" class="btn btn-outline-success ms-1" type="button" id="addSubcategory" 
-                                        (click)="createSubcategory()">Ingresar</button>
-                                    <div *ngIf="!validator.validateSubcategory(newSubcategory)" class="invalid-feedback ms-5">
-                                        Debe ingresar un valor válido (no dígitos)
-                                    </div>
-                                </div>
+                        </div>
+                    </form>
+                    <form>
+                        <div class="input-group">
+                            <select class="form-select" name="category" [(ngModel)]="category">
+                                <option [ngValue]="null" selected disabled>Categoría</option>
+                                <option *ngFor="let category of categoryList" [ngValue]="category">{{category.name}}
+                                </option>
+                            </select>
+                            <input [disabled]="!category" type="text" class="form-control" id="subcategory"
+                                name="subcategory" placeholder="Ingrese una subcategoría"
+                                [(ngModel)]="newSubcategory.name" (keydown)="touchedFields['subcategory'] = true"
+                                [ngClass]="{'is-invalid': touchedFields['subcategory'] && !validator.validateSubcategory(newSubcategory), 'is-valid': touchedFields['subcategory'] && validator.validateSubcategory(newSubcategory)}"
+                                required>
+                            <button [disabled]="!validator.validateSubcategory(newSubcategory)"
+                                class="btn btn-outline-success" type="button"
+                                (click)="createSubcategory()">Ingresar</button>
+                            <div *ngIf="!validator.validateSubcategory(newSubcategory)" class="invalid-feedback">
+                                Debe ingresar un valor válido (no dígitos)
                             </div>
-                        </form>
-                        <form>
-                            <div class="form-floating mb-3 m-2 w-100 d-flex flex-row">
-                                <div class="input-group mb-3 ms-5 me-5">
-                                    <input type="text" class="form-control ms-5" id="unit" name="unit" placeholder="Ingrese una Unidad de medida"
-                                        aria-label="Ingrese una Unidad de medida" aria-describedby="addUnit" 
-                                        [(ngModel)]="newUnit.nameUnit"
-                                        (keydown)="touchedFields['unit'] = true"
-                                        [ngClass]="{'is-invalid':touchedFields['unit'] && !validator.validateUnit(newUnit), 'is-valid':touchedFields['unit'] && validator.validateUnit(newUnit)}"
-                                        required>
-                                    <button [disabled]="!validator.validateUnit(newUnit)" class="btn btn-outline-success ms-1" type="button" id="addUnit" 
-                                        (click)="createUnit()">Ingresar</button>
-                                    <div *ngIf="!validator.validateUnit(newUnit)" class="invalid-feedback ms-5">
-                                        Debe ingresar un valor válido (ej: 0 KG)
-                                    </div>
-                                </div>
+                        </div>
+                    </form>
+                    <form>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="unit" name="unit"
+                                placeholder="Ingrese una Unidad de medida" [(ngModel)]="newUnit.nameUnit"
+                                (keydown)="touchedFields['unit'] = true"
+                                [ngClass]="{'is-invalid': touchedFields['unit'] && !validator.validateUnit(newUnit), 'is-valid': touchedFields['unit'] && validator.validateUnit(newUnit)}"
+                                required>
+                            <button [disabled]="!validator.validateUnit(newUnit)" class="btn btn-outline-success"
+                                type="button" (click)="createUnit()">Ingresar</button>
+                            <div *ngIf="!validator.validateUnit(newUnit)" class="invalid-feedback">
+                                Debe ingresar un valor válido (ej: 0 KG)
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
