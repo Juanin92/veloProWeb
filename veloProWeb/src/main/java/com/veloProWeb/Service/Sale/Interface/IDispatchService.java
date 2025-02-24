@@ -10,5 +10,6 @@ public interface IDispatchService {
     List<DispatchDTO> getDispatches();
     Dispatch createDispatch(DispatchDTO dto);
     void handleStatus(Long dispatchID, int action);
+    void handleDispatchReceiveToSale(Long dispatchID);
     Optional<Dispatch> getDispatchById(Long id);
 }
