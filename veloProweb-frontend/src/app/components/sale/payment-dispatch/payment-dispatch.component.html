@@ -1,1 +1,166 @@
-<p>payment-dispatch works!</p>
+<!-- MODAL DISPATCH PAYMENT -->
+<div class="modal fade" id="dispatchPaymentModal" tabindex="-1" aria-labelledby="dispatchPaymentModal">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="d-flex align-items-center justify-content-between w-100">
+                    <h1 class="modal-title fs-4 mb-0 d-flex align-items-center gap-2">
+                        <i class="bi bi-truck"></i>
+                        <span>Pago del Despacho</span>
+                        <span class="small fs-6 fw-lighter">({{selectedDispatchPayment?.status}})</span>
+                    </h1>
+                    <button (click)="resetModal()" type="button" class="btn-close" aria-label="Close"
+                        data-bs-dismiss="modal"></button>
+                </div>
+            </div>
+            <div class="modal-body p-3">
+                <div class="card shadow">
+                    <div class="card-body p-0">
+                        <div class="table-responsive"
+                            style="max-height: calc(100vh - 350px); min-height: 150px; height: auto;">
+                            <table class="table table-hover table-striped mb-0">
+                                <thead>
+                                    <tr class="bg-light">
+                                        <th scope="col" class="text-center" style="width: 60px">#</th>
+                                        <th scope="col">Descripción</th>
+                                        <th scope="col" class="text-end" style="width: 120px">Precio</th>
+                                        <th scope="col" class="text-center" style="width: 100px">Cantidad</th>
+                                        <th scope="col" class="text-end" style="width: 120px">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let saleDetail of saleDetailDispatchList; let i = index">
+                                        <td class="text-center">{{ i + 1 }}</td>
+                                        <td>{{saleDetail.descriptionProduct}}</td>
+                                        <td class="text-end">{{saleDetail.price | currency : "CLP" : "$" : "1.0-0"}}
+                                        </td>
+                                        <td class="text-center">{{saleDetail.quantity}}</td>
+                                        <td class="text-end">{{saleDetail.price * saleDetail.quantity | currency : "CLP"
+                                            : "$" : "1.0-0"}}</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot class="table-light fw-bold">
+                                    <tr>
+                                        <td colspan="3"></td>
+                                        <td class="text-end">Total:</td>
+                                        <td class="text-end">
+                                            {{totalSum | currency : "CLP" : "$" : "1.0-0"}}
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3 mt-2">
+                    <div class="col-md-6">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title text-center mb-3">Formas de Pagos</h5>
+                                <div class="d-flex flex-wrap justify-content-center gap-2">
+                                    <button [disabled]="saleDetailDispatchList.length === 0"
+                                        class="btn btn-outline-primary border-0 rounded-pill p-2"
+                                        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Efectivo"
+                                        (click)="initiateMethodPayment(1)"
+                                        [ngClass]="{'btn-primary': isCash,'btn-outline-primary': !isCash}">
+                                        <img src="/assets/icons/iconCash.png" alt="Efectivo" width="40" height="40"
+                                            class="img-fluid"/>
+                                    </button>
+                                    <button [disabled]="saleDetailDispatchList.length === 0"
+                                        class="btn btn-outline-primary border-0 rounded-pill p-2"
+                                        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Transferencia"
+                                        (click)="initiateMethodPayment(2)"
+                                        [ngClass]="{'btn-primary': isTransfer,'btn-outline-primary': !isTransfer}">
+                                        <img src="/assets/icons/iconsBanktransfer.png" alt="Transferencia" width="40"
+                                            height="40" class="img-fluid" />
+                                    </button>
+                                    <button [disabled]="saleDetailDispatchList.length === 0"
+                                        class="btn btn-outline-primary border-0 rounded-pill p-2"
+                                        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Crédito"
+                                        (click)="initiateMethodPayment(4)"
+                                        [ngClass]="{'btn-primary': isCredit,'btn-outline-primary': !isCredit}">
+                                        <img src="/assets/icons/iconCreditcard.png" alt="Crédito" width="40" height="40"
+                                            class="img-fluid" />
+                                    </button>
+                                    <button [disabled]="saleDetailDispatchList.length === 0"
+                                        class="btn btn-outline-primary border-0 rounded-pill p-2"
+                                        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Débito"
+                                        (click)="initiateMethodPayment(5)"
+                                        [ngClass]="{'btn-primary': isDebit,'btn-outline-primary': !isDebit}">
+                                        <img src="/assets/icons/iconPos.png" alt="Débito" width="40" height="40"
+                                            class="img-fluid" />
+                                    </button>
+                                    <button [disabled]="saleDetailDispatchList.length === 0"
+                                        class="btn btn-outline-primary border-0 rounded-pill p-2"
+                                        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Prestamos"
+                                        (click)="initiateMethodPayment(3)"
+                                        [ngClass]="{'btn-primary': isLoan,'btn-outline-primary': !isLoan}">
+                                        <img src="/assets/icons/iconLoan.png" alt="Prestamos" width="40" height="40"
+                                            class="img-fluid" />
+                                    </button>
+                                    <button [disabled]="saleDetailDispatchList.length === 0"
+                                        class="btn btn-outline-primary border-0 rounded-pill p-2"
+                                        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Mixto"
+                                        (click)="initiateMethodPayment(6)"
+                                        [ngClass]="{'btn-primary': isMix,'btn-outline-primary': !isMix}">
+                                        <img src="/assets/icons/iconMixed.png" alt="Mixto" width="40" height="40"
+                                            class="img-fluid"/>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <div *ngIf="showSwitch" class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" role="switch"
+                                        id="SwitchCheckDiscount" [(ngModel)]="isDiscount" (ngModelChange)="handleDiscountSwitch()"/>
+                                    <label class="form-check-label" for="SwitchCheckDiscount">Aplicar Descuento</label>
+                                </div>
+                                <div *ngIf="isDiscount" class="form-floating mb-2 w-75">
+                                    <input type="number" class="form-control form-control-lg" id="amountDiscountDispatch"
+                                        name="amountDiscountDispatch" placeholder="Ingrese monto de descuento"
+                                        aria-label="Ingrese monto de descuento" aria-describedby="amountDiscountDispatch" 
+                                        [(ngModel)]="discountAmount" (keyup.enter)="handleDiscountSwitch()"/>
+                                    <label for="amountDiscountDispatch" class="form-label">Descuento</label>
+                                </div>
+                                <div *ngIf="isCash || isMix" class="form-floating mb-2 w-100">
+                                    <input type="number" class="form-control form-control-lg" id="amountSale"
+                                        name="amountSale" placeholder="Ingrese monto" aria-label="Ingrese monto a pagar"
+                                        aria-describedby="amountSale" />
+                                    <label for="amountSale" class="form-label">Monto a pagar</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="isMix || isLoan || isCredit || isDebit || isTransfer" class="col-md-3">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <div *ngIf="isMix || isLoan" class="col-md-4 col-6 mt-lg-0 mt-2 w-100">
+                                    <select class="form-select form-select-sm shadow-sm" name="customerDispatch" id="customerDispatch"
+                                        aria-label="Seleccione un cliente">
+                                        <option [ngValue]="null" selected disabled>Clientes</option>
+                                        <option *ngFor="let customer of customerList">{{customer.name + " " + customer.surname}}</option>
+                                    </select>
+                                </div>
+                                <div *ngIf="showComment" class="form-floating mb-2 w-100">
+                                    <input type="text" class="form-control form-control-lg" id="commentDispatch"
+                                        name="commentDispatch" placeholder="Ingrese Comprobante de la transacción"
+                                        aria-label="Ingrese Comprobante" aria-describedby="commentDispatch" />
+                                    <label for="commentDispatch" class="form-label">Comprobante</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-center mb-0 mt-1 p-0">
+                <button [disabled]="!isOk" type="submit" class="btn btn-success"
+                    (click)="handleStatusDispatch(dispatch, 3)">Confirmar</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                    (click)="resetModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
