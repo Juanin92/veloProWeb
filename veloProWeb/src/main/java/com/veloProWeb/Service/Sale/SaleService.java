@@ -71,6 +71,16 @@ public class SaleService implements ISaleService {
     }
 
     /**
+     * Obtener una venta determinada por un ID
+     * @param id - Identificador de la venta requerida
+     * @return - Optional de venta encontrada
+     */
+    @Override
+    public Optional<Sale> getSaleById(Long id) {
+        return saleRepo.findById(id);
+    }
+
+    /**
      * Configura una Sale dependiendo el método de pago realizo en la venta.
      * Si el pago es mixto o préstamo se actualiza la deuda del cliente
      * y se agrega un ticket asociado al cliente con la venta
@@ -156,25 +166,4 @@ public class SaleService implements ISaleService {
         dto.setDetailList(detailSaleDTOS);
         return dto;
     }
-
-    /**
-     * Obtener una venta determinada por un ID
-     * @param id - Identificador de la venta requerida
-     * @return - Optional de venta encontrada
-     */
-    @Override
-    public Optional<Sale> getSaleById(Long id) {
-        return saleRepo.findById(id);
-    }
-//    @Override
-//    public void saleRegisterVoid(Sale sale) {
-//        sale.setStatus(false);
-//        if (sale.getComment() == null) {
-//            sale.setComment("ANULADO");
-//        }else{
-//            sale.setComment("ANULADO - " + sale.getComment());
-//        }
-//        saleRepo.save(sale);
-//    }
-//
 }
