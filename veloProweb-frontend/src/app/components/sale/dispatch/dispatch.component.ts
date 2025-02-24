@@ -8,11 +8,12 @@ import { SaleDetail } from '../../../models/Entity/Sale/sale-detail';
 import { SaleDetailDTO } from '../../../models/DTO/sale-detail-dto';
 import { TooltipService } from '../../../utils/tooltip.service';
 import { NotificationService } from '../../../utils/notification-service.service';
+import { PaymentDispatchComponent } from "../payment-dispatch/payment-dispatch.component";
 
 @Component({
   selector: 'app-dispatch',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PaymentDispatchComponent],
   templateUrl: './dispatch.component.html',
   styleUrl: './dispatch.component.css'
 })
