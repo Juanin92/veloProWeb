@@ -10,6 +10,7 @@ import com.veloProWeb.Model.Entity.Sale.Sale;
 import com.veloProWeb.Model.Entity.Sale.SaleDetail;
 import com.veloProWeb.Model.Enum.MovementsType;
 import com.veloProWeb.Repository.Customer.TicketHistoryRepo;
+import com.veloProWeb.Repository.DispatchRepo;
 import com.veloProWeb.Repository.Sale.SaleDetailRepo;
 import com.veloProWeb.Service.Customer.CustomerService;
 import com.veloProWeb.Service.Product.ProductService;
@@ -36,6 +37,7 @@ public class SaleDetailServiceTest {
     @InjectMocks private SaleDetailService saleDetailService;
     @Mock private SaleDetailRepo saleDetailRepo;
     @Mock private TicketHistoryRepo ticketHistoryRepo;
+    @Mock private DispatchRepo dispatchRepo;
     @Mock private SaleService saleService;
     @Mock private ProductService productService;
     @Mock private CustomerService customerService;
@@ -85,7 +87,7 @@ public class SaleDetailServiceTest {
         ticketHistory.setDocument("BO1");
 
         dispatch = new Dispatch(1L,"#123", "En Preparación", "Calle 123",
-                "TEST", "Cliente", LocalDate.now(), null,new ArrayList<>());
+                "TEST", "Cliente", false, LocalDate.now(), null,new ArrayList<>());
     }
 
     //Prueba para crear un detalle de venta
@@ -217,5 +219,24 @@ public class SaleDetailServiceTest {
 
         verify(saleDetailRepo, times(1)).findByDispatchId(1L);
         verify(dispatchService, times(1)).getDispatchById(1L);
+    }
+
+    //Prueba para agregar un venta al detalle de venta de un despacho
+    @Test
+    public void addSaleToSaleDetailsDispatch_valid(){
+        saleDetail.setProduct(product);
+        saleDetail.setDispatch(dispatch);
+        List<SaleDetail> saleDetails = Collections.singletonList(saleDetail);
+        when(saleDetailRepo.findByDispatchId(1L)).thenReturn(saleDetails);
+        when(dispatchService.getDispatchById(dispatch.getId())).thenReturn(Optional.of(dispatch));
+
+        saleDetailService.addSaleToSaleDetailsDispatch(1L, sale);
+        verify(dispatchService, times(1)).getDispatchById(1L);
+        verify(saleDetailRepo, times(1)).findByDispatchId(1L);
+        verify(productService, times(1)).updateStockAndReserveDispatch(saleDetail.getProduct(), saleDetail.getQuantity(), false);
+        verify(dispatchRepo, times(1)).save(dispatch);
+
+        assertEquals(sale, saleDetail.getSale());
+        assertTrue(dispatch.isHasSale());
     }
 }
