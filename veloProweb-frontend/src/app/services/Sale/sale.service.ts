@@ -48,4 +48,8 @@ export class SaleService {
       params: {idSale: idSale.toString()}
     });
   }
+
+  createSaleFromDispatch(saleRequest: SaleRequestDTO): Observable<{message: string}>{
+    return this.http.post<{message: string}>(`${this.apiUrl}/venta_despacho`, saleRequest);
+  }
 }
