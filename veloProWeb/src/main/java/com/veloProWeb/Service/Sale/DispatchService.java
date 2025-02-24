@@ -92,24 +92,13 @@ public class DispatchService implements IDispatchService {
         Dispatch dispatch = getDispatchExisting(dispatchID);
         if (dispatch != null) {
             switch (action){
-                case 2:
+                case 1:
                     //Verifica que solo cuando sea "En Preparación" quede "En Ruta"
                     if (dispatch.getStatus().equals(statusMap.get(1))){
                         dispatch.setStatus(statusMap.get(2));
                     }
                     break;
-                case 3:
-                    //Verifica que solo cuando sea "En Preparación" o "En Ruta" quede "Entregado"
-                    if (dispatch.getStatus().equals(statusMap.get(1)) || dispatch.getStatus().equals(statusMap.get(2))){
-                        dispatch.setStatus(statusMap.get(3));
-                        dispatch.setDeliveryDate(LocalDate.now());
-                        for (SaleDetail saleDetail : dispatch.getSaleDetails()){
-                            //Actualiza stock y reserva de los productos del despacho
-                            productService.updateStockAndReserveDispatch(saleDetail.getProduct(), saleDetail.getQuantity(), false);
-                        }
-                    }
-                    break;
-                case 4:
+                case 2:
                     // Verifica que solo cuando el estado sea diferente de "Eliminado" o "Entregado" quede "Eliminado"
                     if (!dispatch.getStatus().equals(statusMap.get(4)) && !dispatch.getStatus().equals(statusMap.get(3))){
                         dispatch.setStatus(statusMap.get(4));
@@ -125,6 +114,26 @@ public class DispatchService implements IDispatchService {
             dispatchRepo.save(dispatch);
         }else{
             throw new IllegalArgumentException("No se encontró el despacho");
+        }
+    }
+
+    /**
+     *  Actualiza el estado del despacho como "entregado".
+     *  Verifica que el estado del despacho actual tenga una condición.
+     *  Establece una fecha de entrega.
+     * @param dispatchID - Identificador del despacho a actualizar
+     */
+    @Override
+    public void handleDispatchReceiveToSale(Long dispatchID) {
+        Dispatch dispatch = getDispatchExisting(dispatchID);
+        if (dispatch != null) {
+            if (dispatch.getStatus().equals(statusMap.get(1)) || dispatch.getStatus().equals(statusMap.get(2))){
+                dispatch.setStatus(statusMap.get(3));
+                dispatch.setDeliveryDate(LocalDate.now());
+                dispatchRepo.save(dispatch);
+            }
+        }else {
+            throw new IllegalArgumentException("No se encontró el despacho.");
         }
     }
 
