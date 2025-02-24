@@ -14,4 +14,5 @@ public interface ISaleDetailService {
     List<DetailSaleRequestDTO> getSaleDetailsToSale(Long idSale);
     void createSaleDetailsToDispatch(List<DetailSaleDTO> dto, Dispatch dispatch);
     List<DetailSaleRequestDTO> getSaleDetailsToDispatch(Long idDispatch);
+    void addSaleToSaleDetailsDispatch(Long idDispatch, Sale sale);
 }

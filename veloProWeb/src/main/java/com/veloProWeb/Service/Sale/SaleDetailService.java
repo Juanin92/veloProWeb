@@ -10,6 +10,7 @@ import com.veloProWeb.Model.Entity.Sale.Sale;
 import com.veloProWeb.Model.Entity.Sale.SaleDetail;
 import com.veloProWeb.Model.Enum.MovementsType;
 import com.veloProWeb.Repository.Customer.TicketHistoryRepo;
+import com.veloProWeb.Repository.DispatchRepo;
 import com.veloProWeb.Repository.Sale.SaleDetailRepo;
 import com.veloProWeb.Service.Customer.Interfaces.ICustomerService;
 import com.veloProWeb.Service.Product.Interfaces.IProductService;
@@ -30,6 +31,7 @@ public class SaleDetailService implements ISaleDetailService {
 
     @Autowired private SaleDetailRepo saleDetailRepo;
     @Autowired private TicketHistoryRepo ticketHistoryRepo;
+    @Autowired private DispatchRepo dispatchRepo;
     @Autowired private IProductService productService;
     @Autowired private ICustomerService customerService;
     @Autowired private ISaleService saleService;
@@ -165,5 +167,30 @@ public class SaleDetailService implements ISaleDetailService {
             }
         }
         return saleRequestDTOS;
+    }
+
+    /**
+     * Asocia una venta a los detalles de venta de un despacho.
+     * Agregar la venta al detalle.
+     * Actualiza el stock y reserva de los productos de la lista.
+     * Marca el despacho como true por tener una venta asociada.
+     * @param idDispatch - Identificador del despacho seleccionado
+     * @param sale - Venta que se asociara al detalle de venta
+     */
+    @Override
+    public void addSaleToSaleDetailsDispatch(Long idDispatch, Sale sale) {
+        Optional<Dispatch> dispatch = dispatchService.getDispatchById(idDispatch);
+        if (dispatch.isPresent()) {
+            List<SaleDetail> saleDetails = saleDetailRepo.findByDispatchId(dispatch.get().getId());
+            for (SaleDetail saleDetail : saleDetails){
+                saleDetail.setSale(sale);
+                saleDetailRepo.save(saleDetail);
+                productService.updateStockAndReserveDispatch(saleDetail.getProduct(), saleDetail.getQuantity(), false);
+            }
+            dispatch.get().setHasSale(true);
+            dispatchRepo.save(dispatch.get());
+        }else {
+            throw new IllegalArgumentException("No se encontró el despacho");
+        }
     }
 }
