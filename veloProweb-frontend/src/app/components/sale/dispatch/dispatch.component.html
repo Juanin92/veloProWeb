@@ -15,8 +15,9 @@
                     data-bs-toggle="tooltip" data-bs-placement="bottom" title="En Ruta"
                     (click)="handleStatusDispatch(dispatch, 2)"><i class="bi bi-truck"></i></button>
                 <button class="btn btn-sm btn-outline-success rounded-pill me-1" 
-                    data-bs-toggle="tooltip" data-bs-placement="bottom" title="Entregado"
-                    (click)="handleStatusDispatch(dispatch, 3)"><i class="bi bi-check-square"></i></button>
+                    data-bs-toggle="tooltip" data-bs-placement="bottom" title="Entregado" 
+                    (click)="getSaleDetailToDispatch(dispatch)"><i class="bi bi-check-square" 
+                     data-bs-toggle="modal" data-bs-target="#dispatchPaymentModal"></i></button>
                 <button class="btn btn-sm btn-outline-danger rounded-pill me-1" 
                     data-bs-toggle="tooltip" data-bs-placement="bottom" title="Cancelar"
                     (click)="handleStatusDispatch(dispatch, 4)"><i class="bi bi-x"></i></button>
@@ -181,3 +182,8 @@
         </div>
     </div>
 </div>
+<!-- MODAL DISPATCH PAYMENT -->
+<app-payment-dispatch 
+    [selectedDispatchPayment]="selectedDispatch" 
+    [saleDetailDispatchList]="saleDetailDispatchList">
+</app-payment-dispatch>
