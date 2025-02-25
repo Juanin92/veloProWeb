@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Dispatch } from '../../../models/Entity/Sale/dispatch';
 import { DetailSaleRequestDTO } from '../../../models/DTO/detail-sale-request-dto';
@@ -8,6 +8,8 @@ import { CustomerService } from '../../../services/customer/customer.service';
 import { Customer } from '../../../models/Entity/Customer/customer.model';
 import { SaleRequestDTO } from '../../../models/DTO/sale-request-dto';
 import { SaleService } from '../../../services/Sale/sale.service';
+import { PaymentMethod } from '../../../models/enum/payment-method';
+import { NotificationService } from '../../../utils/notification-service.service';
 
 @Component({
   selector: 'app-payment-dispatch',
@@ -16,14 +18,16 @@ import { SaleService } from '../../../services/Sale/sale.service';
   templateUrl: './payment-dispatch.component.html',
   styleUrl: './payment-dispatch.component.css'
 })
-export class PaymentDispatchComponent implements OnChanges, OnInit{
+export class PaymentDispatchComponent implements OnChanges {
 
   @Input() selectedDispatchPayment: Dispatch | null = null;
   @Input() saleDetailDispatchList: DetailSaleRequestDTO[] = [];
-  requestDTO: SaleRequestDTO | null = null;
+  requestDTO: SaleRequestDTO;
   customerList: Customer[] = [];
   totalSum: number = 0;
   discountAmount: number = 0;
+  cashAmount: number = 0;
+  comment: string = '';
   isDiscount: boolean = false;
   isCash: boolean = false;
   isTransfer: boolean = false;
@@ -34,26 +38,13 @@ export class PaymentDispatchComponent implements OnChanges, OnInit{
   isOk: boolean = false;
   showSwitch: boolean = false;
   showComment: boolean = false;
-  dispatch: Dispatch = {
-    id: 0,
-    trackingNumber: '',
-    status: '',
-    address: '',
-    comment: '',
-    customer: '',
-    hasSale: false,
-    created: '',
-    deliveryDate: '',
-    detailSaleDTOS: null,
-  }
 
   constructor(
-    private dispatchService: DispatchService, 
+    private dispatchService: DispatchService,
     private customerService: CustomerService,
-    private saleService: SaleService){}
-
-  ngOnInit(): void {
-    this.getCustomersToDispatchPayment();
+    private saleService: SaleService,
+    private notification: NotificationService) {
+    this.requestDTO = this.initializeRequestDTO();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -62,113 +53,133 @@ export class PaymentDispatchComponent implements OnChanges, OnInit{
     }
   }
 
-  getCustomersToDispatchPayment(): void{
-    this.customerService.getCustomer().subscribe({
-      next:(list)=>{
-        this.customerList = list.filter(customer => customer.account);
-      }, error: (error)=>{
-        console.log('Error al obtener los clientes, ', error?.error);
-      }
-    })
+  createSaleFromDispatch(dispatchSelected: Dispatch): void {
+    if (dispatchSelected) {
+      this.requestDTO.id = dispatchSelected.id;
+      this.requestDTO.discount = this.discountAmount;
+      this.requestDTO.total = this.totalSum;
+      this.requestDTO.detailList = dispatchSelected.detailSaleDTOS ? [...dispatchSelected.detailSaleDTOS] : [];
+
+      console.log('Despacho: ', dispatchSelected);
+      console.log('Request: ', this.requestDTO);
+      this.saleService.createSaleFromDispatch(this.requestDTO).subscribe({
+        next: (response) => {
+          const message = response.message
+          this.notification.showSuccessToast(message, 'top', 3000);
+        }, error: (error) => {
+          const message = error.error?.error || error.error?.message || error?.error;
+          console.log("ERROR: ", message);
+          this.notification.showErrorToast(message, 'top', 3000);
+        }
+      })
+    }
   }
 
-  handleStatusDispatch(dispatch: Dispatch, action: number): void{
-    this.dispatchService.handleStatusDispatch(dispatch.id, action).subscribe({
-      next:(response)=>{
-        const message = response.message;
-        console.log('Cambio de estado del despacho, ', message);
-        // this.getDispatches();
-      },error:(error)=>{
-        const message = error.error?.message || error.error?.error || error?.error;
-        console.log('Error estado del despacho, ', message);
+  getCustomersToDispatchPayment(): void {
+    this.customerService.getCustomer().subscribe({
+      next: (list) => {
+        const searchTerms = this.selectedDispatchPayment?.customer.toLowerCase().split(" ");
+        this.customerList = list.filter(customer => 
+          customer.account &&
+          searchTerms?.some(term => 
+            customer.name.toLowerCase().includes(term) || 
+            customer.surname.toLowerCase().includes(term)
+          )
+        );
+      }, 
+      error: (error) => {
+        console.log('Error al obtener los clientes, ', error?.error);
       }
     });
   }
 
-  initiateMethodPayment(button: number): void{
-      switch(button){
-        case 1 : 
-          this.showSwitch = true;
-          this.isCash = true;
-          this.isTransfer = false;
-          this.isLoan = false;
-          this.isCredit = false;
-          this.isDebit = false;
-          this.isMix = false;
-          // this.sale.customer = null;
-          // this.sale.paymentMethod = PaymentMethod.EFECTIVO;
-          break;
-        case 2 : 
-          this.showSwitch = true;
-          this.isTransfer = true;
-          this.isCash = false;
-          this.isLoan = false;
-          this.isCredit = false;
-          this.isDebit = false;
-          this.isMix = false;
-          this.isOk = true;
-          this.showComment = true;
-          // this.sale.customer = null;
-          // this.sale.paymentMethod = PaymentMethod.TRANSFERENCIA;
-          break;
-        case 3 : 
-          this.showSwitch = true;
-          this.isLoan = true;
-          this.isTransfer = false;
-          this.isCash = false;
-          this.isCredit = false;
-          this.isDebit = false;
-          this.isMix = false;
-          this.isOk = false;
-          this.showComment = false;
-          // this.sale.paymentMethod = PaymentMethod.PRESTAMO;
-          break;
-        case 4 : 
-          this.showSwitch = true;
-          this.isCredit = true;
-          this.isTransfer = false;
-          this.isLoan = false;
-          this.isCash = false;
-          this.isDebit = false;
-          this.isMix = false;
-          this.isOk = true;
-          this.showComment = true;
-          // this.sale.customer = null;
-          // this.sale.paymentMethod = PaymentMethod.CREDITO;
-          break;
-        case 5 : 
-          this.showSwitch = true;
-          this.isDebit = true;
-          this.isTransfer = false;
-          this.isLoan = false;
-          this.isCredit = false;
-          this.isCash = false;
-          this.isMix = false;
-          this.isOk = true;
-          this.showComment = true;
-          // this.sale.customer = null;
-          // this.sale.paymentMethod = PaymentMethod.DEBITO;
-          break;
-        case 6 :
-          this.showSwitch = false;
-          this.isMix = true;
-          this.isTransfer = false;
-          this.isLoan = false;
-          this.isCredit = false;
-          this.isDebit = false;
-          this.isCash = false;
-          this.isOk = false;
-          this.showComment = false;
-          // this.sale.paymentMethod = PaymentMethod.MIXTO;
-          break;
-      }
+  initiateMethodPayment(button: number): void {
+    switch (button) {
+      case 1:
+        this.showSwitch = true;
+        this.isCash = true;
+        this.isTransfer = false;
+        this.isLoan = false;
+        this.isCredit = false;
+        this.isDebit = false;
+        this.isMix = false;
+        this.isOk = true;
+        this.requestDTO.idCustomer = null;
+        this.requestDTO.paymentMethod = PaymentMethod.EFECTIVO;
+        break;
+      case 2:
+        this.showSwitch = true;
+        this.isTransfer = true;
+        this.isCash = false;
+        this.isLoan = false;
+        this.isCredit = false;
+        this.isDebit = false;
+        this.isMix = false;
+        this.isOk = false;
+        this.showComment = true;
+        this.requestDTO.idCustomer = null;
+        this.requestDTO.paymentMethod = PaymentMethod.TRANSFERENCIA;
+        break;
+      case 3:
+        this.showSwitch = true;
+        this.isLoan = true;
+        this.isTransfer = false;
+        this.isCash = false;
+        this.isCredit = false;
+        this.isDebit = false;
+        this.isMix = false;
+        this.isOk = true;
+        this.showComment = false;
+        this.requestDTO.paymentMethod = PaymentMethod.PRESTAMO;
+        this.getCustomersToDispatchPayment();
+        break;
+      case 4:
+        this.showSwitch = true;
+        this.isCredit = true;
+        this.isTransfer = false;
+        this.isLoan = false;
+        this.isCash = false;
+        this.isDebit = false;
+        this.isMix = false;
+        this.isOk = false;
+        this.showComment = true;
+        this.requestDTO.idCustomer = null;
+        this.requestDTO.paymentMethod = PaymentMethod.CREDITO;
+        break;
+      case 5:
+        this.showSwitch = true;
+        this.isDebit = true;
+        this.isTransfer = false;
+        this.isLoan = false;
+        this.isCredit = false;
+        this.isCash = false;
+        this.isMix = false;
+        this.isOk = false;
+        this.showComment = true;
+        this.requestDTO.idCustomer = null;
+        this.requestDTO.paymentMethod = PaymentMethod.DEBITO;
+        break;
+      case 6:
+        this.showSwitch = false;
+        this.isMix = true;
+        this.isTransfer = false;
+        this.isLoan = false;
+        this.isCredit = false;
+        this.isDebit = false;
+        this.isCash = false;
+        this.isOk = true;
+        this.showComment = false;
+        this.requestDTO.paymentMethod = PaymentMethod.MIXTO;
+        this.getCustomersToDispatchPayment();
+        break;
     }
+  }
 
   handleDiscountSwitch(): void {
     const totalWithoutDiscount = this.saleDetailDispatchList.reduce((sum, value) => sum + (value.price * value.quantity), 0);
-    
+
     if (this.isDiscount) {
-      if(this.discountAmount > 0 && this.discountAmount < this.totalSum){
+      if (this.discountAmount > 0 && this.discountAmount < this.totalSum) {
         this.totalSum = Math.max(0, totalWithoutDiscount - this.discountAmount);
       }
     } else {
@@ -177,7 +188,23 @@ export class PaymentDispatchComponent implements OnChanges, OnInit{
     }
   }
 
-  resetModal(): void{
+  handleCommentToRequest(option: string): void {
+    if (this.requestDTO.paymentMethod === PaymentMethod.CREDITO || this.requestDTO.paymentMethod === PaymentMethod.DEBITO
+      || this.requestDTO.paymentMethod === PaymentMethod.TRANSFERENCIA) {
+      this.requestDTO.comment = this.comment;
+    } else if (this.requestDTO.paymentMethod === PaymentMethod.EFECTIVO || this.requestDTO.paymentMethod === PaymentMethod.MIXTO) {
+      this.requestDTO.comment = this.cashAmount.toString();
+    }
+
+    if (option.includes('comment')) {
+      this.isOk = !!this.comment;
+    }
+    if (option.includes('cash')) {
+      this.isOk = !!this.cashAmount;
+    }
+  }
+
+  resetModal(): void {
     this.selectedDispatchPayment = null;
     this.totalSum = 0;
     this.isDiscount = false;
@@ -187,5 +214,21 @@ export class PaymentDispatchComponent implements OnChanges, OnInit{
     this.isOk = false;
     this.discountAmount = 0;
     this.showSwitch = false;
+    this.requestDTO = this.initializeRequestDTO();
+  }
+
+  initializeRequestDTO(): SaleRequestDTO {
+    return {
+      id: 0,
+      date: '',
+      idCustomer: null,
+      paymentMethod: PaymentMethod.EFECTIVO,
+      tax: 0,
+      total: 0,
+      discount: 0,
+      numberDocument: 0,
+      comment: '',
+      detailList: [],
+    }
   }
 }
