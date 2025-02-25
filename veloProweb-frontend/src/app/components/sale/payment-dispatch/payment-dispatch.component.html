@@ -128,7 +128,7 @@
                                 <div *ngIf="isCash || isMix" class="form-floating mb-2 w-100">
                                     <input type="number" class="form-control form-control-lg" id="amountSale"
                                         name="amountSale" placeholder="Ingrese monto" aria-label="Ingrese monto a pagar"
-                                        aria-describedby="amountSale" />
+                                        aria-describedby="amountSale" [(ngModel)]="cashAmount" (change)="handleCommentToRequest('cash')"/>
                                     <label for="amountSale" class="form-label">Monto a pagar</label>
                                 </div>
                             </div>
@@ -139,15 +139,17 @@
                             <div class="card-body">
                                 <div *ngIf="isMix || isLoan" class="col-md-4 col-6 mt-lg-0 mt-2 w-100">
                                     <select class="form-select form-select-sm shadow-sm" name="customerDispatch" id="customerDispatch"
-                                        aria-label="Seleccione un cliente">
+                                        aria-label="Seleccione un cliente" [(ngModel)]="requestDTO.idCustomer">
                                         <option [ngValue]="null" selected disabled>Clientes</option>
-                                        <option *ngFor="let customer of customerList">{{customer.name + " " + customer.surname}}</option>
+                                        <option *ngFor="let customer of customerList"
+                                            [ngValue]="customer.id">{{customer.name + " " + customer.surname}}</option>
                                     </select>
                                 </div>
                                 <div *ngIf="showComment" class="form-floating mb-2 w-100">
                                     <input type="text" class="form-control form-control-lg" id="commentDispatch"
                                         name="commentDispatch" placeholder="Ingrese Comprobante de la transacción"
-                                        aria-label="Ingrese Comprobante" aria-describedby="commentDispatch" />
+                                        aria-label="Ingrese Comprobante" aria-describedby="commentDispatch" 
+                                        [(ngModel)]="comment" (change)="handleCommentToRequest('comment')"/>
                                     <label for="commentDispatch" class="form-label">Comprobante</label>
                                 </div>
                             </div>
@@ -157,7 +159,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-center mb-0 mt-1 p-0">
                 <button [disabled]="!isOk" type="submit" class="btn btn-success"
-                    (click)="handleStatusDispatch(dispatch, 3)">Confirmar</button>
+                    (click)="createSaleFromDispatch(selectedDispatchPayment!)">Confirmar</button>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
                     (click)="resetModal()">Cancelar</button>
             </div>
