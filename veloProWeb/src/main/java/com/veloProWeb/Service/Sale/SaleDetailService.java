@@ -12,6 +12,7 @@ import com.veloProWeb.Model.Enum.MovementsType;
 import com.veloProWeb.Repository.Customer.TicketHistoryRepo;
 import com.veloProWeb.Repository.DispatchRepo;
 import com.veloProWeb.Repository.Sale.SaleDetailRepo;
+import com.veloProWeb.Repository.Sale.SaleRepo;
 import com.veloProWeb.Service.Customer.Interfaces.ICustomerService;
 import com.veloProWeb.Service.Product.Interfaces.IProductService;
 import com.veloProWeb.Service.Report.IkardexService;
@@ -32,6 +33,7 @@ public class SaleDetailService implements ISaleDetailService {
     @Autowired private SaleDetailRepo saleDetailRepo;
     @Autowired private TicketHistoryRepo ticketHistoryRepo;
     @Autowired private DispatchRepo dispatchRepo;
+    @Autowired private SaleRepo saleRepo;
     @Autowired private IProductService productService;
     @Autowired private ICustomerService customerService;
     @Autowired private ISaleService saleService;
@@ -182,13 +184,18 @@ public class SaleDetailService implements ISaleDetailService {
         Optional<Dispatch> dispatch = dispatchService.getDispatchById(idDispatch);
         if (dispatch.isPresent()) {
             List<SaleDetail> saleDetails = saleDetailRepo.findByDispatchId(dispatch.get().getId());
+            int totalTax = 0;
             for (SaleDetail saleDetail : saleDetails){
                 saleDetail.setSale(sale);
                 saleDetailRepo.save(saleDetail);
+                totalTax += saleDetail.getTax() * saleDetail.getQuantity();
                 productService.updateStockAndReserveDispatch(saleDetail.getProduct(), saleDetail.getQuantity(), false);
+                productService.updateStockSale(saleDetail.getProduct(), saleDetail.getQuantity());
             }
             dispatch.get().setHasSale(true);
             dispatchRepo.save(dispatch.get());
+            sale.setTax(totalTax);
+            saleRepo.save(sale);
         }else {
             throw new IllegalArgumentException("No se encontró el despacho");
         }
