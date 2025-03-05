@@ -65,4 +65,13 @@ public class TaskService implements ITaskService {
             throw new IllegalArgumentException("Tarea no encontrada");
         }
     }
+
+    /**
+     * Obtener una lista de todas las tareas registradas
+     * @return - Lista de las tareas registradas
+     */
+    @Override
+    public List<Task> getAllTasks() {
+        return taskRepo.findAll();
+    }
 }
