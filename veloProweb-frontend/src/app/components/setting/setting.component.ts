@@ -12,6 +12,8 @@ import { User } from '../../models/Entity/user';
 import { TaskService } from '../../services/User/task.service';
 import { Task } from '../../models/Entity/task';
 import { NotificationService } from '../../utils/notification-service.service';
+import { DispatchService } from '../../services/Sale/dispatch.service';
+import { Dispatch } from '../../models/Entity/Sale/dispatch';
 
 @Component({
   selector: 'app-setting',
@@ -25,6 +27,7 @@ export class SettingComponent implements OnInit{
   recordList: Record[] = [];
   cashRegistersList: CashRegister[] = [];
   userList: User[] = [];
+  dispatchList: Dispatch[] = [];
   task: Task;
   data: LocalData = {
     id: 0,
@@ -43,6 +46,7 @@ export class SettingComponent implements OnInit{
     private cashRegisterService: CashRegisterService,
     private localDataService: LocalDataService,
     private taskService: TaskService,
+    private dispatchService: DispatchService,
     private notification: NotificationService){
       this.task = this.initializeTask();
     }
@@ -52,6 +56,7 @@ export class SettingComponent implements OnInit{
     this.getCashRegisters();
     this.getData();
     this.getUsers();
+    this.getDispatches();
   }
 
   getUsers(): void{
@@ -82,6 +87,17 @@ export class SettingComponent implements OnInit{
       },
       error: (error)=>{
         console.log('No se encontró información sobre los registros de caja')
+      }
+    });
+  }
+
+  getDispatches(): void{
+    this.dispatchService.getDispatches().subscribe({
+      next:(list)=>{
+        this.dispatchList = list;
+      },
+      error: (error)=>{
+        console.log('No se encontró información sobre los despachos registrados');
       }
     });
   }
