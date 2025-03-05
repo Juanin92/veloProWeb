@@ -148,6 +148,36 @@
                         </div>
                     </div>
                 </div>
+                <div class="card shadow h-100 mt-1">
+                    <div class="card-body d-flex flex-column p-3" style="height: 50%;">
+                        <h5 class="text-center mb-3">Historial de tareas asignadas</h5>
+                        <div class="table-responsive flex-grow-1p-1 pt-0" style="height: calc(100vh - 180px); overflow-y: auto;">
+                            <table class="table table-group-divider table-hover">
+                                <thead class="table-light text-center">
+                                    <tr>
+                                        <th rowspan="2">N°</th>
+                                        <th rowspan="2">Fecha</th>
+                                        <th rowspan="2">Empleado</th>
+                                        <th rowspan="2">Descripción</th>
+                                        <th rowspan="2">Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-group-divider text-center align-middle">
+                                    <tr *ngFor="let task of taskList">
+                                        <td>{{task.id}}</td>
+                                        <td>{{task.created| date: 'dd-MM-yyyy'}}</td>
+                                        <td>{{task.user?.name}}</td>
+                                        <td>{{task.description}}</td>
+                                        <td>{{task.status}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div *ngIf="!taskList.length" class="text-center">
+                                <p class="fw-semibold fs-4">Sin tareas asignadas registradas</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="tab-pane fade" id="content-dispatches">
                 <div class="card shadow h-100">
