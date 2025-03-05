@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Task } from '../../models/Entity/task';
+import { TaskRequestDTO } from '../../models/DTO/task-request-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -22,5 +23,9 @@ export class TaskService {
 
   completeTask(taskID: number): Observable<{message: string}>{
     return this.httpClient.put<{message: string}>(this.apiUrl, {}, {params: {taskID: taskID.toString()}});
+  }
+
+  getAllTasks(): Observable<TaskRequestDTO[]>{
+    return this.httpClient.get<TaskRequestDTO[]>(`${this.apiUrl}/lista-tarea`);
   }
 }
