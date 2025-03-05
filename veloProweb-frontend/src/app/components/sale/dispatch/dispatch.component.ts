@@ -21,6 +21,7 @@ export class DispatchComponent implements OnInit{
 
   @Input() saleDetailList: SaleDetail[] = [];
   @Output() dispatchUpdated = new EventEmitter<Dispatch[]>();
+  @Output() dispatchCreated = new EventEmitter<boolean>();
   dispatchList: Dispatch[] = [];
   saleDetailDTOList: SaleDetailDTO[] = [];
   saleDetailDispatchList: DetailSaleRequestDTO[] = [];
@@ -90,6 +91,7 @@ export class DispatchComponent implements OnInit{
         this.notification.showSuccessToast(message, 'top', 3000);
         this.getDispatches();
         this.resetModal();
+        this.dispatchCreated.emit(true);
       },error: (error)=>{
         const message = error.error?.error || error.error?.message || error?.error;
         console.log("ERROR: ", message);
