@@ -14,6 +14,7 @@ import { Task } from '../../models/Entity/task';
 import { NotificationService } from '../../utils/notification-service.service';
 import { DispatchService } from '../../services/Sale/dispatch.service';
 import { Dispatch } from '../../models/Entity/Sale/dispatch';
+import { TaskRequestDTO } from '../../models/DTO/task-request-dto';
 
 @Component({
   selector: 'app-setting',
@@ -28,7 +29,7 @@ export class SettingComponent implements OnInit{
   cashRegistersList: CashRegister[] = [];
   userList: User[] = [];
   dispatchList: Dispatch[] = [];
-  taskList: Task[] = [];
+  taskList: TaskRequestDTO[] = [];
   task: Task;
   data: LocalData = {
     id: 0,
@@ -105,14 +106,14 @@ export class SettingComponent implements OnInit{
   }
 
   getTasks(): void{
-    // this.taskService.getTasks().subscribe({
-    //   next:(list)=>{
-    //     this.taskList = list;
-    //   },
-    //   error: (error)=>{
-    //     console.log('No se encontró información sobre los tareas asignadas');
-    //   }
-    // });
+    this.taskService.getAllTasks().subscribe({
+      next:(list)=>{
+        this.taskList = list;
+      },
+      error: (error)=>{
+        console.log('No se encontró información sobre los tareas asignadas');
+      }
+    });
   }
 
   getData(): void{
