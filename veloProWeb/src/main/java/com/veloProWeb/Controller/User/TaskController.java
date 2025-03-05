@@ -69,4 +69,17 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
+
+    /**
+     * Obtiene todas las tareas asignadas
+     * @return - ResponseEntity con una lista de tareas
+     */
+    @GetMapping("lista-tarea")
+    public ResponseEntity<List<Task>> getAllTasks(){
+        try{
+            return ResponseEntity.ok(taskService.getAllTasks());
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
 }
