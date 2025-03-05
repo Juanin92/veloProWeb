@@ -163,12 +163,12 @@
                                     </tr>
                                 </thead>
                                 <tbody class="table-group-divider text-center align-middle">
-                                    <tr *ngFor="let task of taskList">
-                                        <td>{{task.id}}</td>
+                                    <tr *ngFor="let task of taskList; let i = index">
+                                        <td>{{i + 1}}</td>
                                         <td>{{task.created| date: 'dd-MM-yyyy'}}</td>
-                                        <td>{{task.user?.name}}</td>
+                                        <td>{{task.user}}</td>
                                         <td>{{task.description}}</td>
-                                        <td>{{task.status}}</td>
+                                        <td>{{task.status ? 'Realizada' : 'No Realizada'}}</td>
                                     </tr>
                                 </tbody>
                             </table>
