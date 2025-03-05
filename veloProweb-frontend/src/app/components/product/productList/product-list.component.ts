@@ -40,7 +40,9 @@ export class ProductListComponent implements OnInit{
     this.productService.getProducts().subscribe((list) => {
       this.productList = list;
       if (this.filterList) {
-        this.filteredProductsList = list.filter(product => product.statusProduct === StatusProduct.AVAILABLE);
+        this.filteredProductsList = list.filter(
+          product => product.statusProduct === StatusProduct.AVAILABLE && 
+                      product.salePrice > 0);
       }else{
         this.filteredProductsList = list;
       }
@@ -76,9 +78,9 @@ export class ProductListComponent implements OnInit{
    */
   searchFilterCustomer(): void {
     if (this.textFilter.trim() === '') {
-      this.filteredProductsList = this.productList;
+      this.filteredProductsList = this.filteredProductsList;
     } else {
-      this.filteredProductsList = this.productList.filter(product =>
+      this.filteredProductsList = this.filteredProductsList.filter(product =>
         product.brand.name.toLowerCase().includes(this.textFilter.toLowerCase()) ||
         product.category.name.toLowerCase().includes(this.textFilter.toLowerCase()) ||
         product.subcategoryProduct.name.toLowerCase().includes(this.textFilter.toLowerCase()) ||
