@@ -168,7 +168,10 @@
                                         <td>{{task.created| date: 'dd-MM-yyyy'}}</td>
                                         <td>{{task.user}}</td>
                                         <td>{{task.description}}</td>
-                                        <td>{{task.status ? 'Realizada' : 'No Realizada'}}</td>
+                                        <td>
+                                            <i *ngIf="task.status" class="bi bi-check2-all text-success"></i>
+                                            <i *ngIf="!task.status" class="bi bi-x text-danger"></i>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
