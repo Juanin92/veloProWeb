@@ -1,5 +1,6 @@
 package com.veloProWeb.Controller.User;
 
+import com.veloProWeb.Model.DTO.TaskDTO;
 import com.veloProWeb.Model.Entity.User.Task;
 import com.veloProWeb.Service.User.Interface.ITaskService;
 import com.veloProWeb.Service.User.Interface.IUserService;
@@ -75,7 +76,7 @@ public class TaskController {
      * @return - ResponseEntity con una lista de tareas
      */
     @GetMapping("lista-tarea")
-    public ResponseEntity<List<Task>> getAllTasks(){
+    public ResponseEntity<List<TaskDTO>> getAllTasks(){
         try{
             return ResponseEntity.ok(taskService.getAllTasks());
         }catch (IllegalArgumentException e){
