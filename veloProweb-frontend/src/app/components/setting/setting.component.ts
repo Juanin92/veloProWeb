@@ -28,6 +28,7 @@ export class SettingComponent implements OnInit{
   cashRegistersList: CashRegister[] = [];
   userList: User[] = [];
   dispatchList: Dispatch[] = [];
+  taskList: Task[] = [];
   task: Task;
   data: LocalData = {
     id: 0,
@@ -57,6 +58,7 @@ export class SettingComponent implements OnInit{
     this.getData();
     this.getUsers();
     this.getDispatches();
+    this.getTasks();
   }
 
   getUsers(): void{
@@ -100,6 +102,17 @@ export class SettingComponent implements OnInit{
         console.log('No se encontró información sobre los despachos registrados');
       }
     });
+  }
+
+  getTasks(): void{
+    // this.taskService.getTasks().subscribe({
+    //   next:(list)=>{
+    //     this.taskList = list;
+    //   },
+    //   error: (error)=>{
+    //     console.log('No se encontró información sobre los tareas asignadas');
+    //   }
+    // });
   }
 
   getData(): void{
