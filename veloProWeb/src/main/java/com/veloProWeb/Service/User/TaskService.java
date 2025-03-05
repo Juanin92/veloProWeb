@@ -1,5 +1,6 @@
 package com.veloProWeb.Service.User;
 
+import com.veloProWeb.Model.DTO.TaskDTO;
 import com.veloProWeb.Model.Entity.User.Task;
 import com.veloProWeb.Repository.TaskRepo;
 import com.veloProWeb.Service.User.Interface.ITaskService;
@@ -7,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskService implements ITaskService {
@@ -68,10 +71,20 @@ public class TaskService implements ITaskService {
 
     /**
      * Obtener una lista de todas las tareas registradas
-     * @return - Lista de las tareas registradas
+     * @return - Lista de las tareas registradas con cierta información
      */
     @Override
-    public List<Task> getAllTasks() {
-        return taskRepo.findAll();
+    public List<TaskDTO> getAllTasks() {
+        List<Task> taskList = taskRepo.findAll();
+        return taskList.stream()
+                .map(task -> {
+                    TaskDTO dto =  new TaskDTO();
+                    dto.setCreated(task.getCreated());
+                    dto.setDescription(task.getDescription());
+                    dto.setStatus(task.isStatus());
+                    dto.setUser(String.format("%s %s", task.getUser().getName(), task.getUser().getSurname()));
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 }
