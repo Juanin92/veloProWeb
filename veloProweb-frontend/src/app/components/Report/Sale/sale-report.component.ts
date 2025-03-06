@@ -31,6 +31,7 @@ export class SaleReportComponent implements OnInit, AfterViewInit {
   textFilter: string = '';
   startDate: string = '';
   finalDate: string = '';
+  hasDispatchDetailsSale: boolean = false;
 
   constructor(
     private saleService: SaleService,
@@ -112,6 +113,11 @@ export class SaleReportComponent implements OnInit, AfterViewInit {
           this.customerSale = this.saleDetailList[0].customer;
           this.notificationSale = this.saleDetailList[0].notification;
           this.statusTicket = this.saleDetailList[0].ticketStatus;
+          this.hasDispatchDetailsSale = this.saleDetailList[0].hasDispatch;
+
+          if(this.hasDispatchDetailsSale){
+            this.saleDetailList.push(this.createDispatchRegisterItem());
+          }
         }
         resolve();
       },
@@ -121,6 +127,23 @@ export class SaleReportComponent implements OnInit, AfterViewInit {
       }
     });
     });
+  }
+
+  /**
+   * Crea un objeto DetailSaleRequestDTO representa a un despacho
+   * @returns - Devuelve el objeto
+   */
+  private createDispatchRegisterItem(): DetailSaleRequestDTO{
+    return {
+      descriptionProduct: 'Despacho',
+      quantity: 1,
+      price: 1000,
+      tax: 0,
+      customer: '',
+      notification: '',
+      ticketStatus: false,
+      hasDispatch: true
+    };
   }
 
   /**
