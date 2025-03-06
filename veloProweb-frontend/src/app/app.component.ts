@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { MenuComponent } from "./components/menu/menu.component";
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { LocalDataService } from './services/local-data.service';
 import { LocalData } from './models/Entity/local-data';
 import * as bootstrap from 'bootstrap';
@@ -11,7 +11,7 @@ import { MessageModalComponent } from "./components/user/message-modal/message-m
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MenuComponent, UpdateUserModalComponent, MessageModalComponent],
+  imports: [RouterOutlet, MenuComponent, UpdateUserModalComponent, MessageModalComponent, CommonModule],
   providers: [DatePipe],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
@@ -27,7 +27,8 @@ export class AppComponent implements AfterViewInit{
 
   constructor(
     private datePipe: DatePipe, 
-    private localDataService: LocalDataService){
+    private localDataService: LocalDataService,
+    private router: Router){
     this.getDate();
     this.loadDataFromLocalStorage();
   }
@@ -36,6 +37,10 @@ export class AppComponent implements AfterViewInit{
     if (this.dropdownButton) {
       this.dropdownInstance = new bootstrap.Dropdown(this.dropdownButton.nativeElement);
     }
+  }
+
+  isLoginPage(): boolean {
+    return this.router.url === '/';
   }
 
   toggleDropdown() {
