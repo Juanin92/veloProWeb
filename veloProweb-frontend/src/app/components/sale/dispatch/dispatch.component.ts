@@ -133,7 +133,8 @@ export class DispatchComponent implements OnInit{
       tax: 0,
       customer: '',
       notification: '',
-      ticketStatus: true
+      ticketStatus: true,
+      hasDispatch: true
     }
   }
 }
