@@ -1,0 +1,31 @@
+.forgot-password {
+    color: #00ff7f;
+  }
+  
+  .forgot-password:hover {
+    color: #00cc66;
+  }
+  
+  .login-btn {
+    background-color: #bb86fc;
+    color: #000;
+  }
+  
+  .login-btn:hover {
+    background-color: #a06ae1;
+    color: #000;
+  }
+  
+  .register-link {
+    color: #00ff7f;
+  }
+  
+  .register-link:hover {
+    color: #00cc66;
+  }
+  
+  /* Custom form styles */
+  .form-control:focus {
+    border-color: #bb86fc;
+    box-shadow: 0 0 0 0.25rem rgba(187, 134, 252, 0.25);
+  }
