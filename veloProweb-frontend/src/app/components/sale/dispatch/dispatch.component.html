@@ -186,5 +186,6 @@
 <!-- MODAL DISPATCH PAYMENT -->
 <app-payment-dispatch 
     [selectedDispatchPayment]="selectedDispatch" 
-    [saleDetailDispatchList]="saleDetailDispatchList">
+    [saleDetailDispatchList]="saleDetailDispatchList"
+    (dispatchPaid)="getDispatches()">
 </app-payment-dispatch>
