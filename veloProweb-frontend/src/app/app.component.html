@@ -1,7 +1,7 @@
 <div class="d-flex flex-column min-vh-100">
-  <app-menu [isActive]="isMenuActive"></app-menu>
+  <app-menu *ngIf="!isLoginPage()" [isActive]="isMenuActive"></app-menu>
   <div [class.active]="isMenuActive" class="main flex-grow-1 position-relative">
-    <div class="toggle-search-wrapper position-sticky bg-body w-100">
+    <div *ngIf="!isLoginPage()" class="toggle-search-wrapper position-sticky bg-body w-100">
       <div class="toggle-search d-flex justify-content-between align-items-center p-1 border-bottom border-2">
         <div class="toggle" style="cursor: pointer">
           <span (click)="toggleMenu()" class="icon d-flex align-items-center">
@@ -25,9 +25,10 @@
         </div>
       </div>
     </div>
-    <div class="content-wrapper w-100 h-100 overflow-y-auto">
+    <div *ngIf="!isLoginPage()" class="content-wrapper w-100 h-100 overflow-y-auto">
       <router-outlet></router-outlet>
     </div>
+    <router-outlet *ngIf="isLoginPage()"></router-outlet>
   </div>
 </div>
 <!-- MODAL UPDATE USER -->
