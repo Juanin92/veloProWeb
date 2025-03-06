@@ -11,8 +11,10 @@ import { KardexComponent } from './components/Report/kardex/kardex.component';
 import { SettingComponent } from './components/setting/setting.component';
 import { UserComponent } from './components/user/user.component';
 import { HomeComponent } from './components/Home/home.component';
+import { LoginComponent } from './components/login/login.component';
 
 export const routes: Routes = [
+    {path: '', component: LoginComponent},
     {path: 'clientes', component: CustomerComponent},
     {path: 'stock', component: StockComponent},
     {path: 'proveedores', component: SupplierComponent},
