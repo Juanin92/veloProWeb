@@ -13,4 +13,5 @@ public class DetailSaleRequestDTO {
     private String customer;
     private LocalDate notification;
     private boolean ticketStatus;
+    private boolean hasDispatch;
 }

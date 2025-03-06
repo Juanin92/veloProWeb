@@ -6,4 +6,5 @@ export interface DetailSaleRequestDTO {
     customer: string;
     notification: string;
     ticketStatus: boolean;
+    hasDispatch: boolean;
 }
