@@ -114,6 +114,7 @@ public class SaleDetailService implements ISaleDetailService {
                 dto.setCustomer(customerNames);
                 dto.setTicketStatus(status);
                 dto.setNotification(notification);
+                dto.setHasDispatch(saleDetail.getDispatch() != null);
                 saleRequestDTOS.add(dto);
             }
         }
