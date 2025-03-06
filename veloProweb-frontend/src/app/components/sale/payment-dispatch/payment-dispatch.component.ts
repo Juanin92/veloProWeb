@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Dispatch } from '../../../models/Entity/Sale/dispatch';
 import { DetailSaleRequestDTO } from '../../../models/DTO/detail-sale-request-dto';
@@ -10,6 +10,7 @@ import { SaleRequestDTO } from '../../../models/DTO/sale-request-dto';
 import { SaleService } from '../../../services/Sale/sale.service';
 import { PaymentMethod } from '../../../models/enum/payment-method';
 import { NotificationService } from '../../../utils/notification-service.service';
+import { ModalService } from '../../../utils/modal.service';
 
 @Component({
   selector: 'app-payment-dispatch',
@@ -18,10 +19,11 @@ import { NotificationService } from '../../../utils/notification-service.service
   templateUrl: './payment-dispatch.component.html',
   styleUrl: './payment-dispatch.component.css'
 })
-export class PaymentDispatchComponent implements OnChanges {
+export class PaymentDispatchComponent implements OnChanges, OnInit {
 
   @Input() selectedDispatchPayment: Dispatch | null = null;
   @Input() saleDetailDispatchList: DetailSaleRequestDTO[] = [];
+  @Output() dispatchPaid = new EventEmitter<boolean>();
   requestDTO: SaleRequestDTO;
   customerList: Customer[] = [];
   totalSum: number = 0;
@@ -40,11 +42,15 @@ export class PaymentDispatchComponent implements OnChanges {
   showComment: boolean = false;
 
   constructor(
-    private dispatchService: DispatchService,
     private customerService: CustomerService,
     private saleService: SaleService,
-    private notification: NotificationService) {
+    private notification: NotificationService,
+    public modalService: ModalService) {
     this.requestDTO = this.initializeRequestDTO();
+  }
+
+  ngOnInit(): void {
+    this.modalService.openModal();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -60,12 +66,12 @@ export class PaymentDispatchComponent implements OnChanges {
       this.requestDTO.total = this.totalSum;
       this.requestDTO.detailList = dispatchSelected.detailSaleDTOS ? [...dispatchSelected.detailSaleDTOS] : [];
 
-      console.log('Despacho: ', dispatchSelected);
-      console.log('Request: ', this.requestDTO);
       this.saleService.createSaleFromDispatch(this.requestDTO).subscribe({
         next: (response) => {
           const message = response.message
           this.notification.showSuccessToast(message, 'top', 3000);
+          this.dispatchPaid.emit(true);
+          this.modalService.closeModal();
         }, error: (error) => {
           const message = error.error?.error || error.error?.message || error?.error;
           console.log("ERROR: ", message);
