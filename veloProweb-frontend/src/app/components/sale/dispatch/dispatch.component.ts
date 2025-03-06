@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { DispatchService } from '../../../services/Sale/dispatch.service';
 import { Dispatch } from '../../../models/Entity/Sale/dispatch';
 import { CommonModule } from '@angular/common';
@@ -9,6 +9,7 @@ import { SaleDetailDTO } from '../../../models/DTO/sale-detail-dto';
 import { TooltipService } from '../../../utils/tooltip.service';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { PaymentDispatchComponent } from "../payment-dispatch/payment-dispatch.component";
+import { ModalService } from '../../../utils/modal.service';
 
 @Component({
   selector: 'app-dispatch',
@@ -43,11 +44,13 @@ export class DispatchComponent implements OnInit{
   constructor(
     private dispatchService: DispatchService,
     private tooltip: TooltipService,
-    private notification: NotificationService){}
+    private notification: NotificationService,
+    public modalService: ModalService){}
 
   ngOnInit(): void {
     this.tooltip.initializeTooltips();
     this.getDispatches();
+    this.modalService.openModal();
   }
 
   getDispatches(): void{
@@ -92,6 +95,7 @@ export class DispatchComponent implements OnInit{
         this.getDispatches();
         this.resetModal();
         this.dispatchCreated.emit(true);
+        this.modalService.closeModal();
       },error: (error)=>{
         const message = error.error?.error || error.error?.message || error?.error;
         console.log("ERROR: ", message);
