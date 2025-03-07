@@ -5,6 +5,7 @@ import com.veloProWeb.Repository.UserRepo;
 import com.veloProWeb.Service.User.Interface.IUserService;
 import com.veloProWeb.Validation.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ public class UserService implements IUserService {
 
     @Autowired private UserRepo userRepository;
     @Autowired private UserValidator validator;
+    @Autowired private BCryptPasswordEncoder passwordEncoder;
 
     /**
      * Crea un usuario nuevo.
@@ -40,7 +42,7 @@ public class UserService implements IUserService {
             }else {
                 user.setUsername(user.getUsername());
             }
-            user.setPassword(user.getPassword());
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
         }
     }
@@ -67,7 +69,7 @@ public class UserService implements IUserService {
             user.setUsername(user.getUsername());
         }
         user.setEmail(user.getEmail());
-        user.setToken(user.getPassword());
+        user.setToken(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
