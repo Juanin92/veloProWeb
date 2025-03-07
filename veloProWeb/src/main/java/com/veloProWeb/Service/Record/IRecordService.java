@@ -1,13 +1,13 @@
 package com.veloProWeb.Service.Record;
 
 import com.veloProWeb.Model.Entity.Record;
-import com.veloProWeb.Model.Entity.User.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
 public interface IRecordService {
-    void registerEntry(User user);
-    void registerEnd(User user);
-    void registerAction(User user, String action, String comment);
+    void registerEntry(UserDetails userDetails);
+    void registerEnd(UserDetails userDetails);
+    void registerAction(UserDetails userDetails, String action, String comment);
     List<Record> getAllRecord();
 }
