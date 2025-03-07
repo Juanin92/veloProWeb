@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Filtro de autenticación JWT que intercepta las solicitudes HTTP,
@@ -41,6 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String username = null;
         String jwt = null;
+        String role = null;
 
         // Verifica si el encabezado Authorization existe y comienza con "Bearer ".
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
@@ -61,9 +66,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             // Válida el token JWT.
             if (jwtUtil.validateToken(jwt, userDetails)) {
-                // Crea un objeto UsernamePasswordAuthenticationToken con los detalles del usuario.
+                // Crea un objeto UsernamePasswordAuthenticationToken con los detalles del usuario y el rol.
+                List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
+                        userDetails, null, authorities);
                 // Establece los detalles de la solicitud en el objeto de autenticación.
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 // Establece la autenticación en el contexto de seguridad.
