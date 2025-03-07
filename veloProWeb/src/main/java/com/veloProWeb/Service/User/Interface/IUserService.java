@@ -10,6 +10,7 @@ public interface IUserService {
     void deleteUser(User user);
     void activateUser(User user);
     List<User> getAllUser();
+    User getUserWithUsername(String username);
     User getAuthUser(String username, String pass);
     User getAuthUserToken(String username, String token);
     void sendEmailCode(User user);
