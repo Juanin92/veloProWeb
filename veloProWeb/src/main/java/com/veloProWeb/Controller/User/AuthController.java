@@ -1,0 +1,37 @@
+package com.veloProWeb.Controller.User;
+
+import com.veloProWeb.Model.DTO.LoginRequest;
+import com.veloProWeb.Security.JwUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/auth")
+@CrossOrigin(origins = "http://localhost:4200")
+public class AuthController {
+
+    @Autowired private AuthenticationManager authenticationManager;
+
+    @Autowired private UserDetailsService userDetailsService;
+
+    @Autowired private JwUtil jwtUtil;
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginRequest user) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
+        );
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+        String jwtToken = jwtUtil.generateToken(userDetails);
+
+        return ResponseEntity.ok(jwtToken);
+    }
+
+}
