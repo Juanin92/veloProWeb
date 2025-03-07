@@ -12,19 +12,20 @@ import { SettingComponent } from './components/setting/setting.component';
 import { UserComponent } from './components/user/user.component';
 import { HomeComponent } from './components/Home/home.component';
 import { LoginComponent } from './components/login/login.component';
+import { AuthGuardService } from './utils/auth-guard.service';
 
 export const routes: Routes = [
     {path: '', component: LoginComponent},
-    {path: 'clientes', component: CustomerComponent},
-    {path: 'stock', component: StockComponent},
-    {path: 'proveedores', component: SupplierComponent},
-    {path: 'compras', component: PurchaseComponent},
-    {path: 'reportes', component: ReportComponent},
-    {path: 'ventas', component: SaleComponent},
-    {path: 'ventas-reporte', component: SaleReportComponent},
-    {path: 'compras-reporte', component: PurchaseReportComponent},
-    {path: 'registro-producto', component: KardexComponent},
-    {path: 'configuraciones', component: SettingComponent},
-    {path: 'usuario', component: UserComponent},
-    {path: 'home', component: HomeComponent},
+    {path: 'clientes', component: CustomerComponent, canActivate: [AuthGuardService]},
+    {path: 'stock', component: StockComponent, canActivate: [AuthGuardService]},
+    {path: 'proveedores', component: SupplierComponent, canActivate: [AuthGuardService]},
+    {path: 'compras', component: PurchaseComponent, canActivate: [AuthGuardService]},
+    {path: 'reportes', component: ReportComponent, canActivate: [AuthGuardService]},
+    {path: 'ventas', component: SaleComponent, canActivate: [AuthGuardService]},
+    {path: 'ventas-reporte', component: SaleReportComponent, canActivate: [AuthGuardService]},
+    {path: 'compras-reporte', component: PurchaseReportComponent, canActivate: [AuthGuardService]},
+    {path: 'registro-producto', component: KardexComponent, canActivate: [AuthGuardService]},
+    {path: 'configuraciones', component: SettingComponent, canActivate: [AuthGuardService]},
+    {path: 'usuario', component: UserComponent, canActivate: [AuthGuardService]},
+    {path: 'home', component: HomeComponent, canActivate: [AuthGuardService]},
 ];
