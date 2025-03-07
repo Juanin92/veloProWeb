@@ -45,8 +45,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
@@ -54,7 +53,6 @@ public class SecurityConfig {
                         .accessDeniedHandler(accessDeniedHandler())
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 
