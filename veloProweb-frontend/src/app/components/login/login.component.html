@@ -13,14 +13,14 @@
             <form>
                 <div class="mb-2">
                     <label for="usernameLogin" class="form-label small">Username</label>
-                    <input type="text" class="form-control form-control-sm bg-dark text-white border-secondary"
-                        id="usernameLogin" />
+                    <input [(ngModel)]="userLogin.username" type="text" class="form-control form-control-sm bg-dark text-white border-secondary"
+                        id="usernameLogin" name="usernameLogin" required/>
                 </div>
 
                 <div class="mb-2">
                     <label for="passwordLogin" class="form-label small">Contraseña</label>
-                    <input type="password" class="form-control form-control-sm bg-dark text-white border-secondary"
-                        id="passwordLogin" />
+                    <input [(ngModel)]="userLogin.password" type="password" class="form-control form-control-sm bg-dark text-white border-secondary"
+                        id="passwordLogin" name="passwordLogin" required/>
                 </div>
 
                 <div class="mb-3 text-end">
@@ -29,7 +29,7 @@
                     </a>
                 </div>
 
-                <button type="submit" class="btn btn-sm w-100 py-2" style="background-color: #BB86FC; color: #000;">
+                <button (click)="isLoginUser()" type="button" class="btn btn-sm w-100 py-2" style="background-color: #BB86FC; color: #000;">
                     Iniciar Sesión
                 </button>
             </form>
