@@ -49,15 +49,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // Verifica si el encabezado Authorization existe y comienza con "Bearer ".
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            // Extrae el token JWT del encabezado
             jwt = authorizationHeader.substring(7);
-            try{
-                // extraer el nombre de usuario del token.
-                username = jwtUtil.extractUsername(jwt);
-            } catch (Exception e){
-                System.out.println("Error extracting username from token");
-            }
-
+            username = jwtUtil.extractUsername(jwt);
         }
         // Verifica si el nombre de usuario se extrajo correctamente y no hay autenticación en el contexto de seguridad.
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
