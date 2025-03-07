@@ -11,27 +11,28 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin(origins = "http://localhost:4200")
 public class AuthController {
 
     @Autowired private AuthenticationManager authenticationManager;
-
     @Autowired private UserDetailsService userDetailsService;
-
     @Autowired private JwUtil jwtUtil;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest user) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest user) {
+        Map<String, String> response = new HashMap<>();
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
         );
-
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
         String jwtToken = jwtUtil.generateToken(userDetails);
-
-        return ResponseEntity.ok(jwtToken);
+        response.put("token", jwtToken);
+        return ResponseEntity.ok(response);
     }
 
 }
