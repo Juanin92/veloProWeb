@@ -57,7 +57,13 @@ public class JwUtil {
      * @return - Las reclamaciones del token.
      */
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
+//        return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
+        try {
+            return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
+        } catch (Exception e) {
+            System.out.println("Error extracting claims from token: " + e.getMessage());
+            throw e;
+        }
     }
 
     /**
