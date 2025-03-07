@@ -12,20 +12,27 @@ export class AuthService {
     
   constructor(private httpClient: HttpClient) { }
 
-  login(loginRequest: LoginRequest): Observable<string> {
-    return this.httpClient.post<string>(`${this.apiUrl}/login`, loginRequest);
+  login(loginRequest: LoginRequest): Observable<{token: string, role: string}> {
+    return this.httpClient.post<{token: string, role: string}>(`${this.apiUrl}/login`, loginRequest);
   }
 
   saveToken(token: string): void {
-    localStorage.setItem('token', token);
+    sessionStorage.setItem('token', token);
+  }
+  saveRole(role: string): void {
+    sessionStorage.setItem('role', role); 
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return sessionStorage.getItem('token');
+  }
+  getRole(): string | null {
+    return sessionStorage.getItem('role');
   }
 
   removeToken(): void {
-    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('role');
   }
 
   isAuthenticated(): boolean {
