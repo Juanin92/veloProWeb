@@ -29,8 +29,9 @@ export class LoginComponent {
   isLoginUser(){
     if(this.userLogin){
       this.authService.login(this.userLogin).subscribe({
-        next:(token)=>{
-          this.authService.saveToken(token);
+        next:(response)=>{
+          this.authService.saveToken(response.token);
+          this.authService.saveRole(response.role)
           this.router.navigate(['/home']);
         },error: (error) =>{
           console.error('Error de inicio de sesión:', error);
