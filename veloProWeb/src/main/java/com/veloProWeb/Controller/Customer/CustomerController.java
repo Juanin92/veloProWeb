@@ -28,7 +28,7 @@ public class CustomerController {
      * @return - ResponseEntity con una lista de clientes
      */
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'SELLER', 'MASTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SELLER', 'MASTER', 'GUEST')")
     public List<Customer> getListCustomer(){
         return customerService.getAll();
     }
@@ -39,6 +39,7 @@ public class CustomerController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PostMapping("/agregar")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SELLER', 'MASTER')")
     public ResponseEntity<Map<String, String>> addCustomer(@RequestBody Customer customer,  @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response = new HashMap<>();
         try {
@@ -60,6 +61,7 @@ public class CustomerController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping("/actualizar")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SELLER', 'MASTER')")
     public ResponseEntity<String> updateCustomer(@RequestBody Customer customer, @AuthenticationPrincipal UserDetails userDetails){
         try {
             customerService.updateCustomer(customer);
@@ -77,9 +79,12 @@ public class CustomerController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping("/eliminar")
-    public ResponseEntity<String> deleteCustomer(@RequestBody Customer customer){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
+    public ResponseEntity<String> deleteCustomer(@RequestBody Customer customer, @AuthenticationPrincipal UserDetails userDetails){
         try {
             customerService.delete(customer);
+            recordService.registerAction(userDetails, "DELETE",
+                    "Se eliminó el cliente: " + customer.getName() + " " + customer.getSurname());
             return ResponseEntity.ok("{\"message\":\"Cliente eliminado correctamente!\"}");
         }catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"" + e.getMessage() + "\"}");
@@ -92,11 +97,14 @@ public class CustomerController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping("/activar")
-    public ResponseEntity<Map<String, String>> activeCustomer(@RequestBody Customer customer){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SELLER', 'MASTER')")
+    public ResponseEntity<Map<String, String>> activeCustomer(@RequestBody Customer customer, @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response = new HashMap<>();
         try{
             customerService.activeCustomer(customer);
             response.put("message", "Cliente ha sido activado");
+            recordService.registerAction(userDetails, "ACTIVATE",
+                    "Se activó el cliente: " + customer.getName() + " " + customer.getSurname());
             return ResponseEntity.ok(response);
         }catch (Exception e){
             response.put("message", "Ocurrió un error inesperado. " + e.getMessage());
