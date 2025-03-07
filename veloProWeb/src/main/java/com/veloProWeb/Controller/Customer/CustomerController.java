@@ -15,8 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.springframework.security.authorization.AuthorityReactiveAuthorizationManager.hasAnyRole;
-
 @RestController
 @RequestMapping("/clientes")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -41,11 +39,13 @@ public class CustomerController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PostMapping("/agregar")
-    public ResponseEntity<Map<String, String>> addCustomer(@RequestBody Customer customer){
+    public ResponseEntity<Map<String, String>> addCustomer(@RequestBody Customer customer,  @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response = new HashMap<>();
         try {
             customerService.addNewCustomer(customer);
             response.put("message","Cliente agregado correctamente!");
+            recordService.registerAction(userDetails, "CREATE",
+                    "Se creó el cliente: " + customer.getName() + " " + customer.getSurname());
             return ResponseEntity.ok(response);
         }catch (IllegalArgumentException e){
             response.put("message", e.getMessage());
