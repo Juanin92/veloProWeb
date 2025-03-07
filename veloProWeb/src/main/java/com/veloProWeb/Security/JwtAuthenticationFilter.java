@@ -51,6 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
             username = jwtUtil.extractUsername(jwt);
+            role = jwtUtil.extractRole(jwt);
         }
         // Verifica si el nombre de usuario se extrajo correctamente y no hay autenticación en el contexto de seguridad.
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -60,7 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // Válida el token JWT.
             if (jwtUtil.validateToken(jwt, userDetails)) {
                 // Crea un objeto UsernamePasswordAuthenticationToken con los detalles del usuario y el rol.
-                List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
+                List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(role));
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, authorities);
                 // Establece los detalles de la solicitud en el objeto de autenticación.
