@@ -2,6 +2,7 @@ package com.veloProWeb.Controller.User;
 
 import com.veloProWeb.Model.DTO.LoginRequest;
 import com.veloProWeb.Security.JwUtil;
+import com.veloProWeb.Service.Record.IRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +21,7 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:4200")
 public class AuthController {
 
+    @Autowired private IRecordService recordService;
     @Autowired private AuthenticationManager authenticationManager;
     @Autowired private UserDetailsService userDetailsService;
     @Autowired private JwUtil jwtUtil;
@@ -33,6 +35,7 @@ public class AuthController {
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
         String jwtToken = jwtUtil.generateToken(userDetails);
         response.put("token", jwtToken);
+        recordService.registerEntry(userDetails);
         return ResponseEntity.ok(response);
     }
 
