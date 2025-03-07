@@ -2,31 +2,35 @@ package com.veloProWeb.Controller.Customer;
 
 import com.veloProWeb.Model.Entity.Customer.Customer;
 import com.veloProWeb.Service.Customer.Interfaces.ICustomerService;
+import com.veloProWeb.Service.Record.IRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Controlador REST para gestionar operaciones relacionadas con clientes.
- * Este controlador proporciona endpoints para listar, agregar, actualizar, eliminar y activar clientes.
- */
+import static org.springframework.security.authorization.AuthorityReactiveAuthorizationManager.hasAnyRole;
+
 @RestController
 @RequestMapping("/clientes")
 @CrossOrigin(origins = "http://localhost:4200")
 public class CustomerController {
 
     @Autowired private ICustomerService customerService;
+    @Autowired private IRecordService recordService;
 
     /**
      * Obtiene una lista de clientes.
      * @return - ResponseEntity con una lista de clientes
      */
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SELLER', 'MASTER')")
     public List<Customer> getListCustomer(){
         return customerService.getAll();
     }
@@ -52,12 +56,15 @@ public class CustomerController {
     /**
      * Actualiza los datos un cliente existente
      * @param customer - cliente con los datos actualizados
+     * @param userDetails - Detalle de usuario autenticado.
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping("/actualizar")
-    public ResponseEntity<String> updateCustomer(@RequestBody Customer customer){
+    public ResponseEntity<String> updateCustomer(@RequestBody Customer customer, @AuthenticationPrincipal UserDetails userDetails){
         try {
             customerService.updateCustomer(customer);
+            recordService.registerAction(userDetails, "UPDATE",
+                    "Se actualizó el cliente: " + customer.getName() + " " + customer.getSurname());
             return ResponseEntity.ok("{\"message\":\"Cliente actualizado correctamente!\"}");
         } catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"" + e.getMessage() + "\"}");
