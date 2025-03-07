@@ -2,6 +2,7 @@ import { HttpClient, HttpHandler, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Customer } from '../../models/Entity/Customer/customer.model';
+import { AuthService } from '../User/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,8 @@ export class CustomerService {
 
   private apiUrl = 'http://localhost:8080/clientes';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private auth: AuthService) {
+   }
 
   /**
    * Obtiene una lista de todos los clientes desde el endpoint
@@ -35,7 +37,7 @@ export class CustomerService {
    * @returns Observable que emite un mensaje de confirmación
    */
   updateCustomer(customer: Customer): Observable<string>{
-    return this.httpClient.put<string>(`${this.apiUrl}/actualizar`, customer);
+    return this.httpClient.put<string>(`${this.apiUrl}/actualizar`, customer, {headers: this.auth.getAuthHeaders()});
   }
 
   /**
