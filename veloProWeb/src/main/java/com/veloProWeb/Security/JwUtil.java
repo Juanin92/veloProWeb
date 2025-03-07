@@ -1,5 +1,6 @@
 package com.veloProWeb.Security;
 
+import com.veloProWeb.Model.Entity.User.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -69,13 +70,15 @@ public class JwUtil {
     }
 
     /**
-     * Genera un token JWT para el usuario.
+     * Genera un token JWT para el usuario, incluyendo su rol.
      * @param userDetails - Los detalles del usuario.
      * @return - El token JWT generado.
      */
     public String generateToken(UserDetails userDetails) {
+        User user = (User) userDetails;
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userDetails.getUsername());
+        claims.put("role", user.getRole().name());
+        return createToken(claims, user.getUsername());
     }
 
     /**
@@ -109,4 +112,14 @@ public class JwUtil {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
+    /**
+     * Extrae el rol de un token JWT.
+     * @param token - El token JWT del usuario.
+     * @return - El rol del usuario en formato String.
+     */
+    public String extractRole(String token) {
+        return extractClaim(token, claims -> claims.get("role", String.class));
+    }
+
 }
