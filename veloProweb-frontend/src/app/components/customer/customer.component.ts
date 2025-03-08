@@ -10,6 +10,7 @@ import { CustomerHelperServiceService } from '../../services/customer/customer-h
 import { NotificationService } from '../../utils/notification-service.service';
 import { TooltipService } from '../../utils/tooltip.service';
 import { ModalService } from '../../utils/modal.service';
+import { AuthService } from '../../services/User/auth.service';
 
 
 @Component({
@@ -30,6 +31,7 @@ export class CustomerComponent implements OnInit, AfterViewInit {
   constructor(
     private customerService: CustomerService,
     private customerHelper: CustomerHelperServiceService,
+    public auth: AuthService,
     private notification: NotificationService,
     private tooltipService: TooltipService,
     private modalService: ModalService,
