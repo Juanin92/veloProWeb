@@ -1,0 +1,35 @@
+<div class="d-flex flex-column min-vh-100">
+  <app-menu [isActive]="isMenuActive"></app-menu>
+  <div [class.active]="isMenuActive" class="main flex-grow-1 position-relative">
+    <div class="toggle-search-wrapper position-sticky bg-body w-100">
+      <div class="toggle-search d-flex justify-content-between align-items-center p-1 border-bottom border-2">
+        <div class="toggle" style="cursor: pointer">
+          <span (click)="toggleMenu()" class="icon d-flex align-items-center">
+            <img src="/assets/icons/iconCategories.png" alt="toggle-menu" width="30" height="30" />
+          </span>
+        </div>
+        <p class="fw-bold m-0 d-none d-lg-block">{{currentDate}}</p>
+        <div class="search dropdown">
+          <button class="btn btn-outline-info border-0 dropdown-toggle" type="button" id="userDropdown"
+            aria-expanded="false" #userDropdown (click)="toggleDropdown()">
+            <img src="/assets/icons/usercircle.png" alt="user-profile" width="30" height="30" />
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="userDropdown">
+            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#updateUser">Modificar Datos</a></li>
+            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#newMessageModal">Mensajes</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="#">Cerrar Sesión</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="content-wrapper w-100 h-100 overflow-y-auto">
+        <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
+<!-- MODAL UPDATE USER -->
+<app-update-user-modal></app-update-user-modal>
+<app-message-modal></app-message-modal>
