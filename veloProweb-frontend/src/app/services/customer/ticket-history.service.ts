@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { TicketHistory } from '../../models/Entity/Customer/ticket-history.model';
 import { TicketRequestDTO } from '../../models/DTO/ticket-request-dto';
 import { Customer } from '../../models/Entity/Customer/customer.model';
+import { AuthService } from '../User/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class TicketHistoryService {
 
   private apiUrl = 'http://localhost:8080/Tickets';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private auth: AuthService) { }
 
   /**
    * Obtiene los ticket de un cliente seleccionado
@@ -30,7 +31,7 @@ export class TicketHistoryService {
    * @returns - Observable emite un mensaje de confirmación
    */
   createTicketToCustomer(ticketRequestDTO: TicketRequestDTO): Observable<{message: string}>{
-    return this.httpClient.post<{message: string}>(this.apiUrl, ticketRequestDTO);
+    return this.httpClient.post<{message: string}>(this.apiUrl, ticketRequestDTO, {headers: this.auth.getAuthHeaders()});
   }
 
   /**
