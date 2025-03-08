@@ -28,7 +28,7 @@ export class CustomerService {
    * @returns Observable que emite un mensaje de confirmación
    */
   addCustomer(customer: Customer): Observable<{message: string}>{
-    return this.httpClient.post<{message: string}>(`${this.apiUrl}/agregar`, customer);
+    return this.httpClient.post<{message: string}>(`${this.apiUrl}/agregar`, customer, {headers: this.auth.getAuthHeaders()});
   }
   
   /**
@@ -46,7 +46,7 @@ export class CustomerService {
    * @returns Observable que emite un mensaje de confirmación
    */
   deleteCustomer(customer: Customer): Observable<string>{
-    return this.httpClient.put<string>(`${this.apiUrl}/eliminar`, customer);
+    return this.httpClient.put<string>(`${this.apiUrl}/eliminar`, customer, {headers: this.auth.getAuthHeaders()});
   }
 
   /**
@@ -55,6 +55,6 @@ export class CustomerService {
    * @returns Observable que emite un mensaje de confirmación
    */
   activeCustomer(customer: Customer): Observable<string>{
-    return this.httpClient.put<string>(`${this.apiUrl}/activar`, customer);
+    return this.httpClient.put<string>(`${this.apiUrl}/activar`, customer, {headers: this.auth.getAuthHeaders()});
   }
 }
