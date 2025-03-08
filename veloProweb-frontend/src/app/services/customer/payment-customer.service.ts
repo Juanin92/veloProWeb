@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PaymentCustomer } from '../../models/Entity/Customer/payment-customer.model';
 import { PaymentRequestDTO } from '../../models/DTO/payment-request-dto';
+import { AuthService } from '../User/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class PaymentCustomerService {
   
   private apiUrl = 'http://localhost:8080/pagos';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private auth: AuthService) { }
 
   /**
    * Obtiene todos los pagos realizados
@@ -37,6 +38,6 @@ export class PaymentCustomerService {
    * @returns - Observable emite un mensaje de confirmación o error
    */
   createPaymentCustomer(dto: PaymentRequestDTO): Observable<{message: string}>{
-    return this.httpClient.post<{message: string}>(`${this.apiUrl}`, dto);
+    return this.httpClient.post<{message: string}>(`${this.apiUrl}`, dto, {headers: this.auth.getAuthHeaders()});
   }
 }
