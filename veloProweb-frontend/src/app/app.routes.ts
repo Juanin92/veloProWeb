@@ -13,19 +13,23 @@ import { UserComponent } from './components/user/user.component';
 import { HomeComponent } from './components/Home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { AuthGuardService } from './utils/auth-guard.service';
+import { MainComponent } from './components/main/main.component';
 
 export const routes: Routes = [
-    {path: '', component: LoginComponent},
-    {path: 'clientes', component: CustomerComponent, canActivate: [AuthGuardService]},
-    {path: 'stock', component: StockComponent, canActivate: [AuthGuardService]},
-    {path: 'proveedores', component: SupplierComponent, canActivate: [AuthGuardService]},
-    {path: 'compras', component: PurchaseComponent, canActivate: [AuthGuardService]},
-    {path: 'reportes', component: ReportComponent, canActivate: [AuthGuardService]},
-    {path: 'ventas', component: SaleComponent, canActivate: [AuthGuardService]},
-    {path: 'ventas-reporte', component: SaleReportComponent, canActivate: [AuthGuardService]},
-    {path: 'compras-reporte', component: PurchaseReportComponent, canActivate: [AuthGuardService]},
-    {path: 'registro-producto', component: KardexComponent, canActivate: [AuthGuardService]},
-    {path: 'configuraciones', component: SettingComponent, canActivate: [AuthGuardService]},
-    {path: 'usuario', component: UserComponent, canActivate: [AuthGuardService]},
-    {path: 'home', component: HomeComponent, canActivate: [AuthGuardService]},
+    { path: '', redirectTo: 'login', pathMatch: 'full' }, 
+    { path: 'login', component: LoginComponent },
+    { path: 'main', component: MainComponent, canActivate: [AuthGuardService], children: [
+        { path: 'clientes', component: CustomerComponent, canActivate: [AuthGuardService]},
+        { path: 'stock', component: StockComponent, canActivate: [AuthGuardService]},
+        { path: 'proveedores', component: SupplierComponent, canActivate: [AuthGuardService]},
+        { path: 'compras', component: PurchaseComponent, canActivate: [AuthGuardService]},
+        { path: 'reportes', component: ReportComponent, canActivate: [AuthGuardService]},
+        { path: 'ventas', component: SaleComponent, canActivate: [AuthGuardService]},
+        { path: 'ventas-reporte', component: SaleReportComponent, canActivate: [AuthGuardService]},
+        { path: 'compras-reporte', component: PurchaseReportComponent, canActivate: [AuthGuardService]},
+        { path: 'registro-producto', component: KardexComponent, canActivate: [AuthGuardService]},
+        { path: 'configuraciones', component: SettingComponent, canActivate: [AuthGuardService]},
+        { path: 'usuario', component: UserComponent, canActivate: [AuthGuardService]},
+        { path: 'home', component: HomeComponent, canActivate: [AuthGuardService]}
+    ]}
 ];
