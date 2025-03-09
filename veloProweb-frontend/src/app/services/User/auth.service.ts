@@ -17,22 +17,22 @@ export class AuthService {
   }
 
   saveToken(token: string): void {
-    sessionStorage.setItem('token', token);
+    localStorage.setItem('token', token);
   }
   saveRole(role: string): void {
-    sessionStorage.setItem('role', role); 
+    localStorage.setItem('role', role); 
   }
 
   getToken(): string | null {
-    return sessionStorage.getItem('token');
+    return localStorage.getItem('token');
   }
   getRole(): string | null {
-    return sessionStorage.getItem('role');
+    return localStorage.getItem('role');
   }
 
   removeToken(): void {
-    sessionStorage.removeItem('token');
-    sessionStorage.removeItem('role');
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
   }
 
   isAuthenticated(): boolean {
