@@ -403,6 +403,6 @@
   (productSelected)="addSelectedProductToSaleDetailList($event)"
 ></app-product-list>
 <!-- MODAL DISPATCH -->
-<app-dispatch 
+<app-dispatch-modal 
   [saleDetailList]="saleDetailList"
-  (dispatchCreated)="resetProcess()"></app-dispatch>
+  (dispatchCreated)="resetProcess()"></app-dispatch-modal>

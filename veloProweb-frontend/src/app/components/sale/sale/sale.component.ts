@@ -14,11 +14,12 @@ import { SaleService } from '../../../services/Sale/sale.service';
 import { SaleRequestDTO } from '../../../models/DTO/sale-request-dto';
 import { PaymentMethod } from '../../../models/enum/payment-method';
 import { DispatchComponent } from "../dispatch/dispatch.component";
+import { DispatchModalComponent } from "../dispatch-modal/dispatch-modal.component";
 
 @Component({
   selector: 'app-sale',
   standalone: true,
-  imports: [FormsModule, CommonModule, ProductListComponent, DispatchComponent],
+  imports: [FormsModule, CommonModule, ProductListComponent, DispatchComponent, DispatchModalComponent],
   templateUrl: './sale.component.html',
   styleUrl: './sale.component.css'
 })
