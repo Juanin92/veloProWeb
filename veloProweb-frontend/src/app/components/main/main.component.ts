@@ -11,7 +11,7 @@ import * as bootstrap from 'bootstrap';
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [RouterOutlet, UpdateUserModalComponent, MessageModalComponent, MenuComponent, CommonModule],
+  imports: [RouterOutlet, UpdateUserModalComponent, MenuComponent, CommonModule, MessageModalComponent],
   providers: [DatePipe],
   templateUrl: './main.component.html',
   styleUrl: './main.component.css'
