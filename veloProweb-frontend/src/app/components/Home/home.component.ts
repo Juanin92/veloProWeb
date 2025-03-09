@@ -9,11 +9,12 @@ import { AlertComponent } from "../user/alert/alert.component";
 import { AlertModel } from '../../models/Entity/alert-model';
 import { DispatchComponent } from "../sale/dispatch/dispatch.component";
 import { Dispatch } from '../../models/Entity/Sale/dispatch';
+import { MessageComponent } from "../user/message/message.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, MessageModalComponent, TaskComponent, AlertComponent, DispatchComponent],
+  imports: [CommonModule, MessageModalComponent, TaskComponent, AlertComponent, DispatchComponent, MessageComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
