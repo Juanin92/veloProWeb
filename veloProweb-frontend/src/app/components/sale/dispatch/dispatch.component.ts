@@ -1,56 +1,35 @@
-import { Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { DispatchService } from '../../../services/Sale/dispatch.service';
 import { Dispatch } from '../../../models/Entity/Sale/dispatch';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DetailSaleRequestDTO } from '../../../models/DTO/detail-sale-request-dto';
-import { SaleDetail } from '../../../models/Entity/Sale/sale-detail';
-import { SaleDetailDTO } from '../../../models/DTO/sale-detail-dto';
 import { TooltipService } from '../../../utils/tooltip.service';
-import { NotificationService } from '../../../utils/notification-service.service';
 import { PaymentDispatchComponent } from "../payment-dispatch/payment-dispatch.component";
-import { ModalService } from '../../../utils/modal.service';
+import { DispatchModalComponent } from "../dispatch-modal/dispatch-modal.component";
 
 @Component({
   selector: 'app-dispatch',
   standalone: true,
-  imports: [CommonModule, FormsModule, PaymentDispatchComponent],
+  imports: [CommonModule, FormsModule, PaymentDispatchComponent, DispatchModalComponent],
   templateUrl: './dispatch.component.html',
   styleUrl: './dispatch.component.css'
 })
 export class DispatchComponent implements OnInit{
 
-  @Input() saleDetailList: SaleDetail[] = [];
   @Output() dispatchUpdated = new EventEmitter<Dispatch[]>();
-  @Output() dispatchCreated = new EventEmitter<boolean>();
   dispatchList: Dispatch[] = [];
-  saleDetailDTOList: SaleDetailDTO[] = [];
   saleDetailDispatchList: DetailSaleRequestDTO[] = [];
   selectedDispatch: Dispatch | null = null;
   totalSum: number = 0;
-  dispatch: Dispatch = {
-    id: 0,
-    trackingNumber: '',
-    status: '',
-    address: '',
-    comment: '',
-    customer: '',
-    hasSale: false,
-    created: '',
-    deliveryDate: '',
-    detailSaleDTOS: null,
-  }
 
   constructor(
     private dispatchService: DispatchService,
-    private tooltip: TooltipService,
-    private notification: NotificationService,
-    public modalService: ModalService){}
+    private tooltip: TooltipService){}
 
   ngOnInit(): void {
     this.tooltip.initializeTooltips();
     this.getDispatches();
-    this.modalService.openModal();
   }
 
   getDispatches(): void{
@@ -79,31 +58,6 @@ export class DispatchComponent implements OnInit{
     });
   }
 
-  createNewDispatch(dispatch: Dispatch): void{
-    this.saleDetailDTOList = this.saleDetailList.map(saleDetail => {
-      return {
-        id: saleDetail.id,
-        idProduct: saleDetail.product.id,
-        quantity: saleDetail.quantity
-      };
-    });
-    dispatch.detailSaleDTOS = this.saleDetailDTOList;
-    this.dispatchService.createDispatch(dispatch).subscribe({
-      next:(response)=>{
-        const message = response.message;
-        this.notification.showSuccessToast(message, 'top', 3000);
-        this.getDispatches();
-        this.resetModal();
-        this.dispatchCreated.emit(true);
-        this.modalService.closeModal();
-      },error: (error)=>{
-        const message = error.error?.error || error.error?.message || error?.error;
-        console.log("ERROR: ", message);
-        this.notification.showErrorToast(message, 'top', 3000);
-      }
-    });
-  }
-
   handleStatusDispatch(dispatch: Dispatch, action: number): void{
     this.dispatchService.handleStatusDispatch(dispatch.id, action).subscribe({
       next:(response)=>{
@@ -115,14 +69,6 @@ export class DispatchComponent implements OnInit{
         console.log('Error estado del despacho, ', message);
       }
     });
-  }
-
-  resetModal(): void{
-    this.dispatch.address = '';
-    this.dispatch.comment = '';
-    this.dispatch.customer = '';
-    this.selectedDispatch = null;
-    this.totalSum = 0;
   }
 
   newDetailDispatch(): DetailSaleRequestDTO{
