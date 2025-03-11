@@ -10,43 +10,43 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input type="text" class="form-control-plaintext" id="role" [value]="user.role"
+                                <input type="text" class="form-control-plaintext" id="roleModal" [value]="changeNameRole(user.role)"
                                     readonly>
-                                <label for="role" class="text-muted">Rol</label>
+                                <label for="roleModal" class="text-muted">Rol</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input type="text" class="form-control-plaintext" id="rut" [value]="user.rut" readonly>
-                                <label for="rut" class="text-muted">RUT</label>
+                                <input type="text" class="form-control-plaintext" id="rutModal" [value]="user.rut" readonly>
+                                <label for="rutModal" class="text-muted">RUT</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input type="text" class="form-control-plaintext" id="name" [value]="user.name"
+                                <input type="text" class="form-control-plaintext" id="nameModal" [value]="user.name"
                                     readonly>
-                                <label for="name" class="text-muted">Nombre</label>
+                                <label for="nameModal" class="text-muted">Nombre</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input type="text" class="form-control-plaintext" id="surname" [value]="user.surname"
+                                <input type="text" class="form-control-plaintext" id="surnameModal" [value]="user.surname"
                                     readonly>
-                                <label for="surname" class="text-muted">Apellido</label>
+                                <label for="surnameModal" class="text-muted">Apellido</label>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-floating">
-                                <input type="email" class="form-control" id="email" placeholder="Email" name="email"
+                                <input type="email" class="form-control" id="emailModal" placeholder="Email" name="email"
                                     [(ngModel)]="user.email" required>
-                                <label for="email">Email</label>
+                                <label for="emailModal">Email</label>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="username" placeholder="Nombre usuario"
+                                <input type="text" class="form-control" id="usernameModal" placeholder="Nombre usuario"
                                     name="username" [(ngModel)]="user.username" required>
-                                <label for="username">Nombre de usuario</label>
+                                <label for="usernameModal">Nombre de usuario</label>
                             </div>
                         </div>
                         <div  class="col-12">
@@ -58,8 +58,8 @@
                         </div>
                         <div *ngIf="changePassword" class="col-md-6">
                             <div class="form-floating">
-                                <input type="password" class="form-control" id="password" placeholder="Nueva Contraseña"
-                                    name="password" aria-describedby="passwordHelpInline">
+                                <input type="password" class="form-control" id="newPassword" placeholder="Nueva Contraseña"
+                                    name="newPassword" aria-describedby="passwordHelpInline">
                                 <label for="password">Nueva Contraseña</label>
                             </div>
                         </div>
