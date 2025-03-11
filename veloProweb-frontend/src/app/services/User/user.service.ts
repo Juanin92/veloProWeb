@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from '../../models/Entity/user';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ export class UserService {
 
   private apiUrl = 'http://localhost:8080/usuario';
   
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private auth: AuthService) { }
 
   /**
    * Obtiene una lista de todos los usuarios desde el endpoint
@@ -54,5 +55,9 @@ export class UserService {
    */
   activeUser(user: User): Observable<{message: string}>{
     return this.httpClient.put<{message: string}>(`${this.apiUrl}/activar-usuario`, user);
+  }
+
+  getUserData(): Observable<User>{
+    return this.httpClient.get<User>(`${this.apiUrl}/datos`, {headers: this.auth.getAuthHeaders()});
   }
 }
