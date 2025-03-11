@@ -1,6 +1,7 @@
 package com.veloProWeb.Controller.User;
 
 import com.veloProWeb.Model.DTO.UpdateUserDTO;
+import com.veloProWeb.Model.DTO.UserDTO;
 import com.veloProWeb.Model.Entity.User.User;
 import com.veloProWeb.Service.User.Interface.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Controlador REST para gestionar operaciones relacionadas con usuarios.
- * Este controlador proporciona endpoints para listar, agregar, actualizar, eliminar y activar usuarios.
- */
 @RestController
 @RequestMapping("/usuario")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -80,6 +77,16 @@ public class UserController {
         }catch (Exception e){
             response.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    @GetMapping("datos")
+    public ResponseEntity<UserDTO> getUserData(@AuthenticationPrincipal UserDetails userDetails){
+        try{
+            UserDTO dto = userService.getData(userDetails.getUsername());
+            return ResponseEntity.ok(dto);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
