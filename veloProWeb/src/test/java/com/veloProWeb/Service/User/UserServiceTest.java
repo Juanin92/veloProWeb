@@ -1,5 +1,6 @@
 package com.veloProWeb.Service.User;
 
+import com.veloProWeb.Model.DTO.UpdateUserDTO;
 import com.veloProWeb.Model.Entity.User.User;
 import com.veloProWeb.Model.Enum.Rol;
 import com.veloProWeb.Repository.UserRepo;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -25,7 +27,9 @@ public class UserServiceTest {
     @InjectMocks private UserService userService;
     @Mock private UserRepo userRepo;
     @Mock private UserValidator validator;
+    @Mock private BCryptPasswordEncoder passwordEncoder;
     private User user;
+    private UpdateUserDTO updateUserDTO;
 
     @BeforeEach
     void setUp(){
@@ -135,5 +139,131 @@ public class UserServiceTest {
         List<User> result = userService.getAllUser();
         verify(userRepo).findAll();
         assertEquals(list, result);
+    }
+
+    //Prueba para actualizar los datos de un usuario
+    @Test
+    public void updateUserData_validUsername(){
+        updateUserDTO = new UpdateUserDTO("TestUsername", "example@gmail.com",
+                null, null, null);
+        when(userRepo.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        when(userRepo.existsByUsername(updateUserDTO.getUsername())).thenReturn(false);
+        userService.updateUserData(updateUserDTO, user.getUsername());
+
+        verify(userRepo, times(1)).findByUsername("jpp");
+        verify(userRepo, times(1)).existsByUsername(updateUserDTO.getUsername());
+        verify(userRepo, never()).existsByEmail(updateUserDTO.getEmail());
+        verify(validator, times(1)).validateStatus(user.isStatus());
+        verify(validator, times(1)).validate(user);
+        verify(userRepo, times(1)).save(user);
+
+        assertEquals(updateUserDTO.getUsername(), user.getUsername());
+        assertEquals(updateUserDTO.getEmail(), user.getEmail());
+    }
+    @Test
+    public void updateUserData_validExistingUsernameException(){
+        updateUserDTO = new UpdateUserDTO("TestUsername", "example@gmail.com",
+                null, null, null);
+        when(userRepo.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        when(userRepo.existsByUsername(updateUserDTO.getUsername())).thenReturn(true);
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() ->
+                userService.updateUserData(updateUserDTO, user.getUsername()));
+
+        verify(userRepo, times(1)).findByUsername("jpp");
+        verify(userRepo, times(1)).existsByUsername(updateUserDTO.getUsername());
+        verify(userRepo, never()).existsByEmail(updateUserDTO.getEmail());
+        verify(validator, never()).validateStatus(user.isStatus());
+        verify(validator, never()).validate(user);
+        verify(userRepo, never()).save(user);
+
+        assertEquals(e.getMessage(), "El nombre de usuario ya está en uso");
+    }
+    @Test
+    public void updateUserData_validEmail(){
+        updateUserDTO = new UpdateUserDTO("jpp", "new_example@gmail.com",
+                null, null, null);
+        when(userRepo.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        when(userRepo.existsByEmail(updateUserDTO.getEmail())).thenReturn(false);
+        userService.updateUserData(updateUserDTO, user.getUsername());
+
+        verify(userRepo, times(1)).findByUsername("jpp");
+        verify(userRepo, never()).existsByUsername(updateUserDTO.getUsername());
+        verify(userRepo, times(1)).existsByEmail(updateUserDTO.getEmail());
+        verify(validator, times(1)).validateStatus(user.isStatus());
+        verify(validator, times(1)).validate(user);
+        verify(userRepo, times(1)).save(user);
+
+        assertEquals(updateUserDTO.getUsername(), user.getUsername());
+        assertEquals(updateUserDTO.getEmail(), user.getEmail());
+    }
+    @Test
+    public void updateUserData_validExistingEmailException(){
+        updateUserDTO = new UpdateUserDTO("jpp", "new_example@gmail.com",
+                null, null, null);
+        when(userRepo.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        when(userRepo.existsByEmail(updateUserDTO.getEmail())).thenReturn(true);
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() ->
+                userService.updateUserData(updateUserDTO, user.getUsername()));
+
+        verify(userRepo, times(1)).findByUsername("jpp");
+        verify(userRepo, never()).existsByUsername(updateUserDTO.getUsername());
+        verify(userRepo, times(1)).existsByEmail(updateUserDTO.getEmail());
+        verify(validator, never()).validateStatus(user.isStatus());
+        verify(validator, never()).validate(user);
+        verify(userRepo, never()).save(user);
+
+        assertEquals(e.getMessage(), "El email ya está registrado");
+    }
+    @Test
+    public void updateUserData_validPassword() {
+        user.setToken(null);
+        updateUserDTO = new UpdateUserDTO("jpp", "example@gmail.com",
+                "jpp12345", "new12345", "new12345");
+        when(userRepo.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(updateUserDTO.getCurrentPassword(), user.getPassword())).thenReturn(true);
+        userService.updateUserData(updateUserDTO, user.getUsername());
+
+        verify(userRepo, times(1)).findByUsername("jpp");
+        verify(userRepo, never()).existsByUsername(updateUserDTO.getUsername());
+        verify(userRepo, never()).existsByEmail(updateUserDTO.getEmail());
+        verify(validator, times(1)).validateStatus(user.isStatus());
+        verify(validator, times(1)).validate(user);
+        verify(userRepo, times(1)).save(user);
+
+        assertEquals(updateUserDTO.getUsername(), user.getUsername());
+        assertEquals(updateUserDTO.getEmail(), user.getEmail());
+        assertNull(user.getToken());
+    }
+    @Test
+    public void updateUserData_invalidCurrentPasswordException(){
+        updateUserDTO = new UpdateUserDTO("jpp", "example@gmail.com",
+                "jpp123", "new12345", "new12345");
+        when(userRepo.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(updateUserDTO.getCurrentPassword(), user.getPassword())).thenReturn(false);
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() ->
+                userService.updateUserData(updateUserDTO, user.getUsername()));
+
+        verify(userRepo, times(1)).findByUsername("jpp");
+        verify(validator, never()).validateStatus(user.isStatus());
+        verify(validator, never()).validate(user);
+        verify(userRepo, never()).save(user);
+
+        assertEquals(e.getMessage(), "La contraseña actual o el código de recuperación son incorrectos");
+    }
+    @Test
+    public void updateUserData_invalidMatchNewPasswordException(){
+        updateUserDTO = new UpdateUserDTO("jpp", "example@gmail.com",
+                "jpp12345", "new12345", "new1234");
+        when(userRepo.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(updateUserDTO.getCurrentPassword(), user.getPassword())).thenReturn(true);
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() ->
+                userService.updateUserData(updateUserDTO, user.getUsername()));
+
+        verify(userRepo, times(1)).findByUsername("jpp");
+        verify(validator, never()).validateStatus(user.isStatus());
+        verify(validator, never()).validate(user);
+        verify(userRepo, never()).save(user);
+
+        assertEquals(e.getMessage(), "Las contraseñas nuevas no coinciden");
     }
 }
