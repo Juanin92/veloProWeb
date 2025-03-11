@@ -1,10 +1,13 @@
 package com.veloProWeb.Controller.User;
 
+import com.veloProWeb.Model.DTO.UpdateUserDTO;
 import com.veloProWeb.Model.Entity.User.User;
 import com.veloProWeb.Service.User.Interface.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -54,12 +57,25 @@ public class UserController {
      * @param user - Usuario con los datos actualizados
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
+//    @PutMapping("/editar-usuario")
+//    public ResponseEntity<Map<String, String>> updateUser(@RequestBody User user){
+//        Map<String, String> response =  new HashMap<>();
+//        try{
+//            userService.updateUser(user);
+//            response.put("message", "Usuario "+ user.getName() + " " + user.getUsername() + " actualizado exitosamente");
+//            return ResponseEntity.ok(response);
+//        }catch (Exception e){
+//            response.put("error", e.getMessage());
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+//        }
+//    }
+
     @PutMapping("/editar-usuario")
-    public ResponseEntity<Map<String, String>> updateUser(@RequestBody User user){
+    public ResponseEntity<Map<String, String>> updateUser(@RequestBody UpdateUserDTO user, @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response =  new HashMap<>();
         try{
-            userService.updateUser(user);
-            response.put("message", "Usuario "+ user.getName() + " " + user.getUsername() + " actualizado exitosamente");
+            userService.updateUserData(user, userDetails.getUsername());
+            response.put("message", "Usuario actualizado exitosamente");
             return ResponseEntity.ok(response);
         }catch (Exception e){
             response.put("error", e.getMessage());
