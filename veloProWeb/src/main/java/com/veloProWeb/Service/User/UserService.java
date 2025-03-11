@@ -1,6 +1,7 @@
 package com.veloProWeb.Service.User;
 
 import com.veloProWeb.Model.DTO.UpdateUserDTO;
+import com.veloProWeb.Model.DTO.UserDTO;
 import com.veloProWeb.Model.Entity.User.User;
 import com.veloProWeb.Repository.UserRepo;
 import com.veloProWeb.Service.User.Interface.IUserService;
@@ -188,6 +189,18 @@ public class UserService implements IUserService {
         validator.validateStatus(user.isStatus());
         validator.validate(user);
         userRepository.save(user);
+    }
+
+    /**
+     * Obtiene los datos de un usuario existente
+     * @param username - Nombre de usuario a buscar
+     * @return - Clase DTO con los datos necesarios.
+     */
+    @Override
+    public UserDTO getData(String username) {
+        User user = getUserWithUsername(username);
+        return new UserDTO(user.getName(), user.getSurname(), user.getUsername(), user.getRut(),
+                user.getEmail(), user.getRole());
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.veloProWeb.Service.User.Interface;
 
 import com.veloProWeb.Model.DTO.UpdateUserDTO;
+import com.veloProWeb.Model.DTO.UserDTO;
 import com.veloProWeb.Model.Entity.User.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -18,4 +19,5 @@ public interface IUserService {
     void sendEmailCode(User user);
     void sendEmailUpdatePassword(User user);
     void updateUserData(UpdateUserDTO dto, String username);
+    UserDTO getData(String username);
 }
