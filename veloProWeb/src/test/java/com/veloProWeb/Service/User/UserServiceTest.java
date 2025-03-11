@@ -1,6 +1,7 @@
 package com.veloProWeb.Service.User;
 
 import com.veloProWeb.Model.DTO.UpdateUserDTO;
+import com.veloProWeb.Model.DTO.UserDTO;
 import com.veloProWeb.Model.Entity.User.User;
 import com.veloProWeb.Model.Enum.Rol;
 import com.veloProWeb.Repository.UserRepo;
@@ -265,5 +266,15 @@ public class UserServiceTest {
         verify(userRepo, never()).save(user);
 
         assertEquals(e.getMessage(), "Las contraseñas nuevas no coinciden");
+    }
+
+    //Prueba para obtener la información de un usuario
+    @Test
+    public void getData_valid(){
+        when(userRepo.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        UserDTO dto = userService.getData(user.getUsername());
+
+        verify(userRepo, times(1)).findByUsername("jpp");
+        assertEquals(dto.getName(), user.getName());
     }
 }
