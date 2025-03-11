@@ -153,6 +153,14 @@ public class UserService implements IUserService {
 
     }
 
+    /**
+     * Actualiza los datos de un usuario existente.
+     * Permite modificar el nombre de usuario, el correo electrónico y la contraseña de un usuario.
+     * Verifica que nombre de usuario y email nuevo no estén en uso.
+     * Verifica que la contraseña actual o el código de recuperación sean correctos.
+     * @param dto - Clase con los datos necesarios a modificar
+     * @param username - Nombre del usuario a modificar
+     */
     @Override
     public void updateUserData(UpdateUserDTO dto, String username) {
         User user = getUserWithUsername(username);
