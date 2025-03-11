@@ -200,7 +200,7 @@ public class UserService implements IUserService {
     public UserDTO getData(String username) {
         User user = getUserWithUsername(username);
         return new UserDTO(user.getName(), user.getSurname(), user.getUsername(), user.getRut(),
-                user.getEmail(), user.getRole());
+                user.getEmail(), user.getRole(), user.isStatus());
     }
 
     /**

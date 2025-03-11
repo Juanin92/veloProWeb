@@ -15,4 +15,5 @@ public class UserDTO {
     private String rut;
     private String email;
     private Rol role;
+    private boolean status;
 }
