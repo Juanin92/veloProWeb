@@ -137,9 +137,9 @@ public class UserServiceTest {
         List<User> list = Collections.singletonList(user);
         when(userRepo.findAll()).thenReturn(list);
 
-        List<User> result = userService.getAllUser();
+        List<UserDTO> result = userService.getAllUser();
         verify(userRepo).findAll();
-        assertEquals(list, result);
+        assertEquals(list.size(), result.size());
     }
 
     //Prueba para actualizar los datos de un usuario
