@@ -98,18 +98,15 @@ public class UserService implements IUserService {
     /**
      * Activar un usuario.
      * Válida que usuario exista y esté eliminado
-     * @param user - Objeto con los datos del usuario
+     * @param username - Cadena con el nombre de usuario
      */
     @Override
-    public void activateUser(User user) {
-        User existingUser = getUserCreated(user.getRut());
-        if (existingUser == null){
-            throw new IllegalArgumentException("El usuario no existe en la base de datos.");
-        }
-        if (!existingUser.isStatus()) {
-            existingUser.setStatus(true);
-            existingUser.setDate(LocalDate.now());
-            userRepository.save(existingUser);
+    public void activateUser(String username) {
+        User user = getUserWithUsername(username);
+        if (!user.isStatus()) {
+            user.setStatus(true);
+            user.setDate(LocalDate.now());
+            userRepository.save(user);
         } else {
             throw new IllegalArgumentException("El usuario ya está activo y no puede ser activado nuevamente.");
         }

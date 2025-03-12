@@ -11,7 +11,7 @@ public interface IUserService {
     void addUser(User user);
     void updateUser(User user);
     void deleteUser(String username);
-    void activateUser(User user);
+    void activateUser(String username);
     List<UserDTO> getAllUser();
     User getUserWithUsername(String username);
     User getAuthUser(String username, String pass);
