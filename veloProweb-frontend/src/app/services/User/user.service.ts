@@ -38,8 +38,9 @@ export class UserService {
    * @param user - usuario con la nueva información
    * @returns - Observable que emite un mensaje de confirmación
    */
-  updateUser(user: User): Observable<{message: string}>{
-    return this.httpClient.put<{message: string}>(`${this.apiUrl}/editar-usuario`, user);
+  updateUserByAdmin(user: UserDTO): Observable<{message: string}>{
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/administrar/editar-usuario`, 
+      user, {headers: this.auth.getAuthHeaders()});
   }
 
   /**
