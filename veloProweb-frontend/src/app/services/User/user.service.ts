@@ -19,8 +19,8 @@ export class UserService {
    * Obtiene una lista de todos los usuarios desde el endpoint
    * @returns observable que emite una lista de usuarios
    */
-  getListUsers(): Observable<User[]>{
-    return this.httpClient.get<User[]>(this.apiUrl);
+  getListUsers(): Observable<UserDTO[]>{
+    return this.httpClient.get<UserDTO[]>(this.apiUrl, {headers: this.auth.getAuthHeaders()});
   }
 
   /**
