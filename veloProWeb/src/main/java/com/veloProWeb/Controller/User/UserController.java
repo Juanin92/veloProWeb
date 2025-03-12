@@ -74,18 +74,18 @@ public class UserController {
      * @param user - Usuario con los datos actualizados
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
-//    @PutMapping("/editar-usuario")
-//    public ResponseEntity<Map<String, String>> updateUser(@RequestBody User user){
-//        Map<String, String> response =  new HashMap<>();
-//        try{
-//            userService.updateUser(user);
-//            response.put("message", "Usuario "+ user.getName() + " " + user.getUsername() + " actualizado exitosamente");
-//            return ResponseEntity.ok(response);
-//        }catch (Exception e){
-//            response.put("error", e.getMessage());
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-//        }
-//    }
+    @PutMapping("/editar-usuario")
+    public ResponseEntity<Map<String, String>> updateUser(@RequestBody User user){
+        Map<String, String> response =  new HashMap<>();
+        try{
+            userService.updateUser(user);
+            response.put("message", "Usuario "+ user.getName() + " " + user.getUsername() + " actualizado exitosamente");
+            return ResponseEntity.ok(response);
+        }catch (Exception e){
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
 
     /**
      * Actualiza los datos un usuario existente.
@@ -94,7 +94,7 @@ public class UserController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping("/actualizar-usuario")
-    public ResponseEntity<Map<String, String>> updateUser(@RequestBody UpdateUserDTO user, @AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<Map<String, String>> updateUserProfile(@RequestBody UpdateUserDTO user, @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response =  new HashMap<>();
         try{
             userService.updateUserData(user, userDetails.getUsername());
@@ -114,7 +114,7 @@ public class UserController {
      * @return - Los datos necesario del usuario a compartir
      */
     @GetMapping("datos")
-    public ResponseEntity<UserDTO> getUserData(@AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<UserDTO> getUserProfile(@AuthenticationPrincipal UserDetails userDetails){
         try{
             UserDTO dto = userService.getData(userDetails.getUsername());
             recordService.registerAction(userDetails, "GET_DATA", "Datos del usuario obtenidos exitosamente");
