@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from '../../models/Entity/user';
 import { AuthService } from './auth.service';
+import { UserDTO } from '../../models/DTO/user-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -57,7 +58,7 @@ export class UserService {
     return this.httpClient.put<{message: string}>(`${this.apiUrl}/activar-usuario`, user);
   }
 
-  getUserData(): Observable<User>{
-    return this.httpClient.get<User>(`${this.apiUrl}/datos`, {headers: this.auth.getAuthHeaders()});
+  getUserData(): Observable<UserDTO>{
+    return this.httpClient.get<UserDTO>(`${this.apiUrl}/datos`, {headers: this.auth.getAuthHeaders()});
   }
 }

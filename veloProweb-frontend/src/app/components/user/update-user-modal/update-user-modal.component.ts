@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { User } from '../../../models/Entity/user';
 import { Role } from '../../../models/enum/role';
 import { UserService } from '../../../services/User/user.service';
+import { UserDTO } from '../../../models/DTO/user-dto';
 
 @Component({
   selector: 'app-update-user-modal',
@@ -18,7 +19,7 @@ export class UpdateUserModalComponent implements OnInit{
   changePassword: boolean = false;
   newPassword: string = '';
   newPasswordConfirmed: string = '';
-  user: User = this.initializeUser();
+  userDTO: UserDTO = this.initializeUser();
 
   constructor(private userService: UserService) {}
 
@@ -29,7 +30,7 @@ export class UpdateUserModalComponent implements OnInit{
   getData(){
     this.userService.getUserData().subscribe({
       next:(user)=>{
-        this.user = user;
+        this.userDTO = user;
       }, error: (error) =>{
         console.log('Error: ', error?.error);
       }
@@ -64,19 +65,16 @@ export class UpdateUserModalComponent implements OnInit{
     }
   }
 
-  private initializeUser(): User{
+  private initializeUser(): UserDTO{
     return {
-      id: 0,
-      date: '',
       name: '',
       surname: '',
       username: '',
       rut: '',
       email: '',
-      password: '',
       token: '',
       status: true,
-      role: Role.GUEST
+      role: null
     }
   }
 }
