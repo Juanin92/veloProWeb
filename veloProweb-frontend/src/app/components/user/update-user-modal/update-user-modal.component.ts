@@ -3,6 +3,9 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../services/User/user.service';
 import { UserDTO } from '../../../models/DTO/user-dto';
+import { NotificationService } from '../../../utils/notification-service.service';
+import { UpdateUserDTO } from '../../../models/DTO/update-user-dto';
+import { ModalService } from '../../../utils/modal.service';
 
 @Component({
   selector: 'app-update-user-modal',
@@ -17,12 +20,18 @@ export class UpdateUserModalComponent implements OnInit{
   changePassword: boolean = false;
   newPassword: string = '';
   newPasswordConfirmed: string = '';
+  currentPassword: string = '';
   userDTO: UserDTO = this.initializeUser();
+  updateUserDto: UpdateUserDTO | null = null;
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private notification: NotificationService,
+    public modal: ModalService) {}
 
   ngOnInit(): void {
     this.getData();
+    this.modal.openModal();
   }
 
   getData(){
@@ -31,6 +40,22 @@ export class UpdateUserModalComponent implements OnInit{
         this.userDTO = user;
       }, error: (error) =>{
         console.log('Error: ', error?.error);
+      }
+    });
+  }
+
+  updateUser(userDTO: UserDTO): void{
+    this.updateUserDto = this.initializeUpdateUser(userDTO);
+    this.userService.updateDataUser(this.updateUserDto).subscribe({
+      next:(response)=>{
+        console.log('Usuario agregado exitosamente:', response);
+        this.notification.showSuccessToast(response.message, 'top', 3000);
+        this.resetModalUser();
+        this.modal.closeModal();
+      },error:(error)=>{
+        const message = error.error?.message || error.error?.error || error?.error;
+        console.error('Error al agregar el usuario:', message);
+        this.notification.showErrorToast(`Error al agregar usuario \n${message}`, 'top', 5000);
       }
     });
   }
@@ -61,6 +86,16 @@ export class UpdateUserModalComponent implements OnInit{
       case 'WAREHOUSE': return 'Logística';
       case 'SELLER': return 'Vendedor';
       default: return 'Sin Rol';
+    }
+  }
+
+  private initializeUpdateUser(user: UserDTO): UpdateUserDTO {
+    return {
+      username: user.username,
+      email: user.email,
+      currentPassword: this.currentPassword,
+      newPassword: this.newPassword,
+      confirmPassword: this.newPasswordConfirmed
     }
   }
 
