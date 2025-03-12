@@ -125,11 +125,17 @@ public class UserController {
     public ResponseEntity<Map<String, String>> deleteUser(@RequestBody String username, @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response =  new HashMap<>();
         try{
-            userService.deleteUser(username);
-            recordService.registerAction(userDetails, "DELETE",
-                    "Desactivo usuario del sistema: " + username);
-            response.put("message", "Usuario eliminado exitosamente");
-            return ResponseEntity.ok(response);
+            if (userService.hasRequiredRole(userDetails, "ADMIN", "MASTER")){
+                userService.deleteUser(username);
+                recordService.registerAction(userDetails, "DELETE",
+                        "Desactivo usuario del sistema: " + username);
+                response.put("message", "Usuario eliminado exitosamente");
+                return ResponseEntity.ok(response);
+            }else{
+                recordService.registerAction(userDetails, "LIST_USER_FAILURE",
+                        "Error: " + userDetails.getUsername() + " ingreso indebido");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
         }catch (Exception e){
             response.put("error", e.getMessage());
             recordService.registerAction(userDetails, "DELETE_FAILURE",
@@ -140,18 +146,28 @@ public class UserController {
 
     /**
      *Activa un usuario
-     * @param user - Usuario que se desea activar
+     * @param  username - nombre de usuario que se desea eliminar
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping("/activar-usuario")
-    public ResponseEntity<Map<String, String>> activeUser(@RequestBody User user){
+    public ResponseEntity<Map<String, String>> activeUser(@RequestBody String username, @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response =  new HashMap<>();
         try{
-            userService.activateUser(user);
-            response.put("message", "Usuario activado exitosamente");
-            return ResponseEntity.ok(response);
+            if (userService.hasRequiredRole(userDetails, "ADMIN", "MASTER")){
+                userService.activateUser(username);
+                recordService.registerAction(userDetails, "ACTIVATE ",
+                        "activo usuario del sistema: " + username);
+                response.put("message", "Usuario activado exitosamente");
+                return ResponseEntity.ok(response);
+            }else{
+                recordService.registerAction(userDetails, "LIST_USER_FAILURE",
+                        "Error: " + userDetails.getUsername() + " ingreso indebido");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
         }catch (Exception e){
             response.put("error", e.getMessage());
+            recordService.registerAction(userDetails, "ACTIVATE_FAILURE",
+                    "ERROR: activar usuario(" + username + "): " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
