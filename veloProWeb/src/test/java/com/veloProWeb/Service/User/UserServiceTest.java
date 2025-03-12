@@ -118,16 +118,18 @@ public class UserServiceTest {
     public void activateUser_valid(){
         user.setStatus(false);
         assertFalse(user.isStatus());
-        when(userRepo.findByRut(user.getRut())).thenReturn(Optional.of(user));
+        when(userRepo.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
 
-        userService.activateUser(user);
+        userService.activateUser(user.getUsername());
+        verify(userRepo).findByUsername(user.getUsername());
         verify(userRepo).save(user);
         assertTrue(user.isStatus());
     }
     @Test
     public void activateUser_validUserActivated(){
-        when(userRepo.findByRut(user.getRut())).thenReturn(Optional.of(user));
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() -> userService.activateUser(user));
+        when(userRepo.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() -> userService.activateUser(user.getUsername()));
+        verify(userRepo).findByUsername(user.getUsername());
         verify(userRepo, never()).save(user);
         assertEquals("El usuario ya está activo y no puede ser activado nuevamente.", e.getMessage());
     }
