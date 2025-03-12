@@ -84,25 +84,25 @@ export class UserComponent implements OnInit, AfterViewInit {
   /**
    * Crea un nuevo usuario después de validar el formulario.
    */
-  // createUser(): void{
-  //   if (this.validator.validateForm(this.user)) {
-  //     const newUser = this.user;
-  //     this.userService.addUser(newUser).subscribe({
-  //       next: (response) =>{
-  //         console.log('Usuario agregado exitosamente:', response);
-  //         this.notification.showSuccessToast(response.message, 'top', 3000);
-  //         this.getUsers();
-  //         this.resetForms();
-  //       }, error:(error) => {
-  //         const message = error.error?.message || error.error?.error;
-  //         console.error('Error al agregar el usuario:', error);
-  //         this.notification.showErrorToast(`Error al agregar usuario \n${message}`, 'top', 5000);
-  //       }
-  //     });
-  //   }else {
-  //     this.notification.showWarning('Formulario incompleto', 'Por favor, complete correctamente todos los campos obligatorios.');
-  //   }
-  // }
+  createUser(): void{
+    if (this.validator.validateForm(this.user)) {
+      const newUser = this.user;
+      this.userService.addUser(newUser).subscribe({
+        next: (response) =>{
+          console.log('Usuario agregado exitosamente:', response);
+          this.notification.showSuccessToast(response.message, 'top', 3000);
+          this.getUsers();
+          this.resetForms();
+        }, error:(error) => {
+          const message = error.error?.message || error.error?.error;
+          console.error('Error al agregar el usuario:', error);
+          this.notification.showErrorToast(`Error al agregar usuario \n${message}`, 'top', 5000);
+        }
+      });
+    }else {
+      this.notification.showWarning('Formulario incompleto', 'Por favor, complete correctamente todos los campos obligatorios.');
+    }
+  }
 
   /**
    * Actualiza un usuario existente después de validar el formulario.
