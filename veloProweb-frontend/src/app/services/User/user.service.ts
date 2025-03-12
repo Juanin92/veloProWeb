@@ -28,8 +28,9 @@ export class UserService {
    * @param user - usuario a agregar
    * @returns Observable que emite un mensaje de confirmación
    */
-  addUser(user: User): Observable<{message: string}>{
-    return this.httpClient.post<{message: string}>(`${this.apiUrl}/nuevo-usuario`, user);
+  addUser(user: UserDTO): Observable<{message: string}>{
+    return this.httpClient.post<{message: string}>(`${this.apiUrl}/nuevo-usuario`, 
+      user, {headers: this.auth.getAuthHeaders()});
   }
 
   /**
