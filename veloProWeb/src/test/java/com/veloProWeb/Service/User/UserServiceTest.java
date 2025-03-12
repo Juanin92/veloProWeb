@@ -31,6 +31,7 @@ public class UserServiceTest {
     @Mock private BCryptPasswordEncoder passwordEncoder;
     private User user;
     private UpdateUserDTO updateUserDTO;
+    private UserDTO userDTO;
 
     @BeforeEach
     void setUp(){
@@ -46,25 +47,31 @@ public class UserServiceTest {
         user.setToken("");
         user.setStatus(true);
         user.setRole(Rol.ADMIN);
+
+        userDTO = new UserDTO("Carlos", "Perez", "cape", "12345678-0",
+                "test@gmail.com",Rol.SELLER, true, LocalDate.now());
     }
 
     //Prueba para crear usuario
     @Test
     public void addUser_valid(){
-        when(userRepo.findByRut(user.getRut())).thenReturn(Optional.empty());
-        when(userRepo.findByUsername(user.getUsername())).thenReturn(Optional.empty());
+        when(userRepo.findByRut(userDTO.getRut())).thenReturn(Optional.empty());
+        when(userRepo.findByUsername(userDTO.getUsername())).thenReturn(Optional.empty());
 
-        userService.addUser(user);
-        verify(validator).validate(user);
-        verify(userRepo).save(user);
+        userService.addUser(userDTO);
+        verify(userRepo).findByUsername(userDTO.getUsername());
+        verify(userRepo).findByRut(userDTO.getRut());
+        verify(validator).validate(any(User.class));
+        verify(userRepo).save(any(User.class));
     }
     @Test
     public void addUser_validUsernameExisting(){
-        when(userRepo.findByRut(user.getRut())).thenReturn(Optional.empty());
-        when(userRepo.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() -> userService.addUser(user));
-        verify(validator).validate(user);
-        verify(userRepo, never()).save(user);
+        userDTO.setUsername("jpp");
+        when(userRepo.findByRut(userDTO.getRut())).thenReturn(Optional.empty());
+        when(userRepo.findByUsername(userDTO.getUsername())).thenReturn(Optional.of(user));
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() -> userService.addUser(userDTO));
+        verify(validator, never()).validate(any(User.class));
+        verify(userRepo, never()).save(any(User.class));
         assertEquals("Este nombre de usuario ya existe", e.getMessage());
     }
 
