@@ -67,7 +67,7 @@ public class UserController {
 //        }
 //    }
 
-    @PutMapping("/editar-usuario")
+    @PutMapping("/actualizar-usuario")
     public ResponseEntity<Map<String, String>> updateUser(@RequestBody UpdateUserDTO user, @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response =  new HashMap<>();
         try{
