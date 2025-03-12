@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
 import { UserService } from '../../services/User/user.service';
-import { User } from '../../models/Entity/user';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserValidator } from '../../validation/user-validator';
