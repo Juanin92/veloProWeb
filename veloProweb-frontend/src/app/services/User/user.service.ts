@@ -43,11 +43,12 @@ export class UserService {
 
   /**
    * Elimina (desactiva) un usuario
-   * @param user - usuario seleccionado
+   * @param username - nombre de usuario seleccionado
    * @returns - Observable que emite un mensaje de confirmación
    */
-  deleteUser(user: User): Observable<{message: string}>{
-    return this.httpClient.put<{message: string}>(`${this.apiUrl}/eliminar-usuario`, user);
+  deleteUser(username: string): Observable<{message: string}>{
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/eliminar-usuario`, 
+      username, {headers: this.auth.getAuthHeaders()});
   }
 
   /**
