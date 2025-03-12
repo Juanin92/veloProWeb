@@ -48,14 +48,23 @@ public class UserController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PostMapping("/nuevo-usuario")
-    public ResponseEntity<Map<String, String>> addUser(@RequestBody User user){
+    public ResponseEntity<Map<String, String>> addUser(@RequestBody UserDTO user, @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response =  new HashMap<>();
         try{
-            userService.addUser(user);
-            response.put("message", "Nuevo usuario "+ user.getName() + " " + user.getUsername() + " creado exitosamente");
-            return ResponseEntity.ok(response);
+            if (userService.hasRequiredRole(userDetails, "ADMIN", "MASTER")){
+                userService.addUser(user);
+                recordService.registerAction(userDetails, "CREATE", "Creó un usuario nuevo: " + user.getUsername());
+                response.put("message", "Nuevo usuario "+ user.getName() + " " + user.getUsername() + " creado exitosamente");
+                return ResponseEntity.ok(response);
+            }else{
+                recordService.registerAction(userDetails, "CREATE_FAILURE",
+                        "Error: " + userDetails.getUsername() + " ingreso indebido");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
         }catch (Exception e){
             response.put("error", e.getMessage());
+            recordService.registerAction(userDetails, "DELETE_FAILURE",
+                    "ERROR: crear usuario(" + user.getUsername() + "): " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
