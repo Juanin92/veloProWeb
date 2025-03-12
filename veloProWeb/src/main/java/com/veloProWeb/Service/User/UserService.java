@@ -43,6 +43,7 @@ public class UserService implements IUserService {
             user.setSurname(dto.getSurname().substring(0, 1).toUpperCase() + dto.getSurname().substring(1));
             user.setRut(dto.getRut());
             user.setEmail(dto.getEmail());
+            user.setRole(dto.getRole());
             user.setToken(null);
             user.setStatus(true);
             Optional<User> userNameExist = userRepository.findByUsername(dto.getUsername());
@@ -51,7 +52,7 @@ public class UserService implements IUserService {
             }else {
                 user.setUsername(dto.getUsername());
             }
-            user.setPassword(passwordEncoder.encode(user.getUsername() + user.getRut().substring(0,4)));
+            user.setPassword(passwordEncoder.encode(user.getUsername() + user.getRut().substring(0,5)));
             validator.validate(user);
             userRepository.save(user);
         }
