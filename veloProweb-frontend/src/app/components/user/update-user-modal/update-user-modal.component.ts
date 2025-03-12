@@ -6,6 +6,7 @@ import { UserDTO } from '../../../models/DTO/user-dto';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { UpdateUserDTO } from '../../../models/DTO/update-user-dto';
 import { ModalService } from '../../../utils/modal.service';
+import { UserValidator } from '../../../validation/user-validator';
 
 @Component({
   selector: 'app-update-user-modal',
@@ -23,6 +24,7 @@ export class UpdateUserModalComponent implements OnInit{
   currentPassword: string = '';
   userDTO: UserDTO = this.initializeUser();
   updateUserDto: UpdateUserDTO | null = null;
+  validator = UserValidator;
 
   constructor(
     private userService: UserService,
