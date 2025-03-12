@@ -97,17 +97,18 @@ public class UserServiceTest {
     @Test
     public void deleteUser_valid(){
         assertTrue(user.isStatus());
-        when(userRepo.findByRut(user.getRut())).thenReturn(Optional.of(user));
+        when(userRepo.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
 
-        userService.deleteUser(user);
+        userService.deleteUser(user.getUsername());
+        verify(userRepo).findByUsername(user.getUsername());
         verify(userRepo).save(user);
         assertFalse(user.isStatus());
     }
     @Test
     public void deleteUser_validUserDeleted(){
         user.setStatus(false);
-        when(userRepo.findByRut(user.getRut())).thenReturn(Optional.of(user));
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() -> userService.deleteUser(user));
+        when(userRepo.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() -> userService.deleteUser(user.getUsername()));
         verify(userRepo, never()).save(user);
         assertEquals("El usuario ya está inactivo y no puede ser eliminado nuevamente.", e.getMessage());
     }
