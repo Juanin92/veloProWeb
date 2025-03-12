@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IUserService {
     void addUser(UserDTO dto);
-    void updateUser(User user);
+    void updateUser(UserDTO dto);
     void deleteUser(String username);
     void activateUser(String username);
     List<UserDTO> getAllUser();

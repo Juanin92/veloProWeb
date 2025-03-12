@@ -52,8 +52,9 @@ public class UserService implements IUserService {
             }else {
                 user.setUsername(dto.getUsername());
             }
-            user.setPassword(passwordEncoder.encode(user.getUsername() + user.getRut().substring(0,5)));
+            user.setPassword(user.getUsername() + user.getRut().substring(0,5));
             validator.validate(user);
+            user.setPassword(passwordEncoder.encode(user.getUsername() + user.getRut().substring(0,5)));
             userRepository.save(user);
         }
     }
@@ -61,27 +62,28 @@ public class UserService implements IUserService {
     /**
      * Actualizar los datos de un usuario seleccionado.
      * Válida que el username no esté registrado anteriormente y el usuario exista
-     * @param user - Objeto con los datos actualizados del usuario
+     * @param dto - Objeto con los datos actualizados del usuario
      */
     @Override
-    public void updateUser(User user) {
-        User existingUser = getUserCreated(user.getRut());
+    public void updateUser(UserDTO dto) {
+        User existingUser = getUserCreated(dto.getRut());
         if (existingUser == null){
             throw new IllegalArgumentException("El usuario no existe en la base de datos.");
         }
-        validator.validate(user);
-        user.setName(user.getName().substring(0, 1).toUpperCase() + user.getName().substring(1));
-        user.setSurname(user.getSurname().substring(0, 1).toUpperCase() + user.getSurname().substring(1));
-        user.setRut(user.getRut());
-        User userNameExist = getUserWithUsername(user.getUsername());
-        if (userNameExist != null && userNameExist.getUsername().equalsIgnoreCase(user.getUsername())) {
+        existingUser.setName(dto.getName().substring(0, 1).toUpperCase() + dto.getName().substring(1));
+        existingUser.setSurname(dto.getSurname().substring(0, 1).toUpperCase() + dto.getSurname().substring(1));
+        existingUser.setRut(dto.getRut());
+        Optional<User> userNameExist = userRepository.findByUsername(dto.getUsername());
+        if (userNameExist.isPresent() && !userNameExist.get().getId().equals(existingUser.getId())) {
             throw new IllegalArgumentException("Este nombre de usuario ya existe");
         }else {
-            user.setUsername(user.getUsername());
+            existingUser.setUsername(dto.getUsername());
         }
-        user.setEmail(user.getEmail());
-        user.setToken(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        existingUser.setEmail(dto.getEmail());
+        existingUser.setToken(null);
+        validator.validate(existingUser);
+        existingUser.setPassword(passwordEncoder.encode(existingUser.getPassword()));
+        userRepository.save(existingUser);
     }
 
     /**
