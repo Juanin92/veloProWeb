@@ -7,6 +7,7 @@ import { UserValidator } from '../../validation/user-validator';
 import { Role } from '../../models/enum/role';
 import { TooltipService } from '../../utils/tooltip.service';
 import { NotificationService } from '../../utils/notification-service.service';
+import { UserDTO } from '../../models/DTO/user-dto';
 
 @Component({
   selector: 'app-user',
@@ -17,14 +18,14 @@ import { NotificationService } from '../../utils/notification-service.service';
 })
 export class UserComponent implements OnInit, AfterViewInit {
 
-  userList: User[] = [];
+  userList: UserDTO[] = [];
   addUserButton: boolean = true;
   showForm: boolean = false;
   existingMasterUser: boolean = true;
   validator = UserValidator;
   roles: string[] = Object.values(Role);
-  user: User;
-  selectedUser: User | null = null;
+  user: UserDTO;
+  selectedUser: UserDTO | null = null;
   touchedFields: Record<string, boolean> = {};
 
   roleLabels: { [key: string]: string } = {
@@ -74,7 +75,7 @@ export class UserComponent implements OnInit, AfterViewInit {
    * Oculta botón de agregar usuario.
    * @param selectedUser 
    */
-  getSelectedUser(selectedUser: User): void {
+  getSelectedUser(selectedUser: UserDTO): void {
     this.user = selectedUser;
     this.showForm = true;
     this.addUserButton = false;
@@ -83,46 +84,46 @@ export class UserComponent implements OnInit, AfterViewInit {
   /**
    * Crea un nuevo usuario después de validar el formulario.
    */
-  createUser(): void{
-    if (this.validator.validateForm(this.user)) {
-      const newUser = this.user;
-      this.userService.addUser(newUser).subscribe({
-        next: (response) =>{
-          console.log('Usuario agregado exitosamente:', response);
-          this.notification.showSuccessToast(response.message, 'top', 3000);
-          this.getUsers();
-          this.resetForms();
-        }, error:(error) => {
-          const message = error.error?.message || error.error?.error;
-          console.error('Error al agregar el usuario:', error);
-          this.notification.showErrorToast(`Error al agregar usuario \n${message}`, 'top', 5000);
-        }
-      });
-    }else {
-      this.notification.showWarning('Formulario incompleto', 'Por favor, complete correctamente todos los campos obligatorios.');
-    }
-  }
+  // createUser(): void{
+  //   if (this.validator.validateForm(this.user)) {
+  //     const newUser = this.user;
+  //     this.userService.addUser(newUser).subscribe({
+  //       next: (response) =>{
+  //         console.log('Usuario agregado exitosamente:', response);
+  //         this.notification.showSuccessToast(response.message, 'top', 3000);
+  //         this.getUsers();
+  //         this.resetForms();
+  //       }, error:(error) => {
+  //         const message = error.error?.message || error.error?.error;
+  //         console.error('Error al agregar el usuario:', error);
+  //         this.notification.showErrorToast(`Error al agregar usuario \n${message}`, 'top', 5000);
+  //       }
+  //     });
+  //   }else {
+  //     this.notification.showWarning('Formulario incompleto', 'Por favor, complete correctamente todos los campos obligatorios.');
+  //   }
+  // }
 
   /**
    * Actualiza un usuario existente después de validar el formulario.
    */
-  updateUser(): void {
-    if (this.user && this.validator.validateForm(this.user)) {
-      const updateUser = { ...this.user };
-      this.userService.updateUser(updateUser).subscribe({
-        next: (response) =>{
-          console.log('Se actualizo el cliente: ', updateUser);
-          this.notification.showSuccessToast(response.message, 'top', 3000);
-          this.getUsers();
-          this.resetForms();
-        }, error: (error) => {
-          const message = error.error?.message || error.error?.error;
-          this.notification.showErrorToast(`Error al actualizar usuario \n${message}`, 'top', 5000);
-          console.log('Error al actualizar usuario: ', message);
-        }
-      });
-    }
-  }
+  // updateUser(): void {
+  //   if (this.user && this.validator.validateForm(this.user)) {
+  //     const updateUser = { ...this.user };
+  //     this.userService.updateUser(updateUser).subscribe({
+  //       next: (response) =>{
+  //         console.log('Se actualizo el cliente: ', updateUser);
+  //         this.notification.showSuccessToast(response.message, 'top', 3000);
+  //         this.getUsers();
+  //         this.resetForms();
+  //       }, error: (error) => {
+  //         const message = error.error?.message || error.error?.error;
+  //         this.notification.showErrorToast(`Error al actualizar usuario \n${message}`, 'top', 5000);
+  //         console.log('Error al actualizar usuario: ', message);
+  //       }
+  //     });
+  //   }
+  // }
 
   /**
    * Activa un usuario seleccionado
@@ -187,19 +188,17 @@ export class UserComponent implements OnInit, AfterViewInit {
    * Inicializa un nuevo objeto de usuario con valores predeterminados.
    * @returns - Usuario inicializado.
    */
-  initializeUser(): User {
+  initializeUser(): UserDTO {
     return this.user = {
-      id: 0,
-      date: '',
       name: '',
       surname: '',
       username: '',
       rut: '',
       email: '',
-      password: '',
       token: '',
       status: true,
-      role: null
+      role: null,
+      date: ''
     };
   }
 }

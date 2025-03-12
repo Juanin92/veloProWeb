@@ -9,4 +9,5 @@ export interface UserDTO {
     token: string;
     status: boolean;
     role: Role | null;
+    date: string;
 }

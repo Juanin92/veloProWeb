@@ -110,7 +110,8 @@ export class UpdateUserModalComponent implements OnInit{
       email: '',
       token: '',
       status: true,
-      role: null
+      role: null,
+      date: ''
     }
   }
 }
