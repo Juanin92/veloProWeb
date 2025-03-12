@@ -91,7 +91,7 @@ public class UserController {
      * Actualiza los datos un usuario existente.
      * @param user - Usuario con los datos actualizados
      * @param userDetails - Detalle del usuario autenticado
-     * @return
+     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping("/actualizar-usuario")
     public ResponseEntity<Map<String, String>> updateUser(@RequestBody UpdateUserDTO user, @AuthenticationPrincipal UserDetails userDetails){
