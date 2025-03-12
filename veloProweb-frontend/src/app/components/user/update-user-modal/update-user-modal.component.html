@@ -59,21 +59,22 @@
                         <div *ngIf="changePassword" class="col-md-6">
                             <div class="form-floating">
                                 <input type="password" class="form-control" id="newPassword" placeholder="Nueva Contraseña"
-                                    name="newPassword" aria-describedby="passwordHelpInline">
+                                    name="newPassword" aria-describedby="passwordHelpInline" [(ngModel)]="newPassword">
                                 <label for="password">Nueva Contraseña</label>
                             </div>
                         </div>
                         <div *ngIf="changePassword" class="col-md-6">
                             <div class="form-floating">
                                 <input type="password" class="form-control" id="confirmPassword"
-                                    placeholder="Confirmar Contraseña" name="confirmPassword" aria-describedby="passwordHelpInline">
+                                    placeholder="Confirmar Contraseña" name="confirmPassword" aria-describedby="passwordHelpInline"
+                                    [(ngModel)]="newPasswordConfirmed">
                                 <label for="confirmPassword">Confirmar Contraseña</label>
                             </div>
                         </div>
                         <div *ngIf="changePassword" class="col-md-12">
                             <div class="form-floating">
                                 <input type="password" class="form-control" id="currentPassword" placeholder="Confirmar Contraseña"
-                                    name="currentPassword" aria-describedby="passwordHelpInline">
+                                    name="currentPassword" aria-describedby="passwordHelpInline" [(ngModel)]="currentPassword">
                                 <label for="currentPassword">Contraseña Actual (código de seguridad)</label>
                             </div>
                         </div>
@@ -81,7 +82,9 @@
                 </form>
             </div>
             <div class="modal-footer border-0 justify-content-center">
-                <button type="submit" class="btn btn-warning px-4 py-2">Actualizar</button>
+                <button type="submit" class="btn btn-warning px-4 py-2"
+                    (click)="updateUser(userDTO)"
+                    [attr.data-bs-dismiss]="modal.isModalVisible() ? 'modal' : null">Actualizar</button>
                 <button type="button" class="btn btn-outline-secondary px-4 py-2"
                     data-bs-dismiss="modal" (click)="resetModalUser()">Cancelar</button>
             </div>
