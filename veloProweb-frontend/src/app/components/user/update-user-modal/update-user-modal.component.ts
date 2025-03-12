@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { User } from '../../../models/Entity/user';
-import { Role } from '../../../models/enum/role';
 import { UserService } from '../../../services/User/user.service';
 import { UserDTO } from '../../../models/DTO/user-dto';
 
@@ -42,6 +40,7 @@ export class UpdateUserModalComponent implements OnInit{
     this.changePassword = input.checked;
     this.newPassword = '';
     this.newPasswordConfirmed = '';
+
   }
 
   resetModalUser(): void {
