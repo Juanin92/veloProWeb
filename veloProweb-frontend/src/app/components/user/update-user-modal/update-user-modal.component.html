@@ -70,6 +70,13 @@
                                 <label for="confirmPassword">Confirmar Contraseña</label>
                             </div>
                         </div>
+                        <div *ngIf="changePassword" class="col-md-12">
+                            <div class="form-floating">
+                                <input type="password" class="form-control" id="currentPassword" placeholder="Confirmar Contraseña"
+                                    name="currentPassword" aria-describedby="passwordHelpInline">
+                                <label for="currentPassword">Contraseña Actual (código de seguridad)</label>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
