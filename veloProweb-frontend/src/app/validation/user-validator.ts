@@ -1,17 +1,16 @@
-import { User } from "../models/Entity/user";
+import { UserDTO } from "../models/DTO/user-dto";
 
 export class UserValidator {
-    static validateForm(selectedUser: User): boolean {
+    static validateForm(selectedUser: UserDTO): boolean {
         return this.isFieldValid(selectedUser, 'name') &&
             this.isFieldValid(selectedUser, 'surname') &&
             this.isFieldValid(selectedUser, 'username') &&
             this.isFieldValid(selectedUser, 'rut') &&
-            this.isFieldValid(selectedUser, 'password') &&
             this.isFieldValid(selectedUser, 'email') &&
             this.isFieldValid(selectedUser, 'role');
     }
 
-    static isFieldValid(user: User, fieldName: keyof User): boolean {
+    static isFieldValid(user: UserDTO, fieldName: keyof UserDTO): boolean {
         const value = user[fieldName];
         if (fieldName === 'name') {
             return value !== null && typeof value === 'string' && value.trim().length > 3 && /^[a-zA-Z ]+$/.test(value.trim());
@@ -27,9 +26,6 @@ export class UserValidator {
         }
         if (fieldName === 'email') {
             return value !== null && typeof value === 'string' && /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value);
-        }
-        if (fieldName === 'password') {
-            return value !== null && typeof value === 'string' && value.trim().length >= 7;
         }
         if (fieldName === 'role') {
             return value !== null;
