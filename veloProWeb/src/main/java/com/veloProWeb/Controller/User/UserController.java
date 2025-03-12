@@ -67,6 +67,12 @@ public class UserController {
 //        }
 //    }
 
+    /**
+     * Actualiza los datos un usuario existente.
+     * @param user - Usuario con los datos actualizados
+     * @param userDetails - Detalle del usuario autenticado
+     * @return
+     */
     @PutMapping("/actualizar-usuario")
     public ResponseEntity<Map<String, String>> updateUser(@RequestBody UpdateUserDTO user, @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response =  new HashMap<>();
@@ -80,6 +86,11 @@ public class UserController {
         }
     }
 
+    /**
+     * Obtiene datos de un usuario existente
+     * @param userDetails - Detalle del usuario ya autenticado
+     * @return - Los datos necesario del usuario a compartir
+     */
     @GetMapping("datos")
     public ResponseEntity<UserDTO> getUserData(@AuthenticationPrincipal UserDetails userDetails){
         try{
