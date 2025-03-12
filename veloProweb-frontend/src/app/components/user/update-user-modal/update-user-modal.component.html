@@ -38,15 +38,23 @@
                         <div class="col-12">
                             <div class="form-floating">
                                 <input type="email" class="form-control" id="emailModal" placeholder="Email" name="email"
-                                    [(ngModel)]="userDTO.email" required>
+                                    [(ngModel)]="userDTO.email" 
+                                    [ngClass]="{'is-invalid':!validator.validateUsername(userDTO.email), 'is-valid':validator.validateUsername(userDTO.email)}" required>
                                 <label for="emailModal">Email</label>
+                                <div *ngIf="!validator.validateUsername(userDTO.email)" class="invalid-feedback">
+                                    Email no válido (example&commat;test.com)
+                                </div>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-floating">
                                 <input type="text" class="form-control" id="usernameModal" placeholder="Nombre usuario"
-                                    name="username" [(ngModel)]="userDTO.username" required>
+                                    name="username" [(ngModel)]="userDTO.username" 
+                                    [ngClass]="{'is-invalid':!validator.validateUsername(userDTO.username), 'is-valid':validator.validateUsername(userDTO.username)}" required>
                                 <label for="usernameModal">Nombre de usuario</label>
+                                <div *ngIf="!validator.validateUsername(userDTO.username)" class="invalid-feedback">
+                                    Nombre de Usuario no válido debe tener al menos 3 letras.
+                                </div>
                             </div>
                         </div>
                         <div  class="col-12">
@@ -59,23 +67,35 @@
                         <div *ngIf="changePassword" class="col-md-6">
                             <div class="form-floating">
                                 <input type="password" class="form-control" id="newPassword" placeholder="Nueva Contraseña"
-                                    name="newPassword" aria-describedby="passwordHelpInline" [(ngModel)]="newPassword">
+                                    name="newPassword" aria-describedby="passwordHelpInline" [(ngModel)]="newPassword"
+                                    [ngClass]="{'is-invalid':!validator.validatePassword(newPassword), 'is-valid':validator.validatePassword(newPassword)}">
                                 <label for="password">Nueva Contraseña</label>
+                                <div *ngIf="!validator.validatePassword(newPassword)" class="invalid-feedback">
+                                    Contraseña debe tener 7 o más caracteres.
+                                </div>
                             </div>
                         </div>
                         <div *ngIf="changePassword" class="col-md-6">
                             <div class="form-floating">
                                 <input type="password" class="form-control" id="confirmPassword"
                                     placeholder="Confirmar Contraseña" name="confirmPassword" aria-describedby="passwordHelpInline"
-                                    [(ngModel)]="newPasswordConfirmed">
+                                    [(ngModel)]="newPasswordConfirmed"
+                                    [ngClass]="{'is-invalid':!validator.validatePassword(newPasswordConfirmed), 'is-valid':validator.validatePassword(newPasswordConfirmed)}">
                                 <label for="confirmPassword">Confirmar Contraseña</label>
+                                <div *ngIf="!validator.validatePassword(newPasswordConfirmed)" class="invalid-feedback">
+                                    Contraseña debe tener 7 o más caracteres.
+                                </div>
                             </div>
                         </div>
                         <div *ngIf="changePassword" class="col-md-12">
                             <div class="form-floating">
                                 <input type="password" class="form-control" id="currentPassword" placeholder="Confirmar Contraseña"
-                                    name="currentPassword" aria-describedby="passwordHelpInline" [(ngModel)]="currentPassword">
+                                    name="currentPassword" aria-describedby="passwordHelpInline" [(ngModel)]="currentPassword"
+                                    [ngClass]="{'is-invalid':!validator.validatePassword(currentPassword), 'is-valid':validator.validatePassword(currentPassword)}">
                                 <label for="currentPassword">Contraseña Actual (código de seguridad)</label>
+                                <div *ngIf="!validator.validatePassword(currentPassword)" class="invalid-feedback">
+                                    Contraseña debe tener 7 o más caracteres.
+                                </div>
                             </div>
                         </div>
                     </div>
