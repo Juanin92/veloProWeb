@@ -118,18 +118,22 @@ public class UserController {
 
     /**
      *Elimina un usuario
-     * @param user - Usuario que se desea eliminar
+     * @param username - nombre de usuario que se desea eliminar
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping("/eliminar-usuario")
-    public ResponseEntity<Map<String, String>> deleteUser(@RequestBody User user){
+    public ResponseEntity<Map<String, String>> deleteUser(@RequestBody String username, @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response =  new HashMap<>();
         try{
-            userService.deleteUser(user);
+            userService.deleteUser(username);
+            recordService.registerAction(userDetails, "DELETE",
+                    "Desactivo usuario del sistema: " + username);
             response.put("message", "Usuario eliminado exitosamente");
             return ResponseEntity.ok(response);
         }catch (Exception e){
             response.put("error", e.getMessage());
+            recordService.registerAction(userDetails, "DELETE_FAILURE",
+                    "ERROR: desactivar usuario(" + username + "): " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
