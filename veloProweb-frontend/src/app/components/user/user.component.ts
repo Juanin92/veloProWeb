@@ -149,7 +149,7 @@ export class UserComponent implements OnInit, AfterViewInit {
    * Elimina un usuario seleccionado después de la confirmación del usuario.
    * @param selectedUser - usuario que se desea eliminar.
    */
-  deleteUser(selectedUser: User): void {
+  deleteUser(selectedUser: UserDTO): void {
     if (selectedUser) {
       this.notification.showConfirmation(
         "¿Estas seguro?",
@@ -158,13 +158,13 @@ export class UserComponent implements OnInit, AfterViewInit {
         "Cancelar"
       ).then((result) => {
         if (result.isConfirmed) {
-          this.userService.deleteUser(selectedUser).subscribe({
+          this.userService.deleteUser(selectedUser.username).subscribe({
             next: (response) => {
               console.log('Usuario eliminado exitosamente:', response);
               this.notification.showSuccessToast(response.message, 'top', 3000);
               this.getUsers();
             }, error: (error) => {
-              const message = error.error?.message || error.error?.error;
+              const message = error.error?.message || error.error?.error || error?.error;
               console.log('Error al eliminar cliente: ', message);
               this.notification.showErrorToast(`Error al eliminar usuario \n${message}`, 'top', 5000);
             }
