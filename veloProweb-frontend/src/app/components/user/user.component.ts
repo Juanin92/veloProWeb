@@ -129,15 +129,15 @@ export class UserComponent implements OnInit, AfterViewInit {
    * Activa un usuario seleccionado
    * @param selectedUser - usuario que se desea activar.
    */
-  activateUser(selectedUser: User): void {
+  activateUser(selectedUser: UserDTO): void {
     if(selectedUser){
-      this.userService.activeUser(selectedUser).subscribe({
+      this.userService.activeUser(selectedUser.username).subscribe({
         next: (response) => {
           console.log("Usuario Activado");
           this.notification.showSuccessToast(response.message, 'top', 3000);
           this.getUsers();
         }, error: (error) => {
-          const message = error.error?.message || error.error?.error;
+          const message = error.error?.message || error.error?.error || error?.error;
           console.log('Error al activar usuario: ', message);
           this.notification.showErrorToast(`Error al activar al usuario \n${message}`, 'top', 5000);
         }
