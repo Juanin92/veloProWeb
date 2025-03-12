@@ -12,7 +12,7 @@ public interface IUserService {
     void updateUser(User user);
     void deleteUser(User user);
     void activateUser(User user);
-    List<User> getAllUser();
+    List<UserDTO> getAllUser();
     User getUserWithUsername(String username);
     User getAuthUser(String username, String pass);
     User getAuthUserToken(String username, String token);

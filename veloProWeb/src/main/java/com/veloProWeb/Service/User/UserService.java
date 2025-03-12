@@ -11,8 +11,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements IUserService {
@@ -119,8 +121,11 @@ public class UserService implements IUserService {
      * @return - Lista con los usuarios
      */
     @Override
-    public List<User> getAllUser() {
-        return userRepository.findAll();
+    public List<UserDTO> getAllUser() {
+        return userRepository.findAll().stream().map(user -> {
+            return new UserDTO(user.getName(), user.getSurname(), user.getUsername(), user.getRut(),
+                    user.getEmail(), user.getRole(), user.isStatus(), user.getDate());
+        }).collect(Collectors.toList());
     }
 
     /**
@@ -200,7 +205,7 @@ public class UserService implements IUserService {
     public UserDTO getData(String username) {
         User user = getUserWithUsername(username);
         return new UserDTO(user.getName(), user.getSurname(), user.getUsername(), user.getRut(),
-                user.getEmail(), user.getRole(), user.isStatus());
+                user.getEmail(), user.getRole(), user.isStatus(), user.getDate());
     }
 
     /**
