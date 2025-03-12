@@ -63,7 +63,7 @@ public class UserController {
             }
         }catch (Exception e){
             response.put("error", e.getMessage());
-            recordService.registerAction(userDetails, "DELETE_FAILURE",
+            recordService.registerAction(userDetails, "CREATE_FAILURE",
                     "ERROR: crear usuario(" + user.getUsername() + "): " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
