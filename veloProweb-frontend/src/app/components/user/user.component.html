@@ -14,7 +14,7 @@
                         <table class="table table-hover text-center">
                             <thead class="table-light">
                                 <tr class="position-sticky top-0">
-                                    <th  scope="col">ID</th>
+                                    <th  scope="col"></th>
                                     <th  scope="col">Nombre</th>
                                     <th  scope="col">Apellido</th>
                                     <th  scope="col">RUT</th>
@@ -27,8 +27,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let user of userList">
-                                    <td>{{user.id}}</td>
+                                <tr *ngFor="let user of userList; let i = index">
+                                    <td>{{i + 1}}</td>
                                     <td>{{user.name}}</td>
                                     <td>{{user.surname}}</td>
                                     <td>{{user.rut}}</td>
@@ -38,12 +38,12 @@
                                     <td>{{user.date | date: 'dd-MM-yyyy'}}</td>
                                     <td>{{user.status ? 'Activo':'Inactivo'}}</td>
                                     <td>
-                                        <button class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar info"
-                                        (click)="getSelectedUser(user)"><img src="/assets/icons/btnEditIcon.png" alt="editar" width="15" height="15" class="img-fluid"></button>
+                                        <!-- <button class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar info"
+                                        (click)="getSelectedUser(user)"><img src="/assets/icons/btnEditIcon.png" alt="editar" width="15" height="15" class="img-fluid"></button> -->
                                         <button *ngIf="user.status" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"
                                         (click)="deleteUser(user)"><img src="/assets/icons/btnDeleteIcon.png" alt="borrar" width="15" height="15" class="img-fluid"></button>
-                                        <button *ngIf="!user.status" class="btn btn-success btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Activar"
-                                        (click)="activateUser(user)"><img src="/assets/icons/iconOn.png" alt="activar" width="15" height="15" class="img-fluid"></button>
+                                        <!-- <button *ngIf="!user.status" class="btn btn-success btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Activar"
+                                        (click)="activateUser(user)"><img src="/assets/icons/iconOn.png" alt="activar" width="15" height="15" class="img-fluid"></button> -->
                                     </td>
                                 </tr>
                             </tbody>
@@ -52,7 +52,7 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="showForm" class="col-lg-6 col-md-6 d-flex">
+        <!-- <div *ngIf="showForm" class="col-lg-6 col-md-6 d-flex">
             <div class="card shadow-lg w-100" style="max-height: 80vh; overflow-y: auto;">
                 <div class="card-body">
                     <h5 class="text-center">{{addUserButton ? 'Crear Usuario' : 'Editar Usuario'}}</h5>
@@ -173,6 +173,6 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </div>
