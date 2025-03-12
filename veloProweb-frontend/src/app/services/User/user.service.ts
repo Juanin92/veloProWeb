@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { User } from '../../models/Entity/user';
 import { AuthService } from './auth.service';
 import { UserDTO } from '../../models/DTO/user-dto';
+import { UpdateUserDTO } from '../../models/DTO/update-user-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -60,5 +61,10 @@ export class UserService {
 
   getUserData(): Observable<UserDTO>{
     return this.httpClient.get<UserDTO>(`${this.apiUrl}/datos`, {headers: this.auth.getAuthHeaders()});
+  }
+
+  updateDataUser(userDTO: UpdateUserDTO): Observable<{message: string}>{
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/actualizar-usuario`, 
+      userDTO, {headers: this.auth.getAuthHeaders()});
   }
 }
