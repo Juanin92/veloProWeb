@@ -94,7 +94,7 @@ export class UserComponent implements OnInit, AfterViewInit {
           this.getUsers();
           this.resetForms();
         }, error:(error) => {
-          const message = error.error?.message || error.error?.error;
+          const message = error.error?.message || error.error?.error || error?.error;
           console.error('Error al agregar el usuario:', error);
           this.notification.showErrorToast(`Error al agregar usuario \n${message}`, 'top', 5000);
         }
@@ -107,23 +107,23 @@ export class UserComponent implements OnInit, AfterViewInit {
   /**
    * Actualiza un usuario existente después de validar el formulario.
    */
-  // updateUser(): void {
-  //   if (this.user && this.validator.validateForm(this.user)) {
-  //     const updateUser = { ...this.user };
-  //     this.userService.updateUser(updateUser).subscribe({
-  //       next: (response) =>{
-  //         console.log('Se actualizo el cliente: ', updateUser);
-  //         this.notification.showSuccessToast(response.message, 'top', 3000);
-  //         this.getUsers();
-  //         this.resetForms();
-  //       }, error: (error) => {
-  //         const message = error.error?.message || error.error?.error;
-  //         this.notification.showErrorToast(`Error al actualizar usuario \n${message}`, 'top', 5000);
-  //         console.log('Error al actualizar usuario: ', message);
-  //       }
-  //     });
-  //   }
-  // }
+  updateUserByAdmin(): void {
+    if (this.user && this.validator.validateForm(this.user)) {
+      const updateUser = { ...this.user };
+      this.userService.updateUserByAdmin(updateUser).subscribe({
+        next: (response) =>{
+          console.log('Se actualizo el cliente: ', updateUser);
+          this.notification.showSuccessToast(response.message, 'top', 3000);
+          this.getUsers();
+          this.resetForms();
+        }, error: (error) => {
+          const message = error.error?.message || error.error?.error || error?.error;
+          this.notification.showErrorToast(`Error al actualizar usuario \n${message}`, 'top', 5000);
+          console.log('Error al actualizar usuario: ', message);
+        }
+      });
+    }
+  }
 
   /**
    * Activa un usuario seleccionado
