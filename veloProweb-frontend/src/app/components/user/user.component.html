@@ -155,7 +155,7 @@
                                         [ngClass]="{'is-invalid':touchedFields['password'] && !validator.isFieldValid(user, 'password'), 'is-valid':touchedFields['password'] && validator.isFieldValid(user, 'password')}" required>
                                     <label for="password">Contraseña</label>
                                     <div *ngIf="!validator.isFieldValid(user,'password')" class="invalid-feedback">
-                                        Contraseña debe tener 7 0 más caracteres.
+                                        Contraseña debe tener 7 o más caracteres.
                                     </div>
                                 </div>
                             </div>
