@@ -56,8 +56,9 @@ export class UserService {
    * @param user - usuario seleccionado
    * @returns - Observable que emite un mensaje de confirmación
    */
-  activeUser(user: User): Observable<{message: string}>{
-    return this.httpClient.put<{message: string}>(`${this.apiUrl}/activar-usuario`, user);
+  activeUser(username: string): Observable<{message: string}>{
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/activar-usuario`, 
+      username, {headers: this.auth.getAuthHeaders()});
   }
 
   getUserData(): Observable<UserDTO>{
