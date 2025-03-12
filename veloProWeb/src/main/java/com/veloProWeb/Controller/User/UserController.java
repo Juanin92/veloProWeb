@@ -3,6 +3,7 @@ package com.veloProWeb.Controller.User;
 import com.veloProWeb.Model.DTO.UpdateUserDTO;
 import com.veloProWeb.Model.DTO.UserDTO;
 import com.veloProWeb.Model.Entity.User.User;
+import com.veloProWeb.Service.Record.IRecordService;
 import com.veloProWeb.Service.User.Interface.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,14 +22,24 @@ import java.util.Map;
 public class UserController {
 
     @Autowired private IUserService userService;
+    @Autowired private IRecordService recordService;
 
     /**
      * Obtiene una lista de usuarios.
-     * @return - R lista de usuarios
+     * Verifica que solo los roles admin y master puede obtener la lista.
+     * @param userDetails - Usuario autenticado.
+     * @return - Lista con los datos de usuarios registrados
      */
     @GetMapping
-    public List<User> getListUser(){
-        return userService.getAllUser();
+    public ResponseEntity<List<UserDTO>> getListUser(@AuthenticationPrincipal UserDetails userDetails){
+        if (userService.hasRequiredRole(userDetails, "ADMIN", "MASTER")){
+            recordService.registerAction(userDetails, "LIST_USER", "Obtuvo lista de los usuarios");
+            return ResponseEntity.ok(userService.getAllUser());
+        }else{
+            recordService.registerAction(userDetails, "LIST_USER_FAILURE",
+                    "Error: " + userDetails.getUsername() + " ingreso indebido");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     /**
@@ -78,9 +89,11 @@ public class UserController {
         Map<String, String> response =  new HashMap<>();
         try{
             userService.updateUserData(user, userDetails.getUsername());
+            recordService.registerAction(userDetails, "UPDATE", "Se actualizo sus datos personales");
             response.put("message", "Usuario actualizado exitosamente");
             return ResponseEntity.ok(response);
         }catch (Exception e){
+            recordService.registerAction(userDetails, "UPDATE_FAILURE", "Error al actualizar datos personales: " + e.getMessage());
             response.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
@@ -95,8 +108,10 @@ public class UserController {
     public ResponseEntity<UserDTO> getUserData(@AuthenticationPrincipal UserDetails userDetails){
         try{
             UserDTO dto = userService.getData(userDetails.getUsername());
+            recordService.registerAction(userDetails, "GET_DATA", "Datos del usuario obtenidos exitosamente");
             return ResponseEntity.ok(dto);
         }catch (Exception e){
+            recordService.registerAction(userDetails, "GET_DATA_FAILURE", "Error al obtener datos del usuario: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
