@@ -7,6 +7,8 @@ import com.veloProWeb.Repository.UserRepo;
 import com.veloProWeb.Service.User.Interface.IUserService;
 import com.veloProWeb.Validation.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -206,6 +208,13 @@ public class UserService implements IUserService {
         User user = getUserWithUsername(username);
         return new UserDTO(user.getName(), user.getSurname(), user.getUsername(), user.getRut(),
                 user.getEmail(), user.getRole(), user.isStatus(), user.getDate());
+    }
+
+    @Override
+    public boolean hasRequiredRole(UserDetails userDetails, String... roles) {
+        return userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(authority -> java.util.Arrays.asList(roles).contains(authority));
     }
 
     /**

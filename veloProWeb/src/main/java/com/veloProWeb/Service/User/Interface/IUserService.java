@@ -20,4 +20,5 @@ public interface IUserService {
     void sendEmailUpdatePassword(User user);
     void updateUserData(UpdateUserDTO dto, String username);
     UserDTO getData(String username);
+    boolean hasRequiredRole(UserDetails userDetails, String... roles);
 }
