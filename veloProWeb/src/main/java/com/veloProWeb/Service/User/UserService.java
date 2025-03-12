@@ -82,17 +82,14 @@ public class UserService implements IUserService {
     /**
      * Eliminar/Desactivar usuario.
      * Válida que el usuario exista y no esté ya eliminado
-     * @param user - Objeto con los datos de usuario
+     * @param username - Cadena con el nombre de usuario
      */
     @Override
-    public void deleteUser(User user) {
-        User existingUser = getUserCreated(user.getRut());
-        if (existingUser == null){
-            throw new IllegalArgumentException("El usuario no existe en la base de datos.");
-        }
-        if (existingUser.isStatus()) {
-            existingUser.setStatus(false);
-            userRepository.save(existingUser);
+    public void deleteUser(String username) {
+        User user = getUserWithUsername(username);
+        if (user.isStatus()) {
+            user.setStatus(false);
+            userRepository.save(user);
         } else {
             throw new IllegalArgumentException("El usuario ya está inactivo y no puede ser eliminado nuevamente.");
         }
