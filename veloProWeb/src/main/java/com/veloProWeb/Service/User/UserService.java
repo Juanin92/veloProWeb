@@ -28,27 +28,31 @@ public class UserService implements IUserService {
     /**
      * Crea un usuario nuevo.
      * Válida que no exista un registro del usuario y que el nombre de username no este tampoco registrado
-     * @param user - Objeto con los datos necesario de usuario
+     * @param dto - Objeto con los datos necesario de usuario
      */
     @Override
-    public void addUser(User user) {
-        User userDB = getUserCreated(user.getRut());
+    public void addUser(UserDTO dto) {
+        User userDB = getUserCreated(dto.getRut());
         if (userDB != null){
             throw new IllegalArgumentException("Usuario Existente: Ya hay existe el usuario");
         } else {
-            validator.validate(user);
+            User user = new User();
             user.setId(null);
-            user.setStatus(true);
             user.setDate(LocalDate.now());
-            user.setName(user.getName().substring(0, 1).toUpperCase() + user.getName().substring(1));
-            user.setSurname(user.getSurname().substring(0, 1).toUpperCase() + user.getSurname().substring(1));
-            User userNameExist = getUserWithUsername(user.getUsername());
-            if (userNameExist != null && userNameExist.getUsername().equalsIgnoreCase(user.getUsername())) {
+            user.setName(dto.getName().substring(0, 1).toUpperCase() + dto.getName().substring(1));
+            user.setSurname(dto.getSurname().substring(0, 1).toUpperCase() + dto.getSurname().substring(1));
+            user.setRut(dto.getRut());
+            user.setEmail(dto.getEmail());
+            user.setToken(null);
+            user.setStatus(true);
+            Optional<User> userNameExist = userRepository.findByUsername(dto.getUsername());
+            if (userNameExist.isPresent() && userNameExist.get().getUsername().equalsIgnoreCase(dto.getUsername())) {
                 throw new IllegalArgumentException("Este nombre de usuario ya existe");
             }else {
-                user.setUsername(user.getUsername());
+                user.setUsername(dto.getUsername());
             }
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setPassword(passwordEncoder.encode(user.getUsername() + user.getRut().substring(0,4)));
+            validator.validate(user);
             userRepository.save(user);
         }
     }

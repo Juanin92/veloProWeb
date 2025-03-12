@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.List;
 
 public interface IUserService {
-    void addUser(User user);
+    void addUser(UserDTO dto);
     void updateUser(User user);
     void deleteUser(String username);
     void activateUser(String username);
