@@ -38,8 +38,8 @@
                                     <td>{{user.date | date: 'dd-MM-yyyy'}}</td>
                                     <td>{{user.status ? 'Activo':'Inactivo'}}</td>
                                     <td>
-                                        <!-- <button class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar info"
-                                        (click)="getSelectedUser(user)"><img src="/assets/icons/btnEditIcon.png" alt="editar" width="15" height="15" class="img-fluid"></button> -->
+                                        <button class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar info"
+                                        (click)="getSelectedUser(user)"><img src="/assets/icons/btnEditIcon.png" alt="editar" width="15" height="15" class="img-fluid"></button>
                                         <button *ngIf="user.status" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"
                                         (click)="deleteUser(user)"><img src="/assets/icons/btnDeleteIcon.png" alt="borrar" width="15" height="15" class="img-fluid"></button>
                                         <button *ngIf="!user.status" class="btn btn-success btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Activar"
@@ -52,7 +52,7 @@
                 </div>
             </div>
         </div>
-        <!-- <div *ngIf="showForm" class="col-lg-6 col-md-6 d-flex">
+        <div *ngIf="showForm" class="col-lg-6 col-md-6 d-flex">
             <div class="card shadow-lg w-100" style="max-height: 80vh; overflow-y: auto;">
                 <div class="card-body">
                     <h5 class="text-center">{{addUserButton ? 'Crear Usuario' : 'Editar Usuario'}}</h5>
@@ -145,7 +145,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12">
+                            <!-- <div class="col-12">
                                 <div class="form-floating">
                                     <input type="password" class="form-control" id="password" placeholder="Contraseña"
                                         name="password" 
@@ -158,14 +158,14 @@
                                         Contraseña debe tener 7 o más caracteres.
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="text-center mt-3">
                             <button *ngIf="addUserButton" [disabled]="!validator.validateForm(user)" type="submit" 
                                 class="btn btn-success"
                                 (click)="createUser()">Guardar</button>
-                            <button *ngIf="!addUserButton" [disabled]="!validator.validateForm(user)" type="submit" class="btn btn-success"
-                                (click)="updateUser()">Actualizar</button>
+                            <!-- <button *ngIf="!addUserButton" [disabled]="!validator.validateForm(user)" type="submit" class="btn btn-success"
+                                (click)="updateUser()">Actualizar</button> -->
                             <button type="button" 
                             class="btn btn-secondary ms-2"
                                 (click)="resetForms()">Cancelar</button>
@@ -173,6 +173,6 @@
                     </form>
                 </div>
             </div>
-        </div> -->
+        </div>
     </div>
 </div>
