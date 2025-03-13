@@ -19,11 +19,14 @@ export class TaskService {
   }
 
   createTask(task: TaskRequestDTO): Observable<{message: string}>{
-    return this.httpClient.post<{message: string}>(this.apiUrl, task);
+    return this.httpClient.post<{message: string}>(this.apiUrl, task, {headers: this.auth.getAuthHeaders()});
   }
 
   completeTask(taskID: number): Observable<{message: string}>{
-    return this.httpClient.put<{message: string}>(this.apiUrl, {}, {params: {taskID: taskID.toString()}});
+    return this.httpClient.put<{ message: string }>(this.apiUrl, {}, {
+      params: { taskID: taskID.toString() },
+      headers: this.auth.getAuthHeaders(),
+    });  
   }
 
   getAllTasks(): Observable<TaskRequestDTO[]>{
