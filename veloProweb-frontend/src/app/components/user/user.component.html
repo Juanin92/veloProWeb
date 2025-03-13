@@ -41,9 +41,9 @@
                                         <button class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar info"
                                         (click)="getSelectedUser(user)"><img src="/assets/icons/btnEditIcon.png" alt="editar" width="15" height="15" class="img-fluid"></button>
                                         <button *ngIf="user.status" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"
-                                        (click)="deleteUser(user)"><img src="/assets/icons/btnDeleteIcon.png" alt="borrar" width="15" height="15" class="img-fluid"></button>
+                                        (click)="selectingUser(user, 'delete')"><img src="/assets/icons/btnDeleteIcon.png" alt="borrar" width="15" height="15" class="img-fluid"></button>
                                         <button *ngIf="!user.status" class="btn btn-success btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Activar"
-                                        (click)="activateUser(user)"><img src="/assets/icons/iconOn.png" alt="activar" width="15" height="15" class="img-fluid"></button>
+                                        (click)="selectingUser(user, 'activate')"><img src="/assets/icons/iconOn.png" alt="activar" width="15" height="15" class="img-fluid"></button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -172,6 +172,30 @@
                         </div>
                     </form>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- MODAL SECURITY -->
+<div #securityUser class="modal fade" id="securityUser" tabindex="-1" aria-labelledby="securityUser" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h3 class="modal-title fs-4 fw-bold text-white w-100 text-center">Seguridad</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-2">
+                <form>
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                        <div class="form-floating">
+                            <input type="password" class="form-control" id="authModal" placeholder="Contraseña" name="authModal" 
+                               [(ngModel)]="authRequest.token" (keyup.enter)="confirmAction()" required>
+                            <label for="authModal">Contraseña</label>
+                        </div>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
