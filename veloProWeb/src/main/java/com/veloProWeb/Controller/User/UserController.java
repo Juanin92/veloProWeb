@@ -76,20 +76,14 @@ public class UserController {
      */
     @PutMapping("/administrar/editar-usuario")
     public ResponseEntity<Map<String, String>> updateUserByAdmin(@RequestBody UserDTO user,
-                                                                 @AuthenticationPrincipal UserDetails userDetails,
-                                                                 @RequestHeader("Authorization") String authorization){
+                                                                 @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response =  new HashMap<>();
         try{
             if (userService.hasRequiredRole(userDetails, "ADMIN", "MASTER")){
-                if (userService.getAuthUser(authorization, userDetails)){
-                    userService.updateUser(user);
-                    recordService.registerAction(userDetails, "UPDATE", "Actualizo los datos: " + user.getUsername());
-                    response.put("message", "Usuario "+ user.getName() + " " + user.getUsername() + " actualizado exitosamente");
-                    return ResponseEntity.ok(response);
-                }else{
-                    response.put("error", "No autorizado");
-                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-                }
+                userService.updateUser(user);
+                recordService.registerAction(userDetails, "UPDATE", "Actualizo los datos: " + user.getUsername());
+                response.put("message", "Usuario "+ user.getName() + " " + user.getUsername() + " actualizado exitosamente");
+                return ResponseEntity.ok(response);
             }else{
                 recordService.registerAction(userDetails, "UPDATE_FAILURE",
                         "Error: " + userDetails.getUsername() + " ingreso indebido");
