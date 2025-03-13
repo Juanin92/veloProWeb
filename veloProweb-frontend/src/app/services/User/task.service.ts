@@ -17,7 +17,7 @@ export class TaskService {
     return this.httpClient.get<Task[]>(this.apiUrl, {params: {userId: userID.toString()}});
   }
 
-  createTask(task: Task): Observable<{message: string}>{
+  createTask(task: TaskRequestDTO): Observable<{message: string}>{
     return this.httpClient.post<{message: string}>(this.apiUrl, task);
   }
 
