@@ -161,6 +161,7 @@ export class SettingComponent implements OnInit{
 
   private initializeTask(): TaskRequestDTO{
     return {
+      id: 0,
       description: '',
       status: true,
       created: '',
