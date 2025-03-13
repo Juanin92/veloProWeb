@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { UserService } from '../../services/User/user.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -7,6 +7,8 @@ import { Role } from '../../models/enum/role';
 import { TooltipService } from '../../utils/tooltip.service';
 import { NotificationService } from '../../utils/notification-service.service';
 import { UserDTO } from '../../models/DTO/user-dto';
+import { Modal } from 'bootstrap';
+import { AuthRequestDTO } from '../../models/DTO/auth-request-dto';
 
 @Component({
   selector: 'app-user',
@@ -17,6 +19,7 @@ import { UserDTO } from '../../models/DTO/user-dto';
 })
 export class UserComponent implements OnInit, AfterViewInit {
 
+  @ViewChild('securityUser') securityUserModal!: ElementRef;
   userList: UserDTO[] = [];
   addUserButton: boolean = true;
   showForm: boolean = false;
@@ -25,7 +28,9 @@ export class UserComponent implements OnInit, AfterViewInit {
   roles: string[] = Object.values(Role);
   user: UserDTO;
   selectedUser: UserDTO | null = null;
+  authRequest: AuthRequestDTO = {identifier: '', token: ''};
   touchedFields: Record<string, boolean> = {};
+  actionUser: string = '';
 
   roleLabels: { [key: string]: string } = {
     [Role.MASTER]: 'Maestro',
@@ -124,32 +129,24 @@ export class UserComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /**
-   * Activa un usuario seleccionado
-   * @param selectedUser - usuario que se desea activar.
-   */
-  activateUser(selectedUser: UserDTO): void {
-    if(selectedUser){
-      this.userService.activeUser(selectedUser.username).subscribe({
-        next: (response) => {
-          console.log("Usuario Activado");
-          this.notification.showSuccessToast(response.message, 'top', 3000);
-          this.getUsers();
-        }, error: (error) => {
-          const message = error.error?.message || error.error?.error || error?.error;
-          console.log('Error al activar usuario: ', message);
-          this.notification.showErrorToast(`Error al activar al usuario \n${message}`, 'top', 5000);
-        }
-      });
+  selectingUser(selectedUserUI: UserDTO, action: string): void {
+    if(selectedUserUI){
+      this.selectedUser =  selectedUserUI;
+      this.authRequest = {identifier: '', token: ''};
+      this.actionUser = action;
+      this.manageSecurityModal(true);
     }
   }
 
-  /**
-   * Elimina un usuario seleccionado después de la confirmación del usuario.
-   * @param selectedUser - usuario que se desea eliminar.
-   */
-  deleteUser(selectedUser: UserDTO): void {
-    if (selectedUser) {
+  confirmAction(): void{
+    if(this.actionUser.includes('delete')) this.confirmDelete();
+    if(this.actionUser.includes('activate')) this.activateUser();
+  }
+
+  confirmDelete(): void{
+    if (this.selectedUser && this.authRequest) {
+      this.authRequest.identifier = this.selectedUser.username;
+      console.log('authRequest: ', this.authRequest);
       this.notification.showConfirmation(
         "¿Estas seguro?",
         "No podrás revertir la acción!",
@@ -157,7 +154,7 @@ export class UserComponent implements OnInit, AfterViewInit {
         "Cancelar"
       ).then((result) => {
         if (result.isConfirmed) {
-          this.userService.deleteUser(selectedUser.username).subscribe({
+          this.userService.deleteUser(this.authRequest).subscribe({
             next: (response) => {
               console.log('Usuario eliminado exitosamente:', response);
               this.notification.showSuccessToast(response.message, 'top', 3000);
@@ -168,8 +165,36 @@ export class UserComponent implements OnInit, AfterViewInit {
               this.notification.showErrorToast(`Error al eliminar usuario \n${message}`, 'top', 5000);
             }
           });
+          this.selectedUser = null; 
+          this.authRequest = {identifier: '', token: ''};
+          this.actionUser = '';
+          this.manageSecurityModal(false);
         }
       });
+    }
+  }
+
+  /**
+   * Activa un usuario seleccionado
+   */
+  activateUser(): void {
+    if(this.selectedUser && this.authRequest){
+      this.authRequest.identifier = this.selectedUser.username;
+      this.userService.activeUser(this.authRequest).subscribe({
+        next: (response) => {
+          console.log("Usuario Activado");
+          this.notification.showSuccessToast(response.message, 'top', 3000);
+          this.getUsers();
+        }, error: (error) => {
+          const message = error.error?.message || error.error?.error || error?.error;
+          console.log('Error al activar usuario: ', message);
+          this.notification.showErrorToast(`Error al activar al usuario \n${message}`, 'top', 5000);
+        }
+      });
+      this.selectedUser = null; 
+      this.authRequest = {identifier: '', token: ''};
+      this.actionUser = '';
+      this.manageSecurityModal(false);
     }
   }
 
@@ -199,5 +224,15 @@ export class UserComponent implements OnInit, AfterViewInit {
       role: null,
       date: ''
     };
+  }
+
+  manageSecurityModal(action: boolean): void {
+    const modalElement = this.securityUserModal.nativeElement;
+    const modalInstance = Modal.getInstance(modalElement) || new Modal(modalElement);
+    if (action) {
+        modalInstance.show();
+    } else {
+        modalInstance.hide();
+    }
   }
 }
