@@ -1,5 +1,6 @@
 package com.veloProWeb.Controller.User;
 
+import com.veloProWeb.Model.DTO.AuthRequestDTO;
 import com.veloProWeb.Model.DTO.UpdateUserDTO;
 import com.veloProWeb.Model.DTO.UserDTO;
 import com.veloProWeb.Service.Record.IRecordService;
@@ -74,14 +75,21 @@ public class UserController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping("/administrar/editar-usuario")
-    public ResponseEntity<Map<String, String>> updateUserByAdmin(@RequestBody UserDTO user, @AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<Map<String, String>> updateUserByAdmin(@RequestBody UserDTO user,
+                                                                 @AuthenticationPrincipal UserDetails userDetails,
+                                                                 @RequestHeader("Authorization") String authorization){
         Map<String, String> response =  new HashMap<>();
         try{
             if (userService.hasRequiredRole(userDetails, "ADMIN", "MASTER")){
-                userService.updateUser(user);
-                recordService.registerAction(userDetails, "UPDATE", "Actualizo los datos: " + user.getUsername());
-                response.put("message", "Usuario "+ user.getName() + " " + user.getUsername() + " actualizado exitosamente");
-                return ResponseEntity.ok(response);
+                if (userService.getAuthUser(authorization, userDetails)){
+                    userService.updateUser(user);
+                    recordService.registerAction(userDetails, "UPDATE", "Actualizo los datos: " + user.getUsername());
+                    response.put("message", "Usuario "+ user.getName() + " " + user.getUsername() + " actualizado exitosamente");
+                    return ResponseEntity.ok(response);
+                }else{
+                    response.put("error", "No autorizado");
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+                }
             }else{
                 recordService.registerAction(userDetails, "UPDATE_FAILURE",
                         "Error: " + userDetails.getUsername() + " ingreso indebido");
@@ -135,19 +143,26 @@ public class UserController {
 
     /**
      *Elimina un usuario
-     * @param username - nombre de usuario que se desea eliminar
+     * @param  auth - datos necesarios para eliminar un usuario
+     * @param  userDetails - Detalle del usuario autenticado
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping("/eliminar-usuario")
-    public ResponseEntity<Map<String, String>> deleteUser(@RequestBody String username, @AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<Map<String, String>> deleteUser(@RequestBody AuthRequestDTO auth,
+                                                          @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response =  new HashMap<>();
         try{
             if (userService.hasRequiredRole(userDetails, "ADMIN", "MASTER")){
-                userService.deleteUser(username);
-                recordService.registerAction(userDetails, "DELETE",
-                        "Desactivo usuario del sistema: " + username);
-                response.put("message", "Usuario eliminado exitosamente");
-                return ResponseEntity.ok(response);
+                if (userService.getAuthUser(auth.getToken(), userDetails)){
+                    userService.deleteUser(auth.getIdentifier());
+                    recordService.registerAction(userDetails, "DELETE",
+                            "Desactivo usuario del sistema: " + auth.getIdentifier());
+                    response.put("message", "Usuario eliminado exitosamente");
+                    return ResponseEntity.ok(response);
+                }else{
+                    response.put("error", "No autorizado");
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+                }
             }else{
                 recordService.registerAction(userDetails, "LIST_USER_FAILURE",
                         "Error: " + userDetails.getUsername() + " ingreso indebido");
@@ -156,26 +171,33 @@ public class UserController {
         }catch (Exception e){
             response.put("error", e.getMessage());
             recordService.registerAction(userDetails, "DELETE_FAILURE",
-                    "ERROR: desactivar usuario(" + username + "): " + e.getMessage());
+                    "ERROR: desactivar usuario(" + auth.getIdentifier() + "): " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 
     /**
      *Activa un usuario
-     * @param  username - nombre de usuario que se desea eliminar
+     * @param  auth - datos necesarios para activar un usuario
+     * @param  userDetails - Detalle del usuario autenticado
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping("/activar-usuario")
-    public ResponseEntity<Map<String, String>> activeUser(@RequestBody String username, @AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<Map<String, String>> activeUser(@RequestBody AuthRequestDTO auth,
+                                                          @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response =  new HashMap<>();
         try{
             if (userService.hasRequiredRole(userDetails, "ADMIN", "MASTER")){
-                userService.activateUser(username);
-                recordService.registerAction(userDetails, "ACTIVATE ",
-                        "activo usuario del sistema: " + username);
-                response.put("message", "Usuario activado exitosamente");
-                return ResponseEntity.ok(response);
+                if (userService.getAuthUser(auth.getToken(), userDetails)){
+                    userService.activateUser(auth.getIdentifier());
+                    recordService.registerAction(userDetails, "ACTIVATE ",
+                            "activo usuario del sistema: " + auth.getIdentifier());
+                    response.put("message", "Usuario activado exitosamente");
+                    return ResponseEntity.ok(response);
+                }else{
+                    response.put("error", "No autorizado");
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+                }
             }else{
                 recordService.registerAction(userDetails, "LIST_USER_FAILURE",
                         "Error: " + userDetails.getUsername() + " ingreso indebido");
@@ -184,7 +206,7 @@ public class UserController {
         }catch (Exception e){
             response.put("error", e.getMessage());
             recordService.registerAction(userDetails, "ACTIVATE_FAILURE",
-                    "ERROR: activar usuario(" + username + "): " + e.getMessage());
+                    "ERROR: activar usuario(" + auth.getIdentifier() + "): " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
