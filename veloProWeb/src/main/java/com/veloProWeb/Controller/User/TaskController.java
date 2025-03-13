@@ -1,12 +1,13 @@
 package com.veloProWeb.Controller.User;
 
 import com.veloProWeb.Model.DTO.TaskDTO;
-import com.veloProWeb.Model.Entity.User.Task;
 import com.veloProWeb.Service.User.Interface.ITaskService;
 import com.veloProWeb.Service.User.Interface.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -23,13 +24,13 @@ public class TaskController {
 
     /**
      * Obtiene tareas asignadas de un usuario
-     * @param userId - Identificador del usuario
+     * @param userDetails - usuario autenticado
      * @return - ResponseEntity con una lista de tareas
      */
     @GetMapping()
-    public ResponseEntity<List<Task>> getTasks(@RequestParam Long userId){
+    public ResponseEntity<List<TaskDTO>> getTasks(@AuthenticationPrincipal UserDetails userDetails){
         try{
-            return ResponseEntity.ok(taskService.getTaskByUser(userId));
+            return ResponseEntity.ok(taskService.getTaskByUser(userDetails.getUsername()));
         }catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -62,8 +63,8 @@ public class TaskController {
     public ResponseEntity<Map<String, String>> completeTask(@RequestParam Long taskID){
         HashMap<String, String> response = new HashMap<>();
         try{
-            response.put("message", "Tarea Completada");
             taskService.completeTask(taskID);
+            response.put("message", "Tarea Completada");
             return ResponseEntity.ok(response);
         }catch (IllegalArgumentException e){
             response.put("Error", e.getMessage());
