@@ -83,7 +83,7 @@ public class UserServiceTest {
         when(userRepo.findByRut(user.getRut())).thenReturn(Optional.of(user));
         when(userRepo.findByUsername(user.getUsername())).thenReturn(Optional.empty());
 
-        userService.updateUser(user);
+        userService.updateUser(userDTO);
         verify(validator).validate(user);
         verify(userRepo).save(user);
         assertEquals("Pedro", user.getName());
@@ -93,7 +93,7 @@ public class UserServiceTest {
         user.setName("Pedro");
         when(userRepo.findByRut(user.getRut())).thenReturn(Optional.of(user));
         when(userRepo.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() -> userService.updateUser(user));
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() -> userService.updateUser(userDTO));
 
         verify(validator).validate(user);
         verify(userRepo, never()).save(user);
