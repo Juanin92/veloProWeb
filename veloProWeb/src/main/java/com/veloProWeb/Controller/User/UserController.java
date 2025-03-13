@@ -33,11 +33,8 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<UserDTO>> getListUser(@AuthenticationPrincipal UserDetails userDetails){
         if (userService.hasRequiredRole(userDetails, "ADMIN", "MASTER")){
-            recordService.registerAction(userDetails, "LIST_USER", "Obtuvo lista de los usuarios");
             return ResponseEntity.ok(userService.getAllUser());
         }else{
-            recordService.registerAction(userDetails, "LIST_USER_FAILURE",
-                    "Error: " + userDetails.getUsername() + " ingreso indebido");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
@@ -127,10 +124,8 @@ public class UserController {
     public ResponseEntity<UserDTO> getUserProfile(@AuthenticationPrincipal UserDetails userDetails){
         try{
             UserDTO dto = userService.getData(userDetails.getUsername());
-            recordService.registerAction(userDetails, "GET_DATA", "Datos del usuario obtenidos exitosamente");
             return ResponseEntity.ok(dto);
         }catch (Exception e){
-            recordService.registerAction(userDetails, "GET_DATA_FAILURE", "Error al obtener datos del usuario: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
