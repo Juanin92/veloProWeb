@@ -1,9 +1,11 @@
 package com.veloProWeb.Service;
 
+import com.veloProWeb.Model.DTO.TaskDTO;
 import com.veloProWeb.Model.Entity.User.Task;
 import com.veloProWeb.Model.Entity.User.User;
 import com.veloProWeb.Repository.TaskRepo;
 import com.veloProWeb.Service.User.TaskService;
+import com.veloProWeb.Service.User.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,17 +27,21 @@ public class TaskServiceTest {
 
     @InjectMocks private TaskService taskService;
     @Mock private TaskRepo taskRepo;
+    @Mock private UserService userService;
     private Task task, task2,task3, task4;
     private User user;
+    private TaskDTO dto;
 
     @BeforeEach
     void setUp(){
         user = new User();
+        user.setUsername("Juan");
         user.setId(1L);
         task = new Task(1L, "Test 1", true, LocalDate.now(), user);
         task2 = new Task(2L, "Test 1", false, LocalDate.now(), user);
         task3 = new Task(3L, "Test 1", true, LocalDate.now(), user);
         task4 = new Task(3L, "Test 1", true, LocalDate.now(), new User());
+        dto = new TaskDTO("TestDTO", true, LocalDate.now(), "Juan");
     }
 
     //Prueba para obtener una lista de tareas de un usuario
@@ -53,10 +59,10 @@ public class TaskServiceTest {
 
     @Test
     public void createTask_valid(){
-        Task newTask = new Task();
-        newTask.setUser(user);
-        taskService.createTask(newTask);
+        when(userService.getUserWithUsername(dto.getUser())).thenReturn(user);
+        taskService.createTask(dto);
         ArgumentCaptor<Task> taskArgumentCaptor = ArgumentCaptor.forClass(Task.class);
+        verify(userService, times(1)).getUserWithUsername(dto.getUser());
         verify(taskRepo, times(1)).save(taskArgumentCaptor.capture());
         Task result = taskArgumentCaptor.getValue();
         assertEquals(result.getCreated(), LocalDate.now());
@@ -65,10 +71,9 @@ public class TaskServiceTest {
     }
     @Test
     public void createTask_validNotFoundTaskAndUser(){
-        Task newTask = new Task();
-        newTask.setUser(null);
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() -> taskService.createTask(newTask));
-        verify(taskRepo, never()).save(newTask);
+        TaskDTO nullDTO = new TaskDTO();
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() -> taskService.createTask(dto));
+        verify(taskRepo, never()).save(task);
         assertEquals("Tarea debe contener un usuario seleccionado!", e.getMessage());
     }
 
