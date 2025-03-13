@@ -8,13 +8,12 @@ import { CashRegisterService } from '../../services/Sale/cash-register.service';
 import { LocalDataService } from '../../services/local-data.service';
 import { LocalData } from '../../models/Entity/local-data';
 import { UserService } from '../../services/User/user.service';
-import { User } from '../../models/Entity/user';
 import { TaskService } from '../../services/User/task.service';
-import { Task } from '../../models/Entity/task';
 import { NotificationService } from '../../utils/notification-service.service';
 import { DispatchService } from '../../services/Sale/dispatch.service';
 import { Dispatch } from '../../models/Entity/Sale/dispatch';
 import { TaskRequestDTO } from '../../models/DTO/task-request-dto';
+import { UserDTO } from '../../models/DTO/user-dto';
 
 @Component({
   selector: 'app-setting',
@@ -27,10 +26,10 @@ export class SettingComponent implements OnInit{
 
   recordList: Record[] = [];
   cashRegistersList: CashRegister[] = [];
-  userList: User[] = [];
+  userList: UserDTO[] = [];
   dispatchList: Dispatch[] = [];
   taskList: TaskRequestDTO[] = [];
-  task: Task;
+  task: TaskRequestDTO;
   data: LocalData = {
     id: 0,
     name: '',
@@ -135,8 +134,7 @@ export class SettingComponent implements OnInit{
     }
   }
 
-  createNewTask(task: Task): void {
-    console.log('Tarea:', task);
+  createNewTask(task: TaskRequestDTO): void {
     if (!task.description || !task.user) {
       this.notification.showWarningToast('Faltan datos', 'top', 3000);
       return;
@@ -146,6 +144,7 @@ export class SettingComponent implements OnInit{
         const message = response.message;
         this.notification.showSuccessToast(message, 'top', 3000);
         this.resetTask();
+        this.getTasks();
       },
       error: (error) => {
         const message = error.error?.message || error.error?.error;
@@ -157,16 +156,15 @@ export class SettingComponent implements OnInit{
 
   resetTask(): void{
     this.task.description = '';
-    this.task.user = null;
+    this.task.user = '';
   }
 
-  private initializeTask(): Task{
+  private initializeTask(): TaskRequestDTO{
     return {
-      id: 0,
       description: '',
       status: true,
       created: '',
-      user: null,
+      user: '',
     }
   }
 }
