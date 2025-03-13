@@ -41,11 +41,11 @@ public class TaskController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PostMapping
-    public ResponseEntity<Map<String, String>> createTask(@RequestBody Task task){
+    public ResponseEntity<Map<String, String>> createTask(@RequestBody TaskDTO task){
         HashMap<String, String> response = new HashMap<>();
         try{
-            response.put("message", "Tarea asignada correctamente");
             taskService.createTask(task);
+            response.put("message", "Tarea asignada correctamente");
             return ResponseEntity.ok(response);
         }catch (IllegalArgumentException e){
             response.put("Error", e.getMessage());
