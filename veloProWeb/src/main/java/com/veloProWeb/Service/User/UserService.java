@@ -143,8 +143,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User getAuthUser(String username, String pass) {
-        return null;
+    public boolean getAuthUser(String password, UserDetails userDetails) {
+        return passwordEncoder.matches(password, userDetails.getPassword());
     }
 
     @Override

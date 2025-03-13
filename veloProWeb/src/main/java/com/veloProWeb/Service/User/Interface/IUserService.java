@@ -14,7 +14,7 @@ public interface IUserService {
     void activateUser(String username);
     List<UserDTO> getAllUser();
     User getUserWithUsername(String username);
-    User getAuthUser(String username, String pass);
+    boolean getAuthUser(String password, UserDetails userDetails);
     User getAuthUserToken(String username, String token);
     void sendEmailCode(User user);
     void sendEmailUpdatePassword(User user);
