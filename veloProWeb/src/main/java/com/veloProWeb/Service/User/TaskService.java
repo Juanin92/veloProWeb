@@ -2,8 +2,10 @@ package com.veloProWeb.Service.User;
 
 import com.veloProWeb.Model.DTO.TaskDTO;
 import com.veloProWeb.Model.Entity.User.Task;
+import com.veloProWeb.Model.Entity.User.User;
 import com.veloProWeb.Repository.TaskRepo;
 import com.veloProWeb.Service.User.Interface.ITaskService;
+import com.veloProWeb.Service.User.Interface.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 public class TaskService implements ITaskService {
 
     @Autowired private TaskRepo taskRepo;
+    @Autowired private IUserService userService;
 
     /**
      * Obtener una lista de tareas de un usuario.
@@ -35,18 +38,19 @@ public class TaskService implements ITaskService {
 
     /**
      *Crear Tarea para un usuario
-     * @param task - Objeto que contiene datos esenciales
+     * @param dto - Objeto que contiene datos necesarios
      */
     @Override
-    public void createTask(Task task) {
-        if (task != null && task.getUser() != null) {
-            Task newTask = new Task();
-            newTask.setId(null);
-            newTask.setCreated(LocalDate.now());
-            newTask.setUser(task.getUser());
-            newTask.setDescription(task.getDescription());
-            newTask.setStatus(true);
-            taskRepo.save(newTask);
+    public void createTask(TaskDTO dto) {
+        if (dto != null && !dto.getUser().trim().isEmpty()) {
+            Task task = new Task();
+            task.setId(null);
+            task.setCreated(LocalDate.now());
+            task.setDescription(dto.getDescription());
+            task.setStatus(true);
+            User user = userService.getUserWithUsername(dto.getUser());
+            task.setUser(user);
+            taskRepo.save(task);
         }else {
             throw new IllegalArgumentException("Tarea debe contener un usuario seleccionado!");
         }

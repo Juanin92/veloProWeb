@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ITaskService {
     List<Task> getTaskByUser(Long userID);
-    void createTask(Task task);
+    void createTask(TaskDTO dto);
     void completeTask(Long taskID);
     List<TaskDTO> getAllTasks();
 }
