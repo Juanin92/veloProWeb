@@ -145,20 +145,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="col-12">
-                                <div class="form-floating">
-                                    <input type="password" class="form-control" id="password" placeholder="Contraseña"
-                                        name="password" 
-                                        [disabled]="!user.status"
-                                        [(ngModel)]="user.password"
-                                        (keydown)="touchedFields['password'] = true"
-                                        [ngClass]="{'is-invalid':touchedFields['password'] && !validator.isFieldValid(user, 'password'), 'is-valid':touchedFields['password'] && validator.isFieldValid(user, 'password')}" required>
-                                    <label for="password">Contraseña</label>
-                                    <div *ngIf="!validator.isFieldValid(user,'password')" class="invalid-feedback">
-                                        Contraseña debe tener 7 o más caracteres.
-                                    </div>
-                                </div>
-                            </div> -->
                         </div>
                         <div class="text-center mt-3">
                             <button *ngIf="addUserButton" [disabled]="!validator.validateForm(user)" type="submit" 
