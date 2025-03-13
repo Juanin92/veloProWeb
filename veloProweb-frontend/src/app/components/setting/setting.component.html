@@ -127,7 +127,7 @@
                                 [(ngModel)]="task.user"
                                 [ngClass]="{'is-invalid':!task.user, 'is-valid':task.user}" required>
                                 <option [ngValue]="null" selected disabled>Seleccione Usuario</option>
-                                <option *ngFor="let user of userList" [ngValue]="user">{{user.name + ' ' + user.surname}}</option>
+                                <option *ngFor="let user of userList" [ngValue]="user.username">{{user.name + ' ' + user.surname}}</option>
                             </select>
                             <div *ngIf="!task.user" class="invalid-feedback">
                                 Debe seleccionar usuario
