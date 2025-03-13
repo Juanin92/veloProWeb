@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { TaskService } from '../../services/User/task.service';
-import { Task } from '../../models/Entity/task';
 import { MessageModalComponent } from "../user/message-modal/message-modal.component";
 import { Message } from '../../models/Entity/message';
 import { TaskComponent } from "../setting/task/task.component";
@@ -11,6 +10,7 @@ import { DispatchComponent } from "../sale/dispatch/dispatch.component";
 import { Dispatch } from '../../models/Entity/Sale/dispatch';
 import { MessageComponent } from "../user/message/message.component";
 import { DispatchModalComponent } from "../sale/dispatch-modal/dispatch-modal.component";
+import { TaskRequestDTO } from '../../models/DTO/task-request-dto';
 
 @Component({
   selector: 'app-home',
@@ -21,7 +21,7 @@ import { DispatchModalComponent } from "../sale/dispatch-modal/dispatch-modal.co
 })
 export class HomeComponent{
 
-  taskList: Task[] = [];
+  taskList: TaskRequestDTO[] = [];
   messageList: Message[] = [];
   alertList: AlertModel[] = [];
   dispatchList: Dispatch[] = [];
@@ -38,7 +38,7 @@ export class HomeComponent{
     this.messageList = messages;
   }
 
-  getTasksUpdated(tasks: Task[]): void{
+  getTasksUpdated(tasks: TaskRequestDTO[]): void{
     this.taskList = tasks;
   }
 
