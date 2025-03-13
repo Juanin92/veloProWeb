@@ -41,7 +41,7 @@ public class TaskServiceTest {
         task2 = new Task(2L, "Test 1", false, LocalDate.now(), user);
         task3 = new Task(3L, "Test 1", true, LocalDate.now(), user);
         task4 = new Task(3L, "Test 1", true, LocalDate.now(), new User());
-        dto = new TaskDTO("TestDTO", true, LocalDate.now(), "Juan");
+        dto = new TaskDTO(1L,"TestDTO", true, LocalDate.now(), "Juan");
     }
 
     //Prueba para obtener una lista de tareas de un usuario
@@ -49,12 +49,13 @@ public class TaskServiceTest {
     public void getTaskByUser_valid(){
         List<Task> tasks = Arrays.asList(task,task2,task3,task4);
         List<Task> taskListFiltered = Arrays.asList(task, task3);
+        when(userService.getUserWithUsername(dto.getUser())).thenReturn(user);
         when(taskRepo.findAll()).thenReturn(tasks);
-        List<Task> result = taskService.getTaskByUser(user.getId());
+        List<TaskDTO> result = taskService.getTaskByUser(dto.getUser());
 
+        verify(userService, times(1)).getUserWithUsername(dto.getUser());
         verify(taskRepo, times(1)).findAll();
-        assertEquals(2, result.size());
-        assertEquals(taskListFiltered, result);
+        assertEquals(taskListFiltered.size(), result.size());
     }
 
     @Test
