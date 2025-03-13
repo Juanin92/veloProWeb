@@ -1,8 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Task } from '../../../models/Entity/task';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TaskService } from '../../../services/User/task.service';
+import { TaskRequestDTO } from '../../../models/DTO/task-request-dto';
 
 @Component({
   selector: 'app-task',
@@ -13,8 +13,8 @@ import { TaskService } from '../../../services/User/task.service';
 })
 export class TaskComponent implements OnInit{
 
-  @Output() taskUpdated = new EventEmitter<Task[]>();
-  taskList: Task[] = [];
+  @Output() taskUpdated = new EventEmitter<TaskRequestDTO[]>();
+  taskList: TaskRequestDTO[] = [];
 
   constructor(private taskService: TaskService){}
 
@@ -23,7 +23,7 @@ export class TaskComponent implements OnInit{
   }
 
   getTasks(): void {
-    this.taskService.getTasks(1).subscribe({
+    this.taskService.getTasks().subscribe({
       next: (list) => {
         this.taskList = list;
         this.taskUpdated.emit(this.taskList);
@@ -33,7 +33,7 @@ export class TaskComponent implements OnInit{
     });
   }
 
-  completeTask(task: Task) {
+  completeTask(task: TaskRequestDTO) {
     task.status = false;
     this.taskService.completeTask(task.id).subscribe({
       next:(response)=>{
