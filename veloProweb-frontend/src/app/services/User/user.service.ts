@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { User } from '../../models/Entity/user';
 import { AuthService } from './auth.service';
 import { UserDTO } from '../../models/DTO/user-dto';
 import { UpdateUserDTO } from '../../models/DTO/update-user-dto';
+import { AuthRequestDTO } from '../../models/DTO/auth-request-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -48,9 +48,9 @@ export class UserService {
    * @param username - nombre de usuario seleccionado
    * @returns - Observable que emite un mensaje de confirmación
    */
-  deleteUser(username: string): Observable<{message: string}>{
+  deleteUser(auth: AuthRequestDTO): Observable<{message: string}>{
     return this.httpClient.put<{message: string}>(`${this.apiUrl}/eliminar-usuario`, 
-      username, {headers: this.auth.getAuthHeaders()});
+      auth, {headers: this.auth.getAuthHeaders()});
   }
 
   /**
@@ -58,9 +58,9 @@ export class UserService {
    * @param user - usuario seleccionado
    * @returns - Observable que emite un mensaje de confirmación
    */
-  activeUser(username: string): Observable<{message: string}>{
+  activeUser(auth: AuthRequestDTO): Observable<{message: string}>{
     return this.httpClient.put<{message: string}>(`${this.apiUrl}/activar-usuario`, 
-      username, {headers: this.auth.getAuthHeaders()});
+      auth, {headers: this.auth.getAuthHeaders()});
   }
 
   getUserData(): Observable<UserDTO>{
