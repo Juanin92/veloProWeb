@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Task } from '../../models/Entity/task';
 import { TaskRequestDTO } from '../../models/DTO/task-request-dto';
 import { AuthService } from './auth.service';
 
