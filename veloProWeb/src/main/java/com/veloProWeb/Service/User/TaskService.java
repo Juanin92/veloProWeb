@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -25,15 +24,17 @@ public class TaskService implements ITaskService {
      * Obtener una lista de tareas de un usuario.
      * Filtra que el usuario de la tarea sea el mismo usuario seleccionado,
      * y la tarea debe estar true(Activa)
-     * @param userID - Identificador del Usuario seleccionado
+     * @param username - Nombre de Usuario del usuario seleccionado
      * @return - Lista filtrada
      */
     @Override
-    public List<Task> getTaskByUser(Long userID) {
+    public List<TaskDTO> getTaskByUser(String username) {
+        User user = userService.getUserWithUsername(username);
         List<Task> tasks = taskRepo.findAll();
         return tasks.stream()
-                .filter(task -> Objects.equals(task.getUser().getId(), userID) && task.isStatus())
-                .toList();
+                .filter(task -> task.isStatus() && Objects.equals(task.getUser().getId(), user.getId()))
+                .map(this::mapTaskToTaskDTO)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -81,14 +82,22 @@ public class TaskService implements ITaskService {
     public List<TaskDTO> getAllTasks() {
         List<Task> taskList = taskRepo.findAll();
         return taskList.stream()
-                .map(task -> {
-                    TaskDTO dto =  new TaskDTO();
-                    dto.setCreated(task.getCreated());
-                    dto.setDescription(task.getDescription());
-                    dto.setStatus(task.isStatus());
-                    dto.setUser(String.format("%s %s", task.getUser().getName(), task.getUser().getSurname()));
-                    return dto;
-                })
+                .map(this::mapTaskToTaskDTO)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Convierte un task a un taskDTO
+     * @param task - Objeto a convertir
+     * @return - Objeto DTO
+     */
+    private TaskDTO mapTaskToTaskDTO(Task task) {
+        TaskDTO dto = new TaskDTO();
+        dto.setId(task.getId());
+        dto.setCreated(task.getCreated());
+        dto.setDescription(task.getDescription());
+        dto.setStatus(task.isStatus());
+        dto.setUser(String.format("%s %s", task.getUser().getName(), task.getUser().getSurname()));
+        return dto;
     }
 }
