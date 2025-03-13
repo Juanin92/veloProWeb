@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Task } from '../../models/Entity/task';
 import { TaskRequestDTO } from '../../models/DTO/task-request-dto';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +12,10 @@ export class TaskService {
 
   private apiUrl = 'http://localhost:8080/tareas';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private auth: AuthService) { }
 
-  getTasks(userID: number): Observable<Task[]>{
-    return this.httpClient.get<Task[]>(this.apiUrl, {params: {userId: userID.toString()}});
+  getTasks(): Observable<TaskRequestDTO[]>{
+    return this.httpClient.get<TaskRequestDTO[]>(this.apiUrl, {headers: this.auth.getAuthHeaders()});
   }
 
   createTask(task: TaskRequestDTO): Observable<{message: string}>{
