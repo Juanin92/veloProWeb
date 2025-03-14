@@ -1,11 +1,12 @@
 package com.veloProWeb.Service;
 
 import com.veloProWeb.Model.DTO.General.MessageDTO;
+import com.veloProWeb.Model.DTO.UserDTO;
 import com.veloProWeb.Model.Entity.User.Message;
 import com.veloProWeb.Model.Entity.User.User;
 import com.veloProWeb.Repository.MessageRepo;
-import com.veloProWeb.Repository.UserRepo;
 import com.veloProWeb.Service.User.MessageService;
+import com.veloProWeb.Service.User.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +25,8 @@ public class MessageServiceTest {
 
     @InjectMocks private MessageService messageService;
     @Mock private MessageRepo messageRepo;
-    @Mock private UserRepo userRepo;
+    @Mock private UserService userService;
+    @Mock private UserDTO userDTO;
     private Message message;
     private Message message2;
     private User userSender;
@@ -35,9 +37,11 @@ public class MessageServiceTest {
         userSender = new User();
         userSender.setId(1L);
         userSender.setName("Juan");
+        userSender.setUsername("juan");
         userReceiver = new User();
         userReceiver.setId(2L);
         userReceiver.setName("Pedro");
+        userReceiver.setUsername("pedro");
 
         message = new Message();
         message.setId(1L);
@@ -72,20 +76,13 @@ public class MessageServiceTest {
     @Test
     public void getMessageByUser_valid(){
         List<Message> messageList = Collections.singletonList(message);
-        when(userRepo.findById(1L)).thenReturn(Optional.of(userSender));
-        when(messageRepo.findByReceiverUser(userSender)).thenReturn(messageList);
+        when(userService.getUserWithUsername("pedro")).thenReturn(userReceiver);
+        when(messageRepo.findByReceiverUser(userReceiver)).thenReturn(messageList);
 
-        List<MessageDTO> dtoList = messageService.getMessageByUser(userSender.getId());
-        verify(messageRepo).findByReceiverUser(userSender);
+        List<MessageDTO> dtoList = messageService.getMessageByUser("pedro");
+        verify(userService, times(1)).getUserWithUsername("pedro");
+        verify(messageRepo, times(1)).findByReceiverUser(userReceiver);
         assertEquals(messageList.size(), dtoList.size());
-    }
-    @Test
-    public void getMessageByUser_invalid(){
-        when(userRepo.findById(3L)).thenReturn(Optional.empty());
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() -> messageService.getMessageByUser(3L));
-
-        verify(messageRepo, never()).findByReceiverUser(userSender);
-        assertEquals("Usuario no encontrado", e.getMessage());
     }
 
     //Prueba para dejar como visto el mensaje
@@ -151,14 +148,19 @@ public class MessageServiceTest {
     //Prueba para enviar mensaje
     @Test
     public void sendMessage_valid(){
-        MessageDTO dto = new MessageDTO(null, "Prueba 1", null,false, false, userSender.getId(), userReceiver.getId(), "senderName");
-        when(userRepo.findById(dto.getSenderUser())).thenReturn(Optional.of(userSender));
-        when(userRepo.findById(dto.getReceiverUser())).thenReturn(Optional.of(userReceiver));
-        messageService.sendMessage(dto);
 
+        MessageDTO dto = new MessageDTO(null, "Prueba 1", null,false, false, null, userDTO, null);
+        when(userService.getUserWithUsername(userDTO.getUsername())).thenReturn(userReceiver);
+        when(userService.getUserWithUsername("juan")).thenReturn(userSender);
+        messageService.sendMessage(dto, "juan");
+
+        verify(userService, times(1)).getUserWithUsername("juan");
+        verify(userService, times(1)).getUserWithUsername(userDTO.getUsername());
         verify(messageRepo, times(1)).save(any(Message.class));
         assertEquals("Prueba 1", message.getContext());
         assertEquals(1L, message.getSenderUser().getId());
         assertEquals(2L, message.getReceiverUser().getId());
+        assertFalse(message.isDelete());
+        assertFalse(message.isRead());
     }
 }
