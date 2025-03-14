@@ -1,3 +1,4 @@
+import { UserDTO } from "../DTO/user-dto";
 import { User } from "./user";
 
 export interface Record {
@@ -7,5 +8,5 @@ export interface Record {
     actionDate: string;
     action: string;
     comment: string;
-    user: User;
+    user: UserDTO;
 }
