@@ -1,11 +1,12 @@
 package com.veloProWeb.Service.User;
 
 import com.veloProWeb.Model.DTO.General.MessageDTO;
+import com.veloProWeb.Model.DTO.UserDTO;
 import com.veloProWeb.Model.Entity.User.Message;
 import com.veloProWeb.Model.Entity.User.User;
 import com.veloProWeb.Repository.MessageRepo;
-import com.veloProWeb.Repository.UserRepo;
 import com.veloProWeb.Service.User.Interface.IMessageService;
+import com.veloProWeb.Service.User.Interface.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ import java.util.List;
 public class MessageService implements IMessageService {
 
     @Autowired private MessageRepo messageRepo;
-    @Autowired private UserRepo userRepo;
+    @Autowired private IUserService userService;
 
     /**
      * Obtiene todos los mensajes del sistema
@@ -36,8 +37,8 @@ public class MessageService implements IMessageService {
      * @return - Lista de mensajes del usuario
      */
     @Override
-    public List<MessageDTO> getMessageByUser(Long userID) {
-        User user = userRepo.findById(userID).orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+    public List<MessageDTO> getMessageByUser(String username) {
+        User user = userService.getUserWithUsername(username);
         List<MessageDTO> messageDTOList = new ArrayList<>();
         for (Message message: messageRepo.findByReceiverUser(user)){
             MessageDTO dto = new MessageDTO();
@@ -46,9 +47,9 @@ public class MessageService implements IMessageService {
             dto.setCreated(message.getCreated());
             dto.setRead(message.isRead());
             dto.setDelete(message.isDelete());
-            dto.setReceiverUser(message.getReceiverUser().getId());
-            dto.setSenderUser(message.getSenderUser().getId());
-            dto.setSenderName(user.getName() + " " + user.getSurname());
+            dto.setReceiverUser(createUserDTO(user));
+            dto.setSenderUser(createUserDTO(message.getSenderUser()));
+            dto.setSenderName(message.getSenderUser().getName() + " " + message.getSenderUser().getSurname());
             messageDTOList.add(dto);
         }
         return messageDTOList.stream()
@@ -104,9 +105,9 @@ public class MessageService implements IMessageService {
      * @param dto - Objeto DTO con los datos necesarios
      */
     @Override
-    public void sendMessage(MessageDTO dto) {
-        User receiverUser = userRepo.findById(dto.getReceiverUser()).orElseThrow(() -> new IllegalArgumentException("Destinatario no encontrado"));
-        User senderUser = userRepo.findById(dto.getSenderUser()).orElseThrow(() -> new IllegalArgumentException("Receptor no encontrado"));
+    public void sendMessage(MessageDTO dto, String senderUsername) {
+        User receiverUser = userService.getUserWithUsername(dto.getReceiverUser().getUsername());
+        User senderUser = userService.getUserWithUsername(senderUsername);
 
         Message message =  new Message();
         message.setId(null);
@@ -126,5 +127,11 @@ public class MessageService implements IMessageService {
      */
     private Message getMessageById(Long id){
         return messageRepo.findById(id).orElse(null);
+    }
+
+    private UserDTO createUserDTO(User user){
+        return new UserDTO(
+                user.getName(), user.getSurname(), user.getUsername(),
+                user.getRut(), user.getEmail(), user.getRole(), user.isStatus(), user.getDate());
     }
 }
