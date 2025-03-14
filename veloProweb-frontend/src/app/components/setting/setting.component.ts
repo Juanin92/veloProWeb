@@ -3,22 +3,20 @@ import { RecordService } from '../../services/record.service';
 import { Record } from '../../models/Entity/record';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CashRegisterService } from '../../services/Sale/cash-register.service';
 import { LocalDataService } from '../../services/local-data.service';
 import { LocalData } from '../../models/Entity/local-data';
 import { UserService } from '../../services/User/user.service';
 import { TaskService } from '../../services/User/task.service';
 import { NotificationService } from '../../utils/notification-service.service';
-import { DispatchService } from '../../services/Sale/dispatch.service';
-import { Dispatch } from '../../models/Entity/Sale/dispatch';
 import { TaskRequestDTO } from '../../models/DTO/task-request-dto';
 import { UserDTO } from '../../models/DTO/user-dto';
 import { CashierMovementsComponent } from "./cashier-movements/cashier-movements.component";
+import { DispatchLayoutComponent } from "../sale/dispatch-layout/dispatch-layout.component";
 
 @Component({
   selector: 'app-setting',
   standalone: true,
-  imports: [CommonModule, FormsModule, CashierMovementsComponent],
+  imports: [CommonModule, FormsModule, CashierMovementsComponent, DispatchLayoutComponent],
   templateUrl: './setting.component.html',
   styleUrl: './setting.component.css'
 })
@@ -26,7 +24,6 @@ export class SettingComponent implements OnInit{
 
   recordList: Record[] = [];
   userList: UserDTO[] = [];
-  dispatchList: Dispatch[] = [];
   taskList: TaskRequestDTO[] = [];
   task: TaskRequestDTO;
   data: LocalData = {
@@ -43,10 +40,8 @@ export class SettingComponent implements OnInit{
   constructor(
     private recordService: RecordService,
     private userService: UserService,
-    private cashRegisterService: CashRegisterService,
     private localDataService: LocalDataService,
     private taskService: TaskService,
-    private dispatchService: DispatchService,
     private notification: NotificationService){
       this.task = this.initializeTask();
     }
@@ -55,7 +50,6 @@ export class SettingComponent implements OnInit{
     this.getRecords();
     this.getData();
     this.getUsers();
-    this.getDispatches();
     this.getTasks();
   }
 
@@ -76,17 +70,6 @@ export class SettingComponent implements OnInit{
       },
       error: (error)=>{
         console.log('No se encontró información sobre los registros');
-      }
-    });
-  }
-
-  getDispatches(): void{
-    this.dispatchService.getDispatches().subscribe({
-      next:(list)=>{
-        this.dispatchList = list;
-      },
-      error: (error)=>{
-        console.log('No se encontró información sobre los despachos registrados');
       }
     });
   }
