@@ -23,6 +23,7 @@ export class UserComponent implements OnInit, AfterViewInit {
   @ViewChild('securityUser') securityUserModal!: ElementRef;
   @ViewChild('userTableFilter') dropdownButton!: ElementRef;
   userList: UserDTO[] = [];
+  filteredList: UserDTO[] = [];
   addUserButton: boolean = true;
   showForm: boolean = false;
   existingMasterUser: boolean = true;
@@ -36,6 +37,7 @@ export class UserComponent implements OnInit, AfterViewInit {
   dropdownInstance!: bootstrap.Dropdown;
   sortDate: boolean = true;
   sortName: boolean = true;
+  textFilter: string = '';
 
   roleLabels: { [key: string]: string } = {
     [Role.MASTER]: 'Maestro',
@@ -74,6 +76,7 @@ export class UserComponent implements OnInit, AfterViewInit {
     this.userService.getListUsers().subscribe({
       next: (list) => {
         this.userList = list;
+        this.filteredList = list;
         this.existingMasterUser = !this.userList.some(user => user.role === Role.MASTER);
       },
       error: (error) => {
@@ -252,7 +255,7 @@ export class UserComponent implements OnInit, AfterViewInit {
 
   toggleSortDate() {
     this.sortDate = !this.sortDate;
-    this.userList.sort((a, b) => {
+    this.filteredList.sort((a, b) => {
         const dateA = new Date(a.date).getTime();
         const dateB = new Date(b.date).getTime();
         return this.sortDate ? dateA - dateB : dateB - dateA;
@@ -261,7 +264,7 @@ export class UserComponent implements OnInit, AfterViewInit {
 
   toggleSortName() {
     this.sortName = !this.sortName;
-    this.userList.sort((a, b) => {
+    this.filteredList.sort((a, b) => {
         const nameA = a.name.toLowerCase(); 
         const nameB = b.name.toLowerCase();
         if (this.sortName) {
@@ -270,5 +273,21 @@ export class UserComponent implements OnInit, AfterViewInit {
           return nameA > nameB ? -1 : nameA < nameB ? 1 : 0;
       }
     });
+  }
+
+  searchFilterUser(): void {
+    if (this.textFilter.trim() === '') {
+      this.filteredList = this.userList;
+    } else {
+      this.filteredList = this.userList.filter(user =>
+        user.name.toLowerCase().includes(this.textFilter.toLowerCase()) ||
+        user.surname.toLowerCase().includes(this.textFilter.toLowerCase()) ||
+        user.rut.toLowerCase().includes(this.textFilter.toLowerCase()) ||
+        user.username.toLowerCase().includes(this.textFilter.toLowerCase()) ||
+        user.email.toLowerCase().includes(this.textFilter.toLowerCase()) ||
+        (this.textFilter.toLowerCase() === 'activo' && user.status) ||
+        (this.textFilter.toLowerCase() === 'inactivo' && !user.status)
+      );
+    }
   }
 }
