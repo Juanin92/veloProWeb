@@ -32,7 +32,7 @@ public class UserController {
      */
     @GetMapping
     public ResponseEntity<List<UserDTO>> getListUser(@AuthenticationPrincipal UserDetails userDetails){
-        if (userService.hasRequiredRole(userDetails, "ADMIN", "MASTER")){
+        if (userService.hasRequiredRole(userDetails, "ADMIN", "MASTER", "WAREHOUSE", "SELLER", "GUEST")){
             return ResponseEntity.ok(userService.getAllUser());
         }else{
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
