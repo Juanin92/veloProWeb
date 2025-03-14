@@ -147,40 +147,7 @@
                 </div>
             </div>
             <div class="tab-pane fade" id="content-dispatches">
-                <div class="card shadow h-100">
-                    <div class="card-body d-flex flex-column p-3" style="height: 100%;">
-                        <h5 class="text-center mb-3">Historial de despachos</h5>
-                        <div class="table-responsive flex-grow-1p-1 pt-0" style="height: calc(100vh - 180px); overflow-y: auto;">
-                            <table class="table table-group-divider table-hover">
-                                <thead class="table-light text-center">
-                                    <tr>
-                                        <th rowspan="2">N° Despacho</th>
-                                        <th colspan="2">Fecha</th>
-                                        <th rowspan="2">Cliente</th>
-                                        <th rowspan="2">Dirección</th>
-                                        <th rowspan="2">Comentario</th>
-                                        <th rowspan="2">Estado</th>
-                                    </tr>
-                                    <tr>
-                                        <th>Creación</th>
-                                        <th>Entrega</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="table-group-divider text-center align-middle">
-                                    <tr *ngFor="let dispatch of dispatchList">
-                                        <td>{{dispatch.trackingNumber}}</td>
-                                        <td>{{dispatch.created| date: 'dd-MM-yyyy'}}</td>
-                                        <td>{{dispatch.deliveryDate| date: 'dd-MM-yyyy'}}</td>
-                                        <td>{{dispatch.customer}}</td>
-                                        <td>{{dispatch.address}}</td>
-                                        <td>{{dispatch.comment}}</td>
-                                        <td>{{dispatch.status}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                <app-dispatch-layout></app-dispatch-layout>
             </div>
             <div class="tab-pane fade" id="content-record">
                 <div class="card shadow h-100">
