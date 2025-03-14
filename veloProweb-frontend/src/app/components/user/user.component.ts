@@ -9,6 +9,7 @@ import { NotificationService } from '../../utils/notification-service.service';
 import { UserDTO } from '../../models/DTO/user-dto';
 import { Modal } from 'bootstrap';
 import { AuthRequestDTO } from '../../models/DTO/auth-request-dto';
+import * as bootstrap from 'bootstrap';
 
 @Component({
   selector: 'app-user',
@@ -31,6 +32,9 @@ export class UserComponent implements OnInit, AfterViewInit {
   authRequest: AuthRequestDTO = {identifier: '', token: ''};
   touchedFields: Record<string, boolean> = {};
   actionUser: string = '';
+  @ViewChild('userTableFilter') dropdownButton!: ElementRef;
+  dropdownInstance!: bootstrap.Dropdown;
+  sortAscending: boolean = true;
 
   roleLabels: { [key: string]: string } = {
     [Role.MASTER]: 'Maestro',
@@ -52,6 +56,9 @@ export class UserComponent implements OnInit, AfterViewInit {
     this.renderer.listen('document', 'mouseover', () => {
       this.tooltipService.initializeTooltips();
     });
+    if (this.dropdownButton) {
+          this.dropdownInstance = new bootstrap.Dropdown(this.dropdownButton.nativeElement);
+        }
   }
 
   ngOnInit(): void {
@@ -234,5 +241,20 @@ export class UserComponent implements OnInit, AfterViewInit {
     } else {
         modalInstance.hide();
     }
+  }
+
+  toggleDropdown() {
+    if (this.dropdownInstance) {
+      this.dropdownInstance.toggle();
+    }
+  }
+
+  toggleSortOrder() {
+    this.sortAscending = !this.sortAscending;
+    this.userList.sort((a, b) => {
+        const dateA = new Date(a.date).getTime();
+        const dateB = new Date(b.date).getTime();
+        return this.sortAscending ? dateA - dateB : dateB - dateA;
+    });
   }
 }
