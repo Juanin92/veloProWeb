@@ -33,7 +33,7 @@ public class MessageService implements IMessageService {
      * Obtener mensajes de un usuario específico
      * Verifica que el usuario exista
      * Filtra la lista de mensajes para que no contenga mensajes borrados
-     * @param userID - Identificador del usuario
+     * @param username - nombre de usuario del usuario
      * @return - Lista de mensajes del usuario
      */
     @Override
@@ -103,6 +103,7 @@ public class MessageService implements IMessageService {
      * Crea y Envia mensaje entre usuarios
      * Verifica que los usuarios receptor y destinatario existan
      * @param dto - Objeto DTO con los datos necesarios
+     * @param senderUsername - nombre de usuario del usuario remitente
      */
     @Override
     public void sendMessage(MessageDTO dto, String senderUsername) {
@@ -129,6 +130,11 @@ public class MessageService implements IMessageService {
         return messageRepo.findById(id).orElse(null);
     }
 
+    /**
+     * Crear un objeto DTO de usuario
+     * @param user - Usuario a convertir en DTO
+     * @return - Objeto DTO con los datos del usuario
+     */
     private UserDTO createUserDTO(User user){
         return new UserDTO(
                 user.getName(), user.getSurname(), user.getUsername(),
