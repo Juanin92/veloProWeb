@@ -1,0 +1,84 @@
+<div class="card shadow h-100">
+    <div class="card-body d-flex flex-column p-2" style="height: 50%;">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+            <div class="col-lg-3 col-md-6">
+                <div class="form-floating">
+                    <input id="searchRecord" type="text" [(ngModel)]="textFilter" (ngModelChange)="searchFilterTasks()"
+                        class="form-control form-control-sm" placeholder="Ingrese un valor"
+                        aria-label="buscar registros filtrado" />
+                    <label for="searchRecord" class="fs-6 fw-bolder">Búsqueda Rápida</label>
+                </div>
+            </div>
+            <h5 class="text-center flex-grow-1">Historial de tareas asignadas</h5>
+            <button class="btn btn-outline-primary btn-sm rounded-pill" data-bs-toggle="modal" data-bs-target="#taskModal">
+                <i class="bi bi-plus-lg"></i>
+            </button>
+        </div>
+        <div class="table-responsive flex-grow-1p-1 pt-0" style="max-height: 65vh; overflow-y: auto;">
+            <table class="table table-group-divider table-hover">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th rowspan="2"></th>
+                        <th rowspan="2">Fecha</th>
+                        <th rowspan="2">Empleado</th>
+                        <th rowspan="2">Descripción</th>
+                        <th rowspan="2">Estado</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider text-center align-middle">
+                    <tr *ngFor="let task of filteredTaskList; let i = index">
+                        <td>{{i + 1}}</td>
+                        <td>{{task.created| date: 'dd-MM-yyyy'}}</td>
+                        <td>{{task.user}}</td>
+                        <td>{{task.description}}</td>
+                        <td>
+                            <i *ngIf="!task.status" class="bi bi-check2-all text-success"></i>
+                            <i *ngIf="task.status" class="bi bi-x text-danger"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div *ngIf="!taskList.length" class="text-center">
+                <p class="fw-semibold fs-4">Sin tareas asignadas registradas</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- MODAL TASK -->
+<div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title" id="taskModalLabel">Nueva Tarea</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="resetTask()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card-body d-flex flex-column p-3" style="height: 100%;">
+                    <div class="form-floating mb-3 m-2 w-auto">
+                        <select class="form-select w-auto" aria-label="Seleccione usuario" name="userSelected" [(ngModel)]="task.user"
+                            [ngClass]="{'is-invalid':!task.user, 'is-valid':task.user}" required>
+                            <option [ngValue]="null" selected disabled>Seleccione Usuario</option>
+                            <option *ngFor="let user of userList" [ngValue]="user.username">{{user.name + ' ' + user.surname}}
+                            </option>
+                        </select>
+                        <div *ngIf="!task.user" class="invalid-feedback">
+                            Debe seleccionar usuario
+                        </div>
+                    </div>
+                    <div class="form-floating mb-3 w-auto">
+                        <textarea class="form-control" id="taskText" style="height: 100px" [(ngModel)]="task.description"
+                            [ngClass]="{'is-invalid':!task.description, 'is-valid':task.description}" required></textarea>
+                        <label for="taskText" class="form-label">Descripción de la Tarea:</label>
+                        <div *ngIf="!task.description" class="invalid-feedback">
+                            Debe ingresar una descripción
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <button class="btn btn-primary" type="button" (click)="createNewTask(task)">Enviar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
