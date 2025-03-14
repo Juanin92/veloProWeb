@@ -12,17 +12,17 @@ import { TaskRequestDTO } from '../../models/DTO/task-request-dto';
 import { UserDTO } from '../../models/DTO/user-dto';
 import { CashierMovementsComponent } from "./cashier-movements/cashier-movements.component";
 import { DispatchLayoutComponent } from "../sale/dispatch-layout/dispatch-layout.component";
+import { RegisterComponent } from "./register/register.component";
 
 @Component({
   selector: 'app-setting',
   standalone: true,
-  imports: [CommonModule, FormsModule, CashierMovementsComponent, DispatchLayoutComponent],
+  imports: [CommonModule, FormsModule, CashierMovementsComponent, DispatchLayoutComponent, RegisterComponent],
   templateUrl: './setting.component.html',
   styleUrl: './setting.component.css'
 })
 export class SettingComponent implements OnInit{
 
-  recordList: Record[] = [];
   userList: UserDTO[] = [];
   taskList: TaskRequestDTO[] = [];
   task: TaskRequestDTO;
@@ -38,7 +38,6 @@ export class SettingComponent implements OnInit{
   pass: string = '';
 
   constructor(
-    private recordService: RecordService,
     private userService: UserService,
     private localDataService: LocalDataService,
     private taskService: TaskService,
@@ -47,7 +46,6 @@ export class SettingComponent implements OnInit{
     }
 
   ngOnInit(): void {
-    this.getRecords();
     this.getData();
     this.getUsers();
     this.getTasks();
@@ -59,17 +57,6 @@ export class SettingComponent implements OnInit{
         this.userList = list;
       }, error: (error)=>{
         console.log('Error al obtener la lista ', error);
-      }
-    });
-  }
-
-  getRecords(): void{
-    this.recordService.getRecords().subscribe({
-      next:(list)=>{
-        this.recordList = list;
-      },
-      error: (error)=>{
-        console.log('No se encontró información sobre los registros');
       }
     });
   }
