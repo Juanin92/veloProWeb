@@ -30,43 +30,7 @@
         </ul>
         <div class="tab-content flex-grow-1">
             <div class="tab-pane fade show active" id="content-cashier">
-                <div class="card shadow h-100">
-                    <div class="card-body d-flex flex-column p-3" style="height: 100%;">
-                        <h5 class="text-center mb-3">Movimientos de Caja</h5>
-                        <div class="table-responsive flex-grow-1p-1 pt-0" style="height: calc(100vh - 180px); overflow-y: auto;">
-                            <table class="table table-group-divider table-hover">
-                                <thead class="table-light text-center">
-                                    <tr>
-                                        <th colspan="2">Fecha</th>
-                                        <th colspan="2">Monto</th>
-                                        <th rowspan="2">POS</th>
-                                        <th rowspan="2">Usuario</th>
-                                        <th rowspan="2">Comentario</th>
-                                        <th rowspan="2">Estado</th>
-                                    </tr>
-                                    <tr>
-                                        <th>Apertura</th>
-                                        <th>Cierre</th>
-                                        <th>Apertura</th>
-                                        <th>Cierre</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="table-group-divider text-center align-middle">
-                                    <tr *ngFor="let cashRegister of cashRegistersList">
-                                        <td>{{cashRegister.dateOpening | date: 'dd-MM-yyyy (HH:mm)'}}</td>
-                                        <td>{{cashRegister.dateClosing | date: 'dd-MM-yyyy (HH:mm)'}}</td>
-                                        <td>{{cashRegister.amountOpening | currency: 'CLP':'$':'1.0-0'}}</td>
-                                        <td>{{cashRegister.amountClosingCash | currency: 'CLP':'$':'1.0-0'}}</td>
-                                        <td>{{cashRegister.amountClosingPos | currency: 'CLP':'$':'1.0-0'}}</td>
-                                        <td>{{cashRegister.user.name}}</td>
-                                        <td>{{cashRegister.comment}}</td>
-                                        <td>{{cashRegister.status ? 'Cerrado':'Abierto'}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                <app-cashier-movements></app-cashier-movements>
             </div>
             <div class="tab-pane fade" id="content-company">
                 <div class="card shadow">
