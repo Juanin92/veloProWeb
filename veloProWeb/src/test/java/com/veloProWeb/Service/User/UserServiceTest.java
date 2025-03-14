@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
@@ -29,6 +30,7 @@ public class UserServiceTest {
     @Mock private UserRepo userRepo;
     @Mock private UserValidator validator;
     @Mock private BCryptPasswordEncoder passwordEncoder;
+    @Mock private UserDetails userDetails;
     private User user;
     private UpdateUserDTO updateUserDTO;
     private UserDTO userDTO;
@@ -286,5 +288,25 @@ public class UserServiceTest {
 
         verify(userRepo, times(1)).findByUsername("jpp");
         assertEquals(dto.getName(), user.getName());
+    }
+
+    //Prueba para obtener la autorización de un usuario
+    @Test
+    public void getAuthUser_valid(){
+        String password = "jpp12345";
+        when(userDetails.getPassword()).thenReturn(user.getPassword());
+        when(passwordEncoder.matches(password, userDetails.getPassword())).thenReturn(true);
+        boolean result = userService.getAuthUser(password, userDetails);
+        verify(passwordEncoder, times(1)).matches(password, userDetails.getPassword());
+        assertTrue(result);
+    }
+    @Test
+    public void getAuthUser_invalid(){
+        String password = "jpp12";
+        when(userDetails.getPassword()).thenReturn(user.getPassword());
+        when(passwordEncoder.matches(password, userDetails.getPassword())).thenReturn(false);
+        boolean result = userService.getAuthUser(password, userDetails);
+        verify(passwordEncoder, times(1)).matches(password, userDetails.getPassword());
+        assertFalse(result);
     }
 }
