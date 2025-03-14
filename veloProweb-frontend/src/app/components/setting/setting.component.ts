@@ -1,31 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { RecordService } from '../../services/record.service';
-import { Record } from '../../models/Entity/record';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LocalDataService } from '../../services/local-data.service';
 import { LocalData } from '../../models/Entity/local-data';
-import { UserService } from '../../services/User/user.service';
-import { TaskService } from '../../services/User/task.service';
-import { NotificationService } from '../../utils/notification-service.service';
-import { TaskRequestDTO } from '../../models/DTO/task-request-dto';
-import { UserDTO } from '../../models/DTO/user-dto';
 import { CashierMovementsComponent } from "./cashier-movements/cashier-movements.component";
 import { DispatchLayoutComponent } from "../sale/dispatch-layout/dispatch-layout.component";
 import { RegisterComponent } from "./register/register.component";
+import { TaskLayoutComponent } from "./task-layout/task-layout.component";
 
 @Component({
   selector: 'app-setting',
   standalone: true,
-  imports: [CommonModule, FormsModule, CashierMovementsComponent, DispatchLayoutComponent, RegisterComponent],
+  imports: [CommonModule, FormsModule, CashierMovementsComponent, DispatchLayoutComponent, RegisterComponent, TaskLayoutComponent],
   templateUrl: './setting.component.html',
   styleUrl: './setting.component.css'
 })
-export class SettingComponent implements OnInit{
+export class SettingComponent{
 
-  userList: UserDTO[] = [];
-  taskList: TaskRequestDTO[] = [];
-  task: TaskRequestDTO;
   data: LocalData = {
     id: 0,
     name: '',
@@ -37,40 +28,7 @@ export class SettingComponent implements OnInit{
   access: boolean = false;
   pass: string = '';
 
-  constructor(
-    private userService: UserService,
-    private localDataService: LocalDataService,
-    private taskService: TaskService,
-    private notification: NotificationService){
-      this.task = this.initializeTask();
-    }
-
-  ngOnInit(): void {
-    this.getData();
-    this.getUsers();
-    this.getTasks();
-  }
-
-  getUsers(): void{
-    this.userService.getListUsers().subscribe({
-      next: (list) =>{ 
-        this.userList = list;
-      }, error: (error)=>{
-        console.log('Error al obtener la lista ', error);
-      }
-    });
-  }
-
-  getTasks(): void{
-    this.taskService.getAllTasks().subscribe({
-      next:(list)=>{
-        this.taskList = list;
-      },
-      error: (error)=>{
-        console.log('No se encontró información sobre los tareas asignadas');
-      }
-    });
-  }
+  constructor(private localDataService: LocalDataService){}
 
   getData(): void{
     this.localDataService.getData().subscribe({
@@ -88,41 +46,6 @@ export class SettingComponent implements OnInit{
       this.access = true;
     }else{
       console.log('Acceso denegado');
-    }
-  }
-
-  createNewTask(task: TaskRequestDTO): void {
-    if (!task.description || !task.user) {
-      this.notification.showWarningToast('Faltan datos', 'top', 3000);
-      return;
-    }
-    this.taskService.createTask(task).subscribe({
-      next: (response) => {
-        const message = response.message;
-        this.notification.showSuccessToast(message, 'top', 3000);
-        this.resetTask();
-        this.getTasks();
-      },
-      error: (error) => {
-        const message = error.error?.message || error.error?.error;
-        console.error('Error: ', message); 
-        this.notification.showErrorToast(message, 'top', 3000);
-      }
-    });
-  }
-
-  resetTask(): void{
-    this.task.description = '';
-    this.task.user = '';
-  }
-
-  private initializeTask(): TaskRequestDTO{
-    return {
-      id: 0,
-      description: '',
-      status: true,
-      created: '',
-      user: '',
     }
   }
 }
