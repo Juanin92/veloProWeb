@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface IMessageService {
     List<Message> getAllMessages();
-    List<MessageDTO> getMessageByUser(Long userID);
+    List<MessageDTO> getMessageByUser(String username);
     void isReadMessage(Long id, String context);
     void isDeleteMessage(Long id, String context);
-    void sendMessage(MessageDTO dto);
+    void sendMessage(MessageDTO dto, String senderUsername);
 }
