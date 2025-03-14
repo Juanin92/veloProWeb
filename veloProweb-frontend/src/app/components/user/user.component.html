@@ -22,21 +22,24 @@
                                 <tr class="position-sticky top-0">
                                     <th  scope="col"></th>
                                     <th  scope="col">Nombre</th>
-                                    <th  scope="col">Apellido</th>
                                     <th  scope="col">RUT</th>
                                     <th  scope="col">Usuario</th>
                                     <th  scope="col">Email</th>
                                     <th  scope="col">Rol</th>
-                                    <th  scope="col">Fecha</th>
+                                    <th  scope="col">Registro</th>
                                     <th  scope="col">Estado</th>
-                                    <th  scope="col">Acciones</th>
+                                    <th  scope="col">Acción</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let user of userList; let i = index">
                                     <td>{{i + 1}}</td>
-                                    <td>{{user.name}}</td>
-                                    <td>{{user.surname}}</td>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-bold">{{user.name}}</span>
+                                            <span class="text-muted small">{{user.surname}}</span>
+                                        </div>
+                                    </td>
                                     <td>{{user.rut}}</td>
                                     <td>{{user.username}}</td>
                                     <td>{{user.email}}</td>
