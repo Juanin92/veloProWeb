@@ -3,7 +3,6 @@ import { RecordService } from '../../services/record.service';
 import { Record } from '../../models/Entity/record';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CashRegister } from '../../models/Entity/cash-register';
 import { CashRegisterService } from '../../services/Sale/cash-register.service';
 import { LocalDataService } from '../../services/local-data.service';
 import { LocalData } from '../../models/Entity/local-data';
@@ -14,18 +13,18 @@ import { DispatchService } from '../../services/Sale/dispatch.service';
 import { Dispatch } from '../../models/Entity/Sale/dispatch';
 import { TaskRequestDTO } from '../../models/DTO/task-request-dto';
 import { UserDTO } from '../../models/DTO/user-dto';
+import { CashierMovementsComponent } from "./cashier-movements/cashier-movements.component";
 
 @Component({
   selector: 'app-setting',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, CashierMovementsComponent],
   templateUrl: './setting.component.html',
   styleUrl: './setting.component.css'
 })
 export class SettingComponent implements OnInit{
 
   recordList: Record[] = [];
-  cashRegistersList: CashRegister[] = [];
   userList: UserDTO[] = [];
   dispatchList: Dispatch[] = [];
   taskList: TaskRequestDTO[] = [];
@@ -54,7 +53,6 @@ export class SettingComponent implements OnInit{
 
   ngOnInit(): void {
     this.getRecords();
-    this.getCashRegisters();
     this.getData();
     this.getUsers();
     this.getDispatches();
@@ -78,17 +76,6 @@ export class SettingComponent implements OnInit{
       },
       error: (error)=>{
         console.log('No se encontró información sobre los registros');
-      }
-    });
-  }
-
-  getCashRegisters(): void{
-    this.cashRegisterService.getCashRegisters().subscribe({
-      next:(list)=>{
-        this.cashRegistersList = list;
-      },
-      error: (error)=>{
-        console.log('No se encontró información sobre los registros de caja')
       }
     });
   }
