@@ -6,6 +6,7 @@ import { UserService } from '../../../services/User/user.service';
 import { User } from '../../../models/Entity/user';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { UserDTO } from '../../../models/DTO/user-dto';
 
 @Component({
   selector: 'app-message-modal',
@@ -16,16 +17,16 @@ import { FormsModule } from '@angular/forms';
 })
 export class MessageModalComponent implements OnInit{
 
-  userList: User[] = [];
+  userList: UserDTO[] = [];
   message: Message = {
     id: 0,
     context: '',
     created: '',
     read: false,
     delete: false,
-    senderUser: 0,
-    senderName: '',
-    receiverUser: 0
+    senderUser: null,
+    receiverUser: null,
+    senderName: ''
   };
 
   constructor(
@@ -46,12 +47,10 @@ export class MessageModalComponent implements OnInit{
   }
 
   sendMessage(message: Message): void{
-    message.senderUser = 1;
     if(!message.receiverUser || !message.context){
       this.notification.showWarningToast('Debe seleccionar un destinatario', 'top', 3000);
       return;
     }
-
     this.messageService.sendMessage(message).subscribe({
       next: (response)=>{
         const message = response.message;
@@ -67,6 +66,6 @@ export class MessageModalComponent implements OnInit{
 
   resetModal(): void{
     this.message.context = '';
-    this.message.receiverUser = 0;
+    this.message.receiverUser = null;
   }
 }
