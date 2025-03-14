@@ -20,7 +20,36 @@
                         <table class="table table-hover text-center">
                             <thead class="table-light">
                                 <tr class="position-sticky top-0">
-                                    <th  scope="col"></th>
+                                    <th  scope="col">
+                                        <div class="dropdown">
+                                            <button #userTableFilter id="userTableFilter" (click)="toggleDropdown()" class="btn btn-sm text-dark dropdown-toggle "
+                                                type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="bi bi-funnel-fill"></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <button class="btn btn-sm text-white" (click)="toggleSortOrder()" aria-label="Ordenar por fecha">
+                                                        Registro <i [ngClass]="sortAscending ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button class="btn btn-sm text-white" (click)="toggleSortOrder()" aria-label="Ordenar por fecha">
+                                                        Nombre <i [ngClass]="sortAscending ? 'bi bi-sort-alpha-up' : 'bi bi-sort-alpha-down'"></i>
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button class="btn btn-sm text-white" (click)="toggleSortOrder()" aria-label="Ordenar por fecha">
+                                                        Estado <i [ngClass]="sortAscending ? 'bi bi-sort-up' : 'bi bi-sort-down'"></i>
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button class="btn btn-sm text-white" (click)="toggleSortOrder()" aria-label="Ordenar por fecha">
+                                                        N° <i [ngClass]="sortAscending ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </th>
                                     <th  scope="col">Nombre</th>
                                     <th  scope="col">RUT</th>
                                     <th  scope="col">Usuario</th>
