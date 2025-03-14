@@ -21,6 +21,7 @@ import * as bootstrap from 'bootstrap';
 export class UserComponent implements OnInit, AfterViewInit {
 
   @ViewChild('securityUser') securityUserModal!: ElementRef;
+  @ViewChild('userTableFilter') dropdownButton!: ElementRef;
   userList: UserDTO[] = [];
   addUserButton: boolean = true;
   showForm: boolean = false;
@@ -32,9 +33,9 @@ export class UserComponent implements OnInit, AfterViewInit {
   authRequest: AuthRequestDTO = {identifier: '', token: ''};
   touchedFields: Record<string, boolean> = {};
   actionUser: string = '';
-  @ViewChild('userTableFilter') dropdownButton!: ElementRef;
   dropdownInstance!: bootstrap.Dropdown;
-  sortAscending: boolean = true;
+  sortDate: boolean = true;
+  sortName: boolean = true;
 
   roleLabels: { [key: string]: string } = {
     [Role.MASTER]: 'Maestro',
@@ -249,12 +250,25 @@ export class UserComponent implements OnInit, AfterViewInit {
     }
   }
 
-  toggleSortOrder() {
-    this.sortAscending = !this.sortAscending;
+  toggleSortDate() {
+    this.sortDate = !this.sortDate;
     this.userList.sort((a, b) => {
         const dateA = new Date(a.date).getTime();
         const dateB = new Date(b.date).getTime();
-        return this.sortAscending ? dateA - dateB : dateB - dateA;
+        return this.sortDate ? dateA - dateB : dateB - dateA;
+    });
+  }
+
+  toggleSortName() {
+    this.sortName = !this.sortName;
+    this.userList.sort((a, b) => {
+        const nameA = a.name.toLowerCase(); 
+        const nameB = b.name.toLowerCase();
+        if (this.sortName) {
+          return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
+      } else {
+          return nameA > nameB ? -1 : nameA < nameB ? 1 : 0;
+      }
     });
   }
 }
