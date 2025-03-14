@@ -1,5 +1,6 @@
 package com.veloProWeb.Model.DTO.General;
 
+import com.veloProWeb.Model.DTO.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ public class MessageDTO {
     private LocalDate created;
     private boolean read;
     private boolean delete;
-    private Long senderUser;
-    private Long receiverUser;
+    private UserDTO senderUser;
+    private UserDTO receiverUser;
     private String senderName;
 }
