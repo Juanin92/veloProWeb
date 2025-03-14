@@ -13,7 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -142,6 +141,12 @@ public class UserService implements IUserService {
         return optionalUser.orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
     }
 
+    /**
+     * Verifica si la contraseña seleccionada coincide con la contraseña del usuario autenticado
+     * @param password - Contraseña entregada por el usuario
+     * @param userDetails - Usuario autenticado
+     * @return - True si hay coincidencia, False cuando no hay coincidencia
+     */
     @Override
     public boolean getAuthUser(String password, UserDetails userDetails) {
         return passwordEncoder.matches(password, userDetails.getPassword());
