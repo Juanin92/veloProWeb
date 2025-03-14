@@ -28,23 +28,13 @@
                                             </button>
                                             <ul class="dropdown-menu">
                                                 <li>
-                                                    <button class="btn btn-sm text-white" (click)="toggleSortOrder()" aria-label="Ordenar por fecha">
-                                                        Registro <i [ngClass]="sortAscending ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                                                    <button class="btn btn-sm text-white" (click)="toggleSortDate()" aria-label="Ordenar por fecha">
+                                                        Registro <i [ngClass]="sortDate ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
                                                     </button>
                                                 </li>
                                                 <li>
-                                                    <button class="btn btn-sm text-white" (click)="toggleSortOrder()" aria-label="Ordenar por fecha">
-                                                        Nombre <i [ngClass]="sortAscending ? 'bi bi-sort-alpha-up' : 'bi bi-sort-alpha-down'"></i>
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button class="btn btn-sm text-white" (click)="toggleSortOrder()" aria-label="Ordenar por fecha">
-                                                        Estado <i [ngClass]="sortAscending ? 'bi bi-sort-up' : 'bi bi-sort-down'"></i>
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button class="btn btn-sm text-white" (click)="toggleSortOrder()" aria-label="Ordenar por fecha">
-                                                        N° <i [ngClass]="sortAscending ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                                                    <button class="btn btn-sm text-white" (click)="toggleSortName()" aria-label="Ordenar por fecha">
+                                                        Nombre <i [ngClass]="sortName ? 'bi bi-sort-alpha-up' : 'bi bi-sort-alpha-down'"></i>
                                                     </button>
                                                 </li>
                                             </ul>
