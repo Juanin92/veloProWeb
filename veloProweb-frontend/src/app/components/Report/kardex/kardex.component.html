@@ -1,4 +1,4 @@
-<div class="d-flex flex-column vh-100">
+<div class="container-fluid d-flex flex-column p-1">
     <div class="container-fluid h-100">
         <div class="row mb-3 mt-1 w-100">
             <div class="col-12">
@@ -30,8 +30,13 @@
                             <table class="table table-hover mb-0">
                                 <thead class="table-light text-center">
                                     <tr>
-                                        <th scope="col" class="position-sticky top-0">#</th>
-                                        <th scope="col" class="position-sticky top-0">Fecha</th>
+                                        <th scope="col" class="position-sticky top-0"></th>
+                                        <th scope="col" class="position-sticky top-0">
+                                            <button class="btn btn-sm text-dark" (click)="toggleSortDate()" aria-label="Ordenar por fecha">
+                                                <span class="fw-bolder">Fecha </span><i
+                                                    [ngClass]="sortDate ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                                            </button>
+                                        </th>
                                         <th scope="col" class="position-sticky top-0">Descripción</th>
                                         <th scope="col" class="position-sticky top-0">Stock</th>
                                         <th scope="col" class="position-sticky top-0">Precio</th>
@@ -42,8 +47,8 @@
                                     </tr>
                                 </thead>
                                 <tbody class="table-group-divider text-center align-middle">
-                                    <tr *ngFor="let kardex of filteredKardexList">
-                                        <td scope="row">{{kardex.id}}</td>
+                                    <tr *ngFor="let kardex of filteredKardexList; let i = index">
+                                        <td scope="row">{{i + 1}}</td>
                                         <td>{{kardex.date | date: 'dd-MM-yyyy'}}</td>
                                         <td>{{kardex.product.description}}</td>
                                         <td>{{kardex.stock}}</td>
