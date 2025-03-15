@@ -32,6 +32,8 @@ export class SaleReportComponent implements OnInit, AfterViewInit {
   startDate: string = '';
   finalDate: string = '';
   hasDispatchDetailsSale: boolean = false;
+  sortDate: boolean = true;
+  sortTotal: boolean = true;
 
   constructor(
     private saleService: SaleService,
@@ -218,6 +220,24 @@ export class SaleReportComponent implements OnInit, AfterViewInit {
       observacion: item.comment
     }));
     this.excelService.generateExcel(transformedData, 'Reporte-ventas');
+  }
+
+  toggleSortDate(): void{
+    this.sortDate = !this.sortDate;
+    this.filteredSaleList.sort((a, b) => {
+      const dateA = new Date(a.date).getTime();
+      const dateB = new Date(b.date).getTime();
+      return this.sortDate ? dateA - dateB : dateB - dateA;
+    });
+  }
+
+  toggleSortTotal(): void{
+    this.sortTotal = !this.sortTotal;
+    this.filteredSaleList.sort((a, b) => {
+      const dateA = a.totalSale;
+      const dateB = b.totalSale;
+      return this.sortTotal ? dateA - dateB : dateB - dateA;
+    });
   }
 
   /**
