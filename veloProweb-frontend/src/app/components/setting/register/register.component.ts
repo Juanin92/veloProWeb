@@ -16,6 +16,9 @@ export class RegisterComponent implements OnInit{
   recordList: Record[] = [];
   filteredRecordList: Record[] = [];
   textFilter: string = '';
+  sortEntryDate: boolean = true;
+  sortEndDate: boolean = true;
+  sortActionDate: boolean = true;
 
   constructor(private recordService: RecordService){}
 
@@ -31,6 +34,33 @@ export class RegisterComponent implements OnInit{
       },error: (error)=>{
         console.log('No se encontró información sobre los registros');
       }
+    });
+  }
+
+  toggleSortEntryDate(): void{
+    this.sortEntryDate = !this.sortEntryDate;
+    this.filteredRecordList.sort((a, b) => {
+      const dateA = new Date(a.entryDate).getTime();
+      const dateB = new Date(b.entryDate).getTime();
+      return this.sortEntryDate ? dateA - dateB : dateB - dateA;
+    });
+  }
+  
+  toggleSortEndDate(): void{
+    this.sortEndDate = !this.sortEndDate;
+    this.filteredRecordList.sort((a, b) => {
+      const dateA = new Date(a.endDate).getTime();
+      const dateB = new Date(b.endDate).getTime();
+      return this.sortEndDate ? dateA - dateB : dateB - dateA;
+    });
+  }
+  
+  toggleSortActionDate(): void{
+    this.sortActionDate = !this.sortActionDate;
+    this.filteredRecordList.sort((a, b) => {
+      const dateA = new Date(a.actionDate).getTime();
+      const dateB = new Date(b.actionDate).getTime();
+      return this.sortActionDate ? dateA - dateB : dateB - dateA;
     });
   }
 

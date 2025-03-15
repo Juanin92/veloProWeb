@@ -22,9 +22,24 @@
                         <th rowspan="2">Usuario</th>
                     </tr>
                     <tr>
-                        <th>Ingreso</th>
-                        <th>Salida</th>
-                        <th>Evento</th>
+                        <th>
+                            <button class="btn btn-sm text-dark" (click)="toggleSortEntryDate()" aria-label="Ordenar por fecha">
+                                <span class="fw-bolder">Ingreso </span> <i
+                                    [ngClass]="sortEntryDate ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                            </button>
+                        </th>
+                        <th>
+                            <button class="btn btn-sm text-dark" (click)="toggleSortEndDate()" aria-label="Ordenar por fecha">
+                                <span class="fw-bolder">Salida </span> <i
+                                    [ngClass]="sortEndDate ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                            </button>
+                        </th>
+                        <th>
+                            <button class="btn btn-sm text-dark" (click)="toggleSortActionDate()" aria-label="Ordenar por fecha">
+                                <span class="fw-bolder">Evento </span> <i
+                                    [ngClass]="sortActionDate ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                            </button>
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="table-group-divider text-center align-middle">
