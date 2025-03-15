@@ -4,7 +4,6 @@ import { Kardex } from '../../../models/Entity/kardex';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TooltipService } from '../../../utils/tooltip.service';
-import { MovementsType } from '../../../models/enum/movements-type';
 import { ExcelService } from '../../../utils/excel.service';
 
 @Component({
@@ -19,6 +18,7 @@ export class KardexComponent implements OnInit, AfterViewInit{
   kardexList: Kardex[] = [];
   filteredKardexList: Kardex[] = [];
   textFilter: string = '';
+  sortDate: boolean = true;
 
   constructor(
     private kardexService: KardexServiceService,
@@ -66,6 +66,15 @@ export class KardexComponent implements OnInit, AfterViewInit{
       observacion: item.comment
     }));
     this.excelService.generateExcel(transformedData, 'Registro-Productos');
+  }
+
+  toggleSortDate(): void{
+    this.sortDate = !this.sortDate;
+    this.filteredKardexList.sort((a, b) => {
+      const dateA = new Date(a.date).getTime();
+      const dateB = new Date(b.date).getTime();
+      return this.sortDate ? dateA - dateB : dateB - dateA;
+    });
   }
 
   /**
