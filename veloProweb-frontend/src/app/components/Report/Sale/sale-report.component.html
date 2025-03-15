@@ -3,13 +3,17 @@
     <div class="card shadow mb-2">
         <div class="card-body p-0">
             <div class="d-flex flex-lg-row flex-column m-1 align-items-center justify-content-between position-relative">
-                <div class="order-lg-0 order-2 d-flex flex-column align-items-start">
+                <div class="order-lg-0 order-2 d-flex flex-row flex-lg-column align-items-start">
                     <div class="form-floating mb-3 mb-lg-1">
                         <input id="searchSale" [(ngModel)]="textFilter" (ngModelChange)="searchFilterSales()" type="text"
                             class="form-control form-control-lg" aria-label="buscar una venta rápida"
                             aria-describedby="inputGroup-sizing-md" placeholder="Ingrese un valor" />
                         <label for="searchSale" class="form-label">Búsqueda Rápida</label>
                     </div>
+                    <button class="btn btn-outline-success border-0 btn-sm m-1 d-lg-none d-block" data-bs-toggle="tooltip" data-bs-placement="auto"
+                        data-bs-title="Exportar Excel" (click)="downloadExcel()">
+                        <img src="/assets/icons/iconExcel.png" alt="activar" width="30" height="30" class="img-fluid" />
+                    </button>
                 </div>
                 <div class="order-lg-0 order-3 d-flex flex-row align-items-start">
                     <div class="input-group me-1 w-50">
@@ -34,7 +38,7 @@
                         data-bs-title="Limpiar filtrado">
                         <img src="/assets/icons/iconClean.png" alt="activar" width="30" height="30" class="img-fluid" />
                     </button>
-                    <button class="btn btn-outline-success border-0 btn-sm m-1" data-bs-toggle="tooltip" data-bs-placement="auto"
+                    <button class="btn btn-outline-success border-0 btn-sm m-1 d-none d-lg-block" data-bs-toggle="tooltip" data-bs-placement="auto"
                         data-bs-title="Exportar Excel" (click)="downloadExcel()">
                         <img src="/assets/icons/iconExcel.png" alt="activar" width="30" height="30" class="img-fluid" />
                     </button>
@@ -49,10 +53,20 @@
                 <thead class="table-light text-center">
                     <tr>
                         <th scope="col" class="position-sticky top-0">n° Doc</th>
-                        <th scope="col" class="position-sticky top-0">Fecha</th>
+                        <th scope="col" class="position-sticky top-0">
+                            <button class="btn btn-sm text-dark" (click)="toggleSortDate()" aria-label="Ordenar por fecha">
+                                <span class="fw-bolder">Fecha </span><i
+                                    [ngClass]="sortDate ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                            </button>
+                        </th>
                         <th scope="col" class="position-sticky top-0">Método pago</th>
                         <th scope="col" class="position-sticky top-0">IVA</th>
-                        <th scope="col" class="position-sticky top-0">Total</th>
+                        <th scope="col" class="position-sticky top-0">
+                            <button class="btn btn-sm text-dark" (click)="toggleSortTotal()" aria-label="Ordenar por fecha">
+                                <span class="fw-bolder">Total </span><i
+                                    [ngClass]="sortTotal ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                            </button>
+                        </th>
                         <th scope="col" class="position-sticky top-0">Comentario</th>
                         <th scope="col" class="position-sticky top-0 bg-light" style="z-index: 1020;"></th>
                     </tr>
