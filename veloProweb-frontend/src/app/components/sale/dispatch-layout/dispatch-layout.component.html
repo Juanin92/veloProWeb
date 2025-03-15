@@ -15,7 +15,11 @@
             <table class="table table-group-divider table-hover">
                 <thead class="table-light text-center">
                     <tr>
-                        <th rowspan="2">N° Despacho</th>
+                        <th rowspan="2">
+                            <button class="btn btn-sm text-dark" (click)="toggleSortTrackingNumber()" aria-label="Ordenar por fecha">
+                                <span class="fw-bolder">N° Despacho </span> <i [ngClass]="sortTrackingNumber ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                            </button>
+                        </th>
                         <th colspan="2">Fecha</th>
                         <th rowspan="2">Cliente</th>
                         <th rowspan="2">Dirección</th>
@@ -23,8 +27,18 @@
                         <th rowspan="2">Estado</th>
                     </tr>
                     <tr>
-                        <th>Creación</th>
-                        <th>Entrega</th>
+                        <th>
+                            <button class="btn btn-sm text-dark" (click)="toggleSortCreatedDate()" aria-label="Ordenar por fecha">
+                                <span class="fw-bolder">Creación </span> <i
+                                    [ngClass]="sortCreatedDate ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                            </button>
+                        </th>
+                        <th>
+                            <button class="btn btn-sm text-dark" (click)="toggleSortDeliveryDate()" aria-label="Ordenar por fecha">
+                                <span class="fw-bolder">Entrega </span> <i
+                                    [ngClass]="sortDeliveryDate ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                            </button>
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="table-group-divider text-center align-middle">

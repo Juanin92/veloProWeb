@@ -16,6 +16,9 @@ export class DispatchLayoutComponent implements OnInit{
   dispatchList: Dispatch[] = [];
   filteredDispatchList: Dispatch[] = [];
   textFilter: string = '';
+  sortTrackingNumber: boolean = true;
+  sortDeliveryDate: boolean = true;
+  sortCreatedDate: boolean = true;
 
   constructor(private dispatchService: DispatchService){}
 
@@ -32,6 +35,33 @@ export class DispatchLayoutComponent implements OnInit{
       error: (error)=>{
         console.log('No se encontró información sobre los despachos registrados');
       }
+    });
+  }
+
+  toggleSortTrackingNumber(): void{
+    this.sortTrackingNumber = !this.sortTrackingNumber;
+    this.filteredDispatchList.sort((a, b) => {
+      const trackingA = a.id;
+      const trackingB = b.id;
+      return this.sortTrackingNumber ? trackingA - trackingB : trackingB - trackingA;
+    });
+  }
+
+  toggleSortCreatedDate(): void{
+    this.sortCreatedDate = !this.sortCreatedDate;
+    this.filteredDispatchList.sort((a, b) => {
+      const dateA = new Date(a.created).getTime();
+      const dateB = new Date(b.created).getTime();
+      return this.sortCreatedDate ? dateA - dateB : dateB - dateA;
+    });
+  }
+  
+  toggleSortDeliveryDate(): void{
+    this.sortDeliveryDate = !this.sortDeliveryDate;
+    this.filteredDispatchList.sort((a, b) => {
+      const dateA = new Date(a.deliveryDate).getTime();
+      const dateB = new Date(b.deliveryDate).getTime();
+      return this.sortDeliveryDate ? dateA - dateB : dateB - dateA;
     });
   }
 
