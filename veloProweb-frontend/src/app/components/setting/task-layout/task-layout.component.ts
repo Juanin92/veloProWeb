@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TaskRequestDTO } from '../../../models/DTO/task-request-dto';
 import { TaskService } from '../../../services/User/task.service';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { UserDTO } from '../../../models/DTO/user-dto';
 import { UserService } from '../../../services/User/user.service';
+import * as bootstrap from 'bootstrap';
 
 @Component({
   selector: 'app-task-layout',
@@ -14,19 +15,30 @@ import { UserService } from '../../../services/User/user.service';
   templateUrl: './task-layout.component.html',
   styleUrl: './task-layout.component.css'
 })
-export class TaskLayoutComponent implements OnInit{
+export class TaskLayoutComponent implements OnInit, AfterViewInit {
 
+  @ViewChild('taskTableFilter') dropdownButton!: ElementRef;
   taskList: TaskRequestDTO[] = [];
   filteredTaskList: TaskRequestDTO[] = [];
   userList: UserDTO[] = [];
   task: TaskRequestDTO;
   textFilter: string = '';
+  dropdownInstance!: bootstrap.Dropdown;
+  sortDate: boolean = true;
+  sortName: boolean = true;
+  sortStatus: boolean = true;
 
   constructor(
     private taskService: TaskService,
     private userService: UserService,
-    private notification: NotificationService){
+    private notification: NotificationService) {
     this.task = this.initializeTask();
+  }
+
+  ngAfterViewInit(): void {
+    if (this.dropdownButton) {
+      this.dropdownInstance = new bootstrap.Dropdown(this.dropdownButton.nativeElement);
+    }
   }
 
   ngOnInit(): void {
@@ -35,22 +47,22 @@ export class TaskLayoutComponent implements OnInit{
     this.resetTask();
   }
 
-  getUsers(): void{
+  getUsers(): void {
     this.userService.getListUsers().subscribe({
-      next: (list) =>{ 
+      next: (list) => {
         this.userList = list;
-      }, error: (error)=>{
+      }, error: (error) => {
         console.log('Error al obtener la lista ', error);
       }
     });
   }
 
-  getTasks(): void{
+  getTasks(): void {
     this.taskService.getAllTasks().subscribe({
-      next:(list)=>{
+      next: (list) => {
         this.taskList = list;
         this.filteredTaskList = list;
-      },error: (error)=>{
+      }, error: (error) => {
         console.log('No se encontró información sobre los tareas asignadas');
       }
     });
@@ -67,9 +79,9 @@ export class TaskLayoutComponent implements OnInit{
         this.notification.showSuccessToast(message, 'top', 3000);
         this.resetTask();
         this.getTasks();
-      },error: (error) => {
+      }, error: (error) => {
         const message = error.error?.message || error.error?.error;
-        console.error('Error: ', message); 
+        console.error('Error: ', message);
         this.notification.showErrorToast(message, 'top', 3000);
       }
     });
@@ -80,19 +92,52 @@ export class TaskLayoutComponent implements OnInit{
       this.filteredTaskList = this.taskList;
     } else {
       this.filteredTaskList = this.taskList.filter(task =>
-        task.user.toLowerCase().includes(this.textFilter.toLowerCase()) || 
-        (this.textFilter === 'abierta' && task.status === true)  || 
+        task.user.toLowerCase().includes(this.textFilter.toLowerCase()) ||
+        (this.textFilter === 'abierta' && task.status === true) ||
         (this.textFilter === 'cerrada' && task.status === false)
       );
     }
   }
 
-  resetTask(): void{
+  resetTask(): void {
     this.task.description = '';
     this.task.user = '';
   }
 
-  private initializeTask(): TaskRequestDTO{
+  toggleDropdown() {
+    if (this.dropdownInstance) {
+      this.dropdownInstance.toggle();
+    }
+  }
+
+  toggleSortDate() {
+    this.sortDate = !this.sortDate;
+    this.filteredTaskList.sort((a, b) => {
+      const dateA = new Date(a.created).getTime();
+      const dateB = new Date(b.created).getTime();
+      return this.sortDate ? dateA - dateB : dateB - dateA;
+    });
+  }
+
+  toggleSortName() {
+    this.sortName = !this.sortName;
+    this.filteredTaskList.sort((a, b) => {
+      const nameA = a.user.toLowerCase();
+      const nameB = b.user.toLowerCase();
+      if (this.sortName) {
+        return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
+      } else {
+        return nameA > nameB ? -1 : nameA < nameB ? 1 : 0;
+      }
+    });
+  }
+
+  toggleSortStatus() {
+    this.sortStatus = !this.sortStatus;
+    this.filteredTaskList = this.taskList.filter(task => task.status === this.sortStatus);
+  }
+
+  private initializeTask(): TaskRequestDTO {
     return {
       id: 0,
       description: '',
