@@ -23,8 +23,16 @@
                         <th rowspan="2">Estado</th>
                     </tr>
                     <tr>
-                        <th>Apertura</th>
-                        <th>Cierre</th>
+                        <th>
+                            <button class="btn btn-sm text-dark" (click)="toggleSortOpenDate()" aria-label="Ordenar por fecha">
+                                <span class="fw-bolder">Apertura </span><i [ngClass]="sortDateOpening ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                            </button>
+                        </th>
+                        <th>
+                            <button class="btn btn-sm text-dark" (click)="toggleSortCloseDate()" aria-label="Ordenar por fecha">
+                                <span class="fw-bolder">Cierre </span> <i [ngClass]="sortCloseOpening ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                            </button>
+                        </th>
                         <th>Apertura</th>
                         <th>Cierre</th>
                     </tr>

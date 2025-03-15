@@ -16,6 +16,8 @@ export class CashierMovementsComponent implements OnInit{
   cashRegistersList: CashRegister[] = [];
   filteredCashRegistersList: CashRegister[] = [];
   textFilter: string = '';
+  sortDateOpening: boolean = true;
+  sortCloseOpening: boolean = true;
 
   constructor(private cashRegisterService: CashRegisterService){}
 
@@ -31,6 +33,24 @@ export class CashierMovementsComponent implements OnInit{
       },error: (error)=>{
         console.log('No se encontró información sobre los registros de caja')
       }
+    });
+  }
+
+  toggleSortOpenDate(): void{
+    this.sortDateOpening = !this.sortDateOpening;
+    this.filteredCashRegistersList.sort((a, b) => {
+      const dateA = new Date(a.dateOpening).getTime();
+      const dateB = new Date(b.dateOpening).getTime();
+      return this.sortDateOpening ? dateA - dateB : dateB - dateA;
+    });
+  }
+
+  toggleSortCloseDate(): void{
+    this.sortCloseOpening = !this.sortCloseOpening;
+    this.filteredCashRegistersList.sort((a, b) => {
+      const dateA = new Date(a.dateClosing).getTime();
+      const dateB = new Date(b.dateClosing).getTime();
+      return this.sortCloseOpening ? dateA - dateB : dateB - dateA;
     });
   }
 
