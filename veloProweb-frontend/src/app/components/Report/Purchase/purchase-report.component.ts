@@ -28,6 +28,8 @@ export class PurchaseReportComponent implements OnInit, AfterViewInit {
   textFilter: string = '';
   startDate: string = '';
   finalDate: string = '';
+  sortDate: boolean = true;
+  sortTotal: boolean = true;
 
   constructor(
     private purchaseService: PurchaseService,
@@ -156,6 +158,24 @@ export class PurchaseReportComponent implements OnInit, AfterViewInit {
       proveedor: item.supplier?.name,
     }));
     this.excelService.generateExcel(transformedData, 'Reporte-Compras');
+  }
+
+  toggleSortDate(): void{
+    this.sortDate = !this.sortDate;
+    this.filteredPurchaseList.sort((a, b) => {
+      const dateA = new Date(a.date).getTime();
+      const dateB = new Date(b.date).getTime();
+      return this.sortDate ? dateA - dateB : dateB - dateA;
+    });
+  }
+
+  toggleSortTotal(): void{
+    this.sortTotal = !this.sortTotal;
+    this.filteredPurchaseList.sort((a, b) => {
+      const dateA = a.purchaseTotal;
+      const dateB = b.purchaseTotal;
+      return this.sortTotal ? dateA - dateB : dateB - dateA;
+    });
   }
 
   /**
