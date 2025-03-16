@@ -14,27 +14,40 @@
         <div class="table-responsive flex-grow-1 p-1 pt-0" style="max-height: 65vh; overflow-y: auto;">
             <table class="table table-group-divider table-hover">
                 <thead class="table-light text-center">
-                    <tr>
-                        <th colspan="2">Fecha</th>
-                        <th colspan="2">Monto</th>
-                        <th rowspan="2">POS</th>
-                        <th rowspan="2">Usuario</th>
-                        <th rowspan="2">Comentario</th>
-                        <th rowspan="2">Estado</th>
-                    </tr>
-                    <tr>
-                        <th>
+                    <tr class="position-sticky top-0">
+                        <th scope="col">
                             <button class="btn btn-sm text-dark" (click)="toggleSortOpenDate()" aria-label="Ordenar por fecha">
-                                <span class="fw-bolder">Apertura </span><i [ngClass]="sortDateOpening ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                                <span class="fw-bolder">Apertura </span><i
+                                    [ngClass]="sortDateOpening ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
                             </button>
                         </th>
-                        <th>
+                        <th scope="col">
                             <button class="btn btn-sm text-dark" (click)="toggleSortCloseDate()" aria-label="Ordenar por fecha">
-                                <span class="fw-bolder">Cierre </span> <i [ngClass]="sortCloseOpening ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                                <span class="fw-bolder">Cierre </span> <i
+                                    [ngClass]="sortCloseOpening ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
                             </button>
                         </th>
-                        <th>Apertura</th>
-                        <th>Cierre</th>
+                        <th scope="col">
+                            <button class="btn btn-sm text-dark" (click)="toggleSortAmountOpening()" aria-label="Ordenar por fecha">
+                                <span class="fw-bolder">Apertura </span> <i
+                                    [ngClass]="sortAmountOpening ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                            </button>
+                        </th>
+                        <th scope="col">
+                            <button class="btn btn-sm text-dark" (click)="toggleSortCloseCash()" aria-label="Ordenar por fecha">
+                                <span class="fw-bolder">Cierre </span> <i
+                                    [ngClass]="sortAmountCloseCash ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                            </button>
+                        </th>
+                        <th scope="col">
+                            <button class="btn btn-sm text-dark" (click)="toggleSortClosePos()" aria-label="Ordenar por fecha">
+                                <span class="fw-bolder">POS </span> <i
+                                    [ngClass]="sortAmountClosePos ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                            </button>
+                        </th>
+                        <th scope="col">Usuario</th>
+                        <th scope="col">Comentario</th>
+                        <th scope="col">Estado</th>
                     </tr>
                 </thead>
                 <tbody class="table-group-divider text-center align-middle">
