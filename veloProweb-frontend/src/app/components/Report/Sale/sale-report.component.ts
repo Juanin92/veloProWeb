@@ -9,6 +9,8 @@ import { NotificationService } from '../../../utils/notification-service.service
 import { TooltipService } from '../../../utils/tooltip.service';
 import { ExcelService } from '../../../utils/excel.service';
 import { PdfService } from '../../../utils/pdf.service';
+import { Role } from '../../../models/enum/role';
+import { RoleService } from '../../../services/User/role.service';
 
 @Component({
   selector: 'app-sale-report',
@@ -35,9 +37,11 @@ export class SaleReportComponent implements OnInit, AfterViewInit {
   sortDate: boolean = true;
   sortTotal: boolean = true;
   sortPosition: boolean = true;
+  role = Role;
 
   constructor(
     private saleService: SaleService,
+    protected roleService: RoleService,
     private notification: NotificationService,
     private tooltip: TooltipService,
     private renderer: Renderer2,
