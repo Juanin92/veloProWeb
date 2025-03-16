@@ -1,4 +1,5 @@
-    <div *ngIf="roleService.getRole() !== role.GUEST || selectedCustomer" class="modal fade" id="updateCustomer" tabindex="-1" aria-labelledby="updateCustomer" aria-hidden="true">
+    <div *ngIf="roleService.getRole() !== role.GUEST || roleService.getRole() !== role.WAREHOUSE || selectedCustomer" 
+        class="modal fade" id="updateCustomer" tabindex="-1" aria-labelledby="updateCustomer" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header text-center w-100">
