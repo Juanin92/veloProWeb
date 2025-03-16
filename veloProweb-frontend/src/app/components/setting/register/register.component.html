@@ -15,35 +15,39 @@
             style="max-height: 65vh; overflow-y: auto;">
             <table class="table table-group-divider table-hover">
                 <thead class="table-light text-center">
-                    <tr>
-                        <th colspan="3">Fechas</th>
-                        <th rowspan="2">Acción</th>
-                        <th rowspan="2">Comentario</th>
-                        <th rowspan="2">Usuario</th>
-                    </tr>
-                    <tr>
-                        <th>
+                    <tr class="position-sticky top-0">
+                        <th scope="col" style="width: 10px;">
+                            <button class="btn btn-sm text-dark" (click)="toggleSortPosition()" aria-label="Ordenar por fecha">
+                                <span class="fw-bolder"></span> <i
+                                    [ngClass]="sortPosition ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                            </button>
+                        </th>
+                        <th scope="col">
                             <button class="btn btn-sm text-dark" (click)="toggleSortEntryDate()" aria-label="Ordenar por fecha">
                                 <span class="fw-bolder">Ingreso </span> <i
                                     [ngClass]="sortEntryDate ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
                             </button>
                         </th>
-                        <th>
+                        <th scope="col">
                             <button class="btn btn-sm text-dark" (click)="toggleSortEndDate()" aria-label="Ordenar por fecha">
                                 <span class="fw-bolder">Salida </span> <i
                                     [ngClass]="sortEndDate ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
                             </button>
                         </th>
-                        <th>
+                        <th scope="col">
                             <button class="btn btn-sm text-dark" (click)="toggleSortActionDate()" aria-label="Ordenar por fecha">
                                 <span class="fw-bolder">Evento </span> <i
                                     [ngClass]="sortActionDate ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
                             </button>
                         </th>
+                        <th scope="col">Acción</th>
+                        <th scope="col">Comentario</th>
+                        <th scope="col">Usuario</th>
                     </tr>
                 </thead>
                 <tbody class="table-group-divider text-center align-middle">
-                    <tr *ngFor="let record of filteredRecordList">
+                    <tr *ngFor="let record of filteredRecordList; let i = index">
+                        <th scope="row">{{sortPosition ? i + 1 : filteredRecordList.length - i}}</th>
                         <td>{{record.entryDate | date: 'dd-MM-yyyy (HH:mm)'}}</td>
                         <td>{{record.endDate | date: 'dd-MM-yyyy (HH:mm)'}}</td>
                         <td>{{record.actionDate | date: 'dd-MM-yyyy (HH:mm)'}}</td>
