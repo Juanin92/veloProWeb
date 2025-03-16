@@ -7,6 +7,7 @@ import com.veloProWeb.Service.User.Interface.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,7 @@ public class TaskController {
      * @return - ResponseEntity con una lista de tareas
      */
     @GetMapping()
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER' , 'SELLER', 'GUEST', 'WAREHOUSE')")
     public ResponseEntity<List<TaskDTO>> getTasks(@AuthenticationPrincipal UserDetails userDetails){
         try{
             return ResponseEntity.ok(taskService.getTaskByUser(userDetails.getUsername()));
@@ -44,6 +46,7 @@ public class TaskController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
     public ResponseEntity<Map<String, String>> createTask(@RequestBody TaskDTO task,
                                                           @AuthenticationPrincipal UserDetails userDetails){
         HashMap<String, String> response = new HashMap<>();
@@ -65,6 +68,7 @@ public class TaskController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER' , 'SELLER', 'GUEST', 'WAREHOUSE')")
     public ResponseEntity<Map<String, String>> completeTask(@RequestParam Long taskID,
                                                             @AuthenticationPrincipal UserDetails userDetails){
         HashMap<String, String> response = new HashMap<>();
@@ -85,6 +89,7 @@ public class TaskController {
      * @return - ResponseEntity con una lista de tareas
      */
     @GetMapping("lista-tarea")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
     public ResponseEntity<List<TaskDTO>> getAllTasks(){
         try{
             return ResponseEntity.ok(taskService.getAllTasks());
