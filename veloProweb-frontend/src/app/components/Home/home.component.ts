@@ -1,7 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { TaskService } from '../../services/User/task.service';
-import { MessageModalComponent } from "../user/message-modal/message-modal.component";
 import { Message } from '../../models/Entity/message';
 import { TaskComponent } from "../setting/task/task.component";
 import { AlertComponent } from "../user/alert/alert.component";
@@ -9,13 +7,14 @@ import { AlertModel } from '../../models/Entity/alert-model';
 import { DispatchComponent } from "../sale/dispatch/dispatch.component";
 import { Dispatch } from '../../models/Entity/Sale/dispatch';
 import { MessageComponent } from "../user/message/message.component";
-import { DispatchModalComponent } from "../sale/dispatch-modal/dispatch-modal.component";
 import { TaskRequestDTO } from '../../models/DTO/task-request-dto';
+import { RoleService } from '../../services/User/role.service';
+import { Role } from '../../models/enum/role';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, MessageModalComponent, TaskComponent, AlertComponent, DispatchComponent, MessageComponent, DispatchModalComponent],
+  imports: [CommonModule, TaskComponent, AlertComponent, DispatchComponent, MessageComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -25,6 +24,7 @@ export class HomeComponent{
   messageList: Message[] = [];
   alertList: AlertModel[] = [];
   dispatchList: Dispatch[] = [];
+  role = Role;
   expanded = {
     notification: false,
     dispatch: false,
@@ -32,7 +32,7 @@ export class HomeComponent{
     alert: false
   };
 
-  constructor(private taskService: TaskService) { }
+  constructor(protected roleService: RoleService) { }
 
   getMessagesUpdated(messages: Message[]): void{
     this.messageList = messages;
