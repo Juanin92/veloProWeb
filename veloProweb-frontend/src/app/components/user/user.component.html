@@ -38,6 +38,11 @@
                                                         Nombre <i [ngClass]="sortName ? 'bi bi-sort-alpha-up' : 'bi bi-sort-alpha-down'"></i>
                                                     </button>
                                                 </li>
+                                                <li>
+                                                    <button class="btn btn-sm text-white" (click)="toggleSortPosition()" aria-label="Ordenar por fecha">
+                                                        Posición <i [ngClass]="sortPosition ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                                                    </button>
+                                                </li>
                                             </ul>
                                         </div>
                                     </th>
@@ -53,7 +58,7 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let user of filteredList; let i = index">
-                                    <td>{{i + 1}}</td>
+                                    <td>{{sortPosition ? i + 1 : filteredList.length - i}}</td>
                                     <td>
                                         <div class="d-flex flex-column">
                                             <span class="fw-bold">{{user.name}}</span>
