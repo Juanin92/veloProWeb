@@ -5,9 +5,13 @@ import com.veloProWeb.Model.DTO.PurchaseRequestDTO;
 import com.veloProWeb.Model.Entity.Purchase.Purchase;
 import com.veloProWeb.Service.Purchase.Interfaces.IPurchaseDetailService;
 import com.veloProWeb.Service.Purchase.Interfaces.IPurchaseService;
+import com.veloProWeb.Service.Record.IRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -25,6 +29,7 @@ public class PurchaseController {
 
     @Autowired private IPurchaseService purchaseService;
     @Autowired private IPurchaseDetailService purchaseDetailService;
+    @Autowired private IRecordService recordService;
 
     /**
      * Crear una compra y su detalle de compra correspondiente
@@ -32,15 +37,20 @@ public class PurchaseController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PostMapping("/crear")
-    public ResponseEntity<Map<String, String>> createPurchase(@RequestBody PurchaseRequestDTO dto){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE')")
+    public ResponseEntity<Map<String, String>> createPurchase(@RequestBody PurchaseRequestDTO dto,
+                                                              @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response = new HashMap<>();
         try {
             Purchase purchase = purchaseService.createPurchase(dto);
             purchaseDetailService.createDetailPurchase(dto.getDetailList(),purchase);
+            recordService.registerAction(userDetails, "CREATE", "Compra creada: " + dto.getDocument());
             response.put("message", "Compra registrada correctamente!");
             return ResponseEntity.ok(response);
         }catch (IllegalArgumentException e){
             response.put("message", e.getMessage());
+            recordService.registerAction(userDetails, "CREATE_FAILURE",
+                    "Error: crear compra: " + dto.getDocument());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
@@ -50,6 +60,7 @@ public class PurchaseController {
      * @return - Long con el valor resultante
      */
     @GetMapping("/total_compras")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE')")
     public ResponseEntity<Long> getTotalPurchase(){
         try{
             return ResponseEntity.ok(purchaseService.totalPurchase());
@@ -63,7 +74,10 @@ public class PurchaseController {
      * @return - Lista con las compras
      */
     @GetMapping("/lista-compras")
-    public List<PurchaseRequestDTO> getAllPurchases(){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE')")
+    public List<PurchaseRequestDTO> getAllPurchases(@AuthenticationPrincipal UserDetails userDetails){
+        recordService.registerAction(userDetails, "VIEW_PURCHASE",
+                "Observo reporte de compra");
         return purchaseService.getAllPurchases();
     }
 
@@ -73,6 +87,7 @@ public class PurchaseController {
      * @return - ResponseEntity con la lista DTO con detalle de la compra, si no NOT_FOUND no encuentra nada
      */
     @GetMapping("/detalles")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE')")
     public ResponseEntity<List<DetailPurchaseRequestDTO>> getDetails(@RequestParam Long idPurchase){
         try{
             return ResponseEntity.ok(purchaseDetailService.getPurchaseDetails(idPurchase));
