@@ -92,13 +92,14 @@ public class JwUtil {
 
     /**
      * Crea un token JWT con las reclamaciones y el sujeto especificados.
+     * Tiempo expiración del token es cada 18 hr
      * @param claims - Las reclamaciones del token.
      * @param subject - El sujeto del token.
      * @return - El token JWT creado.
      */
     private String createToken(Map<String, Object> claims, String subject) {
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+                .setExpiration(new Date(System.currentTimeMillis() + 18 * 60 * 60 * 1000))
                 .signWith(getSigningKey()).compact();
     }
 
