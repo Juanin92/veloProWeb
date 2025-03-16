@@ -75,20 +75,28 @@
     <div class="text-center p-2 pt-0 table-responsive" style="max-height: calc(100vh - 210px);">
         <table class="table table-hover">
             <thead class="table-light">
-                <tr>
-                    <th scope="col" class="position-sticky top-0">#</th>
-                    <th scope="col" class="position-sticky top-0">Cliente</th>
-                    <th scope="col" class="position-sticky top-0">Email</th>
-                    <th scope="col" class="position-sticky top-0">Teléfono</th>
-                    <th scope="col" class="position-sticky top-0">Deuda</th>
-                    <th scope="col" class="position-sticky top-0">Estado</th>
-                    <th scope="col" class="position-sticky top-0">Cuenta</th>
-                    <th scope="col" class="position-sticky top-0 bg-light" style="z-index: 1020;">Acción</th>
+                <tr class="position-sticky top-0">
+                    <th scope="col" style="width: 10px;">
+                        <button class="btn btn-sm text-dark" (click)="toggleSortPosition()" aria-label="Ordenar por fecha">
+                            <i [ngClass]="sortPosition ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                        </button>
+                    </th>
+                    <th scope="col">Cliente</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Teléfono</th>
+                    <th scope="col">
+                        <button class="btn btn-sm text-dark" (click)="toggleSortDebt()" aria-label="Ordenar por fecha">
+                            <span class="fw-bolder">Deuda </span><i [ngClass]="sortDebt ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                        </button>
+                    </th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Cuenta</th>
+                    <th scope="col">Acción</th>
                 </tr>
             </thead>
             <tbody class="table-group-divider text-center align-middle">
-                <tr *ngFor="let customer of filteredCustomers">
-                    <th scope="row">{{customer.id}}</th>
+                <tr *ngFor="let customer of filteredCustomers; let i = index">
+                    <th scope="row">{{sortPosition ? i + 1 : filteredCustomers.length - i}}</th>
                     <td>
                         <div class="d-flex flex-column">
                             <span class="fw-bold">{{customer.name}}</span>
@@ -105,24 +113,21 @@
                         </span>
                     </td>
                     <td>
-                        <div class="btn-group" role="group" aria-label="Acciones de cliente">
-                            <button *ngIf="customer.debt > 0" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#paymentCustomer" (click)="openModalCustomer(customer)">
-                                <img src="/assets/icons/btnPayIcon.png" alt="pago" width="24" height="24" class="img-fluid"
-                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Pago de Deuda">
-                            </button>
-                            <button 
-                                *ngIf="auth.getRole() !== 'GUEST'"
-                                class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#updateCustomer" (click)="openModalCustomer(customer)">
-                                <img src="/assets/icons/btnEditIcon.png" alt="editar" width="24" height="24" class="img-fluid"
-                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Actualizar Datos">
-                            </button>
-                            <button 
-                                *ngIf="(customer.debt === 0 && customer.account) && (auth.getRole() !== 'SELLER' && auth.getRole() !== 'GUEST')"
-                                class="btn btn-danger btn-sm" (click)="deleteCustomer(customer)" >
-                                <img src="/assets/icons/btnDeleteIcon.png" alt="borrar" width="24" height="24" class="img-fluid"
-                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
-                            </button>
-                        </div>
+                        <button *ngIf="customer.debt > 0" class="btn btn-success btn-sm" data-bs-toggle="modal"
+                            data-bs-target="#paymentCustomer" (click)="openModalCustomer(customer)">
+                            <img src="/assets/icons/btnPayIcon.png" alt="pago" width="24" height="24" class="img-fluid" data-bs-toggle="tooltip"
+                                data-bs-placement="top" title="Pago de Deuda">
+                        </button>
+                        <button *ngIf="auth.getRole() !== 'GUEST'" class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                            data-bs-target="#updateCustomer" (click)="openModalCustomer(customer)">
+                            <img src="/assets/icons/btnEditIcon.png" alt="editar" width="24" height="24" class="img-fluid"
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="Actualizar Datos">
+                        </button>
+                        <button *ngIf="(customer.debt === 0 && customer.account) && (auth.getRole() !== 'SELLER' && auth.getRole() !== 'GUEST')"
+                            class="btn btn-danger btn-sm" (click)="deleteCustomer(customer)">
+                            <img src="/assets/icons/btnDeleteIcon.png" alt="borrar" width="24" height="24" class="img-fluid"
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
+                        </button>
                     </td>
                 </tr>
             </tbody>
