@@ -5,6 +5,7 @@ import { AuthService } from '../../services/User/auth.service';
 import { Role } from '../../models/enum/role';
 
 import { CommonModule } from '@angular/common';
+import { RoleService } from '../../services/User/role.service';
 
 @Component({
   selector: 'app-menu',
@@ -15,9 +16,10 @@ import { CommonModule } from '@angular/common';
 })
 export class MenuComponent implements AfterViewInit{
   @Input() isActive: boolean = true;
-  Role = Role;
+  role = Role;
 
-  constructor(private tooltipService: TooltipService, public auth: AuthService){}
+  constructor(private tooltipService: TooltipService, 
+    protected roleService: RoleService){}
 
   ngAfterViewInit(): void {
     this.tooltipService.initializeTooltips();
