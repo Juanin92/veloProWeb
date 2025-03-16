@@ -31,7 +31,7 @@ public class UserController {
      * @return - Lista con los datos de usuarios registrados
      */
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER'")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
     public ResponseEntity<List<UserDTO>> getListUser(){
         return ResponseEntity.ok(userService.getAllUser());
     }
@@ -42,7 +42,7 @@ public class UserController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PostMapping("/nuevo-usuario")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER'")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
     public ResponseEntity<Map<String, String>> addUser(@RequestBody UserDTO user,
                                                        @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response =  new HashMap<>();
@@ -65,7 +65,7 @@ public class UserController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping("/administrar/editar-usuario")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER'")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
     public ResponseEntity<Map<String, String>> updateUserByAdmin(@RequestBody UserDTO user,
                                                                  @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response =  new HashMap<>();
@@ -89,7 +89,7 @@ public class UserController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping("/actualizar-usuario")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER' , 'SELLER', 'GUEST', 'WAREHOUSE'")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER' , 'SELLER', 'GUEST', 'WAREHOUSE')")
     public ResponseEntity<Map<String, String>> updateUserProfile(@RequestBody UpdateUserDTO user,
                                                                  @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response =  new HashMap<>();
@@ -112,7 +112,7 @@ public class UserController {
      * @return - Los datos necesario del usuario a compartir
      */
     @GetMapping("datos")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER' , 'SELLER', 'GUEST', 'WAREHOUSE'")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER' , 'SELLER', 'GUEST', 'WAREHOUSE')")
     public ResponseEntity<UserDTO> getUserProfile(@AuthenticationPrincipal UserDetails userDetails){
         try{
             UserDTO dto = userService.getData(userDetails.getUsername());
@@ -129,7 +129,7 @@ public class UserController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping("/eliminar-usuario")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER'")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
     public ResponseEntity<Map<String, String>> deleteUser(@RequestBody AuthRequestDTO auth,
                                                           @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response =  new HashMap<>();
@@ -159,7 +159,7 @@ public class UserController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping("/activar-usuario")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER'")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
     public ResponseEntity<Map<String, String>> activeUser(@RequestBody AuthRequestDTO auth,
                                                           @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response =  new HashMap<>();
