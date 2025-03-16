@@ -27,6 +27,7 @@ export class TaskLayoutComponent implements OnInit, AfterViewInit {
   sortDate: boolean = true;
   sortName: boolean = true;
   sortStatus: boolean = true;
+  sortPosition: boolean = true;
 
   constructor(
     private taskService: TaskService,
@@ -135,6 +136,11 @@ export class TaskLayoutComponent implements OnInit, AfterViewInit {
   toggleSortStatus() {
     this.sortStatus = !this.sortStatus;
     this.filteredTaskList = this.taskList.filter(task => task.status === this.sortStatus);
+  }
+
+  toggleSortPosition() {
+    this.filteredTaskList.reverse();
+    this.sortPosition = !this.sortPosition;
   }
 
   private initializeTask(): TaskRequestDTO {
