@@ -27,6 +27,11 @@ export class StockComponent implements OnInit, AfterViewInit {
   selectedProduct: Product;
   textFilter: string = '';
   statusProduct = StatusProduct;
+  sortPosition: boolean = true;
+  sortPurchase: boolean = true;
+  sortSale: boolean = true;
+  sortStock: boolean = true;
+  sortReserved: boolean = true;
 
   constructor(
     private stockService: ProductService,
@@ -140,6 +145,47 @@ export class StockComponent implements OnInit, AfterViewInit {
       case 'NODISPONIBLE': return 'rgb(9, 180, 237)';
       default: return 'transparent';
     }
+  }
+
+  toggleSortPosition(): void{
+    this.filteredProducts.reverse();
+    this.sortPosition = !this.sortPosition;
+  }
+
+  toggleSortSale(): void{
+    this.sortSale = !this.sortSale;
+    this.filteredProducts.sort((a, b) => {
+        const dateA = a.salePrice;
+        const dateB = b.salePrice;
+        return this.sortSale ? dateA - dateB : dateB - dateA;
+    });
+  }
+
+  toggleSortPurchase(): void{
+    this.sortPurchase = !this.sortPurchase;
+    this.filteredProducts.sort((a, b) => {
+        const dateA = a.buyPrice;
+        const dateB = b.buyPrice;
+        return this.sortPurchase ? dateA - dateB : dateB - dateA;
+    });
+  }
+
+  toggleSortStock(): void{
+    this.sortStock = !this.sortStock;
+    this.filteredProducts.sort((a, b) => {
+        const dateA = a.stock;
+        const dateB = b.stock;
+        return this.sortStock ? dateA - dateB : dateB - dateA;
+    });
+  }
+
+  toggleSortReserved(): void{
+    this.sortReserved = !this.sortReserved;
+    this.filteredProducts.sort((a, b) => {
+        const dateA = a.reserve;
+        const dateB = b.reserve;
+        return this.sortReserved ? dateA - dateB : dateB - dateA;
+    });
   }
 
   /**
