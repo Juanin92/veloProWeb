@@ -6,6 +6,7 @@ import com.veloProWeb.Service.User.Interface.IMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ public class MessageController {
     @Autowired private IRecordService recordService;
 
     @GetMapping()
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE', 'GUEST', 'SELLER')")
     public ResponseEntity<List<MessageDTO>> getMessagesByUser(@AuthenticationPrincipal UserDetails userDetails){
         try{
             return ResponseEntity.ok(messageService.getMessageByUser(userDetails.getUsername()));
@@ -32,6 +34,7 @@ public class MessageController {
     }
 
     @PutMapping()
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE', 'GUEST', 'SELLER')")
     public ResponseEntity<Map<String, String>> isReadMessage(@RequestBody MessageDTO message,
                                                              @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response = new HashMap<>();
@@ -50,6 +53,7 @@ public class MessageController {
     }
 
     @PutMapping("eliminar")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE', 'GUEST', 'SELLER')")
     public ResponseEntity<Map<String, String>> isDeleteMessage(@RequestBody MessageDTO message,
                                                                @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response = new HashMap<>();
@@ -62,12 +66,13 @@ public class MessageController {
         }catch (IllegalArgumentException e){
             response.put("error", e.getMessage());
             recordService.registerAction(userDetails, "MESSAGE_DELETE_FAILURE",
-                    "Error: Eliminado Mensaje ID: " + message.getId() + " - " + e.getMessage());
+                    String.format("Error: Eliminado Mensaje ID: %s (%s)", String.valueOf(message.getId()), e.getMessage()));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 
     @PostMapping()
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE', 'GUEST', 'SELLER')")
     public ResponseEntity<Map<String,String>> sendMessage(@RequestBody MessageDTO message,
                                                           @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response = new HashMap<>();
@@ -75,7 +80,7 @@ public class MessageController {
             response.put("message","Mensaje Enviado");
             messageService.sendMessage(message, userDetails.getUsername());
             recordService.registerAction(userDetails, "MESSAGE",
-                    "Envio Mensaje : " + message.getReceiverUser().getUsername() + " - '" + message.getContext() + "'");
+                    String.format("Envio Mensaje (%S): '%s'", message.getReceiverUser().getUsername(), message.getContext()));
             return ResponseEntity.ok(response);
         }catch (IllegalArgumentException e){
             response.put("error", e.getMessage());
