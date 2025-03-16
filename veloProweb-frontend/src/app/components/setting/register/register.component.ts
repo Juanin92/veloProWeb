@@ -19,6 +19,7 @@ export class RegisterComponent implements OnInit{
   sortEntryDate: boolean = true;
   sortEndDate: boolean = true;
   sortActionDate: boolean = true;
+  sortPosition: boolean = true;
 
   constructor(private recordService: RecordService){}
 
@@ -62,6 +63,11 @@ export class RegisterComponent implements OnInit{
       const dateB = new Date(b.actionDate).getTime();
       return this.sortActionDate ? dateA - dateB : dateB - dateA;
     });
+  }
+
+  toggleSortPosition(): void{
+    this.filteredRecordList.reverse();
+    this.sortPosition = !this.sortPosition;
   }
 
   searchFilterRecords(): void {
