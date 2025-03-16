@@ -7,6 +7,8 @@ import { CustomerValidator } from '../../../validation/customer-validator';
 import { CustomerHelperServiceService } from '../../../services/customer/customer-helper-service.service';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ModalService } from '../../../utils/modal.service';
+import { RoleService } from '../../../services/User/role.service';
+import { Role } from '../../../models/enum/role';
 
 @Component({
   selector: 'app-update-customer',
@@ -20,11 +22,13 @@ export class UpdateCustomerComponent {
   @Input() selectedCustomer: Customer; //Cliente seleccionado desde un componente padre
   @Output() customerUpdated = new EventEmitter<void>();
   customerValidator = CustomerValidator; //Validador de los datos del cliente
+  role = Role;
 
   constructor(
     private customerService: CustomerService,
     private customerHelper: CustomerHelperServiceService,
     private notification: NotificationService,
+    protected roleService: RoleService,
     public modalService: ModalService) {
     //Se inicializa la variable con valores vacíos mediante el helper
     this.selectedCustomer = customerHelper.createEmptyCustomer();
