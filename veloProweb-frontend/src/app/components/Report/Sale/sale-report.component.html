@@ -2,16 +2,18 @@
     <!-- INPUT AREA -->
     <div class="card shadow mb-2">
         <div class="card-body p-0">
-            <div class="d-flex flex-lg-row flex-column m-1 align-items-center justify-content-between position-relative">
+            <div
+                class="d-flex flex-lg-row flex-column m-1 align-items-center justify-content-between position-relative">
                 <div class="order-lg-0 order-2 d-flex flex-row flex-lg-column align-items-start">
                     <div class="form-floating mb-3 mb-lg-1">
-                        <input id="searchSale" [(ngModel)]="textFilter" (ngModelChange)="searchFilterSales()" type="text"
-                            class="form-control form-control-lg" aria-label="buscar una venta rápida"
+                        <input id="searchSale" [(ngModel)]="textFilter" (ngModelChange)="searchFilterSales()"
+                            type="text" class="form-control form-control-lg" aria-label="buscar una venta rápida"
                             aria-describedby="inputGroup-sizing-md" placeholder="Ingrese un valor" />
                         <label for="searchSale" class="form-label">Búsqueda Rápida</label>
                     </div>
-                    <button class="btn btn-outline-success border-0 btn-sm m-1 d-lg-none d-block" data-bs-toggle="tooltip" data-bs-placement="auto"
-                        data-bs-title="Exportar Excel" (click)="downloadExcel()">
+                    <button class="btn btn-outline-success border-0 btn-sm m-1 d-lg-none d-block"
+                        data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="Exportar Excel"
+                        (click)="downloadExcel()">
                         <img src="/assets/icons/iconExcel.png" alt="activar" width="30" height="30" class="img-fluid" />
                     </button>
                 </div>
@@ -19,12 +21,14 @@
                     <div class="input-group me-1 w-50">
                         <span class="input-group-text">Desde</span>
                         <input [(ngModel)]="startDate" type="date" class="form-control" id="startDate" name="startDate"
-                            placeholder="Ingrese fecha" aria-label="Ingrese fecha de inicio" aria-describedby="addStartDate" />
+                            placeholder="Ingrese fecha" aria-label="Ingrese fecha de inicio"
+                            aria-describedby="addStartDate" />
                     </div>
                     <div class="input-group w-50">
                         <span class="input-group-text">Hasta</span>
                         <input [(ngModel)]="finalDate" type="date" class="form-control" id="finalDate" name="finalDate"
-                            placeholder="Ingrese fecha" aria-label="Ingrese fecha de final" aria-describedby="addFinalDate" />
+                            placeholder="Ingrese fecha" aria-label="Ingrese fecha de final"
+                            aria-describedby="addFinalDate" />
                     </div>
                 </div>
                 <div class="order-lg-0 order-4 d-flex flex-row align-items-start">
@@ -38,8 +42,9 @@
                         data-bs-title="Limpiar filtrado">
                         <img src="/assets/icons/iconClean.png" alt="activar" width="30" height="30" class="img-fluid" />
                     </button>
-                    <button class="btn btn-outline-success border-0 btn-sm m-1 d-none d-lg-block" data-bs-toggle="tooltip" data-bs-placement="auto"
-                        data-bs-title="Exportar Excel" (click)="downloadExcel()">
+                    <button class="btn btn-outline-success border-0 btn-sm m-1 d-none d-lg-block"
+                        data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="Exportar Excel"
+                        (click)="downloadExcel()">
                         <img src="/assets/icons/iconExcel.png" alt="activar" width="30" height="30" class="img-fluid" />
                     </button>
                 </div>
@@ -51,50 +56,57 @@
         <div class="card-body p-1 pt-0 table-responsive" style="max-height: calc(100vh - 180px);">
             <table class="table table-hover">
                 <thead class="table-light text-center">
-                    <tr>
-                        <th scope="col" class="position-sticky top-0">n° Doc</th>
-                        <th scope="col" class="position-sticky top-0">
-                            <button class="btn btn-sm text-dark" (click)="toggleSortDate()" aria-label="Ordenar por fecha">
+                    <tr class="position-sticky top-0">
+                        <th scope="col" style="width: 10px;">
+                            <button class="btn btn-sm text-dark" (click)="toggleSortPosition()" aria-label="Ordenar por fecha">
+                                <span class="fw-bolder"></span><i
+                                    [ngClass]="sortPosition ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                            </button>
+                        </th>
+                        <th scope="col">n° Doc</th>
+                        <th scope="col">
+                            <button class="btn btn-sm text-dark" (click)="toggleSortDate()"
+                                aria-label="Ordenar por fecha">
                                 <span class="fw-bolder">Fecha </span><i
                                     [ngClass]="sortDate ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
                             </button>
                         </th>
-                        <th scope="col" class="position-sticky top-0">Método pago</th>
-                        <th scope="col" class="position-sticky top-0">IVA</th>
-                        <th scope="col" class="position-sticky top-0">
-                            <button class="btn btn-sm text-dark" (click)="toggleSortTotal()" aria-label="Ordenar por fecha">
+                        <th scope="col">Método pago</th>
+                        <th scope="col">IVA</th>
+                        <th scope="col">
+                            <button class="btn btn-sm text-dark" (click)="toggleSortTotal()"
+                                aria-label="Ordenar por fecha">
                                 <span class="fw-bolder">Total </span><i
                                     [ngClass]="sortTotal ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
                             </button>
                         </th>
-                        <th scope="col" class="position-sticky top-0">Comentario</th>
-                        <th scope="col" class="position-sticky top-0 bg-light" style="z-index: 1020;"></th>
+                        <th scope="col">Comentario</th>
+                        <th scope="col" style="width: 10px;">Acción</th>
                     </tr>
                 </thead>
                 <tbody class="table-group-divider text-center align-middle">
-                    <tr *ngFor="let sale of filteredSaleList">
-                        <th scope="row">{{ sale.document }}</th>
+                    <tr *ngFor="let sale of filteredSaleList; let i = index">
+                        <th scope="row">{{ sortPosition ? i + 1 : filteredSaleList.length - i }}</th>
+                        <td>{{ sale.document }}</td>
                         <td>{{ sale.date | date: 'dd-MM-yyyy'}}</td>
                         <td>{{ sale.paymentMethod }}</td>
                         <td>{{ sale.tax | currency: 'CLP':'$':'1.0-0'}}</td>
                         <td>{{ sale.totalSale | currency: 'CLP':'$':'1.0-0' }}</td>
-                        <td>{{ sale.comment.includes('null') ? '+++' : sale.comment }}</td>
-                        <td>
-                            <div class="btn-group" role="group" aria-label="Acciones de venta">
-                                <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#saleDetailModal"
-                                    (click)="getSaleDetailsData(sale)">
-                                    <img src="/assets/icons/iconAdd.png" alt="Más información" width="24" height="24"
-                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Más información">
-                                </button>
-                                <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimir"
-                                    (click)="printSale(sale)">
-                                    <img src="/assets/icons/iconPrint.png" alt="Imprimir" width="24" height="24">
-                                </button>
-                                <button *ngIf="sale.status" class="btn btn-outline-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top"
-                                    title="Anular">
-                                    <img src="/assets/icons/iconCancel.png" alt="Anular" width="24" height="24">
-                                </button>
-                            </div>
+                        <td>{{ sale.comment.includes('null') ? '-' : sale.comment }}</td>
+                        <td class="d-flex flex-row">
+                            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#saleDetailModal" (click)="getSaleDetailsData(sale)">
+                                <img src="/assets/icons/iconAdd.png" alt="Más información" width="24" height="24"
+                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Más información">
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="tooltip"
+                                data-bs-placement="top" title="Imprimir" (click)="printSale(sale)">
+                                <img src="/assets/icons/iconPrint.png" alt="Imprimir" width="24" height="24">
+                            </button>
+                            <button *ngIf="sale.status" class="btn btn-outline-danger btn-sm" data-bs-toggle="tooltip"
+                                data-bs-placement="top" title="Anular">
+                                <img src="/assets/icons/iconCancel.png" alt="Anular" width="24" height="24">
+                            </button>
                         </td>
                     </tr>
                 </tbody>
