@@ -28,7 +28,6 @@ public class UserController {
     /**
      * Obtiene una lista de usuarios.
      * Verifica que solo los roles admin y master puede obtener la lista.
-     * @param userDetails - Usuario autenticado.
      * @return - Lista con los datos de usuarios registrados
      */
     @GetMapping
