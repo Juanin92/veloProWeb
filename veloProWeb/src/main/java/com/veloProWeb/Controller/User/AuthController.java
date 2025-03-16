@@ -4,7 +4,9 @@ import com.veloProWeb.Model.DTO.LoginRequest;
 import com.veloProWeb.Security.JwUtil;
 import com.veloProWeb.Service.Record.IRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -43,6 +45,20 @@ public class AuthController {
         response.put("role", role);
         recordService.registerEntry(userDetails);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/logout")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER' , 'SELLER', 'GUEST', 'WAREHOUSE')")
+    public ResponseEntity<Map<String, String>> logout(@AuthenticationPrincipal UserDetails userDetails){
+        Map<String, String> response =  new HashMap<>();
+        try{
+            response.put("message", "Usuario Desconectado Correctamente");
+            recordService.registerEnd(userDetails);
+            return ResponseEntity.ok(response);
+        }catch (IllegalArgumentException e){
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
     }
 
     @GetMapping("/me")
