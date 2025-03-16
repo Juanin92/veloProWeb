@@ -32,7 +32,6 @@ public class TaskController {
     @GetMapping()
     public ResponseEntity<List<TaskDTO>> getTasks(@AuthenticationPrincipal UserDetails userDetails){
         try{
-            recordService.registerAction(userDetails, "TASK", "Tareas vista");
             return ResponseEntity.ok(taskService.getTaskByUser(userDetails.getUsername()));
         }catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -50,8 +49,8 @@ public class TaskController {
         HashMap<String, String> response = new HashMap<>();
         try{
             taskService.createTask(task);
-            recordService.registerAction(userDetails, "TASK", "Creación de tarea para " + task.getUser());
             response.put("message", "Tarea asignada correctamente");
+            recordService.registerAction(userDetails, "TASK", "Creación de tarea para " + task.getUser());
             return ResponseEntity.ok(response);
         }catch (IllegalArgumentException e){
             response.put("Error", e.getMessage());
@@ -71,8 +70,8 @@ public class TaskController {
         HashMap<String, String> response = new HashMap<>();
         try{
             taskService.completeTask(taskID);
-            recordService.registerAction(userDetails, "TASK", "Tarea completada");
             response.put("message", "Tarea Completada");
+            recordService.registerAction(userDetails, "TASK", "Tarea completada");
             return ResponseEntity.ok(response);
         }catch (IllegalArgumentException e){
             response.put("Error", e.getMessage());
