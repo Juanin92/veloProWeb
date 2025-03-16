@@ -7,6 +7,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { LocalDataService } from '../../services/local-data.service';
 import { Router, RouterOutlet } from '@angular/router';
 import * as bootstrap from 'bootstrap';
+import { AuthService } from '../../services/User/auth.service';
 
 @Component({
   selector: 'app-main',
@@ -24,6 +25,7 @@ export class MainComponent implements AfterViewInit {
   dropdownInstance!: bootstrap.Dropdown;
 
   constructor(
+    private auth: AuthService,
     private datePipe: DatePipe,
     private localDataService: LocalDataService,
     private router: Router) {
@@ -39,6 +41,19 @@ export class MainComponent implements AfterViewInit {
 
   isLoginPage(): boolean {
     return this.router.url === '/main/home';
+  }
+
+  logout(): void{
+    this.auth.logout().subscribe({
+      next:(response) =>{
+        console.log(response.message);
+        this.auth.removeToken();
+        this.router.navigate(['/login']);
+      }, error: (error) =>{
+        const message = error.error?.error || error.error?.message || error?.error;
+        console.log('Error: ', message);
+      }
+    });
   }
 
   toggleDropdown() {
