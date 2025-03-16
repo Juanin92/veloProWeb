@@ -15,6 +15,8 @@ import { SaleRequestDTO } from '../../../models/DTO/sale-request-dto';
 import { PaymentMethod } from '../../../models/enum/payment-method';
 import { DispatchComponent } from "../dispatch/dispatch.component";
 import { DispatchModalComponent } from "../dispatch-modal/dispatch-modal.component";
+import { Role } from '../../../models/enum/role';
+import { RoleService } from '../../../services/User/role.service';
 
 @Component({
   selector: 'app-sale',
@@ -46,6 +48,7 @@ export class SaleComponent implements AfterViewInit, OnInit {
   isMixPayment: boolean =  false;
   isOk: boolean = false;
   editingFields: { [key: string]: { quantity?: boolean; } } = {}; // (Map) Campos de edición activa para cantidades o precios en detalles de compra
+  role = Role;
 
 
   constructor(
@@ -53,7 +56,8 @@ export class SaleComponent implements AfterViewInit, OnInit {
     private customerService: CustomerService,
     private tooltipService: TooltipService,
     private notification: NotificationService,
-    private helper: SaleHelperService) {
+    private helper: SaleHelperService,
+    protected roleService: RoleService) {
     this.sale = helper.createEmptySale();
   }
 
