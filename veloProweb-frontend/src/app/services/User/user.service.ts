@@ -20,7 +20,7 @@ export class UserService {
    * @returns observable que emite una lista de usuarios
    */
   getListUsers(): Observable<UserDTO[]>{
-    return this.httpClient.get<UserDTO[]>(this.apiUrl, {headers: this.auth.getAuthHeaders()});
+    return this.httpClient.get<UserDTO[]>(this.apiUrl);
   }
 
   /**
