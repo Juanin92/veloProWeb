@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Supplier } from '../../models/Entity/Purchase/supplier';
+import { AuthService } from '../User/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ export class SupplierService {
 
   private apiUrl = 'http://localhost:8080/proveedores';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private auth: AuthService) { }
 
   /**
    * Obtiene una lista de proveedores desde la API
@@ -26,7 +27,7 @@ export class SupplierService {
    * @returns - Observable emite un mensaje de confirmación o error
    */
   createSupplier(supplier: Supplier): Observable<{message: string}>{
-    return this.http.post<{message: string}>(`${this.apiUrl}`, supplier);
+    return this.http.post<{message: string}>(`${this.apiUrl}`, supplier, {headers: this.auth.getAuthHeaders()});
   }
 
   /**
@@ -35,7 +36,7 @@ export class SupplierService {
    * @returns - Observable emite un mensaje de confirmación o error
    */
   updateSupplier(supplier: Supplier): Observable<{message: string}>{
-    return this.http.put<{message: string}>(`${this.apiUrl}`, supplier);
+    return this.http.put<{message: string}>(`${this.apiUrl}`, supplier, {headers: this.auth.getAuthHeaders()});
   }
 
   /**
