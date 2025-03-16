@@ -3,11 +3,15 @@ package com.veloProWeb.Controller.Sale;
 import com.veloProWeb.Model.DTO.DetailSaleRequestDTO;
 import com.veloProWeb.Model.DTO.DispatchDTO;
 import com.veloProWeb.Model.Entity.Sale.Dispatch;
+import com.veloProWeb.Service.Record.IRecordService;
 import com.veloProWeb.Service.Sale.Interface.IDispatchService;
 import com.veloProWeb.Service.Sale.Interface.ISaleDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -21,8 +25,10 @@ public class DispatchController {
 
     @Autowired private IDispatchService dispatchService;
     @Autowired private ISaleDetailService saleDetailService;
+    @Autowired private IRecordService recordService;
 
     @GetMapping()
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'GUEST', 'SELLER')")
     public ResponseEntity<List<DispatchDTO>> getDispatches(){
         try{
             return ResponseEntity.ok(dispatchService.getDispatches());
@@ -32,33 +38,44 @@ public class DispatchController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> createDispatch(@RequestBody DispatchDTO dto){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'GUEST', 'SELLER')")
+    public ResponseEntity<Map<String, String>> createDispatch(@RequestBody DispatchDTO dto,
+                                                              @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response = new HashMap<>();
         try {
             Dispatch dispatch = dispatchService.createDispatch(dto);
             saleDetailService.createSaleDetailsToDispatch(dto.getDetailSaleDTOS(), dispatch);
+            recordService.registerAction(userDetails, "CREATE", "Despacho creado: " + dto.getCustomer());
             response.put("message", "Despacho en preparación");
             return ResponseEntity.ok(response);
         }catch (IllegalArgumentException e){
             response.put("error", e.getMessage());
+            recordService.registerAction(userDetails, "CREATE_FAILURE",
+                    "Error: crear despacho:  " + dto.getCustomer() + " / " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 
     @PutMapping()
-    public ResponseEntity<Map<String, String>> handleStatusDispatch(@RequestParam Long dispatchID, @RequestParam int action){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'SELLER')")
+    public ResponseEntity<Map<String, String>> handleStatusDispatch(@RequestParam Long dispatchID, @RequestParam int action,
+                                                                    @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response = new HashMap<>();
         try {
             response.put("message", "Cambio de status del despacho");
             dispatchService.handleStatus(dispatchID, action);
+            recordService.registerAction(userDetails, "UPDATE", "Actualiza estado del despacho " + dispatchID);
             return ResponseEntity.ok(response);
         }catch (IllegalArgumentException e){
             response.put("error", e.getMessage());
+            recordService.registerAction(userDetails, "UPDATE_FAILURE",
+                    "Actualiza estado del despacho " + dispatchID + " (" + e.getMessage() + ")");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 
     @GetMapping("/detalles")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'GUEST', 'SELLER')")
     public ResponseEntity<List<DetailSaleRequestDTO>> getDetailSale(@RequestParam Long idDispatch){
         try{
             return ResponseEntity.ok(saleDetailService.getSaleDetailsToDispatch(idDispatch));
