@@ -3,10 +3,10 @@ package com.veloProWeb.Controller.Product;
 import com.veloProWeb.Model.Entity.Product.CategoryProduct;
 import com.veloProWeb.Service.Product.Interfaces.ICategoryService;
 import com.veloProWeb.Service.Record.IRecordService;
-import com.veloProWeb.Service.User.Interface.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +25,6 @@ import java.util.Map;
 public class CategoryController {
 
     @Autowired private ICategoryService categoryService;
-    @Autowired private IUserService userService;
     @Autowired private IRecordService recordService;
 
     /**
@@ -33,12 +32,9 @@ public class CategoryController {
      * @return - ResponseEntity con una lista de las categorías
      */
     @GetMapping
-    public ResponseEntity<List<CategoryProduct>> getAllCategories(@AuthenticationPrincipal UserDetails userDetails){
-        if (userService.hasRequiredRole(userDetails, "ADMIN", "MASTER")){
-            return ResponseEntity.ok(categoryService.getAll());
-        }else{
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER')")
+    public ResponseEntity<List<CategoryProduct>> getAllCategories(){
+        return ResponseEntity.ok(categoryService.getAll());
     }
 
     /**
@@ -47,20 +43,15 @@ public class CategoryController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER')")
     public ResponseEntity<Map<String, String>> createCategory(@RequestBody CategoryProduct category,
                                                               @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response = new HashMap<>();
         try{
-            if(userService.hasRequiredRole(userDetails, "ADMIN", "MASTER")){
-                categoryService.save(category);
-                response.put("message", "Categoría registrada correctamente");
-                recordService.registerAction(userDetails, "CREATE", "categoría creada: " + category.getName());
-                return ResponseEntity.ok(response);
-            }else {
-                recordService.registerAction(userDetails, "CREATE_FAILURE",
-                        "Error: " + userDetails.getUsername() + " ingreso indebido");
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
+            categoryService.save(category);
+            response.put("message", "Categoría registrada correctamente");
+            recordService.registerAction(userDetails, "CREATE", "categoría creada: " + category.getName());
+            return ResponseEntity.ok(response);
         }catch (IllegalArgumentException e){
             response.put("message",e.getMessage());
             recordService.registerAction(userDetails, "CREATE_FAILURE",
