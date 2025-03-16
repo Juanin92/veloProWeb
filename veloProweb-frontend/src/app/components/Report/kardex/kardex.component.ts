@@ -19,6 +19,7 @@ export class KardexComponent implements OnInit, AfterViewInit{
   filteredKardexList: Kardex[] = [];
   textFilter: string = '';
   sortDate: boolean = true;
+  sortPosition: boolean = true;
 
   constructor(
     private kardexService: KardexServiceService,
@@ -75,6 +76,11 @@ export class KardexComponent implements OnInit, AfterViewInit{
       const dateB = new Date(b.date).getTime();
       return this.sortDate ? dateA - dateB : dateB - dateA;
     });
+  }
+
+  toggleSortPosition(): void{
+    this.filteredKardexList.reverse();
+    this.sortPosition = !this.sortPosition;
   }
 
   /**
