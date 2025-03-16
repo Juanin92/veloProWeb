@@ -18,6 +18,9 @@ export class CashierMovementsComponent implements OnInit{
   textFilter: string = '';
   sortDateOpening: boolean = true;
   sortCloseOpening: boolean = true;
+  sortAmountOpening: boolean = true;
+  sortAmountCloseCash: boolean = true;
+  sortAmountClosePos: boolean = true;
 
   constructor(private cashRegisterService: CashRegisterService){}
 
@@ -51,6 +54,33 @@ export class CashierMovementsComponent implements OnInit{
       const dateA = new Date(a.dateClosing).getTime();
       const dateB = new Date(b.dateClosing).getTime();
       return this.sortCloseOpening ? dateA - dateB : dateB - dateA;
+    });
+  }
+
+  toggleSortAmountOpening(): void{
+    this.sortAmountOpening = !this.sortAmountOpening;
+    this.filteredCashRegistersList.sort((a, b) => {
+      const dateA = a.amountOpening;
+      const dateB = b.amountOpening;
+      return this.sortAmountOpening ? dateA - dateB : dateB - dateA;
+    });
+  }
+
+  toggleSortCloseCash(): void{
+    this.sortAmountCloseCash = !this.sortAmountCloseCash;
+    this.filteredCashRegistersList.sort((a, b) => {
+      const dateA = a.amountClosingCash;
+      const dateB = b.amountClosingCash;
+      return this.sortAmountCloseCash ? dateA - dateB : dateB - dateA;
+    });
+  }
+
+  toggleSortClosePos(): void{
+    this.sortAmountClosePos = !this.sortAmountClosePos;
+    this.filteredCashRegistersList.sort((a, b) => {
+      const dateA = a.amountClosingPos;
+      const dateB = b.amountClosingPos;
+      return this.sortAmountClosePos ? dateA - dateB : dateB - dateA;
     });
   }
 
