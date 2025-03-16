@@ -1,4 +1,4 @@
-<div class="flex-grow-1 overflow-auto">
+<div *ngIf="roleService.getRole() !== role.WAREHOUSE" class="flex-grow-1 overflow-auto">
     <p *ngIf="dispatchList.length === 0" class="fw-bold fs-5 text-center">No hay despachos</p>
     <ul class="list-group list-group-flush">
         <li *ngFor="let dispatch of dispatchList"
