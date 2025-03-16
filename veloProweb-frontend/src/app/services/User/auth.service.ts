@@ -16,6 +16,10 @@ export class AuthService {
     return this.httpClient.post<{token: string, role: string}>(`${this.apiUrl}/login`, loginRequest);
   }
 
+  logout(): Observable<{message: string}>{
+    return this.httpClient.post<{message: string}>(`${this.apiUrl}/logout`, {}, {headers: this.getAuthHeaders()});
+  }
+
   saveToken(token: string): void {
     localStorage.setItem('token', token);
   }
