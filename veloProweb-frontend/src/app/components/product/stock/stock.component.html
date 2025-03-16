@@ -24,7 +24,7 @@
             </div>
           </div>
         </div>
-        <div class="col-3 text-end">
+        <div *ngIf="auth.getRole() !== role.SELLER" class="col-3 text-end">
           <div class="d-grid gap-2">
             <div class="d-flex gap-2">
               <button type="button" class="btn btn-outline-light btn-sm w-50 fw-bold text-uppercase"
@@ -52,7 +52,7 @@
       <!-- Vista Mobile -->
       <div class="d-lg-none">
         <div class="d-grid gap-2">
-          <div class="row row-cols-2 g-2 justify-content-center">
+          <div *ngIf="auth.getRole() !== role.SELLER" class="row row-cols-2 g-2 justify-content-center">
             <div class="col">
               <button type="button" class="btn btn-outline-light btn-sm w-100 shadow-sm rounded-pill"
                 data-bs-toggle="modal" data-bs-target="#addProduct">
@@ -138,7 +138,7 @@
             </button>
           </th>
           <th scope="col">Estado</th>
-          <th scope="col">Acción</th>
+          <th *ngIf="auth.getRole() !== role.SELLER" scope="col">Acción</th>
         </tr>
       </thead>
       <tbody class="table-group-divider text-center align-middle">
@@ -156,12 +156,10 @@
           <td [ngStyle]="{
               'background-color': statusColor(product.statusProduct)
             }"></td>
-          <td class="d-flex flex-row">
-            <button *ngIf="
-                              product.statusProduct === statusProduct.AVAILABLE ||
-                              product.statusProduct === statusProduct.UNAVAILABLE && 
-                              product.buyPrice !== 0
-                            " class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#updateProduct">
+          <td *ngIf="auth.getRole() !== role.SELLER" class="d-flex flex-row">
+            <button *ngIf=" product.statusProduct === statusProduct.AVAILABLE ||
+                  product.statusProduct === statusProduct.UNAVAILABLE && product.buyPrice !== 0" 
+                  class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#updateProduct">
               <img src="/assets/icons/btnEditIcon.png" alt="editar" width="24" height="24" class="img-fluid"
                 (click)="openModalProduct(product)" data-bs-toggle="tooltip" data-bs-placement="top"
                 title="Editar info" />
