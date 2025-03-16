@@ -2,9 +2,13 @@ package com.veloProWeb.Controller.Product;
 
 import com.veloProWeb.Model.Entity.Product.UnitProduct;
 import com.veloProWeb.Service.Product.Interfaces.IUnitService;
+import com.veloProWeb.Service.Record.IRecordService;
+import com.veloProWeb.Service.User.Interface.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -21,14 +25,20 @@ import java.util.Map;
 public class UnitController {
 
     @Autowired private IUnitService unitService;
+    @Autowired private IUserService userService;
+    @Autowired private IRecordService recordService;
 
     /**
      * Obtiene una lista de todas las unidades de medidas
      * @return - ResponseEntity con una lista de las unidades
      */
     @GetMapping
-    public ResponseEntity<List<UnitProduct>> getAllUnits(){
-        return ResponseEntity.ok(unitService.getAll());
+    public ResponseEntity<List<UnitProduct>> getAllUnits(@AuthenticationPrincipal UserDetails userDetails){
+        if (userService.hasRequiredRole(userDetails, "ADMIN", "MASTER")){
+            return ResponseEntity.ok(unitService.getAll());
+        }else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     /**
@@ -37,14 +47,24 @@ public class UnitController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PostMapping
-    public ResponseEntity<Map<String, String>> createUnit(@RequestBody UnitProduct unit){
+    public ResponseEntity<Map<String, String>> createUnit(@RequestBody UnitProduct unit,
+                                                          @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response = new HashMap<>();
-        try {
-            unitService.save(unit);
-            response.put("message", "Unidad de medida registrada correctamente");
-            return ResponseEntity.ok(response);
+        try{
+            if(userService.hasRequiredRole(userDetails, "ADMIN", "MASTER")){
+                unitService.save(unit);
+                response.put("message", "Unidad de medida registrada correctamente");
+                recordService.registerAction(userDetails, "CREATE", "unidad creada: " + unit.getNameUnit());
+                return ResponseEntity.ok(response);
+            }else {
+                recordService.registerAction(userDetails, "CREATE_FAILURE",
+                        "Error: " + userDetails.getUsername() + " ingreso indebido");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
         }catch (IllegalArgumentException e){
-            response.put("message", e.getMessage());
+            response.put("message",e.getMessage());
+            recordService.registerAction(userDetails, "CREATE_FAILURE",
+                    "ERROR: crear unidad(" + unit.getNameUnit() + "): " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
