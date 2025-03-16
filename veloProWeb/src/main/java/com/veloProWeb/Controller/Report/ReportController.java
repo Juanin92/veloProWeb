@@ -1,10 +1,14 @@
 package com.veloProWeb.Controller.Report;
 
 import com.veloProWeb.Model.DTO.Report.*;
+import com.veloProWeb.Service.Record.IRecordService;
 import com.veloProWeb.Service.Report.IReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -22,6 +26,7 @@ import java.util.Map;
 public class ReportController {
 
     @Autowired private IReportService reportService;
+    @Autowired private IRecordService recordService;
 
     /**
      * Obtener el conteo diario de ventas en un rango de fechas.
@@ -30,9 +35,12 @@ public class ReportController {
      * @return - ResponseEntity Lista de objetos DTO o mensaje de excepción
      */
     @GetMapping("/cantidad_ventas")
-    public ResponseEntity<Object> getDailySale(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE')")
+    public ResponseEntity<Object> getDailySale(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate,
+                                               @AuthenticationPrincipal UserDetails userDetails){
         try{
             List<DailySaleCountDTO> dtoList = reportService.getDailySale(startDate, endDate);
+            recordService.registerAction(userDetails, "VIEW_CHART", "Gráfico de ventas diarias");
             return ResponseEntity.ok(dtoList);
         }catch (IllegalArgumentException e){
             Map<String, String> response = new HashMap<>();
@@ -48,9 +56,12 @@ public class ReportController {
      * @return - ResponseEntity Lista de objetos DTO o mensaje de excepción
      */
     @GetMapping("/monto_ventas")
-    public ResponseEntity<Object> getTotalSaleDaily(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE')")
+    public ResponseEntity<Object> getTotalSaleDaily(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate,
+                                                    @AuthenticationPrincipal UserDetails userDetails){
         try{
             List<DailySaleSumDTO> dtoList = reportService.getTotalSaleDaily(startDate, endDate);
+            recordService.registerAction(userDetails, "VIEW_CHART", "Gráfico de suma de ventas diarias");
             return ResponseEntity.ok(dtoList);
         }catch (IllegalArgumentException e){
             Map<String, String> response = new HashMap<>();
@@ -66,9 +77,13 @@ public class ReportController {
      * @return - ResponseEntity Lista de objetos DTO o mensaje de excepción
      */
     @GetMapping("/promedio_ventas")
-    public ResponseEntity<Object> getAverageTotalSaleDaily(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE')")
+    public ResponseEntity<Object> getAverageTotalSaleDaily(@RequestParam LocalDate startDate,
+                                                           @RequestParam LocalDate endDate,
+                                                           @AuthenticationPrincipal UserDetails userDetails){
         try{
             List<DailySaleAvgDTO> dtoList = reportService.getAverageTotalSaleDaily(startDate, endDate);
+            recordService.registerAction(userDetails, "VIEW_CHART", "Gráfico de promedio ventas diarias");
             return ResponseEntity.ok(dtoList);
         }catch (IllegalArgumentException e){
             Map<String, String> response = new HashMap<>();
@@ -84,9 +99,12 @@ public class ReportController {
      * @return - ResponseEntity Lista de objetos DTO o mensaje de excepción
      */
     @GetMapping("/ganancias_ventas")
-    public ResponseEntity<Object> getEarningSale(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE')")
+    public ResponseEntity<Object> getEarningSale(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate,
+                                                 @AuthenticationPrincipal UserDetails userDetails){
         try{
             List<DailySaleEarningDTO> dtoList = reportService.getEarningSale(startDate, endDate);
+            recordService.registerAction(userDetails, "VIEW_CHART", "Gráfico de ganancias ventas diarias");
             return ResponseEntity.ok(dtoList);
         }catch (IllegalArgumentException e){
             Map<String, String> response = new HashMap<>();
@@ -102,9 +120,13 @@ public class ReportController {
      * @return - ResponseEntity Lista de objetos DTO o mensaje de excepción
      */
     @GetMapping("/producto_ventas")
-    public ResponseEntity<Object> getMostProductSale(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE')")
+    public ResponseEntity<Object> getMostProductSale(@RequestParam LocalDate startDate,
+                                                     @RequestParam LocalDate endDate,
+                                                     @AuthenticationPrincipal UserDetails userDetails){
         try{
             List<ProductReportDTO> dtoList = reportService.getMostProductSale(startDate, endDate);
+            recordService.registerAction(userDetails, "VIEW_CHART", "Gráfico de productos más vendidos");
             return ResponseEntity.ok(dtoList);
         }catch (IllegalArgumentException e){
             Map<String, String> response = new HashMap<>();
@@ -120,9 +142,13 @@ public class ReportController {
      * @return - ResponseEntity Lista de objetos DTO o mensaje de excepción
      */
     @GetMapping("/categoria_ventas")
-    public ResponseEntity<Object> getMostCategorySale(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE')")
+    public ResponseEntity<Object> getMostCategorySale(@RequestParam LocalDate startDate,
+                                                      @RequestParam LocalDate endDate,
+                                                      @AuthenticationPrincipal UserDetails userDetails){
         try{
             List<ProductReportDTO> dtoList = reportService.getMostCategorySale(startDate, endDate);
+            recordService.registerAction(userDetails, "VIEW_CHART", "Gráfico de categorías más vendidas");
             return ResponseEntity.ok(dtoList);
         }catch (IllegalArgumentException e){
             Map<String, String> response = new HashMap<>();
