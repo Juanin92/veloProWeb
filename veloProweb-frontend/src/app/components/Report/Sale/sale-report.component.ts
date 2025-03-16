@@ -34,6 +34,7 @@ export class SaleReportComponent implements OnInit, AfterViewInit {
   hasDispatchDetailsSale: boolean = false;
   sortDate: boolean = true;
   sortTotal: boolean = true;
+  sortPosition: boolean = true;
 
   constructor(
     private saleService: SaleService,
@@ -238,6 +239,11 @@ export class SaleReportComponent implements OnInit, AfterViewInit {
       const dateB = b.totalSale;
       return this.sortTotal ? dateA - dateB : dateB - dateA;
     });
+  }
+
+  toggleSortPosition(): void{
+    this.filteredSaleList.reverse();
+    this.sortPosition = !this.sortPosition;
   }
 
   /**
