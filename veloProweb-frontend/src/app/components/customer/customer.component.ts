@@ -11,6 +11,8 @@ import { NotificationService } from '../../utils/notification-service.service';
 import { TooltipService } from '../../utils/tooltip.service';
 import { ModalService } from '../../utils/modal.service';
 import { AuthService } from '../../services/User/auth.service';
+import { Role } from '../../models/enum/role';
+import { RoleService } from '../../services/User/role.service';
 
 @Component({
   selector: 'app-customer',
@@ -28,11 +30,12 @@ export class CustomerComponent implements OnInit, AfterViewInit {
   totalDebts: number = 0;
   sortDebt: boolean = true;
   sortPosition: boolean = true;
+  role = Role;
 
   constructor(
     private customerService: CustomerService,
     private customerHelper: CustomerHelperServiceService,
-    public auth: AuthService,
+    protected roleService: RoleService,
     private notification: NotificationService,
     private tooltipService: TooltipService,
     private modalService: ModalService,
