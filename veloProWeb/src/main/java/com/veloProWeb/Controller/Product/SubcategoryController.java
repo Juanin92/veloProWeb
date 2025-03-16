@@ -32,7 +32,7 @@ public class SubcategoryController {
      * @return - ResponseEntity con una lista de las subcategorías
      */
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER', 'WAREHOUSE')")
     public ResponseEntity<List<SubcategoryProduct>> getAllSubcategories(){
         return ResponseEntity.ok(subcategoryService.getAll());
     }
@@ -43,7 +43,7 @@ public class SubcategoryController {
      * @return - ResponseEntity con una lista de las subcategorías
      */
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER', 'WAREHOUSE')")
     public ResponseEntity<List<SubcategoryProduct>> getAllSubcategoriesByCategory(@PathVariable Long id){
         return ResponseEntity.ok(subcategoryService.getSubcategoryByCategoryID(id));
     }
@@ -54,7 +54,7 @@ public class SubcategoryController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER', 'WAREHOUSE')")
     public ResponseEntity<Map<String, String>> createSubcategories(@RequestBody SubcategoryProduct subcategory,
                                                                    @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response = new HashMap<>();

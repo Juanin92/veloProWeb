@@ -28,7 +28,7 @@ public class StockController {
      * @return - ResponseEntity con una lista de los productos
      */
     @GetMapping()
-    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER','SELLER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER','SELLER', 'WAREHOUSE')")
     public ResponseEntity<List<Product>> getListProducts(){
         return ResponseEntity.ok(productService.getAll());
     }
@@ -39,7 +39,7 @@ public class StockController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PostMapping()
-    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER', 'WAREHOUSE')")
     public ResponseEntity<Map<String, String>> createProduct(@RequestBody Product product,
                                                              @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response =  new HashMap<>();
@@ -62,7 +62,7 @@ public class StockController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping()
-    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER', 'WAREHOUSE')")
     public ResponseEntity<Map<String, String>> updateProduct(@RequestBody Product product,
                                                              @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response = new HashMap<>();
@@ -85,7 +85,7 @@ public class StockController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping("/eliminar_producto")
-    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER', 'WAREHOUSE')")
     public ResponseEntity<Map<String, String>> deleteProduct(@RequestBody Product product,
                                                              @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response = new HashMap<>();
@@ -108,7 +108,7 @@ public class StockController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping("/activar_producto")
-    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER', 'WAREHOUSE')")
     public ResponseEntity<Map<String, String>> activeProduct(@RequestBody Product product,
                                                              @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response = new HashMap<>();

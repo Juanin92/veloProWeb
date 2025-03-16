@@ -32,7 +32,7 @@ public class BrandController {
      * @return - ResponseEntity con una lista de las marcas
      */
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER', 'WAREHOUSE')")
     public ResponseEntity<List<BrandProduct>> getAllBrands(){
         return ResponseEntity.ok(brandService.getAll());
     }
@@ -43,7 +43,7 @@ public class BrandController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER', 'WAREHOUSE')")
     public ResponseEntity<Map<String, String>> createBrand(@RequestBody BrandProduct brand,
                                                            @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response = new HashMap<>();

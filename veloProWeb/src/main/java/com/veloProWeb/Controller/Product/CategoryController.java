@@ -32,7 +32,7 @@ public class CategoryController {
      * @return - ResponseEntity con una lista de las categorías
      */
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER', 'WAREHOUSE')")
     public ResponseEntity<List<CategoryProduct>> getAllCategories(){
         return ResponseEntity.ok(categoryService.getAll());
     }
@@ -43,7 +43,7 @@ public class CategoryController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER', 'WAREHOUSE')")
     public ResponseEntity<Map<String, String>> createCategory(@RequestBody CategoryProduct category,
                                                               @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response = new HashMap<>();
