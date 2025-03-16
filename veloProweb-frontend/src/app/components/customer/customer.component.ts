@@ -12,7 +12,6 @@ import { TooltipService } from '../../utils/tooltip.service';
 import { ModalService } from '../../utils/modal.service';
 import { AuthService } from '../../services/User/auth.service';
 
-
 @Component({
   selector: 'app-customer',
   standalone: true,
@@ -21,12 +20,14 @@ import { AuthService } from '../../services/User/auth.service';
   styleUrl: './customer.component.css'
 })
 export class CustomerComponent implements OnInit, AfterViewInit {
+
   customers: Customer[] = [];
   filteredCustomers: Customer[] = [];
   selectedCustomer: Customer;
-
   textFilter: string = '';
   totalDebts: number = 0;
+  sortDebt: boolean = true;
+  sortPosition: boolean = true;
 
   constructor(
     private customerService: CustomerService,
@@ -147,6 +148,20 @@ export class CustomerComponent implements OnInit, AfterViewInit {
    */
   getEmailEmpty(email: string): string {
     return email.includes('x@x.xxx') ? 'Sin Registro' : email;
+  }
+
+  toggleSortDebt() {
+    this.sortDebt = !this.sortDebt;
+    this.filteredCustomers.sort((a, b) => {
+      const dateA = a.debt;
+      const dateB = b.debt;
+      return this.sortDebt ? dateA - dateB : dateB - dateA;
+    });
+  }
+
+  toggleSortPosition() {
+    this.filteredCustomers.reverse();
+    this.sortPosition = !this.sortPosition;
   }
 
   /**
