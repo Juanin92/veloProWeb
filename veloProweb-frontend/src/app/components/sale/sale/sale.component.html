@@ -1,4 +1,4 @@
-<div class="container-fluid d-flex flex-column p-2 min-vh-100 p-0">
+<div *ngIf="roleService.getRole() !== role.WAREHOUSE" class="container-fluid d-flex flex-column p-2 min-vh-100 p-0">
   <!-- Área superior -->
   <div class="row py-1 align-items-center">
     <div class="col-md-4 col-6">
