@@ -18,7 +18,7 @@ export class BrandService {
    * @returns observable que emite una lista de marcas
    */
   getBrands(): Observable<Brand[]>{
-    return this.httpClient.get<Brand[]>(this.apiUrl, {headers: this.auth.getAuthHeaders()});
+    return this.httpClient.get<Brand[]>(this.apiUrl);
   }
 
   /**

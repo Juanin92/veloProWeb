@@ -17,7 +17,7 @@ export class CategoryService {
    * @returns observable que emite una lista de categorías
    */
   getCategories(): Observable<Category[]> {
-    return this.httpClient.get<Category[]>(this.apiUrl, {headers: this.auth.getAuthHeaders()});
+    return this.httpClient.get<Category[]>(this.apiUrl);
   }
 
   /**

@@ -17,7 +17,7 @@ export class UnitService {
    * @returns observable que emite una lista de unidades de medidas
    */
   getUnits(): Observable<UnitProductModel[]> {
-    return this.httpClient.get<UnitProductModel[]>(this.apiUrl, {headers: this.auth.getAuthHeaders()});
+    return this.httpClient.get<UnitProductModel[]>(this.apiUrl);
   }
 
   /**

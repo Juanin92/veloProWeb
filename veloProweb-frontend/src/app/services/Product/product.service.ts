@@ -18,7 +18,7 @@ export class ProductService {
    * @returns observable que emite una lista de productos
    */
   getProducts(): Observable<Product[]>{
-    return this.httpClient.get<Product[]>(this.apiUrl, {headers: this.auth.getAuthHeaders()});
+    return this.httpClient.get<Product[]>(this.apiUrl);
   }
 
   /**

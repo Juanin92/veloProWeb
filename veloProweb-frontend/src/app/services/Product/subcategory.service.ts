@@ -19,7 +19,7 @@ export class SubcategoryService {
    * @returns - observable que emite una lista de subcategorías
    */
   getSubCategoriesByCategory(id: number): Observable<Subcategory[]> {
-    return this.httpClient.get<Subcategory[]>(`${this.apiUrl}/${id}`, {headers: this.auth.getAuthHeaders()});
+    return this.httpClient.get<Subcategory[]>(`${this.apiUrl}/${id}`);
   }
 
   /**
