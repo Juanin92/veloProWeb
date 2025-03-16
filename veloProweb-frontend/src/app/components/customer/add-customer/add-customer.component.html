@@ -1,4 +1,4 @@
-<div *ngIf="roleService.getRole() !== role.GUEST" class="modal fade" id="addCustomer" tabindex="-1" aria-labelledby="addCustomer" aria-hidden="true"
+<div *ngIf="roleService.getRole() !== role.GUEST || roleService.getRole() !== role.WAREHOUSE" class="modal fade" id="addCustomer" tabindex="-1" aria-labelledby="addCustomer" aria-hidden="true"
  (hidden.bs.modal)="resetCustomerForm()">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
