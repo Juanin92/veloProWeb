@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PurchaseRequestDTO } from '../../models/DTO/purchase-request-dto';
 import { DetailPurchaseRequestDTO } from '../../models/DTO/detail-purchase-request-dto';
+import { AuthService } from '../User/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class PurchaseService {
 
   private apiUrl = 'http://localhost:8080/compras';
   
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private auth: AuthService) { }
 
   /**
    * Crea un nueva compra realizando una petición POST a la API
@@ -19,7 +20,7 @@ export class PurchaseService {
    * @returns - Observable emite un mensaje de confirmación o error
    */
   createPurchase(purchaseRequest: PurchaseRequestDTO): Observable<{message: string}>{
-    return this.http.post<{message: string}>(`${this.apiUrl}/crear`, purchaseRequest);
+    return this.http.post<{message: string}>(`${this.apiUrl}/crear`, purchaseRequest, {headers: this.auth.getAuthHeaders()});
   }
 
   /**
@@ -31,7 +32,7 @@ export class PurchaseService {
   }
 
   getAllPurchases(): Observable<PurchaseRequestDTO[]>{
-    return this.http.get<PurchaseRequestDTO[]>(`${this.apiUrl}/lista-compras`);
+    return this.http.get<PurchaseRequestDTO[]>(`${this.apiUrl}/lista-compras`, {headers: this.auth.getAuthHeaders()});
   }
 
   getDetailPurchase(idPurchase: number): Observable<DetailPurchaseRequestDTO[]>{
