@@ -3,10 +3,10 @@ package com.veloProWeb.Controller.Product;
 import com.veloProWeb.Model.Entity.Product.SubcategoryProduct;
 import com.veloProWeb.Service.Product.Interfaces.ISubcategoryService;
 import com.veloProWeb.Service.Record.IRecordService;
-import com.veloProWeb.Service.User.Interface.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +25,6 @@ import java.util.Map;
 public class SubcategoryController {
 
     @Autowired private ISubcategoryService subcategoryService;
-    @Autowired private IUserService userService;
     @Autowired private IRecordService recordService;
 
     /**
@@ -33,12 +32,9 @@ public class SubcategoryController {
      * @return - ResponseEntity con una lista de las subcategorías
      */
     @GetMapping
-    public ResponseEntity<List<SubcategoryProduct>> getAllSubcategories(@AuthenticationPrincipal UserDetails userDetails){
-        if (userService.hasRequiredRole(userDetails, "ADMIN", "MASTER")){
-            return ResponseEntity.ok(subcategoryService.getAll());
-        }else{
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER')")
+    public ResponseEntity<List<SubcategoryProduct>> getAllSubcategories(){
+        return ResponseEntity.ok(subcategoryService.getAll());
     }
 
     /**
@@ -47,13 +43,9 @@ public class SubcategoryController {
      * @return - ResponseEntity con una lista de las subcategorías
      */
     @GetMapping("/{id}")
-    public ResponseEntity<List<SubcategoryProduct>> getAllSubcategoriesByCategory(@PathVariable Long id,
-                                                                                  @AuthenticationPrincipal UserDetails userDetails){
-        if (userService.hasRequiredRole(userDetails, "ADMIN", "MASTER")){
-            return ResponseEntity.ok(subcategoryService.getSubcategoryByCategoryID(id));
-        }else{
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER')")
+    public ResponseEntity<List<SubcategoryProduct>> getAllSubcategoriesByCategory(@PathVariable Long id){
+        return ResponseEntity.ok(subcategoryService.getSubcategoryByCategoryID(id));
     }
 
     /**
@@ -62,20 +54,15 @@ public class SubcategoryController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER')")
     public ResponseEntity<Map<String, String>> createSubcategories(@RequestBody SubcategoryProduct subcategory,
                                                                    @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response = new HashMap<>();
         try{
-            if(userService.hasRequiredRole(userDetails, "ADMIN", "MASTER")){
-                subcategoryService.save(subcategory);
-                response.put("message", "Subcategoría registrada correctamente");
-                recordService.registerAction(userDetails, "CREATE", "Subcategoría creada: " + subcategory.getName());
-                return ResponseEntity.ok(response);
-            }else {
-                recordService.registerAction(userDetails, "CREATE_FAILURE",
-                        "Error: " + userDetails.getUsername() + " ingreso indebido");
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
+            subcategoryService.save(subcategory);
+            response.put("message", "Subcategoría registrada correctamente");
+            recordService.registerAction(userDetails, "CREATE", "Subcategoría creada: " + subcategory.getName());
+            return ResponseEntity.ok(response);
         }catch (IllegalArgumentException e){
             response.put("message",e.getMessage());
             recordService.registerAction(userDetails, "CREATE_FAILURE",
