@@ -12,6 +12,8 @@ import { StatusProduct } from '../../../models/enum/status-product';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ModalService } from '../../../utils/modal.service';
 import { TooltipService } from '../../../utils/tooltip.service';
+import { AuthService } from '../../../services/User/auth.service';
+import { Role } from '../../../models/enum/role';
 
 @Component({
   selector: 'app-stock',
@@ -32,8 +34,10 @@ export class StockComponent implements OnInit, AfterViewInit {
   sortSale: boolean = true;
   sortStock: boolean = true;
   sortReserved: boolean = true;
+  role = Role;
 
   constructor(
+    public auth: AuthService,
     private stockService: ProductService,
     private helper: ProductHelperService,
     private notification: NotificationService,
