@@ -21,7 +21,7 @@
       </a>
     </li>
     <li
-      *ngIf="auth.getRole() !== 'WAREHOUSE' || auth.getRole() === 'GUEST'"
+      *ngIf="roleService.getRole() !== role.WAREHOUSE || roleService.getRole() !== role.GUEST"
       class="w-100"
       data-bs-toggle="tooltip"
       data-bs-placement="right"
@@ -59,7 +59,7 @@
       </a>
     </li>
     <li
-      *ngIf="auth.getRole() !== Role.WAREHOUSE"
+      *ngIf="roleService.getRole() !== role.WAREHOUSE"
       class="w-100"
       data-bs-toggle="tooltip"
       data-bs-placement="right"
@@ -81,7 +81,7 @@
       </a>
     </li>
     <li
-      *ngIf="auth.getRole() !== Role.SELLER && auth.getRole() !== Role.GUEST"
+      *ngIf="roleService.getRole() !== role.SELLER || roleService.getRole() !== role.GUEST"
       class="w-100"
       data-bs-toggle="tooltip"
       data-bs-placement="right"
@@ -103,7 +103,7 @@
       </a>
     </li>
     <li
-      *ngIf="auth.getRole() !== Role.SELLER && auth.getRole() !== Role.GUEST && auth.getRole() !== Role.WAREHOUSE"
+      *ngIf="roleService.getRole() !== role.SELLER && roleService.getRole() !== role.GUEST && roleService.getRole() !== role.WAREHOUSE"
       class="w-100"
       data-bs-toggle="tooltip"
       data-bs-placement="right"
@@ -123,8 +123,8 @@
       </a>
     </li>
     <li
-      *ngIf="auth.getRole() !== Role.WAREHOUSE && auth.getRole() !== Role.GUEST 
-        && auth.getRole() !== Role.SELLER"
+      *ngIf="roleService.getRole() !== role.WAREHOUSE && roleService.getRole() !== role.GUEST 
+        && roleService.getRole() !== role.SELLER"
       class="w-100"
       data-bs-toggle="tooltip"
       data-bs-placement="right"
