@@ -17,8 +17,8 @@
         <div class="table-responsive flex-grow-1p-1 pt-0" style="max-height: 65vh; overflow-y: auto;">
             <table class="table table-group-divider table-hover">
                 <thead class="table-light text-center">
-                    <tr>
-                        <th rowspan="2">
+                    <tr class="position-sticky top-0">
+                        <th scope="col" style="width: 10px;">
                             <div class="dropdown">
                                 <button #taskTableFilter id="taskTableFilter" (click)="toggleDropdown()"
                                     class="btn btn-sm text-dark dropdown-toggle " type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -40,18 +40,23 @@
                                             Estado <i [ngClass]="sortStatus ? 'bi bi-sort-up' : 'bi bi-sort-down'"></i>
                                         </button>
                                     </li>
+                                    <li>
+                                        <button class="btn btn-sm text-white" (click)="toggleSortPosition()" aria-label="Ordenar por fecha">
+                                            Posición <i [ngClass]="sortPosition ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                                        </button>
+                                    </li>
                                 </ul>
                             </div>
                         </th>
-                        <th rowspan="2">Fecha</th>
-                        <th rowspan="2">Empleado</th>
-                        <th rowspan="2">Descripción</th>
-                        <th rowspan="2">Estado</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Empleado</th>
+                        <th scope="col">Descripción</th>
+                        <th scope="col">Estado</th>
                     </tr>
                 </thead>
                 <tbody class="table-group-divider text-center align-middle">
                     <tr *ngFor="let task of filteredTaskList; let i = index">
-                        <td>{{i + 1}}</td>
+                        <th scope="row">{{sortPosition ? i + 1 : filteredTaskList.length - i}}</th>
                         <td>{{task.created| date: 'dd-MM-yyyy'}}</td>
                         <td>{{task.user}}</td>
                         <td>{{task.description}}</td>
