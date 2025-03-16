@@ -37,6 +37,7 @@ export class UserComponent implements OnInit, AfterViewInit {
   dropdownInstance!: bootstrap.Dropdown;
   sortDate: boolean = true;
   sortName: boolean = true;
+  sortPosition: boolean = true;
   textFilter: string = '';
 
   roleLabels: { [key: string]: string } = {
@@ -61,7 +62,7 @@ export class UserComponent implements OnInit, AfterViewInit {
     });
     if (this.dropdownButton) {
           this.dropdownInstance = new bootstrap.Dropdown(this.dropdownButton.nativeElement);
-        }
+    }
   }
 
   ngOnInit(): void {
@@ -273,6 +274,11 @@ export class UserComponent implements OnInit, AfterViewInit {
           return nameA > nameB ? -1 : nameA < nameB ? 1 : 0;
       }
     });
+  }
+
+  toggleSortPosition() {
+    this.filteredList.reverse();
+    this.sortPosition = !this.sortPosition;
   }
 
   searchFilterUser(): void {
