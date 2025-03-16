@@ -102,24 +102,48 @@
   <div class="text-center p-2 pt-0 table-responsive" style="max-height: calc(100vh - 180px);">
     <table class="table table-hover">
       <thead class="table-light">
-        <tr>
-          <th scope="col" class="position-sticky top-0">#</th>
-          <th scope="col" class="position-sticky top-0">Marca</th>
-          <th scope="col" class="position-sticky top-0">Categoría</th>
-          <th scope="col" class="position-sticky top-0">Subcategoría</th>
-          <th scope="col" class="position-sticky top-0">Descripción</th>
-          <th scope="col" class="position-sticky top-0">Un</th>
-          <th scope="col" class="position-sticky top-0">Compra</th>
-          <th scope="col" class="position-sticky top-0">Venta</th>
-          <th scope="col" class="position-sticky top-0">Stock</th>
-          <th scope="col" class="position-sticky top-0">Reserva</th>
-          <th scope="col" class="position-sticky top-0">Estado</th>
-          <th scope="col" class="position-sticky top-0 bg-light" style="z-index: 1020;">Acción</th>
+        <tr class="position-sticky top-0">
+          <th scope="col" style="width: 10px;">
+            <button class="btn btn-sm text-dark" (click)="toggleSortPosition()" aria-label="Ordenar por fecha">
+              <i [ngClass]="sortPosition ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+            </button>
+          </th>
+          <th scope="col">Marca</th>
+          <th scope="col">Categoría</th>
+          <th scope="col">Subcategoría</th>
+          <th scope="col">Descripción</th>
+          <th scope="col">Un</th>
+          <th scope="col">
+            <button class="btn btn-sm text-dark" (click)="toggleSortPurchase()" aria-label="Ordenar por fecha">
+              <span class="fw-bolder">Compra </span><i
+                [ngClass]="sortPurchase ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+            </button>
+          </th>
+          <th scope="col">
+            <button class="btn btn-sm text-dark" (click)="toggleSortSale()" aria-label="Ordenar por fecha">
+              <span class="fw-bolder">Venta </span><i
+                [ngClass]="sortSale ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+            </button>
+          </th>
+          <th scope="col">
+            <button class="btn btn-sm text-dark" (click)="toggleSortStock()" aria-label="Ordenar por fecha">
+              <span class="fw-bolder">Stock </span><i
+                [ngClass]="sortStock ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+            </button>
+          </th>
+          <th scope="col">
+            <button class="btn btn-sm text-dark" (click)="toggleSortReserved()" aria-label="Ordenar por fecha">
+              <span class="fw-bolder">Reserva </span><i
+                [ngClass]="sortReserved ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+            </button>
+          </th>
+          <th scope="col">Estado</th>
+          <th scope="col">Acción</th>
         </tr>
       </thead>
       <tbody class="table-group-divider text-center align-middle">
-        <tr *ngFor="let product of filteredProducts">
-          <th scope="row">{{ product.id }}</th>
+        <tr *ngFor="let product of filteredProducts; let i = index">
+          <th scope="row">{{ sortPosition ? i + 1 : filteredProducts.length - i }}</th>
           <td>{{ product.brand.name }}</td>
           <td>{{ product.category.name }}</td>
           <td>{{ product.subcategoryProduct.name }}</td>
@@ -132,28 +156,26 @@
           <td [ngStyle]="{
               'background-color': statusColor(product.statusProduct)
             }"></td>
-          <td>
-            <div class="btn-group" role="group" aria-label="Acciones de productos">
-              <button *ngIf="
-                  product.statusProduct === statusProduct.AVAILABLE ||
-                  product.statusProduct === statusProduct.UNAVAILABLE && 
-                  product.buyPrice !== 0
-                " class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#updateProduct">
-                <img src="/assets/icons/btnEditIcon.png" alt="editar" width="24" height="24" class="img-fluid"
-                  (click)="openModalProduct(product)" data-bs-toggle="tooltip" data-bs-placement="top"
-                  title="Editar info" />
-              </button>
-              <button *ngIf="product.statusProduct === statusProduct.UNAVAILABLE" (click)="deleteProduct(product)"
-                class="btn btn-sm btn-danger">
-                <img src="/assets/icons/btnDeleteIcon.png" alt="borrar" width="24" height="24" class="img-fluid"
-                  data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" />
-              </button>
-              <button *ngIf="product.statusProduct === statusProduct.DISCONTINUED" (click)="activateProduct(product)"
-                class="btn btn-sm btn-outline-success border-0">
-                <img src="/assets/icons/iconOn.png" alt="activar" width="24" height="24" class="img-fluid"
-                  data-bs-toggle="tooltip" data-bs-placement="top" title="Activar" />
-              </button>
-            </div>
+          <td class="d-flex flex-row">
+            <button *ngIf="
+                              product.statusProduct === statusProduct.AVAILABLE ||
+                              product.statusProduct === statusProduct.UNAVAILABLE && 
+                              product.buyPrice !== 0
+                            " class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#updateProduct">
+              <img src="/assets/icons/btnEditIcon.png" alt="editar" width="24" height="24" class="img-fluid"
+                (click)="openModalProduct(product)" data-bs-toggle="tooltip" data-bs-placement="top"
+                title="Editar info" />
+            </button>
+            <button *ngIf="product.statusProduct === statusProduct.UNAVAILABLE" (click)="deleteProduct(product)"
+              class="btn btn-sm btn-danger">
+              <img src="/assets/icons/btnDeleteIcon.png" alt="borrar" width="24" height="24" class="img-fluid"
+                data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" />
+            </button>
+            <button *ngIf="product.statusProduct === statusProduct.DISCONTINUED" (click)="activateProduct(product)"
+              class="btn btn-sm btn-outline-success border-0">
+              <img src="/assets/icons/iconOn.png" alt="activar" width="24" height="24" class="img-fluid"
+                data-bs-toggle="tooltip" data-bs-placement="top" title="Activar" />
+            </button>
           </td>
         </tr>
       </tbody>
