@@ -53,6 +53,12 @@
             <table class="table table-hover">
                 <thead class="table-light text-center">
                     <tr>
+                        <th scope="col" class="position-sticky top-0" style="width: 10px;">
+                            <button class="btn btn-sm text-dark" (click)="toggleSortPosition()" aria-label="Ordenar por fecha">
+                                <span class="fw-bolder"></span><i
+                                    [ngClass]="sortPosition ? 'bi bi-sort-numeric-up' : 'bi bi-sort-numeric-down'"></i>
+                            </button>
+                        </th>
                         <th scope="col" class="position-sticky top-0">
                             <button class="btn btn-sm text-dark" (click)="toggleSortDate()" aria-label="Ordenar por fecha">
                                 <span class="fw-bolder">Fecha </span><i
@@ -68,12 +74,13 @@
                             </button>
                         </th>
                         <th scope="col" class="position-sticky top-0">Proveedor</th>
-                        <th scope="col" class="position-sticky top-0 bg-light" style="z-index: 1020;"></th>
+                        <th scope="col" class="position-sticky top-0 bg-light" style="z-index: 1020; width: 10px;">Acción</th>
                     </tr>
                 </thead>
                 <tbody class="table-group-divider text-center align-middle">
-                    <tr *ngFor="let purchase of filteredPurchaseList">
-                        <th scope="row">{{ purchase.date | date: 'dd-MM-yyyy'}}</th>
+                    <tr *ngFor="let purchase of filteredPurchaseList; let i = index">
+                        <th scope="row">{{ sortPosition ? i + 1 : filteredPurchaseList.length - i}}</th>
+                        <td>{{ purchase.date | date: 'dd-MM-yyyy'}}</td>
                         <td>{{ purchase.documentType + ' - ' + purchase.document }}</td>
                         <td>{{ purchase.tax | currency: 'CLP':'$':'1.0-0'}}</td>
                         <td>{{ purchase.purchaseTotal| currency: 'CLP':'$':'1.0-0' }}</td>
