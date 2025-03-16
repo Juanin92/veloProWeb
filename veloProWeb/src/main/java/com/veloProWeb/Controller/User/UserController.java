@@ -8,6 +8,7 @@ import com.veloProWeb.Service.User.Interface.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -31,12 +32,9 @@ public class UserController {
      * @return - Lista con los datos de usuarios registrados
      */
     @GetMapping
-    public ResponseEntity<List<UserDTO>> getListUser(@AuthenticationPrincipal UserDetails userDetails){
-        if (userService.hasRequiredRole(userDetails, "ADMIN", "MASTER", "WAREHOUSE", "SELLER", "GUEST")){
-            return ResponseEntity.ok(userService.getAllUser());
-        }else{
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER'")
+    public ResponseEntity<List<UserDTO>> getListUser(){
+        return ResponseEntity.ok(userService.getAllUser());
     }
 
     /**
@@ -45,23 +43,19 @@ public class UserController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PostMapping("/nuevo-usuario")
-    public ResponseEntity<Map<String, String>> addUser(@RequestBody UserDTO user, @AuthenticationPrincipal UserDetails userDetails){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER'")
+    public ResponseEntity<Map<String, String>> addUser(@RequestBody UserDTO user,
+                                                       @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response =  new HashMap<>();
         try{
-            if (userService.hasRequiredRole(userDetails, "ADMIN", "MASTER")){
-                userService.addUser(user);
-                recordService.registerAction(userDetails, "CREATE", "Creó un usuario nuevo: " + user.getUsername());
-                response.put("message", "Nuevo usuario "+ user.getName() + " " + user.getUsername() + " creado exitosamente");
-                return ResponseEntity.ok(response);
-            }else{
-                recordService.registerAction(userDetails, "CREATE_FAILURE",
-                        "Error: " + userDetails.getUsername() + " ingreso indebido");
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
+            userService.addUser(user);
+            response.put("message", "Nuevo usuario "+ user.getName() + " " + user.getUsername() + " creado exitosamente");
+            recordService.registerAction(userDetails, "CREATE", "Creó un usuario nuevo: " + user.getUsername());
+            return ResponseEntity.ok(response);
         }catch (Exception e){
             response.put("error", e.getMessage());
             recordService.registerAction(userDetails, "CREATE_FAILURE",
-                    "ERROR: crear usuario(" + user.getUsername() + "): " + e.getMessage());
+                    String.format("ERROR: crear usuario %s (%s)",user.getUsername(), e.getMessage()));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
@@ -72,24 +66,19 @@ public class UserController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping("/administrar/editar-usuario")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER'")
     public ResponseEntity<Map<String, String>> updateUserByAdmin(@RequestBody UserDTO user,
                                                                  @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response =  new HashMap<>();
         try{
-            if (userService.hasRequiredRole(userDetails, "ADMIN", "MASTER")){
-                userService.updateUser(user);
-                recordService.registerAction(userDetails, "UPDATE", "Actualizo los datos: " + user.getUsername());
-                response.put("message", "Usuario "+ user.getName() + " " + user.getUsername() + " actualizado exitosamente");
-                return ResponseEntity.ok(response);
-            }else{
-                recordService.registerAction(userDetails, "UPDATE_FAILURE",
-                        "Error: " + userDetails.getUsername() + " ingreso indebido");
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
+            userService.updateUser(user);
+            response.put("message", "Usuario "+ user.getName() + " " + user.getUsername() + " actualizado exitosamente");
+            recordService.registerAction(userDetails, "UPDATE", "Actualizo los datos: " + user.getUsername());
+            return ResponseEntity.ok(response);
         }catch (Exception e){
             response.put("error", e.getMessage());
             recordService.registerAction(userDetails, "UPDATE_FAILURE",
-                    "ERROR: actualizar usuario(" + user.getUsername() + "): " + e.getMessage());
+                    String.format("ERROR: actualizar usuario %s (%s)",user.getUsername(), e.getMessage()));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
@@ -101,16 +90,19 @@ public class UserController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping("/actualizar-usuario")
-    public ResponseEntity<Map<String, String>> updateUserProfile(@RequestBody UpdateUserDTO user, @AuthenticationPrincipal UserDetails userDetails){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER' , 'SELLER', 'GUEST', 'WAREHOUSE'")
+    public ResponseEntity<Map<String, String>> updateUserProfile(@RequestBody UpdateUserDTO user,
+                                                                 @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response =  new HashMap<>();
         try{
             userService.updateUserData(user, userDetails.getUsername());
-            recordService.registerAction(userDetails, "UPDATE", "Se actualizo sus datos personales");
             response.put("message", "Usuario actualizado exitosamente");
+            recordService.registerAction(userDetails, "UPDATE", "Se actualizo sus datos personales");
             return ResponseEntity.ok(response);
         }catch (Exception e){
-            recordService.registerAction(userDetails, "UPDATE_FAILURE", "Error al actualizar datos personales: " + e.getMessage());
             response.put("error", e.getMessage());
+            recordService.registerAction(userDetails, "UPDATE_FAILURE",
+                    "Error al actualizar datos personales: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
@@ -121,6 +113,7 @@ public class UserController {
      * @return - Los datos necesario del usuario a compartir
      */
     @GetMapping("datos")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER' , 'SELLER', 'GUEST', 'WAREHOUSE'")
     public ResponseEntity<UserDTO> getUserProfile(@AuthenticationPrincipal UserDetails userDetails){
         try{
             UserDTO dto = userService.getData(userDetails.getUsername());
@@ -137,30 +130,25 @@ public class UserController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping("/eliminar-usuario")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER'")
     public ResponseEntity<Map<String, String>> deleteUser(@RequestBody AuthRequestDTO auth,
                                                           @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response =  new HashMap<>();
         try{
-            if (userService.hasRequiredRole(userDetails, "ADMIN", "MASTER")){
-                if (userService.getAuthUser(auth.getToken(), userDetails)){
-                    userService.deleteUser(auth.getIdentifier());
-                    recordService.registerAction(userDetails, "DELETE",
-                            "Desactivo usuario del sistema: " + auth.getIdentifier());
-                    response.put("message", "Usuario eliminado exitosamente");
-                    return ResponseEntity.ok(response);
-                }else{
-                    response.put("error", "No autorizado");
-                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-                }
+            if (userService.getAuthUser(auth.getToken(), userDetails)){
+                userService.deleteUser(auth.getIdentifier());
+                response.put("message", "Usuario eliminado exitosamente");
+                recordService.registerAction(userDetails, "DELETE",
+                        "Desactivo usuario del sistema: " + auth.getIdentifier());
+                return ResponseEntity.ok(response);
             }else{
-                recordService.registerAction(userDetails, "LIST_USER_FAILURE",
-                        "Error: " + userDetails.getUsername() + " ingreso indebido");
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                response.put("error", "No autorizado");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
             }
         }catch (Exception e){
             response.put("error", e.getMessage());
             recordService.registerAction(userDetails, "DELETE_FAILURE",
-                    "ERROR: desactivar usuario(" + auth.getIdentifier() + "): " + e.getMessage());
+                    String.format("ERROR: desactivar usuario %s (%s)", auth.getIdentifier(), e.getMessage()));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
@@ -172,30 +160,25 @@ public class UserController {
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping("/activar-usuario")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER'")
     public ResponseEntity<Map<String, String>> activeUser(@RequestBody AuthRequestDTO auth,
                                                           @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response =  new HashMap<>();
         try{
-            if (userService.hasRequiredRole(userDetails, "ADMIN", "MASTER")){
-                if (userService.getAuthUser(auth.getToken(), userDetails)){
-                    userService.activateUser(auth.getIdentifier());
-                    recordService.registerAction(userDetails, "ACTIVATE ",
-                            "activo usuario del sistema: " + auth.getIdentifier());
-                    response.put("message", "Usuario activado exitosamente");
-                    return ResponseEntity.ok(response);
-                }else{
-                    response.put("error", "No autorizado");
-                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-                }
+            if (userService.getAuthUser(auth.getToken(), userDetails)){
+                userService.activateUser(auth.getIdentifier());
+                response.put("message", "Usuario activado exitosamente");
+                recordService.registerAction(userDetails, "ACTIVATE ",
+                        "activo usuario del sistema: " + auth.getIdentifier());
+                return ResponseEntity.ok(response);
             }else{
-                recordService.registerAction(userDetails, "LIST_USER_FAILURE",
-                        "Error: " + userDetails.getUsername() + " ingreso indebido");
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                response.put("error", "No autorizado");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
             }
         }catch (Exception e){
             response.put("error", e.getMessage());
             recordService.registerAction(userDetails, "ACTIVATE_FAILURE",
-                    "ERROR: activar usuario(" + auth.getIdentifier() + "): " + e.getMessage());
+                    String.format("ERROR: activar usuario %s (%s)", auth.getIdentifier(), e.getMessage()));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
