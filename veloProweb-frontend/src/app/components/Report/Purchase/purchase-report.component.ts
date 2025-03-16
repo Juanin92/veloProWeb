@@ -30,6 +30,7 @@ export class PurchaseReportComponent implements OnInit, AfterViewInit {
   finalDate: string = '';
   sortDate: boolean = true;
   sortTotal: boolean = true;
+  sortPosition: boolean = true;
 
   constructor(
     private purchaseService: PurchaseService,
@@ -176,6 +177,11 @@ export class PurchaseReportComponent implements OnInit, AfterViewInit {
       const dateB = b.purchaseTotal;
       return this.sortTotal ? dateA - dateB : dateB - dateA;
     });
+  }
+
+  toggleSortPosition(): void{
+    this.filteredPurchaseList.reverse();
+    this.sortPosition = !this.sortPosition;
   }
 
   /**
