@@ -7,6 +7,8 @@ import { DetailSaleRequestDTO } from '../../../models/DTO/detail-sale-request-dt
 import { TooltipService } from '../../../utils/tooltip.service';
 import { PaymentDispatchComponent } from "../payment-dispatch/payment-dispatch.component";
 import { DispatchModalComponent } from "../dispatch-modal/dispatch-modal.component";
+import { Role } from '../../../models/enum/role';
+import { RoleService } from '../../../services/User/role.service';
 
 @Component({
   selector: 'app-dispatch',
@@ -22,9 +24,11 @@ export class DispatchComponent implements OnInit{
   saleDetailDispatchList: DetailSaleRequestDTO[] = [];
   selectedDispatch: Dispatch | null = null;
   totalSum: number = 0;
+  role = Role;
 
   constructor(
     private dispatchService: DispatchService,
+    protected roleService: RoleService,
     private tooltip: TooltipService){}
 
   ngOnInit(): void {

@@ -11,6 +11,8 @@ import { SaleService } from '../../../services/Sale/sale.service';
 import { PaymentMethod } from '../../../models/enum/payment-method';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ModalService } from '../../../utils/modal.service';
+import { Role } from '../../../models/enum/role';
+import { RoleService } from '../../../services/User/role.service';
 
 @Component({
   selector: 'app-payment-dispatch',
@@ -40,11 +42,13 @@ export class PaymentDispatchComponent implements OnChanges, OnInit {
   isOk: boolean = false;
   showSwitch: boolean = false;
   showComment: boolean = false;
+  role = Role;
 
   constructor(
     private customerService: CustomerService,
     private saleService: SaleService,
     private notification: NotificationService,
+    protected roleService: RoleService,
     public modalService: ModalService) {
     this.requestDTO = this.initializeRequestDTO();
   }
