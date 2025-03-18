@@ -28,7 +28,7 @@ public class StockController {
      * @return - ResponseEntity con una lista de los productos
      */
     @GetMapping()
-    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER','SELLER', 'WAREHOUSE')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MASTER','SELLER', 'WAREHOUSE', 'GUEST')")
     public ResponseEntity<List<Product>> getListProducts(){
         return ResponseEntity.ok(productService.getAll());
     }
