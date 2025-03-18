@@ -81,7 +81,7 @@
       </a>
     </li>
     <li
-      *ngIf="roleService.getRole() !== role.SELLER && roleService.getRole() !== role.GUEST"
+      *ngIf="roleService.getRole() !== role.GUEST"
       class="w-100"
       data-bs-toggle="tooltip"
       data-bs-placement="right"
@@ -91,6 +91,7 @@
       <a
         class="nav-link d-flex align-items-center"
         [routerLink]="['/main/reportes']"
+        (click)="isSellerRole()"
       >
         <span class="icon d-flex align-items-center"
           ><img
