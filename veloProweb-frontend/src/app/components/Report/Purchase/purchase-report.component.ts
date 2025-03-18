@@ -11,8 +11,7 @@ import { NotificationService } from '../../../utils/notification-service.service
 import { firstValueFrom } from 'rxjs';
 import { DetailPurchaseRequestDTO } from '../../../models/DTO/detail-purchase-request-dto';
 import { ExcelService } from '../../../utils/excel.service';
-import { Role } from '../../../models/enum/role';
-import { RoleService } from '../../../services/User/role.service';
+import { ReportPermissionsService } from '../../../services/Permissions/report-permissions.service';
 
 @Component({
   selector: 'app-purchase-report',
@@ -33,7 +32,6 @@ export class PurchaseReportComponent implements OnInit, AfterViewInit {
   sortDate: boolean = true;
   sortTotal: boolean = true;
   sortPosition: boolean = true;
-  role = Role;
 
   constructor(
     private purchaseService: PurchaseService,
@@ -42,7 +40,7 @@ export class PurchaseReportComponent implements OnInit, AfterViewInit {
     private tooltip: TooltipService,
     private renderer: Renderer2,
     private excelService: ExcelService,
-    protected roleService: RoleService) { }
+    protected permission: ReportPermissionsService) { }
 
   ngAfterViewInit(): void {
     this.renderer.listen('document', 'mouseover', () => {

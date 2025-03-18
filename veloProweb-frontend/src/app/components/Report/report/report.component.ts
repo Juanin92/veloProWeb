@@ -8,8 +8,7 @@ import { NotificationService } from '../../../utils/notification-service.service
 import { ReportDTO } from '../../../models/DTO/Report/report-dto';
 import { ChartService } from '../../../utils/chart.service';
 import { ProductReportDTO } from '../../../models/DTO/Report/product-report-dto';
-import { Role } from '../../../models/enum/role';
-import { RoleService } from '../../../services/User/role.service';
+import { ReportPermissionsService } from '../../../services/Permissions/report-permissions.service';
 
 @Component({
   selector: 'app-report',
@@ -34,11 +33,10 @@ export class ReportComponent implements OnInit, AfterViewInit {
   highestDay: string = '';
   lowestDay: string = '';
   trend: string = '';
-  role = Role;
 
   constructor(
     private reportService: ReportServiceService,
-    protected roleService: RoleService,
+    protected permission: ReportPermissionsService,
     private notification: NotificationService,
     private chartService: ChartService
   ) { }

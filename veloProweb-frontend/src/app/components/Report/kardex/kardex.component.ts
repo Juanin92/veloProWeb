@@ -5,8 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TooltipService } from '../../../utils/tooltip.service';
 import { ExcelService } from '../../../utils/excel.service';
-import { Role } from '../../../models/enum/role';
-import { RoleService } from '../../../services/User/role.service';
+import { ReportPermissionsService } from '../../../services/Permissions/report-permissions.service';
 
 @Component({
   selector: 'app-kardex',
@@ -22,13 +21,12 @@ export class KardexComponent implements OnInit, AfterViewInit{
   textFilter: string = '';
   sortDate: boolean = true;
   sortPosition: boolean = true;
-  role = Role;
 
   constructor(
     private kardexService: KardexServiceService,
     private tooltip: TooltipService,
     private excelService: ExcelService,
-    protected roleService: RoleService
+    protected permission: ReportPermissionsService
   ){}
 
   ngAfterViewInit(): void {

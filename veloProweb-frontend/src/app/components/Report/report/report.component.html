@@ -1,8 +1,8 @@
-<div *ngIf="roleService.getRole() !== role.GUEST && roleService.getRole() !== role.SELLER" class="container-fluid vh-100 d-flex flex-column p-2">
+<div *ngIf="permission.canViewReport()" class="container-fluid vh-100 d-flex flex-column p-2">
     <div class="row flex-grow-1">
         <div class="col-12 d-flex flex-column">
             <div class="row mb-1 justify-content-around">
-                <div *ngIf="roleService.getRole() !== role.WAREHOUSE" class="col-md-4 mb-2">
+                <div *ngIf="permission.canSaleReport()" class="col-md-4 mb-2">
                     <a class="btn btn-sm btn-primary w-100" [routerLink]="['/main/ventas-reporte']"
                         target="_blank">Ventas</a>
                 </div>

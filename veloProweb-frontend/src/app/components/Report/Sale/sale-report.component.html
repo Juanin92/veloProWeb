@@ -1,4 +1,4 @@
-<div *ngIf="roleService.getRole() !== role.WAREHOUSE && roleService.getRole() !== role.GUEST" class="container-fluid d-flex flex-column p-1">
+<div *ngIf="permission.canViewSaleReport()" class="container-fluid d-flex flex-column p-1">
     <!-- INPUT AREA -->
     <div class="card shadow mb-2">
         <div class="card-body p-0">
