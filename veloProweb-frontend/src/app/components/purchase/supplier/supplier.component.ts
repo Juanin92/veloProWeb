@@ -5,6 +5,8 @@ import { Supplier } from '../../../models/Entity/Purchase/supplier';
 import { SupplierValidator } from '../../../validation/supplier-validator';
 import { SupplierService } from '../../../services/Purchase/supplier.service';
 import { NotificationService } from '../../../utils/notification-service.service';
+import { Role } from '../../../models/enum/role';
+import { RoleService } from '../../../services/User/role.service';
 
 @Component({
   selector: 'app-supplier',
@@ -22,10 +24,12 @@ export class SupplierComponent implements OnInit {
   updateStatus: boolean = false; //Estado para mostrar el formulario de actualización
   validator = SupplierValidator;
   touchedFields: Record<string, boolean> = {};
+  role = Role;
 
   constructor(
     private supplierService: SupplierService,
-    private notification: NotificationService) {
+    private notification: NotificationService,
+    protected roleService: RoleService) {
     this.newSupplier = this.initializeSupplier();
   }
 

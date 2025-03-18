@@ -1,4 +1,4 @@
-<div class="container-fluid d-flex flex-lg-row flex-column p-3">
+<div *ngIf="roleService.getRole() !== role.SELLER && roleService.getRole() !== role.GUEST" class="container-fluid d-flex flex-lg-row flex-column p-3">
     <div class="table-responsive text-center w-100 w-lg-50 mb-3">
         <table class="table table-hover">
             <thead class="table-info">
