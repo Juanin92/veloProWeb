@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Input} from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { TooltipService } from '../../utils/tooltip.service';
 import { AuthService } from '../../services/User/auth.service';
 import { Role } from '../../models/enum/role';
@@ -19,9 +19,16 @@ export class MenuComponent implements AfterViewInit{
   role = Role;
 
   constructor(private tooltipService: TooltipService, 
-    protected roleService: RoleService){}
+    protected roleService: RoleService,
+    private router: Router){}
 
   ngAfterViewInit(): void {
     this.tooltipService.initializeTooltips();
+  }
+
+  isSellerRole(): void{
+    if(this.roleService.getRole() === this.role.SELLER){
+      this.router.navigate(['/main/ventas-reporte']);
+    } 
   }
 }
