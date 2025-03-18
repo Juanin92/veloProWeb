@@ -12,4 +12,8 @@ export class UserPermissionsService {
   canViewUser(): boolean {
     return this.auth.getRole() === Role.MASTER && this.auth.getRole() === Role.ADMIN;
   }
+  canViewAlert(): boolean {
+    return this.auth.getRole() === Role.MASTER && this.auth.getRole() === Role.ADMIN 
+    && this.auth.getRole() === Role.WAREHOUSE;
+  }
 }
