@@ -8,8 +8,7 @@ import { DetailSaleRequestDTO } from '../../../models/DTO/detail-sale-request-dt
 import { DispatchService } from '../../../services/Sale/dispatch.service';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { SaleDetailDTO } from '../../../models/DTO/sale-detail-dto';
-import { RoleService } from '../../../services/User/role.service';
-import { Role } from '../../../models/enum/role';
+import { DispatchPermissionsService } from '../../../services/Permissions/dispatch-permissions.service';
 
 @Component({
   selector: 'app-dispatch-modal',
@@ -27,7 +26,6 @@ export class DispatchModalComponent implements OnInit, OnChanges{
   selectedDispatch: Dispatch | null = null;
   saleDetailDTOList: SaleDetailDTO[] = [];
   totalSum: number = 0;
-  role = Role;
   dispatch: Dispatch = {
       id: 0,
       trackingNumber: '',
@@ -43,7 +41,7 @@ export class DispatchModalComponent implements OnInit, OnChanges{
   
   constructor(
       private dispatchService: DispatchService,
-      protected roleService: RoleService,
+      protected permission: DispatchPermissionsService,
       private notification: NotificationService,
       public modalService: ModalService){}
 

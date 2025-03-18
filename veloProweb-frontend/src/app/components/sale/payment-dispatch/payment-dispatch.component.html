@@ -1,5 +1,5 @@
 <!-- MODAL DISPATCH PAYMENT -->
-<div *ngIf="roleService.getRole() !== role.WAREHOUSE && roleService.getRole() !== role.GUEST" class="modal fade" id="dispatchPaymentModal" tabindex="-1" aria-labelledby="dispatchPaymentModal">
+<div *ngIf="permission.canViewDispatchLayout()" class="modal fade" id="dispatchPaymentModal" tabindex="-1" aria-labelledby="dispatchPaymentModal">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">

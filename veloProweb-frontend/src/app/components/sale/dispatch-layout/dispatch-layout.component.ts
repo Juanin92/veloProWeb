@@ -3,8 +3,7 @@ import { Dispatch } from '../../../models/Entity/Sale/dispatch';
 import { DispatchService } from '../../../services/Sale/dispatch.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RoleService } from '../../../services/User/role.service';
-import { Role } from '../../../models/enum/role';
+import { DispatchPermissionsService } from '../../../services/Permissions/dispatch-permissions.service';
 
 @Component({
   selector: 'app-dispatch-layout',
@@ -21,11 +20,10 @@ export class DispatchLayoutComponent implements OnInit{
   sortTrackingNumber: boolean = true;
   sortDeliveryDate: boolean = true;
   sortCreatedDate: boolean = true;
-  role = Role;
 
   constructor(
     private dispatchService: DispatchService,
-    protected roleService: RoleService){}
+    protected permission: DispatchPermissionsService){}
 
   ngOnInit(): void {
     this.getDispatches();

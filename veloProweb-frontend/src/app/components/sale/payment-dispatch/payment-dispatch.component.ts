@@ -3,7 +3,6 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { FormsModule } from '@angular/forms';
 import { Dispatch } from '../../../models/Entity/Sale/dispatch';
 import { DetailSaleRequestDTO } from '../../../models/DTO/detail-sale-request-dto';
-import { DispatchService } from '../../../services/Sale/dispatch.service';
 import { CustomerService } from '../../../services/customer/customer.service';
 import { Customer } from '../../../models/Entity/Customer/customer.model';
 import { SaleRequestDTO } from '../../../models/DTO/sale-request-dto';
@@ -11,8 +10,7 @@ import { SaleService } from '../../../services/Sale/sale.service';
 import { PaymentMethod } from '../../../models/enum/payment-method';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ModalService } from '../../../utils/modal.service';
-import { Role } from '../../../models/enum/role';
-import { RoleService } from '../../../services/User/role.service';
+import { DispatchPermissionsService } from '../../../services/Permissions/dispatch-permissions.service';
 
 @Component({
   selector: 'app-payment-dispatch',
@@ -42,13 +40,12 @@ export class PaymentDispatchComponent implements OnChanges, OnInit {
   isOk: boolean = false;
   showSwitch: boolean = false;
   showComment: boolean = false;
-  role = Role;
 
   constructor(
     private customerService: CustomerService,
     private saleService: SaleService,
     private notification: NotificationService,
-    protected roleService: RoleService,
+    protected permission: DispatchPermissionsService,
     public modalService: ModalService) {
     this.requestDTO = this.initializeRequestDTO();
   }
