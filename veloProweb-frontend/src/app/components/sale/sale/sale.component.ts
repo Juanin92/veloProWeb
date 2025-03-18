@@ -21,7 +21,7 @@ import { RoleService } from '../../../services/User/role.service';
 @Component({
   selector: 'app-sale',
   standalone: true,
-  imports: [FormsModule, CommonModule, ProductListComponent, DispatchComponent, DispatchModalComponent],
+  imports: [FormsModule, CommonModule, ProductListComponent, DispatchModalComponent],
   templateUrl: './sale.component.html',
   styleUrl: './sale.component.css'
 })

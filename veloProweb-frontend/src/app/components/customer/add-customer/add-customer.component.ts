@@ -7,8 +7,7 @@ import { CommonModule } from '@angular/common';
 import { CustomerHelperServiceService } from '../../../services/customer/customer-helper-service.service';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ModalService } from '../../../utils/modal.service';
-import { Role } from '../../../models/enum/role';
-import { RoleService } from '../../../services/User/role.service';
+import { CustomerPermissionsService } from '../../../services/Permissions/customer-permissions.service';
 
 @Component({
   selector: 'app-add-customer',
@@ -23,13 +22,11 @@ export class AddCustomerComponent {
   customerValidator = CustomerValidator; // Validador de para los datos del cliente.
   @Output() customerAdded = new EventEmitter<void>();
   touchedFields: Record<string, boolean> = {}; //Campo tocado en el DOM 
-  role = Role;
-
   constructor(
     private customerService: CustomerService,
     private customerHelper: CustomerHelperServiceService,
     private notification: NotificationService,
-    protected roleService: RoleService,
+    protected permission: CustomerPermissionsService,
     public modalService: ModalService) {
     //Se inicializa la variable con valores vacíos mediante el helper
     this.newCustomer = customerHelper.createEmptyCustomer();

@@ -11,8 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { PaymentValidator } from '../../../validation/payment-validator';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ModalService } from '../../../utils/modal.service';
-import { Role } from '../../../models/enum/role';
-import { RoleService } from '../../../services/User/role.service';
+import { CustomerPermissionsService } from '../../../services/Permissions/customer-permissions.service';
 
 @Component({
   selector: 'app-payment-customer',
@@ -33,14 +32,13 @@ export class PaymentCustomerComponent implements OnChanges {
   paymentValue: number = 0;
   selectedTickets: TicketHistory[] = []; //Lista de tickets seleccionados
   validation = PaymentValidator;
-  role = Role;
 
 
   constructor(
     private paymentService: PaymentCustomerService,
     private customerHelper: CustomerHelperServiceService,
     private ticketService: TicketHistoryService,
-    protected roleService: RoleService,
+    protected permission: CustomerPermissionsService,
     private notification: NotificationService,
     public modalService: ModalService) {
     this.selectedCustomer = customerHelper.createEmptyCustomer();

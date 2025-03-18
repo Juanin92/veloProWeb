@@ -10,9 +10,8 @@ import { CustomerHelperServiceService } from '../../services/customer/customer-h
 import { NotificationService } from '../../utils/notification-service.service';
 import { TooltipService } from '../../utils/tooltip.service';
 import { ModalService } from '../../utils/modal.service';
-import { AuthService } from '../../services/User/auth.service';
 import { Role } from '../../models/enum/role';
-import { RoleService } from '../../services/User/role.service';
+import { CustomerPermissionsService } from '../../services/Permissions/customer-permissions.service';
 
 @Component({
   selector: 'app-customer',
@@ -30,12 +29,11 @@ export class CustomerComponent implements OnInit, AfterViewInit {
   totalDebts: number = 0;
   sortDebt: boolean = true;
   sortPosition: boolean = true;
-  role = Role;
 
   constructor(
     private customerService: CustomerService,
     private customerHelper: CustomerHelperServiceService,
-    protected roleService: RoleService,
+    protected permission: CustomerPermissionsService,
     private notification: NotificationService,
     private tooltipService: TooltipService,
     private modalService: ModalService,

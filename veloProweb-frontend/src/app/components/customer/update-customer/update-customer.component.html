@@ -1,4 +1,4 @@
-    <div *ngIf="roleService.getRole() !== role.GUEST || roleService.getRole() !== role.WAREHOUSE || selectedCustomer" 
+    <div *ngIf="permission.canUpdateUser() || selectedCustomer" 
         class="modal fade" id="updateCustomer" tabindex="-1" aria-labelledby="updateCustomer" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -12,7 +12,7 @@
                             <input type="text" class="form-control" id="nameUpdateCustomer" placeholder="Ingrese nombre" name="name"
                                 [(ngModel)]="selectedCustomer.name"
                                 [ngClass]="{'is-invalid': !customerValidator.isFieldValid(selectedCustomer, 'name')}"
-                                [disabled]="selectedCustomer.debt > 0 || roleService.getRole() === role.SELLER" required />
+                                [disabled]="selectedCustomer.debt > 0 || permission.canChangeInputValue()" required />
                             <label for="nameUpdateCustomer" class="form-label">Nombre</label>
                             <div *ngIf="!customerValidator.isFieldValid(selectedCustomer, 'name')" cl
                                 class="invalid-feedback">
@@ -23,7 +23,7 @@
                             <input type="text" class="form-control" id="surnameUpdateCustomer" placeholder="Ingrese apellidos"
                                 name="surname" [(ngModel)]="selectedCustomer.surname"
                                 [ngClass]="{'is-invalid': !customerValidator.isFieldValid(selectedCustomer, 'surname')}"
-                                [disabled]="selectedCustomer.debt > 0 || roleService.getRole() === role.SELLER" required />
+                                [disabled]="selectedCustomer.debt > 0 || permission.canChangeInputValue()" required />
                             <label for="surnameUpdateCustomer" class="form-label">Apellidos</label>
                             <div *ngIf="!customerValidator.isFieldValid(selectedCustomer, 'surname')"
                                 class="invalid-feedback">
