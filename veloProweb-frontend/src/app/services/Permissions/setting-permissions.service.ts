@@ -13,13 +13,13 @@ export class SettingPermissionsService {
     return this.auth.getRole() !== Role.WAREHOUSE && this.auth.getRole() !== Role.GUEST;
   }
   canViewCashierMovements(): boolean {
-    return this.auth.getRole() === Role.MASTER && this.auth.getRole() === Role.ADMIN;
+    return this.auth.getRole() === Role.MASTER || this.auth.getRole() === Role.ADMIN;
   }
   canViewRegisters(): boolean {
     return this.auth.getRole() === Role.MASTER;
   }
   canViewTaskLayout(): boolean {
-    return this.auth.getRole() === Role.MASTER && this.auth.getRole() === Role.ADMIN;
+    return this.auth.getRole() === Role.MASTER || this.auth.getRole() === Role.ADMIN;
   }
   canViewDispatchLayout(): boolean{
     return this.auth.getRole() !== Role.WAREHOUSE && this.auth.getRole() !== Role.GUEST;
