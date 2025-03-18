@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AlertService } from '../../../services/User/alert.service';
 import { AlertModel } from '../../../models/Entity/alert-model';
 import { TooltipService } from '../../../utils/tooltip.service';
+import { UserPermissionsService } from '../../../services/Permissions/user-permissions.service';
 
 @Component({
   selector: 'app-alert',
@@ -25,6 +26,7 @@ export class AlertComponent implements OnInit{
   
   constructor(
     private alertService: AlertService,
+    protected permission: UserPermissionsService,
     private tooltip: TooltipService){}
 
   ngOnInit(): void {
