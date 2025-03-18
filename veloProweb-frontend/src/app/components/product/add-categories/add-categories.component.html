@@ -1,5 +1,5 @@
-<div class="modal fade" id="categoriesModal" tabindex="-1" aria-labelledby="categoriesModal" aria-hidden="true"
-    (hidden.bs.modal)="resetForms()">
+<div *ngIf="roleService.getRole() !== role.SELLER && roleService.getRole() !== role.GUEST" class="modal fade" id="categoriesModal" tabindex="-1" 
+    aria-labelledby="categoriesModal" aria-hidden="true" (hidden.bs.modal)="resetForms()">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content bg-dark-subtle text-light">
             <div class="modal-header text-center w-100 border-0">
