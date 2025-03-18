@@ -1,5 +1,5 @@
 <!-- MODAL DISPATCH -->
-<div *ngIf="roleService.getRole() !== role.WAREHOUSE" class="modal fade" id="dispatchModal" tabindex="-1" aria-labelledby="dispatchModal" aria-hidden="true">
+<div *ngIf="roleService.getRole() !== role.WAREHOUSE && roleService.getRole() !== role.GUEST" class="modal fade" id="dispatchModal" tabindex="-1" aria-labelledby="dispatchModal" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header text-center w-100">
