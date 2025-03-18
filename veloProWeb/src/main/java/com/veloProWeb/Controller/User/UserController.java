@@ -31,7 +31,7 @@ public class UserController {
      * @return - Lista con los datos de usuarios registrados
      */
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER' , 'SELLER', 'GUEST', 'WAREHOUSE')")
     public ResponseEntity<List<UserDTO>> getListUser(){
         return ResponseEntity.ok(userService.getAllUser());
     }
