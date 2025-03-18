@@ -1,5 +1,5 @@
 <div
-  *ngIf="roleService.getRole() !== role.SELLER && roleService.getRole() !== role.GUEST"
+  *ngIf="permission.canUpdateProduct()"
   class="modal fade"
   id="updateProduct"
   tabindex="-1"

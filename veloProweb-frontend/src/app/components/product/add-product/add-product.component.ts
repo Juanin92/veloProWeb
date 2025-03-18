@@ -15,8 +15,7 @@ import { SubcategoryService } from '../../../services/Product/subcategory.servic
 import { Category } from '../../../models/Entity/Product/category';
 import { Subcategory } from '../../../models/Entity/Product/subcategory';
 import { ModalService } from '../../../utils/modal.service';
-import { Role } from '../../../models/enum/role';
-import { RoleService } from '../../../services/User/role.service';
+import { ProductPermissionsService } from '../../../services/Permissions/product-permissions.service';
 
 @Component({
   selector: 'app-add-product',
@@ -39,7 +38,6 @@ export class AddProductComponent implements OnInit {
   categoryList: Category[] = [];
   subcategoryList: Subcategory[] = [];
   touchedFields: Record<string, boolean> = {};
-  role = Role;
 
   constructor(
     private productService: ProductService,
@@ -50,7 +48,7 @@ export class AddProductComponent implements OnInit {
     private helper: ProductHelperService,
     private notification: NotificationService,
     public modalService: ModalService,
-    protected roleService: RoleService) {
+    protected permission: ProductPermissionsService) {
     this.newProduct = helper.createEmptyProduct();
   }
 

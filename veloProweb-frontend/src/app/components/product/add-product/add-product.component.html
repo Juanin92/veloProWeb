@@ -1,4 +1,4 @@
-<div *ngIf="roleService.getRole() !== role.SELLER && roleService.getRole() !== role.GUEST" class="modal fade" id="addProduct" tabindex="-1" aria-labelledby="addProduct" aria-hidden="true"
+<div *ngIf="permission.canAddProduct()" class="modal fade" id="addProduct" tabindex="-1" aria-labelledby="addProduct" aria-hidden="true"
     (hidden.bs.modal)="resetProductForm()" (shown.bs.modal)="loadData()">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content border-0 shadow-lg rounded-3">

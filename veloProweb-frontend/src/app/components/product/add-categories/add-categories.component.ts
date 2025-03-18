@@ -12,8 +12,7 @@ import { ProductValidator } from '../../../validation/product-validator';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../../utils/notification-service.service';
-import { Role } from '../../../models/enum/role';
-import { RoleService } from '../../../services/User/role.service';
+import { ProductPermissionsService } from '../../../services/Permissions/product-permissions.service';
 
 @Component({
   selector: 'app-add-categories',
@@ -32,7 +31,6 @@ export class AddCategoriesComponent implements OnInit{
   validator = ProductValidator;
   categoryList: Category[] = [];
   touchedFields: Record<string, boolean> = {};
-  role = Role;
 
   constructor(
     private brandService: BrandService,
@@ -41,7 +39,7 @@ export class AddCategoriesComponent implements OnInit{
     private unitService: UnitService,
     private helper: ProductHelperService,
     private notification: NotificationService,
-    protected roleService: RoleService
+    protected permission: ProductPermissionsService
   ){
     this.newBrand = helper.createEmptyBrand();
     this.newCategory = helper.createEmptyCategory();

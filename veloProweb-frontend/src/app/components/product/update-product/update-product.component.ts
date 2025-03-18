@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { ProductService } from '../../../services/Product/product.service';
 import { ProductHelperService } from '../../../services/Product/product-helper.service';
 import { NotificationService } from '../../../utils/notification-service.service';
@@ -7,8 +7,7 @@ import { ProductValidator } from '../../../validation/product-validator';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ModalService } from '../../../utils/modal.service';
-import { Role } from '../../../models/enum/role';
-import { RoleService } from '../../../services/User/role.service';
+import { ProductPermissionsService } from '../../../services/Permissions/product-permissions.service';
 
 @Component({
   selector: 'app-update-product',
@@ -24,14 +23,13 @@ export class UpdateProductComponent implements OnChanges{
   validator = ProductValidator;
   stockChanged: boolean = false;
   originalStock: number;
-  role = Role;
 
   constructor(
     private productService: ProductService,
     private helper: ProductHelperService,
     private notification: NotificationService,
     public modalService: ModalService,
-    protected roleService: RoleService) {
+    protected permission: ProductPermissionsService) {
     this.selectedProduct = helper.createEmptyProduct();
     this.originalStock = this.selectedProduct.stock;
   }

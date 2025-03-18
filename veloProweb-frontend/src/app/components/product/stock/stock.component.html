@@ -24,7 +24,7 @@
             </div>
           </div>
         </div>
-        <div *ngIf="roleService.getRole() !== role.SELLER && roleService.getRole() !== role.GUEST" class="col-3 text-end">
+        <div *ngIf="permission.canAddProduct()" class="col-3 text-end">
           <div class="d-grid gap-2">
             <div class="d-flex gap-2">
               <button type="button" class="btn btn-outline-light btn-sm w-50 fw-bold text-uppercase"
@@ -52,7 +52,7 @@
       <!-- Vista Mobile -->
       <div class="d-lg-none">
         <div class="d-grid gap-2">
-          <div *ngIf="roleService.getRole() !== role.SELLER && roleService.getRole() !== role.GUEST" class="row row-cols-2 g-2 justify-content-center">
+          <div *ngIf="permission.canAddProduct()" class="row row-cols-2 g-2 justify-content-center">
             <div class="col">
               <button type="button" class="btn btn-outline-light btn-sm w-100 shadow-sm rounded-pill"
                 data-bs-toggle="modal" data-bs-target="#addProduct">
@@ -138,7 +138,7 @@
             </button>
           </th>
           <th scope="col">Estado</th>
-          <th *ngIf="roleService.getRole() !== role.SELLER && roleService.getRole() !== role.GUEST" scope="col">Acción</th>
+          <th *ngIf="permission.canUpdateProduct()" scope="col">Acción</th>
         </tr>
       </thead>
       <tbody class="table-group-divider text-center align-middle">
@@ -156,7 +156,7 @@
           <td [ngStyle]="{
               'background-color': statusColor(product.statusProduct)
             }"></td>
-          <td *ngIf="roleService.getRole() !== role.SELLER && roleService.getRole() !== role.GUEST" class="d-flex flex-row">
+          <td *ngIf="permission.canUpdateProduct()" class="d-flex flex-row">
             <button *ngIf=" product.statusProduct === statusProduct.AVAILABLE ||
                   product.statusProduct === statusProduct.UNAVAILABLE && product.buyPrice !== 0" 
                   class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#updateProduct">

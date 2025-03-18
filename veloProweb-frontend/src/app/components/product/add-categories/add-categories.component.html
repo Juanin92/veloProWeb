@@ -1,4 +1,4 @@
-<div *ngIf="roleService.getRole() !== role.SELLER && roleService.getRole() !== role.GUEST" class="modal fade" id="categoriesModal" tabindex="-1" 
+<div *ngIf="permission.canAddCategories()" class="modal fade" id="categoriesModal" tabindex="-1" 
     aria-labelledby="categoriesModal" aria-hidden="true" (hidden.bs.modal)="resetForms()">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content bg-dark-subtle text-light">
