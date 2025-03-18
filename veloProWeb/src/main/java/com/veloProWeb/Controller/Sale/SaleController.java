@@ -74,7 +74,7 @@ public class SaleController {
      * @return - Lista con las ventas registradas
      */
     @GetMapping("/lista-venta")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'SELLER')")
     public List<SaleRequestDTO> getAllSales(@AuthenticationPrincipal UserDetails userDetails){
         recordService.registerAction(userDetails, "VIEW", "Reporte - Lista de ventas realizadas");
         return saleService.getAllSale();
