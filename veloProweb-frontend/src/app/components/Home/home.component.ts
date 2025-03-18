@@ -8,8 +8,8 @@ import { DispatchComponent } from "../sale/dispatch/dispatch.component";
 import { Dispatch } from '../../models/Entity/Sale/dispatch';
 import { MessageComponent } from "../user/message/message.component";
 import { TaskRequestDTO } from '../../models/DTO/task-request-dto';
-import { RoleService } from '../../services/User/role.service';
-import { Role } from '../../models/enum/role';
+import { DispatchPermissionsService } from '../../services/Permissions/dispatch-permissions.service';
+import { UserPermissionsService } from '../../services/Permissions/user-permissions.service';
 
 @Component({
   selector: 'app-home',
@@ -24,7 +24,6 @@ export class HomeComponent{
   messageList: Message[] = [];
   alertList: AlertModel[] = [];
   dispatchList: Dispatch[] = [];
-  role = Role;
   expanded = {
     notification: false,
     dispatch: false,
@@ -32,7 +31,8 @@ export class HomeComponent{
     alert: false
   };
 
-  constructor(protected roleService: RoleService) { }
+  constructor(protected permissionDispatch: DispatchPermissionsService, 
+    protected permissionAlert: UserPermissionsService) { }
 
   getMessagesUpdated(messages: Message[]): void{
     this.messageList = messages;
