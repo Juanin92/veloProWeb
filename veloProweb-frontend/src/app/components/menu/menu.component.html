@@ -21,7 +21,7 @@
       </a>
     </li>
     <li
-      *ngIf="roleService.getRole() !== role.WAREHOUSE || roleService.getRole() !== role.GUEST"
+      *ngIf="roleService.getRole() !== role.WAREHOUSE"
       class="w-100"
       data-bs-toggle="tooltip"
       data-bs-placement="right"
@@ -81,7 +81,7 @@
       </a>
     </li>
     <li
-      *ngIf="roleService.getRole() !== role.SELLER || roleService.getRole() !== role.GUEST"
+      *ngIf="roleService.getRole() !== role.SELLER && roleService.getRole() !== role.GUEST"
       class="w-100"
       data-bs-toggle="tooltip"
       data-bs-placement="right"
@@ -103,7 +103,8 @@
       </a>
     </li>
     <li
-      *ngIf="roleService.getRole() !== role.SELLER && roleService.getRole() !== role.GUEST && roleService.getRole() !== role.WAREHOUSE"
+      *ngIf="roleService.getRole() !== role.SELLER && roleService.getRole() !== role.GUEST && 
+        roleService.getRole() !== role.WAREHOUSE"
       class="w-100"
       data-bs-toggle="tooltip"
       data-bs-placement="right"
