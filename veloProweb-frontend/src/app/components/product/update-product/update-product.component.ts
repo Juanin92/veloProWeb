@@ -7,6 +7,8 @@ import { ProductValidator } from '../../../validation/product-validator';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ModalService } from '../../../utils/modal.service';
+import { Role } from '../../../models/enum/role';
+import { RoleService } from '../../../services/User/role.service';
 
 @Component({
   selector: 'app-update-product',
@@ -22,12 +24,14 @@ export class UpdateProductComponent implements OnChanges{
   validator = ProductValidator;
   stockChanged: boolean = false;
   originalStock: number;
+  role = Role;
 
   constructor(
     private productService: ProductService,
     private helper: ProductHelperService,
     private notification: NotificationService,
-    public modalService: ModalService) {
+    public modalService: ModalService,
+    protected roleService: RoleService) {
     this.selectedProduct = helper.createEmptyProduct();
     this.originalStock = this.selectedProduct.stock;
   }
