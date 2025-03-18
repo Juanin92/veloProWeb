@@ -13,10 +13,8 @@ import { CustomerService } from '../../../services/customer/customer.service';
 import { SaleService } from '../../../services/Sale/sale.service';
 import { SaleRequestDTO } from '../../../models/DTO/sale-request-dto';
 import { PaymentMethod } from '../../../models/enum/payment-method';
-import { DispatchComponent } from "../dispatch/dispatch.component";
 import { DispatchModalComponent } from "../dispatch-modal/dispatch-modal.component";
-import { Role } from '../../../models/enum/role';
-import { RoleService } from '../../../services/User/role.service';
+import { SalePermissionsService } from '../../../services/Permissions/sale-permissions.service';
 
 @Component({
   selector: 'app-sale',
@@ -48,7 +46,6 @@ export class SaleComponent implements AfterViewInit, OnInit {
   isMixPayment: boolean =  false;
   isOk: boolean = false;
   editingFields: { [key: string]: { quantity?: boolean; } } = {}; // (Map) Campos de edición activa para cantidades o precios en detalles de compra
-  role = Role;
 
 
   constructor(
@@ -57,7 +54,7 @@ export class SaleComponent implements AfterViewInit, OnInit {
     private tooltipService: TooltipService,
     private notification: NotificationService,
     private helper: SaleHelperService,
-    protected roleService: RoleService) {
+    protected permission: SalePermissionsService) {
     this.sale = helper.createEmptySale();
   }
 
