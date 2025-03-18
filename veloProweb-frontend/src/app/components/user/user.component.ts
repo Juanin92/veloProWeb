@@ -10,6 +10,7 @@ import { UserDTO } from '../../models/DTO/user-dto';
 import { Modal } from 'bootstrap';
 import { AuthRequestDTO } from '../../models/DTO/auth-request-dto';
 import * as bootstrap from 'bootstrap';
+import { UserPermissionsService } from '../../services/Permissions/user-permissions.service';
 
 @Component({
   selector: 'app-user',
@@ -50,6 +51,7 @@ export class UserComponent implements OnInit, AfterViewInit {
 
   constructor(
     private userService: UserService,
+    protected permission: UserPermissionsService,
     private notification: NotificationService,
     private tooltipService: TooltipService,
     private renderer: Renderer2) {

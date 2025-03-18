@@ -7,6 +7,7 @@ import { NotificationService } from '../../../utils/notification-service.service
 import { UpdateUserDTO } from '../../../models/DTO/update-user-dto';
 import { ModalService } from '../../../utils/modal.service';
 import { UserValidator } from '../../../validation/user-validator';
+import { UserPermissionsService } from '../../../services/Permissions/user-permissions.service';
 
 @Component({
   selector: 'app-update-user-modal',
@@ -28,6 +29,7 @@ export class UpdateUserModalComponent implements OnInit{
 
   constructor(
     private userService: UserService,
+    protected permission: UserPermissionsService,
     private notification: NotificationService,
     public modal: ModalService) {}
 
