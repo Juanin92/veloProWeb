@@ -1,4 +1,4 @@
-<div *ngIf="roleService.getRole() !== role.SELLER && roleService.getRole() !== role.GUEST" class="contianer-fluid d-flex flex-lg-row flex-column p-1 min-vh-100">
+<div *ngIf="permission.canViewPurchase()" class="contianer-fluid d-flex flex-lg-row flex-column p-1 min-vh-100">
   <div
     class="d-flex flex-column align-items-center text-center w-25 border border-start-0 border-top-0 border-bottom-0 border-3 border-white vh-100 overflow-y-auto">
     <p class="fw-bold fs-1 mb-0">Compra</p>
