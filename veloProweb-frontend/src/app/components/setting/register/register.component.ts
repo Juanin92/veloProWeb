@@ -3,6 +3,7 @@ import { Record } from '../../../models/Entity/record';
 import { RecordService } from '../../../services/record.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { SettingPermissionsService } from '../../../services/Permissions/setting-permissions.service';
 
 @Component({
   selector: 'app-register',
@@ -21,7 +22,8 @@ export class RegisterComponent implements OnInit{
   sortActionDate: boolean = true;
   sortPosition: boolean = true;
 
-  constructor(private recordService: RecordService){}
+  constructor(private recordService: RecordService, 
+    protected permission: SettingPermissionsService){}
 
   ngOnInit(): void {
     this.getRecords();

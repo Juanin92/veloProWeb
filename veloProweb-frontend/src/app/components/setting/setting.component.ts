@@ -7,6 +7,7 @@ import { CashierMovementsComponent } from "./cashier-movements/cashier-movements
 import { DispatchLayoutComponent } from "../sale/dispatch-layout/dispatch-layout.component";
 import { RegisterComponent } from "./register/register.component";
 import { TaskLayoutComponent } from "./task-layout/task-layout.component";
+import { SettingPermissionsService } from '../../services/Permissions/setting-permissions.service';
 
 @Component({
   selector: 'app-setting',
@@ -28,7 +29,8 @@ export class SettingComponent{
   access: boolean = false;
   pass: string = '';
 
-  constructor(private localDataService: LocalDataService){}
+  constructor(private localDataService: LocalDataService,
+    protected permission: SettingPermissionsService){}
 
   getData(): void{
     this.localDataService.getData().subscribe({

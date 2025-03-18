@@ -1,28 +1,28 @@
-<div class="d-flex flex-column vh-100">
+<div *ngIf="permission.canViewSetting()" class="d-flex flex-column vh-100">
     <div class="container-fluid d-flex flex-column">
         <ul class="nav nav-tabs mb-3 mt-1" id="tabs">
-            <li class="nav-item active">
+            <li *ngIf="permission.canViewCashierMovements()" class="nav-item active">
                 <button class="nav-link active" id="tab-cashier" data-bs-toggle="tab" data-bs-target="#content-cashier">
                     Registro de Caja
                 </button>
             </li>
-            <li class="nav-item">
+            <li *ngIf="permission.canViewCashierMovements()" class="nav-item">
                 <button (click)="getData()" class="nav-link" id="tab-company" data-bs-toggle="tab" data-bs-target="#content-company">
                     Datos de la Empresa
                 </button>
             </li>
-            <li class="nav-item">
+            <li *ngIf="permission.canViewTaskLayout()" class="nav-item">
                 <button class="nav-link" id="tab-task" data-bs-toggle="tab" data-bs-target="#content-tasks">
                     Tareas
                 </button>
             </li>
-            <li class="nav-item">
+            <li *ngIf="permission.canViewDispatchLayout()" class="nav-item">
                 <button class="nav-link" id="tab-dispatches" data-bs-toggle="tab"
                     data-bs-target="#content-dispatches">
                     Despachos
                 </button>
             </li>
-            <li class="nav-item">
+            <li *ngIf="permission.canViewRegisters()" class="nav-item">
                 <button class="nav-link" id="tab-record" data-bs-toggle="tab" data-bs-target="#content-record">
                     Historial
                 </button>

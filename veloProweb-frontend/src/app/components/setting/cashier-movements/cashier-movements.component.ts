@@ -3,6 +3,7 @@ import { CashRegister } from '../../../models/Entity/cash-register';
 import { CommonModule } from '@angular/common';
 import { CashRegisterService } from '../../../services/Sale/cash-register.service';
 import { FormsModule } from '@angular/forms';
+import { SettingPermissionsService } from '../../../services/Permissions/setting-permissions.service';
 
 @Component({
   selector: 'app-cashier-movements',
@@ -22,7 +23,8 @@ export class CashierMovementsComponent implements OnInit{
   sortAmountCloseCash: boolean = true;
   sortAmountClosePos: boolean = true;
 
-  constructor(private cashRegisterService: CashRegisterService){}
+  constructor(private cashRegisterService: CashRegisterService, 
+    protected permission: SettingPermissionsService){}
 
   ngOnInit(): void {
     this.getCashRegisters();

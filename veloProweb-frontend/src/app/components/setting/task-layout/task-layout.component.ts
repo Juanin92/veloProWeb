@@ -7,6 +7,7 @@ import { NotificationService } from '../../../utils/notification-service.service
 import { UserDTO } from '../../../models/DTO/user-dto';
 import { UserService } from '../../../services/User/user.service';
 import * as bootstrap from 'bootstrap';
+import { SettingPermissionsService } from '../../../services/Permissions/setting-permissions.service';
 
 @Component({
   selector: 'app-task-layout',
@@ -32,7 +33,8 @@ export class TaskLayoutComponent implements OnInit, AfterViewInit {
   constructor(
     private taskService: TaskService,
     private userService: UserService,
-    private notification: NotificationService) {
+    private notification: NotificationService,
+    protected permission: SettingPermissionsService) {
     this.task = this.initializeTask();
   }
 
