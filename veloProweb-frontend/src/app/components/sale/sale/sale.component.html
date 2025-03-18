@@ -215,6 +215,7 @@
               />
             </button>
             <button
+              *ngIf="roleService.getRole() !== role.GUEST"
               [disabled]="saleDetailList.length === 0"
               class="btn btn-outline-primary border-0 rounded-pill p-2"
               data-bs-toggle="tooltip"
@@ -235,6 +236,7 @@
               />
             </button>
             <button
+              *ngIf="roleService.getRole() !== role.GUEST"
               [disabled]="saleDetailList.length === 0"
               class="btn btn-outline-primary border-0 rounded-pill p-2"
               data-bs-toggle="tooltip"
