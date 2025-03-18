@@ -16,6 +16,8 @@ import { Router } from '@angular/router';
 import { AddCategoriesComponent } from '../../product/add-categories/add-categories.component';
 import { AddProductComponent } from "../../product/add-product/add-product.component";
 import { ProductListComponent } from "../../product/productList/product-list.component";
+import { Role } from '../../../models/enum/role';
+import { RoleService } from '../../../services/User/role.service';
 
 @Component({
   selector: 'app-purchase',
@@ -35,6 +37,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
   total: number = 0; //Total acumulado de la compra
   TotalPurchaseDB: number = 0; //Total de compras registradas en la BD
   editingFields: { [key: string]: { quantity?: boolean; price?: boolean } } = {}; // (Map) Campos de edición activa para cantidades o precios en detalles de compra
+  role = Role;
 
   constructor(
     private purchaseService: PurchaseService,
@@ -42,7 +45,8 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     private helper: PurchaseHelperService,
     private tooltipService: TooltipService,
     private notification: NotificationService,
-    private route: Router
+    private route: Router,
+    protected roleService: RoleService
   ){
     this.purchase = helper.createEmptyPurchase();
   }
