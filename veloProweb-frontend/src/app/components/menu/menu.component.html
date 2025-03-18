@@ -21,7 +21,7 @@
       </a>
     </li>
     <li
-      *ngIf="roleService.getRole() !== role.WAREHOUSE"
+      *ngIf="permission.canViewSale()"
       class="w-100"
       data-bs-toggle="tooltip"
       data-bs-placement="right"
@@ -59,7 +59,7 @@
       </a>
     </li>
     <li
-      *ngIf="roleService.getRole() !== role.WAREHOUSE"
+       *ngIf="permission.canViewCustomer()"
       class="w-100"
       data-bs-toggle="tooltip"
       data-bs-placement="right"
@@ -81,7 +81,7 @@
       </a>
     </li>
     <li
-      *ngIf="roleService.getRole() !== role.GUEST"
+      *ngIf="permission.canViewReport()"
       class="w-100"
       data-bs-toggle="tooltip"
       data-bs-placement="right"
@@ -104,8 +104,7 @@
       </a>
     </li>
     <li
-      *ngIf="roleService.getRole() !== role.SELLER && roleService.getRole() !== role.GUEST && 
-        roleService.getRole() !== role.WAREHOUSE"
+      *ngIf="permission.canViewSetting()"
       class="w-100"
       data-bs-toggle="tooltip"
       data-bs-placement="right"
@@ -125,8 +124,7 @@
       </a>
     </li>
     <li
-      *ngIf="roleService.getRole() !== role.WAREHOUSE && roleService.getRole() !== role.GUEST 
-        && roleService.getRole() !== role.SELLER"
+      *ngIf="permission.canViewUser()"
       class="w-100"
       data-bs-toggle="tooltip"
       data-bs-placement="right"
