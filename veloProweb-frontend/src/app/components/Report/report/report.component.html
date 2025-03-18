@@ -1,4 +1,4 @@
-<div class="container-fluid vh-100 d-flex flex-column p-2">
+<div *ngIf="roleService.getRole() !== role.GUEST" class="container-fluid vh-100 d-flex flex-column p-2">
     <div class="row flex-grow-1">
         <div class="col-12 d-flex flex-column">
             <div class="row mb-1 justify-content-around">
