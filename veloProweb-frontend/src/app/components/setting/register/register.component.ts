@@ -22,7 +22,7 @@ export class RegisterComponent implements OnInit{
   sortActionDate: boolean = true;
   sortPosition: boolean = true;
 
-  constructor(private recordService: RecordService, 
+  constructor(private recordService: RecordService,
     protected permission: SettingPermissionsService){}
 
   ngOnInit(): void {
