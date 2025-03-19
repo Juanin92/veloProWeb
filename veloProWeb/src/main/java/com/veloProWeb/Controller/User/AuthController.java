@@ -1,10 +1,12 @@
 package com.veloProWeb.Controller.User;
 
 import com.veloProWeb.Model.DTO.LoginRequest;
+import com.veloProWeb.Security.EncryptionService;
 import com.veloProWeb.Security.JwUtil;
 import com.veloProWeb.Service.Record.IRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +27,7 @@ import java.util.Map;
 public class AuthController {
 
     @Autowired private IRecordService recordService;
+    @Autowired private EncryptionService encryptionService;
     @Autowired private AuthenticationManager authenticationManager;
     @Autowired private UserDetailsService userDetailsService;
     @Autowired private JwUtil jwtUtil;
@@ -32,19 +35,26 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest user) {
         Map<String, String> response = new HashMap<>();
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
-        );
-        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
-        String jwtToken = jwtUtil.generateToken(userDetails);
-        response.put("token", jwtToken);
-        String role = userDetails.getAuthorities().stream()
-                .findFirst()
-                .map(GrantedAuthority::getAuthority)
-                .orElse(null);
-        response.put("role", role);
-        recordService.registerEntry(userDetails);
-        return ResponseEntity.ok(response);
+        try{
+            String decryptedPassword = encryptionService.decrypt(user.getPassword());
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(user.getUsername(), decryptedPassword)
+            );
+            UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+            String jwtToken = jwtUtil.generateToken(userDetails);
+            response.put("token", jwtToken);
+            String role = userDetails.getAuthorities().stream()
+                    .findFirst()
+                    .map(GrantedAuthority::getAuthority)
+                    .orElse(null);
+            response.put("role", role);
+            recordService.registerEntry(userDetails);
+            return ResponseEntity.ok(response);
+        }catch (Exception e){
+            response.put("error", "Error de autenticación: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
     }
 
     @PostMapping("/logout")
@@ -59,6 +69,13 @@ public class AuthController {
             response.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
+    }
+
+    @GetMapping("/encriptado")
+    public ResponseEntity<String> getEncryptionKey() {
+        return ResponseEntity.ok()
+                .contentType(MediaType.TEXT_PLAIN)
+                .body(encryptionService.getEncryptionKey());
     }
 
     @GetMapping("/me")
