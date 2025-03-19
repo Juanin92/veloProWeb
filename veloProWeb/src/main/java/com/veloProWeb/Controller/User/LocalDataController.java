@@ -24,28 +24,9 @@ public class LocalDataController {
     @Autowired private IRecordService recordService;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'SELLER', 'WAREHOUSE', 'GUEST')")
     public List<LocalData> getData(){
         return localDataService.getData();
-    }
-
-    @PostMapping()
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
-    public ResponseEntity<Map<String, String>> saveData(@RequestBody LocalData data,
-                                                        @AuthenticationPrincipal UserDetails userDetails){
-        Map<String, String> response = new HashMap<>();
-        try{
-            localDataService.saveData(data);
-            response.put("message", "Información registrada");
-            recordService.registerAction(userDetails, "CREATE", String.format("Creación datos de la empresa %s",
-                    data.getName()));
-            return ResponseEntity.ok(response);
-        }catch (IllegalArgumentException e){
-            response.put("error", e.getMessage());
-            recordService.registerAction(userDetails, "CREATE_FAILURE",
-                    String.format("Error: crear datos empresa %s (%s)", data.getName(), e.getMessage()));
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
     }
 
     @PutMapping()
