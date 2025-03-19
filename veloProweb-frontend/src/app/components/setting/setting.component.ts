@@ -8,6 +8,7 @@ import { DispatchLayoutComponent } from "../sale/dispatch-layout/dispatch-layout
 import { RegisterComponent } from "./register/register.component";
 import { TaskLayoutComponent } from "./task-layout/task-layout.component";
 import { SettingPermissionsService } from '../../services/Permissions/setting-permissions.service';
+import { NotificationService } from '../../utils/notification-service.service';
 
 @Component({
   selector: 'app-setting',
@@ -30,16 +31,38 @@ export class SettingComponent{
   pass: string = '';
 
   constructor(private localDataService: LocalDataService,
-    protected permission: SettingPermissionsService){}
+    protected permission: SettingPermissionsService,
+    private notification: NotificationService){}
 
   getData(): void{
     this.localDataService.getData().subscribe({
       next:(list)=>{
         if(list.length === 1){
           this.data = list[0];
+          const simplifiedData = {
+            name: list[0].name,
+            phone: list[0].phone,
+            email: list[0].email,
+            address: list[0].address
+          };
+          this.modifyLocalDataStorage(simplifiedData);
         }
       }
     });
+  }
+
+  updateLocalData(): void{
+    if(this.data){
+      this.localDataService.updateData(this.data).subscribe({
+        next: (response)=>{
+          this.notification.showSuccessToast(response.message, 'top', 3000);
+          this.getData();
+        }, error: (error)=>{
+          const message = error.error?.message || error.error?.error || error?.error;
+          this.notification.showErrorToast(message, 'top', 3000);
+        }
+      });
+    }
   }
 
   getAccessHistory(): void{
@@ -49,5 +72,9 @@ export class SettingComponent{
     }else{
       console.log('Acceso denegado');
     }
+  }
+
+  private modifyLocalDataStorage(data: { name: string, phone: string, email: string, address: string }): void{
+    sessionStorage.setItem('companyData', JSON.stringify(data));
   }
 }
