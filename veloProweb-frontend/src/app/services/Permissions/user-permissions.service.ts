@@ -9,10 +9,6 @@ export class UserPermissionsService {
 
   constructor(private auth: AuthService) { }
 
-  canViewUser(): boolean {
-    return this.auth.getRole() !== Role.WAREHOUSE && this.auth.getRole() !== Role.SELLER && 
-    this.auth.getRole() !== Role.GUEST;
-  }
   canViewAlert(): boolean {
     return this.auth.getRole() !== Role.SELLER && this.auth.getRole() !== Role.GUEST;;
   }
