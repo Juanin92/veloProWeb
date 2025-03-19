@@ -124,60 +124,50 @@ public class UserController {
 
     /**
      *Elimina un usuario
-     * @param  auth - datos necesarios para eliminar un usuario
+     * @param  user - datos necesarios para eliminar un usuario
      * @param  userDetails - Detalle del usuario autenticado
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping("/eliminar-usuario")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
-    public ResponseEntity<Map<String, String>> deleteUser(@RequestBody AuthRequestDTO auth,
+    public ResponseEntity<Map<String, String>> deleteUser(@RequestBody UserDTO user,
                                                           @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response =  new HashMap<>();
         try{
-            if (userService.getAuthUser(auth.getToken(), userDetails)){
-                userService.deleteUser(auth.getIdentifier());
-                response.put("message", "Usuario eliminado exitosamente");
-                recordService.registerAction(userDetails, "DELETE",
-                        "Desactivo usuario del sistema: " + auth.getIdentifier());
-                return ResponseEntity.ok(response);
-            }else{
-                response.put("error", "No autorizado");
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-            }
+            userService.deleteUser(user.getUsername());
+            response.put("message", "Usuario eliminado exitosamente");
+            recordService.registerAction(userDetails, "DELETE",
+                    "Desactivo usuario del sistema: " + user.getUsername());
+            return ResponseEntity.ok(response);
         }catch (Exception e){
             response.put("error", e.getMessage());
             recordService.registerAction(userDetails, "DELETE_FAILURE",
-                    String.format("ERROR: desactivar usuario %s (%s)", auth.getIdentifier(), e.getMessage()));
+                    String.format("ERROR: desactivar usuario %s (%s)", user.getUsername(), e.getMessage()));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 
     /**
      *Activa un usuario
-     * @param  auth - datos necesarios para activar un usuario
+     * @param  user - datos necesarios para activar un usuario
      * @param  userDetails - Detalle del usuario autenticado
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
      */
     @PutMapping("/activar-usuario")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
-    public ResponseEntity<Map<String, String>> activeUser(@RequestBody AuthRequestDTO auth,
+    public ResponseEntity<Map<String, String>> activeUser(@RequestBody UserDTO user,
                                                           @AuthenticationPrincipal UserDetails userDetails){
         Map<String, String> response =  new HashMap<>();
         try{
-            if (userService.getAuthUser(auth.getToken(), userDetails)){
-                userService.activateUser(auth.getIdentifier());
-                response.put("message", "Usuario activado exitosamente");
-                recordService.registerAction(userDetails, "ACTIVATE ",
-                        "activo usuario del sistema: " + auth.getIdentifier());
-                return ResponseEntity.ok(response);
-            }else{
-                response.put("error", "No autorizado");
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-            }
+            userService.activateUser(user.getUsername());
+            response.put("message", "Usuario activado exitosamente");
+            recordService.registerAction(userDetails, "ACTIVATE ",
+                    "activo usuario del sistema: " + user.getUsername());
+            return ResponseEntity.ok(response);
         }catch (Exception e){
             response.put("error", e.getMessage());
             recordService.registerAction(userDetails, "ACTIVATE_FAILURE",
-                    String.format("ERROR: activar usuario %s (%s)", auth.getIdentifier(), e.getMessage()));
+                    String.format("ERROR: activar usuario %s (%s)", user.getUsername(), e.getMessage()));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
