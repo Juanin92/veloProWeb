@@ -7,8 +7,6 @@ import { Role } from '../../models/enum/role';
 import { TooltipService } from '../../utils/tooltip.service';
 import { NotificationService } from '../../utils/notification-service.service';
 import { UserDTO } from '../../models/DTO/user-dto';
-import { Modal } from 'bootstrap';
-import { AuthRequestDTO } from '../../models/DTO/auth-request-dto';
 import * as bootstrap from 'bootstrap';
 import { UserPermissionsService } from '../../services/Permissions/user-permissions.service';
 
@@ -21,7 +19,6 @@ import { UserPermissionsService } from '../../services/Permissions/user-permissi
 })
 export class UserComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('securityUser') securityUserModal!: ElementRef;
   @ViewChild('userTableFilter') dropdownButton!: ElementRef;
   userList: UserDTO[] = [];
   filteredList: UserDTO[] = [];
@@ -32,9 +29,7 @@ export class UserComponent implements OnInit, AfterViewInit {
   roles: string[] = Object.values(Role);
   user: UserDTO;
   selectedUser: UserDTO | null = null;
-  authRequest: AuthRequestDTO = {identifier: '', token: ''};
   touchedFields: Record<string, boolean> = {};
-  actionUser: string = '';
   dropdownInstance!: bootstrap.Dropdown;
   sortDate: boolean = true;
   sortName: boolean = true;
@@ -143,58 +138,41 @@ export class UserComponent implements OnInit, AfterViewInit {
     }
   }
 
-  selectingUser(selectedUserUI: UserDTO, action: string): void {
-    if(selectedUserUI){
-      this.selectedUser =  selectedUserUI;
-      this.authRequest = {identifier: '', token: ''};
-      this.actionUser = action;
-      this.manageSecurityModal(true);
-    }
-  }
-
-  confirmAction(): void{
-    if(this.actionUser.includes('delete')) this.confirmDelete();
-    if(this.actionUser.includes('activate')) this.activateUser();
-  }
-
-  confirmDelete(): void{
-    if (this.selectedUser && this.authRequest) {
-      this.authRequest.identifier = this.selectedUser.username;
-      console.log('authRequest: ', this.authRequest);
-      this.notification.showConfirmation(
-        "¿Estas seguro?",
-        "No podrás revertir la acción!",
-        "Si eliminar!",
-        "Cancelar"
-      ).then((result) => {
-        if (result.isConfirmed) {
-          this.userService.deleteUser(this.authRequest).subscribe({
+  confirmDelete(user: UserDTO): void {
+    this.selectedUser = user;
+    this.notification.showConfirmation(
+      "¿Estás seguro?",
+      "No podrás revertir la acción!",
+      "Sí, eliminar!",
+      "Cancelar"
+    ).then((result) => {
+      if (result.isConfirmed) {
+        if (this.selectedUser) {
+          this.userService.deleteUser(this.selectedUser).subscribe({
             next: (response) => {
               console.log('Usuario eliminado exitosamente:', response);
               this.notification.showSuccessToast(response.message, 'top', 3000);
               this.getUsers();
-            }, error: (error) => {
+            },
+            error: (error) => {
               const message = error.error?.message || error.error?.error || error?.error;
-              console.log('Error al eliminar cliente: ', message);
+              console.log('Error al eliminar usuario: ', message);
               this.notification.showErrorToast(`Error al eliminar usuario \n${message}`, 'top', 5000);
             }
           });
-          this.selectedUser = null; 
-          this.authRequest = {identifier: '', token: ''};
-          this.actionUser = '';
-          this.manageSecurityModal(false);
         }
-      });
-    }
+      }
+      this.selectedUser = null;
+    });
   }
 
   /**
    * Activa un usuario seleccionado
    */
-  activateUser(): void {
-    if(this.selectedUser && this.authRequest){
-      this.authRequest.identifier = this.selectedUser.username;
-      this.userService.activeUser(this.authRequest).subscribe({
+  activateUser(user: UserDTO): void {
+    this.selectedUser = user;
+    if(this.selectedUser){
+      this.userService.activeUser(this.selectedUser).subscribe({
         next: (response) => {
           console.log("Usuario Activado");
           this.notification.showSuccessToast(response.message, 'top', 3000);
@@ -205,10 +183,7 @@ export class UserComponent implements OnInit, AfterViewInit {
           this.notification.showErrorToast(`Error al activar al usuario \n${message}`, 'top', 5000);
         }
       });
-      this.selectedUser = null; 
-      this.authRequest = {identifier: '', token: ''};
-      this.actionUser = '';
-      this.manageSecurityModal(false);
+      this.selectedUser = null;
     }
   }
 
@@ -238,16 +213,6 @@ export class UserComponent implements OnInit, AfterViewInit {
       role: null,
       date: ''
     };
-  }
-
-  manageSecurityModal(action: boolean): void {
-    const modalElement = this.securityUserModal.nativeElement;
-    const modalInstance = Modal.getInstance(modalElement) || new Modal(modalElement);
-    if (action) {
-        modalInstance.show();
-    } else {
-        modalInstance.hide();
-    }
   }
 
   toggleDropdown() {
