@@ -30,4 +30,17 @@ export class MenuComponent implements AfterViewInit{
       this.router.navigate(['/main/ventas-reporte']);
     } 
   }
+
+  logout(): void{
+    this.auth.logout().subscribe({
+      next:(response) =>{
+        console.log(response.message);
+        this.auth.removeToken();
+        this.router.navigate(['/login']);
+      }, error: (error) =>{
+        const message = error.error?.error || error.error?.message || error?.error;
+        console.log('Error: ', message);
+      }
+    });
+  }
 }
