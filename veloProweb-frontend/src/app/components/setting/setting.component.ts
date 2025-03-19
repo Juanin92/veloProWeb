@@ -9,6 +9,10 @@ import { RegisterComponent } from "./register/register.component";
 import { TaskLayoutComponent } from "./task-layout/task-layout.component";
 import { SettingPermissionsService } from '../../services/Permissions/setting-permissions.service';
 import { NotificationService } from '../../utils/notification-service.service';
+import { AuthService } from '../../services/User/auth.service';
+import { LoginRequest } from '../../models/DTO/login-request';
+import { EncryptionService } from '../../security/encryption.service';
+import { AuthRequestDTO } from '../../models/DTO/auth-request-dto';
 
 @Component({
   selector: 'app-setting',
@@ -29,8 +33,12 @@ export class SettingComponent{
   };
   access: boolean = false;
   pass: string = '';
+  encryptedCode: string = '';
 
-  constructor(private localDataService: LocalDataService,
+  constructor(
+    private localDataService: LocalDataService,
+    private authService: AuthService,
+    private encryptionService: EncryptionService,
     protected permission: SettingPermissionsService,
     private notification: NotificationService){}
 
@@ -65,12 +73,27 @@ export class SettingComponent{
     }
   }
 
+  getEncryptedKey(): void{
+    this.authService.getEncryptionKey().subscribe({
+      next: (key) => { this.encryptedCode = key;},
+      error: (error) => {
+        const message = error.error?.error || error?.error;
+        console.log('Error: ', message);
+      }
+    });
+  }
+
   getAccessHistory(): void{
-    const key = 1234;
-    if (this.pass === key.toString()) {
-      this.access = true;
-    }else{
-      console.log('Acceso denegado');
+    if(this.encryptedCode && this.pass.trim() !== ''){
+      const authRequest: AuthRequestDTO = {identifier: '',
+        token: this.encryptionService.encryptPassword(this.pass, this.encryptedCode)};
+      this.authService.getAuthAccess(authRequest).subscribe({
+        next:(response)=>{ this.access = response; console.log('response: ', response);},
+        error:(error)=>{
+          const message = error.error?.error || error?.error;
+          console.log('Error: ', message);
+        }
+      });
     }
   }
 
