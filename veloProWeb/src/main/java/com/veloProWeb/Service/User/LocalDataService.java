@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LocalDataService implements ILocalDataService {
@@ -44,6 +45,8 @@ public class LocalDataService implements ILocalDataService {
      */
     @Override
     public List<LocalData> getData() {
-        return localDataRepo.findAll();
+        return localDataRepo.findAll().stream()
+                .peek(localData -> localData.setEmailSecurityApp(null))
+                .collect(Collectors.toList());
     }
 }
