@@ -48,9 +48,9 @@ export class UserService {
    * @param username - nombre de usuario seleccionado
    * @returns - Observable que emite un mensaje de confirmación
    */
-  deleteUser(auth: AuthRequestDTO): Observable<{message: string}>{
+  deleteUser(user: UserDTO): Observable<{message: string}>{
     return this.httpClient.put<{message: string}>(`${this.apiUrl}/eliminar-usuario`, 
-      auth, {headers: this.auth.getAuthHeaders()});
+      user, {headers: this.auth.getAuthHeaders()});
   }
 
   /**
@@ -58,9 +58,9 @@ export class UserService {
    * @param user - usuario seleccionado
    * @returns - Observable que emite un mensaje de confirmación
    */
-  activeUser(auth: AuthRequestDTO): Observable<{message: string}>{
+  activeUser(user: UserDTO): Observable<{message: string}>{
     return this.httpClient.put<{message: string}>(`${this.apiUrl}/activar-usuario`, 
-      auth, {headers: this.auth.getAuthHeaders()});
+      user, {headers: this.auth.getAuthHeaders()});
   }
 
   getUserData(): Observable<UserDTO>{
