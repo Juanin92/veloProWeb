@@ -15,28 +15,22 @@ public class LocalDataService implements ILocalDataService {
     @Autowired private LocalDataRepo localDataRepo;
 
     /**
-     * Crear información local
-     * @param data - Objeto con la información local necesaria
-     */
-    @Override
-    public void saveData(LocalData data) {
-        LocalData localData =  new LocalData();
-        localData.setId(null);
-        localData.setName(data.getName());
-        localData.setPhone(data.getPhone());
-        localData.setEmail(data.getEmail());
-        localData.setEmailSecurityApp(data.getEmailSecurityApp());
-        localData.setAddress(data.getAddress());
-        localDataRepo.save(localData);
-    }
-
-    /**
      * Actualiza los datos locales
      * @param localData - Objeto con los datos para actualizar
      */
     @Override
     public void updateData(LocalData localData) {
-        localDataRepo.save(localData);
+        LocalData existingData = localDataRepo.findById(1L).orElseThrow(() ->new IllegalArgumentException("No se encontró la data"));
+        existingData.setName(localData.getName());
+        existingData.setPhone(localData.getPhone());
+        existingData.setEmail(localData.getEmail());
+        if (localData.getEmailSecurityApp() != null && !localData.getEmailSecurityApp().trim().isEmpty()) {
+            existingData.setEmailSecurityApp(localData.getEmailSecurityApp());
+        }else {
+            existingData.setEmailSecurityApp(existingData.getEmailSecurityApp());
+        }
+        existingData.setAddress(localData.getAddress());
+        localDataRepo.save(existingData);
     }
 
     /**
@@ -45,8 +39,25 @@ public class LocalDataService implements ILocalDataService {
      */
     @Override
     public List<LocalData> getData() {
-        return localDataRepo.findAll().stream()
-                .peek(localData -> localData.setEmailSecurityApp(null))
-                .collect(Collectors.toList());
+        List<LocalData> dataList = localDataRepo.findAll();
+        if (dataList.isEmpty()) {
+            LocalData localData = createLocalData();
+            dataList.add(localData);
+        }else{
+            dataList = dataList.stream()
+                    .peek(localData -> localData.setEmailSecurityApp(null))
+                    .collect(Collectors.toList());
+        }
+        return dataList;
+    }
+
+    private LocalData createLocalData(){
+        LocalData localData = new LocalData();
+        localData.setName("Nombre de la empresa");
+        localData.setPhone("+569 12345678");
+        localData.setEmail("email@example.com");
+        localData.setEmailSecurityApp("Llave Acceso");
+        localData.setAddress("Dirección");
+        return localData;
     }
 }
