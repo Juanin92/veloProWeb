@@ -74,7 +74,11 @@ export class UserComponent implements OnInit, AfterViewInit {
     this.userService.getListUsers().subscribe({
       next: (list) => {
         this.userList = list;
-        this.filteredList = list;
+        if(localStorage.getItem('role') !== Role.MASTER){
+          this.filteredList = list.filter(user => user.role !== Role.MASTER);
+        }else{
+          this.filteredList = list;
+        }
         this.existingMasterUser = !this.userList.some(user => user.role === Role.MASTER);
       },
       error: (error) => {
