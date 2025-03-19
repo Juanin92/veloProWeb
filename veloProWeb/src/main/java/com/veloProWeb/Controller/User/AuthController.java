@@ -1,9 +1,11 @@
 package com.veloProWeb.Controller.User;
 
+import com.veloProWeb.Model.DTO.AuthRequestDTO;
 import com.veloProWeb.Model.DTO.LoginRequest;
 import com.veloProWeb.Security.EncryptionService;
 import com.veloProWeb.Security.JwUtil;
 import com.veloProWeb.Service.Record.IRecordService;
+import com.veloProWeb.Service.User.Interface.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,6 +29,7 @@ import java.util.Map;
 public class AuthController {
 
     @Autowired private IRecordService recordService;
+    @Autowired private IUserService userService;
     @Autowired private EncryptionService encryptionService;
     @Autowired private AuthenticationManager authenticationManager;
     @Autowired private UserDetailsService userDetailsService;
@@ -68,6 +71,22 @@ public class AuthController {
         }catch (IllegalArgumentException e){
             response.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    @PostMapping("/verificar")
+    @PreAuthorize("hasAnyAuthority('MASTER')")
+    public ResponseEntity<Boolean> getAuthAccess(@RequestBody AuthRequestDTO dto,
+                                                 @AuthenticationPrincipal UserDetails userDetails){
+        try{
+            String decryptedPassword = encryptionService.decrypt(dto.getToken());
+            if (userService.getAuthUser(decryptedPassword, userDetails)){
+                return ResponseEntity.ok(true);
+            }else{
+                return ResponseEntity.ok(false);
+            }
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
