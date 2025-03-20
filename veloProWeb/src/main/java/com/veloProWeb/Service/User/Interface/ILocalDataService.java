@@ -7,4 +7,5 @@ import java.util.List;
 public interface ILocalDataService {
     void updateData(LocalData localData);
     List<LocalData> getData();
+    List<LocalData> getDataToEmail();
 }

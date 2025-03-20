@@ -51,6 +51,15 @@ public class LocalDataService implements ILocalDataService {
         return dataList;
     }
 
+    /**
+     * Obtener los datos locales
+     * @return - Objeto con los datos necesarios
+     */
+    @Override
+    public List<LocalData> getDataToEmail() {
+        return localDataRepo.findAll();
+    }
+
     private LocalData createLocalData(){
         LocalData localData = new LocalData();
         localData.setName("Nombre de la empresa");
