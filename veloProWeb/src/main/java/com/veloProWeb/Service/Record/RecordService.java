@@ -100,6 +100,30 @@ public class RecordService implements IRecordService{
         }
     }
 
+    @Override
+    public void registerActionManual(String username, String action, String comment) {
+        User user = userService.getUserWithUsername(username);
+        if (user != null){
+            Record record = new Record();
+            record.setEntryDate(null);
+            record.setEndaDate(null);
+            record.setActionDate(LocalDateTime.now());
+            record.setAction(action);
+            record.setComment(comment);
+            record.setUser(user);
+            recordRepo.save(record);
+        }else {
+            Record record = new Record();
+            record.setEntryDate(null);
+            record.setEndaDate(null);
+            record.setActionDate(LocalDateTime.now());
+            record.setAction(action);
+            record.setComment("PELIGRO" + comment);
+            record.setUser(null);
+            recordRepo.save(record);
+        }
+    }
+
     /**
      * Obtener un registro de todos los movimientos o registro del sistema
      * @return - Lista con los registros

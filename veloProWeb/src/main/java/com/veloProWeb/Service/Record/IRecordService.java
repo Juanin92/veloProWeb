@@ -9,5 +9,6 @@ public interface IRecordService {
     void registerEntry(UserDetails userDetails);
     void registerEnd(UserDetails userDetails);
     void registerAction(UserDetails userDetails, String action, String comment);
+    void registerActionManual(String username, String action, String comment);
     List<Record> getAllRecord();
 }
