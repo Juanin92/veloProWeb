@@ -156,10 +156,15 @@ public class UserService implements IUserService {
         return passwordEncoder.matches(password, userDetails.getPassword());
     }
 
+    /**
+     * Verifica que el código de seguridad coincide con el usuario autenticado.
+     * @param username - nombre de usuario autenticado
+     * @param token - código de seguridad
+     */
     @Override
     public void getAuthUserToken(String username, String token) {
         User user = getUserWithUsername(username);
-        if (user.getToken() != null) {
+        if (user != null && user.getToken() != null) {
             if (passwordEncoder.matches(token, user.getToken())){
                 user.setToken(null);
                 userRepository.save(user);
@@ -169,6 +174,11 @@ public class UserService implements IUserService {
         }
     }
 
+    /**
+     *  Envia un correo con el código de seguridad generado aleatoriamente.
+     *  Encripta el código al guardarlo
+     * @param user - Usuario al que se le envia el correo
+     */
     @Override
     public void sendEmailCode(User user) {
         String code = codeGenerator.generate();
