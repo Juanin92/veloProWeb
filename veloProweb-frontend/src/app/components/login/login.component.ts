@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { HomeComponent } from '../Home/home.component';
 import { LoginRequest } from '../../models/DTO/login-request';
 import { AuthService } from '../../services/User/auth.service';
 import { FormsModule } from '@angular/forms';
@@ -50,15 +49,54 @@ export class LoginComponent implements OnInit {
         username: this.userLogin.username,
         password: this.encryptionService.encryptPassword(this.userLogin.password, this.encryptionKey)
       }
-      this.authService.login(encryptedUser).subscribe({
-        next: (response) => {
-          this.authService.saveToken(response.token);
-          this.authService.saveRole(response.role);
-          this.router.navigate(['/main/home']);
-        },
-        error: (error) => {
-          console.error('login.component: login error', error);
-          this.notification.showWarning('Error!', 'Las credenciales no son correctas, intente de nuevo');
+      if(this.sendCode){
+        this.loginWithCode(encryptedUser);
+      }else{
+        this.normalLogin(encryptedUser);
+      }
+    }
+  }
+
+  normalLogin(encryptedUser: LoginRequest): void{
+    this.authService.login(encryptedUser).subscribe({
+      next: (response) => {
+        this.authService.saveToken(response.token);
+        this.authService.saveRole(response.role);
+        this.router.navigate(['/main/home']);
+      },
+      error: (error) => {
+        console.error('login.component: login error', error);
+        this.notification.showWarning('Error!', 'Las credenciales no son correctas, intente de nuevo');
+      }
+    });
+  }
+
+  loginWithCode(encryptedUser: LoginRequest): void{
+    this.authService.loginWithCode(encryptedUser).subscribe({
+      next: (response) => {
+        this.authService.saveToken(response.token);
+        this.authService.saveRole(response.role);
+        this.router.navigate(['/main/home']);
+      },
+      error: (error) => {
+        console.error('login.component: login error', error);
+        this.notification.showWarning('Error!', 'Las credenciales no son correctas, intente de nuevo');
+      }
+    });
+  }
+
+  sendEmail(): void{
+    if (this.userLogin && this.userLogin.username) {
+      this.authService.sendEmailCode(this.userLogin).subscribe({
+        next:(response)=>{
+          this.sendCode = response.action;
+          this.notification.showSuccessToast(response.message, 'top', 3000);
+          console.log('OK: ', response.message);
+        }, error: (error)=>{
+          this.sendCode = error.action;
+          const message = error.error?.error || error.error?.message || error?.error;
+          console.log('Error: ', message);
+          this.notification.showErrorToast(message, 'top', 3000);
         }
       });
     }
