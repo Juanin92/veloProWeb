@@ -5,6 +5,8 @@ import com.veloProWeb.Model.DTO.UserDTO;
 import com.veloProWeb.Model.Entity.User.User;
 import com.veloProWeb.Model.Enum.Rol;
 import com.veloProWeb.Repository.UserRepo;
+import com.veloProWeb.Security.CodeGenerator;
+import com.veloProWeb.Utils.EmailService;
 import com.veloProWeb.Validation.UserValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +33,8 @@ public class UserServiceTest {
     @Mock private UserValidator validator;
     @Mock private BCryptPasswordEncoder passwordEncoder;
     @Mock private UserDetails userDetails;
+    @Mock private CodeGenerator codeGenerator;
+    @Mock private EmailService emailService;
     private User user;
     private UpdateUserDTO updateUserDTO;
     private UserDTO userDTO;
@@ -308,5 +312,54 @@ public class UserServiceTest {
         boolean result = userService.getAuthUser(password, userDetails);
         verify(passwordEncoder, times(1)).matches(password, userDetails.getPassword());
         assertFalse(result);
+    }
+
+    //Prueba para enviar código de seguridad generado al correo del usuario
+    @Test
+    public void sendEmailCode_valid(){
+        String code = "exampleCodeGenerator";
+        String encryptedCode = "EncryptedCodeGenerator";
+        when(codeGenerator.generate()).thenReturn(code);
+        when(passwordEncoder.encode(code)).thenReturn(encryptedCode);
+        userService.sendEmailCode(user);
+
+        verify(codeGenerator, times(1)).generate();
+        verify(emailService, times(1)).sendPasswordResetCode(user, code);
+        verify(passwordEncoder, times(1)).encode(code);
+        verify(userRepo, times(1)).save(user);
+
+        assertEquals(user.getToken(), encryptedCode);
+    }
+
+    //Prueba para obtener una autenticación de un usuario mediante un código de seguridad
+    @Test
+    public void getAuthUserToken_valid(){
+        String code = "exampleCodeGenerator";
+        user.setToken("exampleCodeGenerator");
+        when(userRepo.findByUsername("jpp")).thenReturn(Optional.of(user));
+        when(userRepo.save(user)).thenReturn(user);
+        when(passwordEncoder.matches(code, user.getToken())).thenReturn(true);
+        userService.getAuthUserToken("jpp", code);
+
+        verify(userRepo, times(1)).findByUsername("jpp");
+        verify(passwordEncoder, times(1)).matches(code, code);
+        verify(userRepo, times(1)).save(user);
+
+        assertNull(user.getToken());
+    }
+    @Test
+    public void getAuthUserToken_validNotMatchesCode(){
+        String code = "CodeGenerator";
+        user.setToken("exampleCodeGenerator");
+        when(userRepo.findByUsername("jpp")).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(code, user.getToken())).thenReturn(false);
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() ->
+                userService.getAuthUserToken(user.getUsername(), code));
+
+        verify(userRepo, times(1)).findByUsername("jpp");
+        verify(passwordEncoder, times(1)).matches(code, user.getToken());
+        verify(userRepo, never()).save(user);
+
+        assertEquals("Los códigos de seguridad no tiene similitud", e.getMessage());
     }
 }
