@@ -8,11 +8,12 @@ import { LocalDataService } from '../../services/local-data.service';
 import { Router, RouterOutlet } from '@angular/router';
 import * as bootstrap from 'bootstrap';
 import { AuthService } from '../../services/User/auth.service';
+import { CashierComponent } from "../setting/cashier/cashier.component";
 
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [RouterOutlet, UpdateUserModalComponent, MenuComponent, CommonModule, MessageModalComponent],
+  imports: [RouterOutlet, UpdateUserModalComponent, MenuComponent, CommonModule, MessageModalComponent, CashierComponent],
   providers: [DatePipe],
   templateUrl: './main.component.html',
   styleUrl: './main.component.css'
