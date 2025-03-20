@@ -11,13 +11,14 @@ import { EncryptionService } from '../../security/encryption.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
 
   encryptionKey: string = '';
+  sendCode: boolean = false;
   userLogin: LoginRequest = {
     username: '',
     password: ''
