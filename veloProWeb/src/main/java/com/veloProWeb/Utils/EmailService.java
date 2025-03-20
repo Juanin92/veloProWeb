@@ -116,7 +116,7 @@ public class EmailService {
     }
 
     private LocalData getLocalData() {
-        List<LocalData> list = localDataService.getData();
+        List<LocalData> list = localDataService.getDataToEmail();
         if (list.isEmpty()) {
             throw new IllegalArgumentException("No se encontraron datos locales.");
         }
