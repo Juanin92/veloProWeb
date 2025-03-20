@@ -24,7 +24,8 @@
                 </div>
 
                 <div class="mb-3 text-end">
-                    <a href="#" class="text-decoration-none small text-success">
+                    <a class="text-decoration-none small text-success" 
+                    data-bs-toggle="modal" data-bs-target="#forgotPasswordModal" style="cursor: pointer;">
                         ¿Olvidó su contraseña?
                     </a>
                 </div>
@@ -35,4 +36,34 @@
             </form>
         </div>
     </div>
+</div>
+<!-- MODAL FORGET PASSWORD -->
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white shadow-lg p-4">
+      <div class="modal-header border-secondary">
+        <h4 class="modal-title fw-bold text-center w-100" id="forgotPasswordLabel">Recuperar Contraseña</h4>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <p *ngIf="!userLogin.username" class="fw-bold text-danger fs-5">
+          ⚠️ No ha ingresado un nombre de usuario.
+        </p>
+        <p *ngIf="userLogin.username" class="fw-bold text-success fs-5">
+          Si ha olvidado su contraseña, se enviará un código de seguridad para recuperarla.
+        </p>
+        <p *ngIf="sendCode" class="fw-bold text-primary fs-5">
+          ✅ Código enviado con éxito. Revise su bandeja de entrada.
+        </p>
+      </div>
+      <div class="modal-footer border-secondary d-flex flex-column">
+        <button type="button" class="btn btn-outline-danger fw-bold w-100 mb-2" data-bs-dismiss="modal">
+          Cancelar
+        </button>
+        <button *ngIf="userLogin.username" type="button" class="btn btn-outline-success fw-bold w-100">
+          Enviar Código
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
