@@ -177,10 +177,11 @@ public class UserService implements IUserService {
     /**
      *  Envia un correo con el código de seguridad generado aleatoriamente.
      *  Encripta el código al guardarlo
-     * @param user - Usuario al que se le envia el correo
+     * @param username - Usuario al que se le envia el correo
      */
     @Override
-    public void sendEmailCode(User user) {
+    public void sendEmailCode(String username) {
+        User user = getUserWithUsername(username);
         String code = codeGenerator.generate();
         emailService.sendPasswordResetCode(user, code);
         user.setToken(passwordEncoder.encode(code));
