@@ -321,7 +321,7 @@ public class UserServiceTest {
         String encryptedCode = "EncryptedCodeGenerator";
         when(codeGenerator.generate()).thenReturn(code);
         when(passwordEncoder.encode(code)).thenReturn(encryptedCode);
-        userService.sendEmailCode(user);
+        userService.sendEmailCode(user.getUsername());
 
         verify(codeGenerator, times(1)).generate();
         verify(emailService, times(1)).sendPasswordResetCode(user, code);
