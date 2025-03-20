@@ -165,7 +165,7 @@ public class UserService implements IUserService {
     public void sendEmailCode(User user) {
         String code = codeGenerator.generate();
         emailService.sendPasswordResetCode(user, code);
-        user.setToken(code);
+        user.setToken(passwordEncoder.encode(code));
         userRepository.save(user);
     }
 
