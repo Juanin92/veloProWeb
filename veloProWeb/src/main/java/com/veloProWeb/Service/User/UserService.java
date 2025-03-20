@@ -4,7 +4,9 @@ import com.veloProWeb.Model.DTO.UpdateUserDTO;
 import com.veloProWeb.Model.DTO.UserDTO;
 import com.veloProWeb.Model.Entity.User.User;
 import com.veloProWeb.Repository.UserRepo;
+import com.veloProWeb.Security.CodeGenerator;
 import com.veloProWeb.Service.User.Interface.IUserService;
+import com.veloProWeb.Utils.EmailService;
 import com.veloProWeb.Validation.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,6 +25,8 @@ public class UserService implements IUserService {
     @Autowired private UserRepo userRepository;
     @Autowired private UserValidator validator;
     @Autowired private BCryptPasswordEncoder passwordEncoder;
+    @Autowired private CodeGenerator codeGenerator;
+    @Autowired private EmailService emailService;
 
     /**
      * Crea un usuario nuevo.
@@ -159,7 +163,10 @@ public class UserService implements IUserService {
 
     @Override
     public void sendEmailCode(User user) {
-
+        String code = codeGenerator.generate();
+        emailService.sendPasswordResetCode(user, code);
+        user.setToken(code);
+        userRepository.save(user);
     }
 
     @Override
