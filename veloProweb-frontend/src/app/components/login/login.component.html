@@ -50,7 +50,7 @@
           ⚠️ No ha ingresado un nombre de usuario.
         </p>
         <p *ngIf="userLogin.username" class="fw-bold text-success fs-5">
-          Si ha olvidado su contraseña, se enviará un código de seguridad para recuperarla.
+          Si ha olvidado su contraseña, se enviará un código de seguridad a su correo para recuperarla.
         </p>
         <p *ngIf="sendCode" class="fw-bold text-primary fs-5">
           ✅ Código enviado con éxito. Revise su bandeja de entrada.
@@ -60,7 +60,8 @@
         <button type="button" class="btn btn-outline-danger fw-bold w-100 mb-2" data-bs-dismiss="modal">
           Cancelar
         </button>
-        <button *ngIf="userLogin.username" type="button" class="btn btn-outline-success fw-bold w-100">
+        <button *ngIf="userLogin.username" (click)="sendEmail()" 
+          type="button" class="btn btn-outline-success fw-bold w-100">
           Enviar Código
         </button>
       </div>
