@@ -157,8 +157,16 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User getAuthUserToken(String username, String token) {
-        return null;
+    public void getAuthUserToken(String username, String token) {
+        User user = getUserWithUsername(username);
+        if (user.getToken() != null) {
+            if (passwordEncoder.matches(token, user.getToken())){
+                user.setToken(null);
+                userRepository.save(user);
+            }else {
+                throw new IllegalArgumentException("Los códigos de seguridad no tiene similitud");
+            }
+        }
     }
 
     @Override
