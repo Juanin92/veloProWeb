@@ -38,7 +38,7 @@ public class LocalDataServiceTest {
     //Prueba para guardar información
     @Test
     public void saveData_valid(){
-        localDataService.saveData(localData);
+        localDataService.updateData(localData);
         verify(localDataRepo).save(localData);
         assertEquals("Prueba", localData.getName());
         assertNotEquals("Test", localData.getName());
