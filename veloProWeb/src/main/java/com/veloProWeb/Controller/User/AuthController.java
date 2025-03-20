@@ -113,6 +113,26 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/olvide-codigo")
+    public ResponseEntity<Map<Boolean, String>> sendEmailCode(@RequestBody LoginRequest loginRequest){
+        Map<Boolean, String> response = new HashMap<>();
+        try{
+            if (loginRequest != null && loginRequest.getUsername() != null) {
+                userService.sendEmailCode(loginRequest.getUsername());
+                response.put(true, "Código de seguridad enviado");
+                recordService.registerAction(null, "CHANGE",
+                        String.format("Envio de código de seguridad, realizado por el usuario %s", loginRequest.getUsername()));
+                return ResponseEntity.ok(response);
+            }else {
+                response.put(false, "Debe agregar un nombre de usuario para enviar su código al correo");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+        }catch (Exception e){
+            response.put(false, e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
     @GetMapping("/encriptado")
     public ResponseEntity<String> getEncryptionKey() {
         return ResponseEntity.ok()
