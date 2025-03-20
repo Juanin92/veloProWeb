@@ -9,6 +9,7 @@ import com.veloProWeb.Service.User.Interface.IUserService;
 import com.veloProWeb.Utils.EmailService;
 import com.veloProWeb.Validation.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -165,10 +166,7 @@ public class UserService implements IUserService {
     public void getAuthUserToken(String username, String token) {
         User user = getUserWithUsername(username);
         if (user != null && user.getToken() != null) {
-            if (passwordEncoder.matches(token, user.getToken())){
-                user.setToken(null);
-                userRepository.save(user);
-            }else {
+            if (!passwordEncoder.matches(token, user.getToken())){
                 throw new IllegalArgumentException("Los códigos de seguridad no tiene similitud");
             }
         }
@@ -212,7 +210,7 @@ public class UserService implements IUserService {
         }
         if (dto.getCurrentPassword() != null && !dto.getCurrentPassword().isEmpty()) {
             boolean isCurrentPasswordValid = passwordEncoder.matches(dto.getCurrentPassword(), user.getPassword());
-            boolean isTokenValid = user.getToken() != null && dto.getCurrentPassword().equals(user.getToken());
+            boolean isTokenValid = user.getToken() != null && passwordEncoder.matches(dto.getCurrentPassword(), user.getToken());
             if (!isCurrentPasswordValid && !isTokenValid) {
                 throw new IllegalArgumentException("La contraseña actual o el código de recuperación son incorrectos");
             }
@@ -275,5 +273,19 @@ public class UserService implements IUserService {
      */
     private boolean existByEmail(String email){
         return userRepository.existsByEmail(email);
+    }
+
+    /**
+     * Limpia los campos de token del usuario cada 2 hr automáticamente
+     */
+    @Scheduled(fixedRate = 7200000)
+    private void cleanTokenToUsers(){
+        List<User> usersWithTokens = userRepository.findByTokenIsNotNull();
+        if (!usersWithTokens.isEmpty()) {
+            for (User user : usersWithTokens) {
+                user.setToken(null);
+                userRepository.save(user);
+            }
+        }
     }
 }
