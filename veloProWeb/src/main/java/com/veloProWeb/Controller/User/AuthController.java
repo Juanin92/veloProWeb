@@ -60,6 +60,29 @@ public class AuthController {
 
     }
 
+    @PostMapping("/login/code")
+    public ResponseEntity<Map<String, String>> loginWithCode(@RequestBody LoginRequest user) {
+        Map<String, String> response = new HashMap<>();
+        try{
+            String decryptedPassword = encryptionService.decrypt(user.getPassword());
+            userService.getAuthUserToken(user.getUsername(), decryptedPassword);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+            String jwtToken = jwtUtil.generateToken(userDetails);
+            response.put("token", jwtToken);
+            String role = userDetails.getAuthorities().stream()
+                    .findFirst()
+                    .map(GrantedAuthority::getAuthority)
+                    .orElse(null);
+            response.put("role", role);
+            recordService.registerEntry(userDetails);
+            return ResponseEntity.ok(response);
+        }catch (Exception e){
+            response.put("error", "Error de autenticación: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
+    }
+
     @PostMapping("/logout")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER' , 'SELLER', 'GUEST', 'WAREHOUSE')")
     public ResponseEntity<Map<String, String>> logout(@AuthenticationPrincipal UserDetails userDetails){
