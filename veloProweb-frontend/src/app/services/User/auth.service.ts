@@ -21,12 +21,20 @@ export class AuthService {
     return this.httpClient.post<{ token: string, role: string }>(`${this.apiUrl}/login`, loginRequest);
   }
 
+  loginWithCode(loginRequest: LoginRequest): Observable<{token: string, role: string}>{
+    return this.httpClient.post<{ token: string, role: string }>(`${this.apiUrl}/login/code`, loginRequest);
+  }
+
   logout(): Observable<{ message: string }> {
     return this.httpClient.post<{ message: string }>(`${this.apiUrl}/logout`, {}, { headers: this.getAuthHeaders() });
   }
 
   getAuthAccess(auth: AuthRequestDTO): Observable<boolean>{
     return this.httpClient.post<boolean>(`${this.apiUrl}/verificar`, auth, { headers: this.getAuthHeaders() });;
+  }
+
+  sendEmailCode(loginRequest: LoginRequest): Observable<{action: boolean,message: string}>{
+    return this.httpClient.post<{action: boolean, message: string}>(`${this.apiUrl}/olvide-codigo`, loginRequest);
   }
 
   saveToken(token: string): void {
