@@ -1,14 +1,15 @@
 package com.veloProWeb.Service.Sale.Interface;
 
+import com.veloProWeb.Model.DTO.CashRegisterDTO;
 import com.veloProWeb.Model.Entity.Sale.CashRegister;
 
 import java.util.List;
 
 public interface ICashRegisterService {
-    void addRegisterOpening(CashRegister cashRegister);
-    void addRegisterClosing(CashRegister cashRegister);
-    void addRegisterValidateComment(CashRegister cashRegister);
+    void addRegisterOpening(String username, int amount);
+    void addRegisterClosing(CashRegisterDTO cashRegister);
+    void addRegisterValidateComment(CashRegisterDTO cashRegister);
     CashRegister getRegisterByUser(Long id);
-    List<CashRegister> getAll();
-    void updateRegister(Long id, String status, Integer amountOpening, Integer amountClosing, Integer pos);
+    List<CashRegisterDTO> getAll();
+    void updateRegister(CashRegisterDTO cashRegister);
 }
