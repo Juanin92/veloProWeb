@@ -19,6 +19,11 @@ public class CashRegisterService implements ICashRegisterService {
     @Autowired private CashRegisterRepo cashRegisterRepo;
     @Autowired private UserService userService;
 
+    /**
+     * Crea un registro de caja con los de la apertura
+     * @param username - nombre de usuario del usuario que hace el registro
+     * @param amount - monto de la apertura de caja
+     */
     @Override
     public void addRegisterOpening(String username, int amount) {
         User user = userService.getUserWithUsername(username);
@@ -37,6 +42,12 @@ public class CashRegisterService implements ICashRegisterService {
         }
     }
 
+    /**
+     * Agrega los datos de cierre al registro de caja realizado por un usuario
+     * Valida los montos ingresados.
+     * Verifica el usuario, si esta presenta agregas los datos y deja cerrado el registro
+     * @param dto - Objeto con los datos necesario
+     */
     @Override
     public void addRegisterClosing(CashRegisterDTO dto) {
         User user = userService.getUserWithUsername(dto.getUser());
@@ -44,11 +55,11 @@ public class CashRegisterService implements ICashRegisterService {
         validateAmount(dto.getAmountClosingPos());
         if (user != null) {
             CashRegister cashRegister = getRegisterByUser(user.getId());
-            if (cashRegister.getAmountClosingCash() < cashRegister.getAmountOpening()) {
+            if (dto.getAmountClosingCash() < cashRegister.getAmountOpening()) {
                 throw new IllegalArgumentException("El monto de cierre en efectivo es menor a la apertura.");
             }
-            cashRegister.setAmountClosingCash(cashRegister.getAmountClosingCash());
-            cashRegister.setAmountClosingPos(cashRegister.getAmountClosingPos());
+            cashRegister.setAmountClosingCash(dto.getAmountClosingCash());
+            cashRegister.setAmountClosingPos(dto.getAmountClosingPos());
             cashRegister.setDateClosing(LocalDateTime.now());
             cashRegister.setStatus("CLOSED");
             cashRegister.setComment(null);
@@ -56,6 +67,12 @@ public class CashRegisterService implements ICashRegisterService {
         }
     }
 
+    /**
+     * Agrega un comentario a un registro de caja por su ID ya creado.
+     * Verifica que el comentario tenga un valor.
+     * Guarda el comentario si se encuentra el registro correspondiente
+     * @param dto - Objeto con los datos necesario
+     */
     @Override
     public void addRegisterValidateComment(CashRegisterDTO dto) {
         if (dto.getComment() == null || dto.getComment().trim().isEmpty()){
@@ -68,6 +85,12 @@ public class CashRegisterService implements ICashRegisterService {
         }
     }
 
+    /**
+     * Obtener un registro hecho por un usuario específico.
+     * Verifica si el registro esta vació o la fecha es después de la fecha de apertura
+     * @param userID - Identificador del usuario
+     * @return - Objeto del registro de caja encontrado
+     */
     @Override
     public CashRegister getRegisterByUser(Long userID) {
         CashRegister cashRegister = cashRegisterRepo.findLatestOpenRegisterByUser(userID);
@@ -95,6 +118,11 @@ public class CashRegisterService implements ICashRegisterService {
         ).toList();
     }
 
+    /**
+     * Actualizar los montos de un registro seleccionado.
+     * Buscar el registro a actualizar y si está presente se actualiza
+     * @param dto - Datos a actualizar del registro seleccionado
+     */
     @Override
     public void updateRegister(CashRegisterDTO dto) {
         Optional<CashRegister> cashRegister = cashRegisterRepo.findById(dto.getId());
@@ -106,6 +134,10 @@ public class CashRegisterService implements ICashRegisterService {
         }
     }
 
+    /**
+     * Validar los montos ingresados
+     * @param amount - Monto a validar
+     */
     private void validateAmount(int amount){
         if (amount <= 0) {
             throw new IllegalArgumentException("El monto debe ser mayor a 0");
