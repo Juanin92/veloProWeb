@@ -17,7 +17,7 @@
           <ul class="dropdown-menu" aria-labelledby="userDropdown">
             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#updateUser">Modificar Datos</a></li>
             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#newMessageModal">Mensajes</a></li>
-            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#cashierModal">Caja</a></li>
+            <li *ngIf="permission.canViewSale()"><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#cashierModal">Caja</a></li>
             <li>
               <hr class="dropdown-divider">
             </li>

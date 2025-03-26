@@ -9,6 +9,7 @@ import { Router, RouterOutlet } from '@angular/router';
 import * as bootstrap from 'bootstrap';
 import { AuthService } from '../../services/User/auth.service';
 import { CashierComponent } from "../setting/cashier/cashier.component";
+import { MenuPermissionsService } from '../../services/Permissions/menu-permissions.service';
 
 @Component({
   selector: 'app-main',
@@ -29,7 +30,8 @@ export class MainComponent implements AfterViewInit {
     private auth: AuthService,
     private datePipe: DatePipe,
     private localDataService: LocalDataService,
-    private router: Router) {
+    private router: Router,
+    protected permission: MenuPermissionsService) {
     this.getDate();
     this.loadDataFromLocalStorage();
   }
