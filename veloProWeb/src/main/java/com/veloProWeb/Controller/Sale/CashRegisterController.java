@@ -14,10 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-/**
- * Controlador REST para gestionar operaciones relacionadas con registro de caja.
- * Este controlador proporciona endpoints para listar registro de caja.
- */
 @RestController
 @RequestMapping("/caja")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -35,5 +31,11 @@ public class CashRegisterController {
     public List<CashRegisterDTO> getCashRegisters(@AuthenticationPrincipal UserDetails userDetails){
         recordService.registerAction(userDetails, "VIEW", "Lista de registro de la caja");
         return cashRegisterService.getAll();
+    }
+
+    @GetMapping("/verificar-apertura")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'SELLER', 'GUEST')")
+    public boolean hasOpenRegisterOnDate(@AuthenticationPrincipal UserDetails userDetails){
+        return cashRegisterService.hasOpenRegisterOnDate(userDetails.getUsername());
     }
 }
