@@ -9,7 +9,6 @@ public interface ICashRegisterService {
     void addRegisterOpening(String username, int amount);
     void addRegisterClosing(CashRegisterDTO cashRegister);
     void addRegisterValidateComment(CashRegisterDTO cashRegister);
-    CashRegister getRegisterByUser(Long id);
     List<CashRegisterDTO> getAll();
     void updateRegister(CashRegisterDTO cashRegister);
 }
