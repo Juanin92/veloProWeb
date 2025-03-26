@@ -2,45 +2,58 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content bg-dark text-white shadow-lg p-4">
             <div class="modal-header border-secondary">
-                <h4 class="modal-title fw-bold text-center w-100" id="cashierModalOpen">Apertura Caja</h4>
-                <h4 class="modal-title fw-bold text-center w-100" id="cashierModalClose">Cierre Caja</h4>
+                <h4 *ngIf="isOpening" class="modal-title fw-bold text-center w-100" id="cashierModalOpen">Apertura Caja</h4>
+                <h4 *ngIf="isClosing" class="modal-title fw-bold text-center w-100" id="cashierModalClose">Cierre Caja</h4>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <div class="modal-body text-center">
+            <div *ngIf="isOpening" class="modal-body text-center">
                 <div class="form-floating mb-3">
-                    <!-- <input type="text" class="form-control" id="amountOpening" placeholder="Ingrese Monto apertura de caja"
-                        name="amountOpening" [(ngModel)]="selectedCustomer.surname"
-                        [ngClass]="{'is-invalid': !customerValidator.isFieldValid(selectedCustomer, 'surname')}"
-                        [disabled]="selectedCustomer.debt > 0 || permission.canChangeInputValue()" required /> -->
                     <input type="number" class="form-control" id="amountOpening" placeholder="Ingrese Monto apertura de caja" name="amountOpening"
-                        required />
+                        [(ngModel)]="cashier.amountOpening"
+                        [ngClass]="{'is-invalid': !cashier.amountOpening, 'is-valid': cashier.amountOpening}"  required />
                     <label for="amountOpening" class="form-label">Monto Inicial</label>
-                    <!-- <div *ngIf="!customerValidator.isFieldValid(selectedCustomer, 'surname')" class="invalid-feedback">
+                    <div *ngIf="!cashier.amountOpening" class="invalid-feedback">
                         Monto debe ser mayor a 0.
-                    </div> -->
+                    </div>
                 </div>
             </div>
-            <!-- <div class="modal-body text-center">
+            <div *ngIf="isClosing" class="modal-body text-center">
                 <div class="form-floating mb-3">
                     <input type="number" class="form-control" id="amountClosing" placeholder="Ingrese Monto cierre de caja"
-                        name="amountClosing" required />
+                        name="amountClosing" 
+                        [(ngModel)]="cashier.amountClosingCash"
+                        [ngClass]="{'is-invalid': !cashier.amountClosingCash, 'is-valid': cashier.amountClosingCash}" required />
                     <label for="amountClosing" class="form-label">Monto final</label>
+                    <div *ngIf="!cashier.amountClosingCash" class="invalid-feedback">
+                        Monto debe ser mayor a 0.
+                    </div>
                 </div>
                 <div class="form-floating mb-3">
                     <input type="number" class="form-control" id="amountPos" placeholder="Ingrese Monto terminal Pos"
-                        name="amountPos" required />
+                        name="amountPos"
+                        [(ngModel)]="cashier.amountClosingPos"
+                        [ngClass]="{'is-invalid': !cashier.amountClosingPos, 'is-valid': cashier.amountClosingPos}" required />
                     <label for="amountPos" class="form-label">Monto Terminal POS</label>
+                    <div *ngIf="!cashier.amountClosingPos" class="invalid-feedback">
+                        Monto debe ser mayor a 0.
+                    </div>
                 </div>
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" id="commentCashier" placeholder="Ingrese Comentario"
-                        name="commentCashier" required />
+                        name="commentCashier"
+                        [(ngModel)]="cashier.comment"
+                        [ngClass]="{'is-invalid': !cashier.comment, 'is-valid': cashier.comment}" required />
                     <label for="commentCashier" class="form-label">Observación/Comentario</label>
+                    <div *ngIf="!cashier.comment" class="invalid-feedback">
+                        Debe ingresar un observación para el registro.
+                    </div>
                 </div>
-            </div> -->
+            </div>
             <div class="modal-footer border-secondary d-flex flex-column">
                 <button type="button"
-                    class="btn btn-outline-success fw-bold w-100">
+                    class="btn btn-outline-success fw-bold w-100"
+                    (click)="saveOpeningRegister()">
                     Guardar
                 </button>
             </div>
