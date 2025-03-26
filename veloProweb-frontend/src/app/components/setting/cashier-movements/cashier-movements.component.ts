@@ -91,8 +91,7 @@ export class CashierMovementsComponent implements OnInit{
       this.filteredCashRegistersList = this.cashRegistersList;
     } else {
       this.filteredCashRegistersList = this.cashRegistersList.filter(cashier =>
-        cashier.user.name.toLowerCase().includes(this.textFilter.toLowerCase()) || 
-        cashier.user.surname.toLowerCase().includes(this.textFilter.toLowerCase()) || 
+        cashier.user.toLowerCase().includes(this.textFilter.toLowerCase()) ||
         (this.textFilter.toLowerCase() === 'abierto' && cashier.status) || 
         (this.textFilter.toLowerCase() === 'cerrado' && cashier.status)
       );
