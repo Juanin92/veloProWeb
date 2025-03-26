@@ -10,6 +10,7 @@ import com.veloProWeb.Service.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -120,6 +121,21 @@ public class CashRegisterService implements ICashRegisterService {
             cashRegister.get().setAmountClosingCash(dto.getAmountClosingCash());
             cashRegisterRepo.save(cashRegister.get());
         }
+    }
+
+    /**
+     * Verificar si un usuario tiene un registro de caja abierto en la fecha actual
+     * @param username - Nombre de usuario
+     * @return - Verdadero si el usuario tiene un registro abierto en la fecha actual
+     */
+    @Override
+    public boolean hasOpenRegisterOnDate(String username) {
+        User user = userService.getUserWithUsername(username);
+        if (user != null) {
+            LocalDate date = LocalDate.now();
+            return cashRegisterRepo.existsOpenRegisterByUserAndDate(user.getId(), date);
+        }
+        return false;
     }
 
     /**
