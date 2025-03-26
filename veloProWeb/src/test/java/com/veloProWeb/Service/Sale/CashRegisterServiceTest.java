@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -146,33 +147,6 @@ public class CashRegisterServiceTest {
         assertEquals("Debes agregar un comentario para registrar.", e.getMessage());
     }
 
-    //Prueba para obtener un registro de caja por su identificador
-    @Test
-    public void getRegisterByUser_valid(){
-        when(cashRegisterRepo.findLatestOpenRegisterByUser(1L)).thenReturn(cashRegister);
-        CashRegister result = cashRegisterService.getRegisterByUser(1L);
-
-        verify(cashRegisterRepo, times(1)).findLatestOpenRegisterByUser(1L);
-        assertEquals(result, cashRegister);
-    }
-    @Test
-    public void getRegisterByUser_invalidNullValue(){
-        when(cashRegisterRepo.findLatestOpenRegisterByUser(4L)).thenReturn(null);
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cashRegisterService.getRegisterByUser(4L));
-
-        verify(cashRegisterRepo, times(1)).findLatestOpenRegisterByUser(4L);
-        assertEquals("No hay registro de apertura válido.", e.getMessage());
-    }
-    @Test
-    public void getRegisterByUser_invalidDateNotMatch(){
-        cashRegister.setDateOpening(LocalDateTime.now().plusDays(2));
-        when(cashRegisterRepo.findLatestOpenRegisterByUser(1L)).thenReturn(cashRegister);
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cashRegisterService.getRegisterByUser(1L));
-
-        verify(cashRegisterRepo, times(1)).findLatestOpenRegisterByUser(1L);
-        assertEquals("La fecha no coincide con la apertura.", e.getMessage());
-    }
-
     //Prueba para obtener lista de cashRegister
     @Test
     public void getAll_valid(){
@@ -196,5 +170,25 @@ public class CashRegisterServiceTest {
         assertEquals(dto.getAmountOpening(), cashRegister.getAmountOpening());
         assertEquals(dto.getAmountClosingPos(), cashRegister.getAmountClosingPos());
         assertEquals(dto.getAmountClosingCash(), cashRegister.getAmountClosingCash());
+    }
+
+    //Prueba para verificar si un usuario tiene un registro abierto en la fecha actual
+    @Test
+    public void hasOpenRegisterOnDate_valid(){
+        when(userService.getUserWithUsername("jpp")).thenReturn(user);
+        when(cashRegisterRepo.existsOpenRegisterByUserAndDate(user.getId(), LocalDate.now())).thenReturn(true);
+
+        verify(userService, times(1)).getUserWithUsername("jpp");
+        verify(cashRegisterRepo, times(1)).existsOpenRegisterByUserAndDate(user.getId(), LocalDate.now());
+        assertTrue(cashRegisterService.hasOpenRegisterOnDate("jpp"));
+    }
+    @Test
+    public void hasOpenRegisterOnDate_invalid(){
+        when(userService.getUserWithUsername("jpp")).thenReturn(user);
+        when(cashRegisterRepo.existsOpenRegisterByUserAndDate(user.getId(), LocalDate.now())).thenReturn(false);
+
+        verify(userService, times(1)).getUserWithUsername("jpp");
+        verify(cashRegisterRepo, times(1)).existsOpenRegisterByUserAndDate(user.getId(), LocalDate.now());
+        assertFalse(cashRegisterService.hasOpenRegisterOnDate("jpp"));
     }
 }
