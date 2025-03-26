@@ -2,7 +2,6 @@ import { UserDTO } from "../DTO/user-dto";
 import { User } from "./user";
 
 export interface CashRegister {
-    id: number;
     dateOpening: string;
     dateClosing: string;
     amountOpening: number;
@@ -10,5 +9,5 @@ export interface CashRegister {
     amountClosingPos: number;
     status: boolean;
     comment: string;
-    user: UserDTO;
+    user: string;
 }
