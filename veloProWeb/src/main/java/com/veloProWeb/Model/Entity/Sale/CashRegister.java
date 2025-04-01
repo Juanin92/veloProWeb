@@ -29,6 +29,7 @@ public class CashRegister {
     private int amountClosingPos;
     private String status;
     private String comment;
+    private boolean alert;
 
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = true)
