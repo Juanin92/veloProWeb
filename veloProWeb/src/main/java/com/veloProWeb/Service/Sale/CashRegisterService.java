@@ -42,6 +42,7 @@ public class CashRegisterService implements ICashRegisterService {
             cashRegister.setAmountClosingPos(0);
             cashRegister.setStatus("OPEN");
             cashRegister.setComment(null);
+            cashRegister.setAlert(false);
             cashRegister.setUser(user);
             cashRegisterRepo.save(cashRegister);
         }
@@ -61,34 +62,14 @@ public class CashRegisterService implements ICashRegisterService {
         if (user != null) {
             if(!user.getRole().equals(Rol.WAREHOUSE)){
                 CashRegister cashRegister = getOpeningRegisterByUser(user.getId());
-                if (dto.getAmountClosingCash() < cashRegister.getAmountOpening()) {
-                    throw new IllegalArgumentException("El monto de cierre en efectivo es menor a la apertura.");
-                }
                 cashRegister.setAmountClosingCash(dto.getAmountClosingCash());
                 cashRegister.setAmountClosingPos(dto.getAmountClosingPos());
                 cashRegister.setDateClosing(LocalDateTime.now());
                 cashRegister.setStatus("CLOSED");
-                cashRegister.setComment(null);
+                cashRegister.setComment(dto.getComment());
                 cashRegisterRepo.save(cashRegister);
+                validateClosingAndOpeningAmount(cashRegister);
             }
-        }
-    }
-
-    /**
-     * Agrega un comentario a un registro de caja por su ID ya creado.
-     * Verifica que el comentario tenga un valor.
-     * Guarda el comentario si se encuentra el registro correspondiente
-     * @param dto - Objeto con los datos necesario
-     */
-    @Override
-    public void addRegisterValidateComment(CashRegisterDTO dto) {
-        if (dto.getComment() == null || dto.getComment().trim().isEmpty()){
-            throw new IllegalArgumentException("Debes agregar un comentario para registrar.");
-        }
-        Optional<CashRegister> cashRegister = cashRegisterRepo.findById(dto.getId());
-        if (cashRegister.isPresent()) {
-            cashRegister.get().setComment(dto.getComment());
-            cashRegisterRepo.save(cashRegister.get());
         }
     }
 
@@ -162,6 +143,21 @@ public class CashRegisterService implements ICashRegisterService {
     private void validateAmount(int amount){
         if (amount <= 0) {
             throw new IllegalArgumentException("El monto debe ser mayor a 0");
+        }
+    }
+
+    /**
+     * Validar diferencias entre el monto de cierre y apertura de caja,
+     * si el monto de cierre es menor al de apertura se agrega un comentario
+     * y se marca como alerta
+     * @param cashRegister - Objeto del registro de caja
+     */
+    private void validateClosingAndOpeningAmount(CashRegister cashRegister) {
+        if (cashRegister.getAmountClosingCash() < cashRegister.getAmountOpening()) {
+            cashRegister.setComment(cashRegister.getComment() +
+                    " - El monto de cierre en efectivo es menor a la apertura.");
+            cashRegister.setAlert(true);
+            cashRegisterRepo.save(cashRegister);
         }
     }
 }
