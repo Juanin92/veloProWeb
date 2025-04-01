@@ -3,6 +3,8 @@ import { CashRegisterService } from '../../../services/Sale/cash-register.servic
 import { CashRegister } from '../../../models/Entity/cash-register';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { NotificationService } from '../../../utils/notification-service.service';
 
 @Component({
   selector: 'app-cashier',
@@ -14,16 +16,29 @@ import { CommonModule } from '@angular/common';
 export class CashierComponent {
 
   cashier: CashRegister = this.initializeCashier();
-  canSale: boolean = false;
-  isOpening: boolean = true;
-  isClosing: boolean = false;
 
   constructor(
-    private cashierService: CashRegisterService){}
+    private cashierService: CashRegisterService,
+    private router: Router,
+    private notification: NotificationService){}
 
-  saveOpeningRegister(): void{
-    this.isOpening = false;
-    this.isClosing = true;
+  saveOpeningRegister(): void {
+    if (this.cashier.amountOpening !== null) {
+      this.cashierService.addRegisterOpening(this.cashier.amountOpening).subscribe({
+        next: (response) => {
+          this.notification.showSuccessToast(response.message, 'top', 3000);
+          this.router.navigate(['/main/ventas']);
+          if(response){
+            sessionStorage.setItem('isOpen', true.toString());
+          }
+        },
+        error: (error) => {
+          const message = error.error?.error || error.error?.message || error?.error;
+          console.log('Error: ', message);
+          this.notification.showErrorToast(message, 'top', 3000);
+        }
+      });
+    }
   }
 
   saveClosingRegister(): void{}
