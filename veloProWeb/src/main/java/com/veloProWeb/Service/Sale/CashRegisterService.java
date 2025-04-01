@@ -55,8 +55,8 @@ public class CashRegisterService implements ICashRegisterService {
      * @param dto - Objeto con los datos necesario
      */
     @Override
-    public void addRegisterClosing(CashRegisterDTO dto) {
-        User user = userService.getUserWithUsername(dto.getUser());
+    public void addRegisterClosing(String username, CashRegisterDTO dto) {
+        User user = userService.getUserWithUsername(username);
         if (user.getRole() != Rol.MASTER){
             validateAmount(dto.getAmountClosingCash());
             validateAmount(dto.getAmountClosingPos());
