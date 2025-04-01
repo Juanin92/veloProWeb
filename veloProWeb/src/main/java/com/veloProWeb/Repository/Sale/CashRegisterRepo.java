@@ -16,6 +16,6 @@ public interface CashRegisterRepo extends JpaRepository<CashRegister, Long> {
     CashRegister findLatestOpenRegisterByUser(@Param("userId") Long userId);
 
     @Query("SELECT COUNT(c) > 0 FROM CashRegister c WHERE c.user.id = :userId AND " +
-            "DATE(c.dateOpening) = :dateOpening AND c.status = 'OPEN AND c.dateClosing IS NULL'")
+            "FUNCTION('DATE', c.dateOpening) = :dateOpening AND c.status = 'OPEN' AND c.dateClosing IS NULL")
     boolean existsOpenRegisterByUserAndDate(@Param("userId") Long userId, @Param("dateOpening") LocalDate dateOpening);
 }
