@@ -29,21 +29,21 @@ public class CashRegisterService implements ICashRegisterService {
     @Override
     public void addRegisterOpening(String username, int amount) {
         User user = userService.getUserWithUsername(username);
-        validateAmount(amount);
-        if (user != null) {
-            if (!user.getRole().equals(Rol.WAREHOUSE)){
-                CashRegister cashRegister = new CashRegister();
-                cashRegister.setId(null);
-                cashRegister.setDateOpening(LocalDateTime.now());
-                cashRegister.setDateClosing(null);
-                cashRegister.setAmountOpening(amount);
-                cashRegister.setAmountClosingCash(0);
-                cashRegister.setAmountClosingPos(0);
-                cashRegister.setStatus("OPEN");
-                cashRegister.setComment(null);
-                cashRegister.setUser(user);
-                cashRegisterRepo.save(cashRegister);
-            }
+        if (user.getRole() != Rol.MASTER){
+            validateAmount(amount);
+        }
+        if (!user.getRole().equals(Rol.WAREHOUSE)) {
+            CashRegister cashRegister = new CashRegister();
+            cashRegister.setId(null);
+            cashRegister.setDateOpening(LocalDateTime.now());
+            cashRegister.setDateClosing(null);
+            cashRegister.setAmountOpening(amount);
+            cashRegister.setAmountClosingCash(0);
+            cashRegister.setAmountClosingPos(0);
+            cashRegister.setStatus("OPEN");
+            cashRegister.setComment(null);
+            cashRegister.setUser(user);
+            cashRegisterRepo.save(cashRegister);
         }
     }
 
