@@ -4,15 +4,16 @@ import com.veloProWeb.Model.DTO.CashRegisterDTO;
 import com.veloProWeb.Service.Record.IRecordService;
 import com.veloProWeb.Service.Sale.Interface.ICashRegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/caja")
@@ -35,7 +36,24 @@ public class CashRegisterController {
 
     @GetMapping("/verificar-apertura")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'SELLER', 'GUEST')")
-    public boolean hasOpenRegisterOnDate(@AuthenticationPrincipal UserDetails userDetails){
-        return cashRegisterService.hasOpenRegisterOnDate(userDetails.getUsername());
+    public ResponseEntity<Map<String, Boolean>> hasOpenRegisterOnDate(@AuthenticationPrincipal UserDetails userDetails){
+        boolean result = cashRegisterService.hasOpenRegisterOnDate(userDetails.getUsername());
+        Map<String, Boolean> response = Collections.singletonMap("isOpen", result);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/apertura")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'SELLER', 'GUEST')")
+    public ResponseEntity<Map<String, String>> addRegisterOpening(@AuthenticationPrincipal UserDetails userDetails, @RequestBody int amount){
+        Map<String, String> response = new HashMap<>();
+        try{
+            cashRegisterService.addRegisterOpening(userDetails.getUsername(), amount);
+            recordService.registerAction(userDetails, "OPEN", String.format("Apertura de caja con $%s pesos", amount));
+            response.put("message", "Apertura de caja exitosa");
+            return ResponseEntity.ok(response);
+        }catch (Exception e){
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 }
