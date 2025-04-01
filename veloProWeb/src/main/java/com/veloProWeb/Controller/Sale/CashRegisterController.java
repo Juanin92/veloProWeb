@@ -64,7 +64,7 @@ public class CashRegisterController {
                                                                   @RequestBody CashRegisterDTO dto){
         Map<String, String> response = new HashMap<>();
         try{
-            cashRegisterService.addRegisterClosing(dto);
+            cashRegisterService.addRegisterClosing(userDetails.getUsername(), dto);
             recordService.registerAction(userDetails, "CLOSE", String.format("Cierre de caja: $%s pesos - " +
                     "POS: $%s pesos", dto.getAmountClosingCash(), dto.getAmountClosingPos()));
             response.put("message", "Cierre de caja exitoso");
