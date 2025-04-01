@@ -91,7 +91,7 @@ public class CashRegisterServiceTest {
 
         when(userService.getUserWithUsername("jpp")).thenReturn(user);
         when(cashRegisterRepo.findLatestOpenRegisterByUser(user.getId())).thenReturn(cashRegister);
-        cashRegisterService.addRegisterClosing(dto);
+        cashRegisterService.addRegisterClosing("jpp", dto);
 
         verify(userService, times(1)).getUserWithUsername("jpp");
         verify(cashRegisterRepo, times(1)).findLatestOpenRegisterByUser(user.getId());
@@ -112,7 +112,8 @@ public class CashRegisterServiceTest {
 
         when(userService.getUserWithUsername("jpp")).thenReturn(user);
         when(cashRegisterRepo.findLatestOpenRegisterByUser(user.getId())).thenReturn(cashRegister);
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() -> cashRegisterService.addRegisterClosing(dto));
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                () -> cashRegisterService.addRegisterClosing("jpp", dto));
 
         verify(userService, times(1)).getUserWithUsername("jpp");
         verify(cashRegisterRepo, times(1)).findLatestOpenRegisterByUser(user.getId());
