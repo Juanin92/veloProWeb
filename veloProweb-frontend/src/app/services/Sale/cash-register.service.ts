@@ -25,4 +25,8 @@ export class CashRegisterService {
     addRegisterOpening(amount: number): Observable<{message: string}>{
       return this.http.post<{message: string}>(`${this.apiUrl}/apertura`, amount, {headers: this.auth.getAuthHeaders()});
     }
+
+    addRegisterClosing(cashier: CashRegister): Observable<{message: string}>{
+      return this.http.post<{message: string}>(`${this.apiUrl}/cierre`, cashier, {headers: this.auth.getAuthHeaders()});
+    }
 }
