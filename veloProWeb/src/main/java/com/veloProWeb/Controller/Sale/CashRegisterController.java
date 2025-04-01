@@ -44,12 +44,30 @@ public class CashRegisterController {
 
     @PostMapping("/apertura")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'SELLER', 'GUEST')")
-    public ResponseEntity<Map<String, String>> addRegisterOpening(@AuthenticationPrincipal UserDetails userDetails, @RequestBody int amount){
+    public ResponseEntity<Map<String, String>> addRegisterOpening(@AuthenticationPrincipal UserDetails userDetails,
+                                                                  @RequestBody int amount){
         Map<String, String> response = new HashMap<>();
         try{
             cashRegisterService.addRegisterOpening(userDetails.getUsername(), amount);
             recordService.registerAction(userDetails, "OPEN", String.format("Apertura de caja con $%s pesos", amount));
             response.put("message", "Apertura de caja exitosa");
+            return ResponseEntity.ok(response);
+        }catch (Exception e){
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @PostMapping("/cierre")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'SELLER', 'GUEST')")
+    public ResponseEntity<Map<String, String>> addRegisterClosing(@AuthenticationPrincipal UserDetails userDetails,
+                                                                  @RequestBody CashRegisterDTO dto){
+        Map<String, String> response = new HashMap<>();
+        try{
+            cashRegisterService.addRegisterClosing(dto);
+            recordService.registerAction(userDetails, "CLOSE", String.format("Cierre de caja: $%s pesos - " +
+                    "POS: $%s pesos", dto.getAmountClosingCash(), dto.getAmountClosingPos()));
+            response.put("message", "Cierre de caja exitoso");
             return ResponseEntity.ok(response);
         }catch (Exception e){
             response.put("message", e.getMessage());
