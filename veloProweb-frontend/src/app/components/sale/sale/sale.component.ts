@@ -15,6 +15,7 @@ import { SaleRequestDTO } from '../../../models/DTO/sale-request-dto';
 import { PaymentMethod } from '../../../models/enum/payment-method';
 import { DispatchModalComponent } from "../dispatch-modal/dispatch-modal.component";
 import { SalePermissionsService } from '../../../services/Permissions/sale-permissions.service';
+import { CashRegisterService } from '../../../services/Sale/cash-register.service';
 
 @Component({
   selector: 'app-sale',
@@ -45,6 +46,7 @@ export class SaleComponent implements AfterViewInit, OnInit {
   isDebitPayment: boolean =  false;
   isMixPayment: boolean =  false;
   isOk: boolean = false;
+  openingRegisterLabel: boolean = false;
   editingFields: { [key: string]: { quantity?: boolean; } } = {}; // (Map) Campos de edición activa para cantidades o precios en detalles de compra
 
 
@@ -54,13 +56,21 @@ export class SaleComponent implements AfterViewInit, OnInit {
     private tooltipService: TooltipService,
     private notification: NotificationService,
     private helper: SaleHelperService,
-    protected permission: SalePermissionsService) {
+    protected permission: SalePermissionsService,
+    private cashRegisterService: CashRegisterService) {
     this.sale = helper.createEmptySale();
   }
 
   ngOnInit(): void {
     this.getCustomer();
     this.getTotalSale();
+
+    const isOpen = localStorage.getItem('isOpen') === 'true';
+    if (isOpen) {
+      this.openingRegisterLabel = true; 
+    } else {
+      this.openingCashierRegister();
+    }
   }
 
   ngAfterViewInit(): void {
@@ -348,6 +358,18 @@ export class SaleComponent implements AfterViewInit, OnInit {
       this.updateTotalWithCash();
     }
   }
+
+  openingCashierRegister(): void {
+    this.cashRegisterService.hasOpenRegisterOnDate().subscribe({
+      next: (response) => {
+        this.openingRegisterLabel = response;
+      },
+      error: (error) => {
+        console.error("Error en la solicitud:", error);
+      }
+    });
+  }
+  
 
   /**
    * Reinicia el proceso de venta a su estado inicial.
