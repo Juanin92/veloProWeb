@@ -41,7 +41,30 @@ export class CashierComponent {
     }
   }
 
-  saveClosingRegister(): void{}
+  saveClosingRegister(): void{
+    if(this.cashier){
+      this.cashierService.addRegisterClosing(this.cashier).subscribe({
+        next: (response) => {
+          this.notification.showSuccessToast(response.message, 'top', 3000);
+          if(response){
+            sessionStorage.setItem('isOpen', false.toString());
+          }
+        },
+        error: (error) => {
+          const message = error.error?.error || error.error?.message || error?.error;
+          console.log('Error: ', message);
+          this.notification.showErrorToast(message, 'top', 3000);
+        }
+      });
+    }
+  }
+
+  validateAmounts(): boolean{
+    if(this.cashier.amountClosingCash < 0 || this.cashier.amountClosingPos < 0){
+      return false;
+    }
+    return true;
+  }
 
   initializeCashier(): CashRegister{
     return {
