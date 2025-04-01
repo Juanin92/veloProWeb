@@ -57,19 +57,19 @@ public class CashRegisterService implements ICashRegisterService {
     @Override
     public void addRegisterClosing(CashRegisterDTO dto) {
         User user = userService.getUserWithUsername(dto.getUser());
-        validateAmount(dto.getAmountClosingCash());
-        validateAmount(dto.getAmountClosingPos());
-        if (user != null) {
-            if(!user.getRole().equals(Rol.WAREHOUSE)){
-                CashRegister cashRegister = getOpeningRegisterByUser(user.getId());
-                cashRegister.setAmountClosingCash(dto.getAmountClosingCash());
-                cashRegister.setAmountClosingPos(dto.getAmountClosingPos());
-                cashRegister.setDateClosing(LocalDateTime.now());
-                cashRegister.setStatus("CLOSED");
-                cashRegister.setComment(dto.getComment());
-                cashRegisterRepo.save(cashRegister);
-                validateClosingAndOpeningAmount(cashRegister);
-            }
+        if (user.getRole() != Rol.MASTER){
+            validateAmount(dto.getAmountClosingCash());
+            validateAmount(dto.getAmountClosingPos());
+        }
+        if (!user.getRole().equals(Rol.WAREHOUSE)) {
+            CashRegister cashRegister = getOpeningRegisterByUser(user.getId());
+            cashRegister.setAmountClosingCash(dto.getAmountClosingCash());
+            cashRegister.setAmountClosingPos(dto.getAmountClosingPos());
+            cashRegister.setDateClosing(LocalDateTime.now());
+            cashRegister.setStatus("CLOSED");
+            cashRegister.setComment(dto.getComment());
+            cashRegisterRepo.save(cashRegister);
+            validateClosingAndOpeningAmount(cashRegister);
         }
     }
 
