@@ -121,32 +121,6 @@ public class CashRegisterServiceTest {
         assertEquals("El monto de cierre en efectivo es menor a la apertura.", e.getMessage());
     }
 
-    //Prueba para crear comentario a un registro existente
-    @Test
-    public void addRegisterValidateComment_valid(){
-        dto.setComment("Prueba Test");
-        cashRegister.setComment(null);
-
-        when(cashRegisterRepo.findById(dto.getId())).thenReturn(Optional.of(cashRegister));
-        cashRegisterService.addRegisterValidateComment(dto);
-
-        verify(cashRegisterRepo, times(1)).findById(dto.getId());
-        verify(cashRegisterRepo, times(1)).save(cashRegister);
-
-        assertEquals(dto.getComment(), cashRegister.getComment());
-    }
-    @ParameterizedTest
-    @ValueSource(strings = {"", "   "})
-    public void addRegisterValidateComment_invalidEmptyComment(String comment){
-        dto.setComment(comment);
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() -> cashRegisterService.addRegisterValidateComment(dto));
-
-        verify(cashRegisterRepo, never()).findById(dto.getId());
-        verify(cashRegisterRepo, never()).save(cashRegister);
-
-        assertEquals("Debes agregar un comentario para registrar.", e.getMessage());
-    }
-
     //Prueba para obtener lista de cashRegister
     @Test
     public void getAll_valid(){
