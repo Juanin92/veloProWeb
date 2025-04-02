@@ -1,29 +1,31 @@
 <!-- MODAL OPENING -->
 <div class="modal fade" id="openingCashierModal" tabindex="-1" aria-labelledby="openingCashierModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-dark text-white shadow-lg p-4">
-            <div class="modal-header border-secondary">
-                <h4 class="modal-title fw-bold text-center w-100" id="cashierModalOpen">Apertura Caja</h4>
+        <div class="modal-content shadow-lg">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-bold w-100 text-center">Apertura de Caja</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <div class="modal-body text-center">
+            <div class="modal-body p-4">
+                <div class="text-center mb-4">
+                    <i class="bi bi-cash-coin" style="font-size: 3rem; color: #007bff;"></i>
+                </div>
                 <div class="form-floating mb-3">
-                    <input type="number" class="form-control" id="amountOpening" placeholder="Ingrese Monto apertura de caja" name="amountOpening"
-                        [(ngModel)]="cashier.amountOpening"
-                        [ngClass]="{'is-invalid': !cashier.amountOpening, 'is-valid': cashier.amountOpening}"  required />
+                    <input type="number" class="form-control" id="amountOpening" placeholder="Ingrese Monto Inicial"
+                        name="amountOpening" [(ngModel)]="cashier.amountOpening"
+                        [ngClass]="{'is-invalid': !cashier.amountOpening, 'is-valid': cashier.amountOpening}"
+                        required />
                     <label for="amountOpening" class="form-label">Monto Inicial</label>
                     <div *ngIf="!cashier.amountOpening" class="invalid-feedback">
-                        Monto debe ser mayor a 0.
+                        El monto debe ser mayor a 0.
                     </div>
                 </div>
             </div>
-            <div class="modal-footer border-secondary d-flex flex-column">
-                <button type="button"
-                    class="btn btn-outline-success fw-bold w-100"
-                    (click)="saveOpeningRegister()"
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-success btn-lg rounded-pill" (click)="saveOpeningRegister()"
                     [attr.data-bs-dismiss]="modalService.isModalVisible() ? 'modal' : null">
-                    Guardar
+                    Iniciar Caja
                 </button>
             </div>
         </div>
@@ -32,46 +34,45 @@
 <!-- MODAL CLOSING -->
 <div class="modal fade" id="closingCashierModal" tabindex="-1" aria-labelledby="closingCashierModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-dark text-white shadow-lg p-4">
-            <div class="modal-header border-secondary">
-                <h4 class="modal-title fw-bold text-center w-100" id="cashierModalClosing">Cierre de Caja
-                </h4>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                    aria-label="Close" (click)="resetValue()"></button>
+        <div class="modal-content shadow-lg">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-bold w-100 text-center">Cierre de Caja</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="resetValue()"></button>
             </div>
-            <div class="modal-body text-center">
+            <div class="modal-body p-4">
                 <div class="form-floating mb-3">
-                    <input type="number" class="form-control" id="amountClosing"
-                        placeholder="Ingrese Monto cierre de caja" name="amountClosing"
-                        [(ngModel)]="cashier.amountClosingCash"
+                    <input type="number" class="form-control" id="amountClosing" placeholder="Monto Final (Efectivo)"
+                        name="amountClosing" [(ngModel)]="cashier.amountClosingCash"
                         [ngClass]="{'is-invalid': !cashier.amountClosingCash, 'is-valid': cashier.amountClosingCash}"
                         required />
-                    <label for="amountClosing" class="form-label">Monto final</label>
+                    <label for="amountClosing" class="form-label">Monto Final (Efectivo)</label>
                     <div *ngIf="!cashier.amountClosingCash" class="invalid-feedback">
-                        Monto debe ser mayor a 0.
+                        El monto debe ser mayor a 0.
                     </div>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="number" class="form-control" id="amountPos" placeholder="Ingrese Monto terminal Pos"
+                    <input type="number" class="form-control" id="amountPos" placeholder="Monto Terminal POS"
                         name="amountPos" [(ngModel)]="cashier.amountClosingPos"
                         [ngClass]="{'is-invalid': !cashier.amountClosingPos, 'is-valid': cashier.amountClosingPos}"
                         required />
                     <label for="amountPos" class="form-label">Monto Terminal POS</label>
                     <div *ngIf="!cashier.amountClosingPos" class="invalid-feedback">
-                        Monto debe ser mayor a 0.
+                        El monto debe ser mayor a 0.
                     </div>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="commentCashier" placeholder="Ingrese Comentario"
-                        name="commentCashier" [(ngModel)]="cashier.comment"
-                        [ngClass]="{'is-valid': cashier.comment}" required />
+                    <textarea class="form-control" id="commentCashier" placeholder="Observación/Comentario"
+                        name="commentCashier" [(ngModel)]="cashier.comment" [ngClass]="{'is-valid': cashier.comment}"
+                        required></textarea>
                     <label for="commentCashier" class="form-label">Observación/Comentario</label>
                 </div>
             </div>
-            <div class="modal-footer border-secondary d-flex flex-column">
-                <button [disabled]="validateAmounts()" type="button" class="btn btn-outline-success fw-bold w-100" 
-                (click)="saveClosingRegister()" [attr.data-bs-dismiss]="modalService.isModalVisible() ? 'modal' : null">
-                    Guardar
+            <div class="modal-footer d-flex justify-content-center">
+                <button [disabled]="validateAmounts()" type="button" class="btn btn-primary btn-lg rounded-pill"
+                    (click)="saveClosingRegister()"
+                    [attr.data-bs-dismiss]="modalService.isModalVisible() ? 'modal' : null">
+                    Cerrar Caja
                 </button>
             </div>
         </div>
