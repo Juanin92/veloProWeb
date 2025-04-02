@@ -31,7 +31,9 @@ export class CashierComponent {
           this.notification.showSuccessToast(response.message, 'top', 3000);
           sessionStorage.setItem('isOpen', true.toString());
           this.modalService.closeModal();
-          this.router.navigate(['/main/ventas']);
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         },
         error: (error) => {
           const message = error.error?.error || error.error?.message || error?.error;
@@ -49,6 +51,9 @@ export class CashierComponent {
           this.notification.showSuccessToast(response.message, 'top', 3000);
           sessionStorage.removeItem('isOpen');
           this.modalService.closeModal();
+          setTimeout(() => {
+            window.location.reload();
+          }, 4000);
         },
         error: (error) => {
           const message = error.error?.error || error.error?.message || error?.error;
