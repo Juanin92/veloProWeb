@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { NotificationService } from '../../../utils/notification-service.service';
+import { ModalService } from '../../../utils/modal.service';
 
 @Component({
   selector: 'app-cashier',
@@ -20,17 +21,17 @@ export class CashierComponent {
   constructor(
     private cashierService: CashRegisterService,
     private router: Router,
-    private notification: NotificationService){}
+    private notification: NotificationService,
+    public modalService: ModalService){}
 
   saveOpeningRegister(): void {
     if (this.cashier.amountOpening !== null) {
       this.cashierService.addRegisterOpening(this.cashier.amountOpening).subscribe({
         next: (response) => {
           this.notification.showSuccessToast(response.message, 'top', 3000);
+          sessionStorage.setItem('isOpen', true.toString());
+          this.modalService.closeModal();
           this.router.navigate(['/main/ventas']);
-          if(response){
-            sessionStorage.setItem('isOpen', true.toString());
-          }
         },
         error: (error) => {
           const message = error.error?.error || error.error?.message || error?.error;
@@ -46,9 +47,8 @@ export class CashierComponent {
       this.cashierService.addRegisterClosing(this.cashier).subscribe({
         next: (response) => {
           this.notification.showSuccessToast(response.message, 'top', 3000);
-          if(response){
-            sessionStorage.removeItem('isOpen');
-          }
+          sessionStorage.removeItem('isOpen');
+          this.modalService.closeModal();
         },
         error: (error) => {
           const message = error.error?.error || error.error?.message || error?.error;
