@@ -21,7 +21,8 @@
             <div class="modal-footer border-secondary d-flex flex-column">
                 <button type="button"
                     class="btn btn-outline-success fw-bold w-100"
-                    (click)="saveOpeningRegister()">
+                    (click)="saveOpeningRegister()"
+                    [attr.data-bs-dismiss]="modalService.isModalVisible() ? 'modal' : null">
                     Guardar
                 </button>
             </div>
@@ -69,7 +70,7 @@
             </div>
             <div class="modal-footer border-secondary d-flex flex-column">
                 <button [disabled]="validateAmounts()" type="button" class="btn btn-outline-success fw-bold w-100" 
-                (click)="saveClosingRegister()">
+                (click)="saveClosingRegister()" [attr.data-bs-dismiss]="modalService.isModalVisible() ? 'modal' : null">
                     Guardar
                 </button>
             </div>
