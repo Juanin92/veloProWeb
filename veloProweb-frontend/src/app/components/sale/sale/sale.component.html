@@ -1,11 +1,16 @@
-<div *ngIf="!openingRegisterLabel" class="container-fluid d-flex flex-column p-2 min-vh-100 p-0">
-  <h5 class="justify-content-center align-content-center text-center fw-bold">
-    Debes registrar la apertura de caja para continuar con las ventas
-  </h5>
-  <button class="btn btn-success rounded-2" data-bs-toggle="modal"
-        data-bs-target="#openingCashierModal">Registrar apertura</button>
+
+<div *ngIf="!openingRegisterStatus"
+  class="container-fluid d-flex flex-column justify-content-center align-items-center min-vh-100">
+  <div class="text-center">
+    <i class="bi bi-exclamation-triangle-fill text-warning" style="font-size: 3rem;"></i>
+    <h5 class="mt-3 mb-4 fw-bold">Apertura de Caja Pendiente</h5>
+    <p class="mb-4">Necesitas registrar la apertura de caja para comenzar a vender.</p>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#openingCashierModal">
+      Abrir Caja
+    </button>
+  </div>
 </div>
-<div *ngIf="permission.canViewSale() && openingRegisterLabel" class="container-fluid d-flex flex-column p-2 min-vh-100 p-0">
+<div *ngIf="permission.canViewSale() && openingRegisterStatus" class="container-fluid d-flex flex-column p-2 min-vh-100 p-0">
   <!-- Área superior -->
   <div class="row py-1 align-items-center">
     <div class="col-md-4 col-6">
