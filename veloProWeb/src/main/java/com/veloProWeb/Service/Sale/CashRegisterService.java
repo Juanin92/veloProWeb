@@ -68,6 +68,9 @@ public class CashRegisterService implements ICashRegisterService {
             cashRegister.setDateClosing(LocalDateTime.now());
             cashRegister.setStatus("CLOSED");
             cashRegister.setComment(dto.getComment());
+            if (dto.getComment().toLowerCase().contains("error")) {
+                cashRegister.setAlert(true);
+            }
             cashRegisterRepo.save(cashRegister);
             validateClosingAndOpeningAmount(cashRegister);
         }
