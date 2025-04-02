@@ -16,6 +16,7 @@ import { PaymentMethod } from '../../../models/enum/payment-method';
 import { DispatchModalComponent } from "../dispatch-modal/dispatch-modal.component";
 import { SalePermissionsService } from '../../../services/Permissions/sale-permissions.service';
 import { CashRegisterService } from '../../../services/Sale/cash-register.service';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-sale',
@@ -46,7 +47,7 @@ export class SaleComponent implements AfterViewInit, OnInit {
   isDebitPayment: boolean =  false;
   isMixPayment: boolean =  false;
   isOk: boolean = false;
-  openingRegisterLabel: boolean = false;
+  openingRegisterStatus: boolean = false;
   editingFields: { [key: string]: { quantity?: boolean; } } = {}; // (Map) Campos de edición activa para cantidades o precios en detalles de compra
 
 
@@ -64,13 +65,7 @@ export class SaleComponent implements AfterViewInit, OnInit {
   ngOnInit(): void {
     this.getCustomer();
     this.getTotalSale();
-
-    const isOpen = localStorage.getItem('isOpen') === 'true';
-    if (isOpen) {
-      this.openingRegisterLabel = true; 
-    } else {
-      this.openingCashierRegister();
-    }
+    this.hasOpeningCashierRegister();
   }
 
   ngAfterViewInit(): void {
@@ -359,16 +354,22 @@ export class SaleComponent implements AfterViewInit, OnInit {
     }
   }
 
-  openingCashierRegister(): void {
-    this.cashRegisterService.hasOpenRegisterOnDate().subscribe({
-      next: (response) => {
-        this.openingRegisterLabel = response;
-      },
-      error: (error) => {
-        console.error("Error en la solicitud:", error);
-      }
-    });
-  }
+  hasOpeningCashierRegister(): void {
+    const isOpen = sessionStorage.getItem('isOpen');
+    if (isOpen) {
+        this.openingRegisterStatus = true;
+    } else {
+        this.cashRegisterService.hasOpenRegisterOnDate().subscribe({
+            next: (response) => {
+                this.openingRegisterStatus = response;
+            },
+            error: (error) => {
+                console.error("Error en la solicitud:", error);
+                this.openingRegisterStatus = false;
+            }
+        });
+    }
+}
   
 
   /**
