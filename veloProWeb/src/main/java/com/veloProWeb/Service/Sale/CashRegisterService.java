@@ -68,7 +68,7 @@ public class CashRegisterService implements ICashRegisterService {
             cashRegister.setDateClosing(LocalDateTime.now());
             cashRegister.setStatus("CLOSED");
             cashRegister.setComment(dto.getComment());
-            if (dto.getComment().toLowerCase().contains("error")) {
+            if (dto.getComment().toLowerCase().matches(".*\\berror\\b.*")) {
                 cashRegister.setAlert(true);
             }
             cashRegisterRepo.save(cashRegister);
