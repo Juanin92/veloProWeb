@@ -47,7 +47,7 @@ export class CashierComponent {
         next: (response) => {
           this.notification.showSuccessToast(response.message, 'top', 3000);
           if(response){
-            sessionStorage.setItem('isOpen', false.toString());
+            sessionStorage.removeItem('isOpen');
           }
         },
         error: (error) => {
@@ -59,11 +59,14 @@ export class CashierComponent {
     }
   }
 
-  validateAmounts(): boolean{
-    if(this.cashier.amountClosingCash < 0 || this.cashier.amountClosingPos < 0){
-      return false;
-    }
-    return true;
+  validateAmounts(): boolean {
+    return this.cashier.amountClosingCash <= 0 || this.cashier.amountClosingPos <= 0;
+  }
+
+  resetValue(): void{
+    this.cashier.amountClosingCash = 0;
+    this.cashier.amountClosingPos = 0;
+    this.cashier.comment = '';
   }
 
   initializeCashier(): CashRegister{
