@@ -36,7 +36,7 @@
                 <h4 class="modal-title fw-bold text-center w-100" id="cashierModalClosing">Cierre de Caja
                 </h4>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
+                    aria-label="Close" (click)="resetValue()"></button>
             </div>
             <div class="modal-body text-center">
                 <div class="form-floating mb-3">
@@ -63,11 +63,8 @@
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" id="commentCashier" placeholder="Ingrese Comentario"
                         name="commentCashier" [(ngModel)]="cashier.comment"
-                        [ngClass]="{'is-invalid': !cashier.comment, 'is-valid': cashier.comment}" required />
+                        [ngClass]="{'is-valid': cashier.comment}" required />
                     <label for="commentCashier" class="form-label">Observación/Comentario</label>
-                    <div *ngIf="!cashier.comment" class="invalid-feedback">
-                        Debe ingresar un observación para el registro.
-                    </div>
                 </div>
             </div>
             <div class="modal-footer border-secondary d-flex flex-column">
