@@ -26,7 +26,7 @@ public class EmailService {
     @Autowired private PdfService pdfService;
     private LocalData localData;
 
-    /*
+    /**
      * Configura el JavaMailSender para enviar correos electrónicos.
      * @return JavaMailSenderImpl configurado.
      */
@@ -48,14 +48,28 @@ public class EmailService {
         return mailSender;
     }
 
+    /**
+     * Envía un correo electrónico al cliente con un recordatorio de pago.
+     * @param customer el cliente al que se le enviará el correo.
+     * @param ticket el ticket asociado al cliente.
+     */
     public void sendOverdueTicketNotification(Customer customer, TicketHistory ticket) {
         String to = customer.getEmail();
-        String subject = "Aviso: Su ticket ha vencido";
-        String text = "Hola " + customer.getName() + ",\n\n" +
-                "Te recordamos que tu boleta " + ticket.getDocument() + " ha vencido." +
-                "\nFecha de compra: " + ticket.getDate() + "." +
-                "\n\nPor favor, póngase en contacto con nosotros para realizar el pago." +
-                "\n\n¡Gracias por su atención!";
+        String subject = "Aviso:  ticket ha vencido";
+        String text = String.format(""" 
+                Hola %s,
+
+                Esperamos que te encuentres bien. Queremos recordarte que tu boleta con el número **%s** ha vencido. 
+                Fecha de compra: **%s**.
+
+                Te invitamos a ponerte en contacto con nosotros para facilitar el proceso de pago y resolver cualquier duda que puedas tener. 
+                Tu satisfacción es muy importante para nosotros.
+
+                ¡Gracias por tu atención y preferencia!
+
+                Saludos cordiales,
+                El equipo de atención al cliente""",
+                customer.getName(), ticket.getDocument(), ticket.getDate());
 
         sendSimpleEmail(to, subject, text);
     }
@@ -102,7 +116,7 @@ public class EmailService {
         }
     }
 
-    /*
+    /**
      * Envía un email al usuario con instrucciones para restablecer su contraseña.
      * @param user el usuario al que se le enviará el correo.
      * @param code el código de restablecimiento de contraseña.
@@ -162,7 +176,7 @@ public class EmailService {
         return list.getFirst();
     }
 
-    /*
+    /**
      * Genera el texto del correo electrónico según el método de pago de la venta.
      * @param sale la venta para la cual se generará el texto del correo.
      * @return el texto del correo electrónico.
@@ -204,7 +218,7 @@ public class EmailService {
         }
     }
 
-    /*
+    /**
      * Extrae la cantidad pagada del comentario de la venta.
      * @param comment el comentario de la venta.
      * @return la cantidad pagada extraída, o 0 si no se encuentra.
