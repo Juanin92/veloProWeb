@@ -81,8 +81,9 @@ export class CashierComponent {
       amountOpening: 0,
       amountClosingCash: 0,
       amountClosingPos: 0,
-      status: false,
+      status: '',
       comment: '',
+      alert: false,
       user: ''
     }
   }
