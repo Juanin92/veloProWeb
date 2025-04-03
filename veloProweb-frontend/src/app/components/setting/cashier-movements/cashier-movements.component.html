@@ -51,7 +51,8 @@
                     </tr>
                 </thead>
                 <tbody class="table-group-divider text-center align-middle">
-                    <tr *ngFor="let cashRegister of filteredCashRegistersList">
+                    <tr *ngFor="let cashRegister of filteredCashRegistersList"
+                        [ngClass]="{'table-warning fw-bold border border-dark': cashRegister.alert}">
                         <td>{{cashRegister.dateOpening | date: 'dd-MM-yyyy (HH:mm)'}}</td>
                         <td>{{cashRegister.dateClosing | date: 'dd-MM-yyyy (HH:mm)'}}</td>
                         <td>{{cashRegister.amountOpening | currency: 'CLP':'$':'1.0-0'}}</td>
@@ -59,7 +60,7 @@
                         <td>{{cashRegister.amountClosingPos | currency: 'CLP':'$':'1.0-0'}}</td>
                         <td>{{cashRegister.user}}</td>
                         <td>{{cashRegister.comment}}</td>
-                        <td>{{cashRegister.status ? 'Cerrado':'Abierto'}}</td>
+                        <td>{{getCashierStatus(cashRegister.status)}}</td>
                     </tr>
                 </tbody>
             </table>
