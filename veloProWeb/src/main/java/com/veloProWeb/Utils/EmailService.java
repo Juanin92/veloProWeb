@@ -5,6 +5,7 @@ import com.veloProWeb.Model.Entity.Customer.TicketHistory;
 import com.veloProWeb.Model.Entity.Sale.Sale;
 import com.veloProWeb.Model.Entity.User.LocalData;
 import com.veloProWeb.Model.Entity.User.User;
+import com.veloProWeb.Model.Enum.PaymentMethod;
 import com.veloProWeb.Service.User.Interface.ILocalDataService;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import java.util.Properties;
 public class EmailService {
 
     @Autowired private ILocalDataService localDataService;
+    @Autowired private PdfService pdfService;
     private LocalData localData;
 
     private JavaMailSenderImpl getJavaMailSender() {
@@ -54,36 +56,42 @@ public class EmailService {
         sendSimpleEmail(to, subject, text);
     }
 
-    public void sendSalesReceiptEmail(Customer customer, Sale sale, String filePath) {
-        String to = customer.getEmail();
-        String subject = "Confirmación de Venta - " + sale.getDocument();
-        String text = "Hola " + customer.getName() + ",\n\n" +
-                "Se ha generado una venta con el documento " + sale.getDocument() +
-                " mediante el método de préstamo por un total de $" + sale.getTotalSale() + "." +
-                "\n\nAgradecemos su compra. Adjuntamos la boleta de su compra para su referencia." +
-                "\n\n¡Gracias por elegirnos!";
+    public void sendSalesReceiptEmail(Sale sale) {
+        if (sale.getPaymentMethod() == PaymentMethod.MIXTO || sale.getPaymentMethod() == PaymentMethod.PRESTAMO){
+            String to = sale.getCustomer().getEmail();
+            String subject = "Confirmación de Venta - " + sale.getDocument();
+            String text = "Hola " + sale.getCustomer().getName() + ",\n\n" +
+                    "Se ha generado una venta con el documento " + sale.getDocument() +
+                    " mediante el método de préstamo por un total de $" + sale.getTotalSale() + "." +
+                    "\n\nAgradecemos su compra. Adjuntamos la boleta de su compra para su referencia." +
+                    "\n\n¡Gracias por elegirnos!";
 
-        if (!"x@x.xxx".equals(to)) {
-            try {
-                JavaMailSenderImpl mailSender = getJavaMailSender();
-                MimeMessage message = mailSender.createMimeMessage();
-                MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            if (!"x@x.xxx".equals(to)) {
+                try {
+                    // Generar el PDF antes de enviarlo
+                    localData = getLocalData();
+                    String filePath = pdfService.generateSalesReceiptPDF(sale, localData);
 
-                helper.setFrom(localData.getEmail());
-                helper.setTo(to);
-                helper.setSubject(subject);
-                helper.setText(text);
+                    JavaMailSenderImpl mailSender = getJavaMailSender();
+                    MimeMessage message = mailSender.createMimeMessage();
+                    MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-                FileSystemResource file = new FileSystemResource(filePath);
-                if (file.exists()) {
-                    helper.addAttachment(Objects.requireNonNull(file.getFilename()), file);
-                } else {
-                    throw new IllegalArgumentException("El archivo PDF no existe: " + filePath);
+                    helper.setFrom(localData.getEmail());
+                    helper.setTo(to);
+                    helper.setSubject(subject);
+                    helper.setText(text);
+
+                    FileSystemResource file = new FileSystemResource(filePath);
+                    if (file.exists()) {
+                        helper.addAttachment(Objects.requireNonNull(file.getFilename()), file);
+                    } else {
+                        throw new IllegalArgumentException("El archivo PDF no existe: " + filePath);
+                    }
+
+                    mailSender.send(message);
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("No fue posible enviar el correo: " + e.getMessage());
                 }
-
-                mailSender.send(message);
-            } catch (Exception e) {
-                throw new IllegalArgumentException("No fue posible enviar el correo: " + e.getMessage());
             }
         }
     }
