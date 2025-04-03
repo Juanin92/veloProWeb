@@ -11,12 +11,17 @@ import java.util.Base64;
 public class EncryptionService {
 
     @Value("${crypto.encryption.key}")
-    private String encryptionKeyBase64;
+    private String encryptionKeyBase64; // Clave de encriptación AES en Base64
 
     public String getEncryptionKey() {
         return encryptionKeyBase64;
     }
 
+    /**
+     * Encripta una contraseña utilizando AES encriptado.
+     * @param encryptedPassword contraseña a encriptar
+     * @return contraseña encriptada
+     */
     public String decrypt(String encryptedPassword) throws Exception {
         byte[] decodedKey = Base64.getDecoder().decode(encryptionKeyBase64);
         SecretKeySpec secretKey = new SecretKeySpec(decodedKey, "AES");
