@@ -26,6 +26,10 @@ public class EmailService {
     @Autowired private PdfService pdfService;
     private LocalData localData;
 
+    /*
+     * Configura el JavaMailSender para enviar correos electrónicos.
+     * @return JavaMailSenderImpl configurado.
+     */
     private JavaMailSenderImpl getJavaMailSender() {
         localData = getLocalData();
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -56,6 +60,10 @@ public class EmailService {
         sendSimpleEmail(to, subject, text);
     }
 
+    /**
+     * Envía un correo electrónico al cliente con la boleta de venta.
+     * @param sale la venta que se va a enviar por correo.
+     */
     public void sendSalesReceiptEmail(Sale sale) {
         if (sale.getPaymentMethod() == PaymentMethod.MIXTO || sale.getPaymentMethod() == PaymentMethod.PRESTAMO){
             String to = sale.getCustomer().getEmail();
@@ -98,6 +106,11 @@ public class EmailService {
         }
     }
 
+    /*
+     * Envía un email al usuario con instrucciones para restablecer su contraseña.
+     * @param user el usuario al que se le enviará el correo.
+     * @param code el código de restablecimiento de contraseña.
+     */
     public void sendPasswordResetCode(User user, String code) {
         String to = user.getEmail();
         String subject = "Instrucciones para Restablecer tu Contraseña";
@@ -112,6 +125,12 @@ public class EmailService {
         sendSimpleEmail(to, subject, text);
     }
 
+    /**
+     * Envía un correo electrónico simple.
+     * @param to      destinatario del correo.
+     * @param subject asunto del correo.
+     * @param text    cuerpo del correo.
+     */
     private void sendSimpleEmail(String to, String subject, String text) {
         try {
             JavaMailSenderImpl mailSender = getJavaMailSender();
@@ -125,6 +144,12 @@ public class EmailService {
         }
     }
 
+    /**
+     * Obtiene los datos locales necesarios para la configuración del correo.
+     *
+     * @return LocalData objeto con los datos locales.
+     * @throws IllegalArgumentException si no se encuentran datos locales.
+     */
     private LocalData getLocalData() {
         List<LocalData> list = localDataService.getDataToEmail();
         if (list.isEmpty()) {
