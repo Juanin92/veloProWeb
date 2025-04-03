@@ -68,11 +68,7 @@ public class EmailService {
         if (sale.getPaymentMethod() == PaymentMethod.MIXTO || sale.getPaymentMethod() == PaymentMethod.PRESTAMO){
             String to = sale.getCustomer().getEmail();
             String subject = "Confirmación de Venta - " + sale.getDocument();
-            String text = "Hola " + sale.getCustomer().getName() + ",\n\n" +
-                    "Se ha generado una venta con el documento " + sale.getDocument() +
-                    " mediante el método de préstamo por un total de $" + sale.getTotalSale() + "." +
-                    "\n\nAgradecemos su compra. Adjuntamos la boleta de su compra para su referencia." +
-                    "\n\n¡Gracias por elegirnos!";
+            String text = generateTextEmail(sale);
 
             if (!"x@x.xxx".equals(to)) {
                 try {
@@ -164,6 +160,60 @@ public class EmailService {
             throw new IllegalArgumentException("No se encontraron datos locales.");
         }
         return list.getFirst();
+    }
+
+    /*
+     * Genera el texto del correo electrónico según el método de pago de la venta.
+     * @param sale la venta para la cual se generará el texto del correo.
+     * @return el texto del correo electrónico.
+     */
+    private String generateTextEmail(Sale sale) {
+        switch (sale.getPaymentMethod()) {
+            case PRESTAMO:
+                return String.format(
+                        """
+                                Hola %s,
+
+                                Se ha generado una venta con el documento %s \
+                                mediante el método de préstamo por un total de $%d.
+
+                                Agradecemos su compra. Adjuntamos la boleta de su compra para su referencia.
+
+                                ¡Gracias por elegirnos!""",
+                        sale.getCustomer().getName(), sale.getDocument(), sale.getTotalSale());
+            case MIXTO:
+                int amountPaid = extractAmountPaid(sale.getComment());
+                int totalDebt = sale.getTotalSale() + amountPaid;
+                return String.format(
+                        """
+                                Hola %s,
+
+                                Se ha generado una venta con el documento %s \
+                                mediante el método mixto por un total de $%d.
+
+                                Monto abonado: $%d
+                                Deuda restante: $%d
+
+                                Agradecemos su compra. Adjuntamos la boleta de su compra para su referencia.
+
+                                ¡Gracias por elegirnos!""",
+                        sale.getCustomer().getName(), sale.getDocument(), totalDebt,
+                        amountPaid, sale.getTotalSale());
+            default:
+                return "";
+        }
+    }
+
+    /*
+     * Extrae la cantidad pagada del comentario de la venta.
+     * @param comment el comentario de la venta.
+     * @return la cantidad pagada extraída, o 0 si no se encuentra.
+     */
+    private int extractAmountPaid(String comment) {
+        if (comment == null || !comment.matches(".*\\$\\d+.*")) {
+            return 0;
+        }
+        return Integer.parseInt(comment.replaceAll("[^0-9]", ""));
     }
 }
 
