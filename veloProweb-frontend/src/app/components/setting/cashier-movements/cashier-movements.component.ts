@@ -35,6 +35,7 @@ export class CashierMovementsComponent implements OnInit{
       next:(list)=>{
         this.cashRegistersList = list;
         this.filteredCashRegistersList = list;
+        console.log(this.cashRegistersList);
       },error: (error)=>{
         console.log('No se encontró información sobre los registros de caja')
       }
@@ -86,14 +87,23 @@ export class CashierMovementsComponent implements OnInit{
     });
   }
 
+  getCashierStatus(status: string): string {
+    if(status === 'OPEN'){
+      return 'Abierto';
+    }else{
+      return 'Cerrado';
+    }
+  }
+
   searchFilterCashierMovements(): void {
     if (this.textFilter.trim() === '') {
       this.filteredCashRegistersList = this.cashRegistersList;
     } else {
       this.filteredCashRegistersList = this.cashRegistersList.filter(cashier =>
         cashier.user.toLowerCase().includes(this.textFilter.toLowerCase()) ||
-        (this.textFilter.toLowerCase() === 'abierto' && cashier.status) || 
-        (this.textFilter.toLowerCase() === 'cerrado' && cashier.status)
+        (this.textFilter.toLowerCase() === 'abierto' && cashier.status.toLowerCase() === 'open') ||
+        (this.textFilter.toLowerCase() === 'cerrado' && cashier.status.toLowerCase() === 'closed') ||
+        (this.textFilter.toLowerCase() === 'error' && cashier.alert) 
       );
     }
   }
