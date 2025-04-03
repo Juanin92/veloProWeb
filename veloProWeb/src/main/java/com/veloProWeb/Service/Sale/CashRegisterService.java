@@ -86,7 +86,7 @@ public class CashRegisterService implements ICashRegisterService {
         return cashRegisters.stream().map(cashRegister ->
             new CashRegisterDTO(cashRegister.getId(), cashRegister.getDateOpening(), cashRegister.getDateClosing(),
                     cashRegister.getAmountOpening(), cashRegister.getAmountClosingCash(), cashRegister.getAmountClosingPos(),
-                    cashRegister.getStatus(), cashRegister.getComment(),
+                    cashRegister.getStatus(), cashRegister.getComment(), cashRegister.isAlert(),
                     String.format("%s %s", cashRegister.getUser().getName(), cashRegister.getUser().getSurname()))
         ).toList();
     }
