@@ -89,7 +89,9 @@ public class EmailService {
                     }
 
                     mailSender.send(message);
+                    pdfService.deleteSalesReceiptPDF(sale.getDocument());
                 } catch (Exception e) {
+                    pdfService.deleteSalesReceiptPDF(sale.getDocument());
                     throw new IllegalArgumentException("No fue posible enviar el correo: " + e.getMessage());
                 }
             }
