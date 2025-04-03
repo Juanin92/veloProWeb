@@ -11,6 +11,10 @@ public class CodeGenerator {
         return generateRandomToken();
     }
 
+    /**
+     * Genera un token aleatorio de 8 caracteres alfanuméricos
+     * @return token aleatorio
+     */
     private String generateRandomToken() {
         RandomStringGenerator generator = new RandomStringGenerator.Builder()
                 .withinRange('0', 'z')
