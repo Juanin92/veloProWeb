@@ -35,15 +35,6 @@ export class TicketHistoryService {
   }
 
   /**
-   * Valida el ticket de un cliente
-   * @param customer - Cliente seleccionado
-   * @returns - Observable emite un mensaje de confirmación
-   */
-  valideTicketByCustomer(customer: Customer): Observable<{message: string}>{
-    return this.httpClient.put<{message: string}>(`${this.apiUrl}/validar`, customer);
-  }
-
-  /**
    * Actualiza el estado de un ticket
    * @param ticket - ticket seleccionado
    * @returns - Observable emite un mensaje de confirmación
