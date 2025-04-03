@@ -8,6 +8,7 @@ import com.veloProWeb.Service.Record.IRecordService;
 import com.veloProWeb.Service.Sale.Interface.IDispatchService;
 import com.veloProWeb.Service.Sale.Interface.ISaleDetailService;
 import com.veloProWeb.Service.Sale.Interface.ISaleService;
+import com.veloProWeb.Utils.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,7 @@ public class SaleController {
     @Autowired private ISaleDetailService saleDetailService;
     @Autowired private IDispatchService dispatchService;
     @Autowired private IRecordService recordService;
+    @Autowired private EmailService emailService;
 
     /**
      * Crear una venta y su detalle de venta correspondiente
@@ -46,6 +48,7 @@ public class SaleController {
             saleDetailService.createSaleDetailsToSale(dto.getDetailList(), sale);
             response.put("message", "Venta registrada correctamente!");
             recordService.registerAction(userDetails, "CREATE", "Venta realizada " + dto.getNumberDocument());
+            emailService.sendSalesReceiptEmail(sale);
             return ResponseEntity.ok(response);
         }catch (IllegalArgumentException e){
             response.put("message", e.getMessage());
