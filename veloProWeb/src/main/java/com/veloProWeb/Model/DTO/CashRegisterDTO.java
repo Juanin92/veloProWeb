@@ -23,5 +23,6 @@ public class CashRegisterDTO {
     private int amountClosingPos;
     private String status;
     private String comment;
+    private boolean alert;
     private String user;
 }
