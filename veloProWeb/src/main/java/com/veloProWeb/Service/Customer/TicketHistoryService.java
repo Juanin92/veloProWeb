@@ -6,7 +6,10 @@ import com.veloProWeb.Model.Enum.PaymentStatus;
 import com.veloProWeb.Repository.Customer.TicketHistoryRepo;
 import com.veloProWeb.Service.Customer.Interfaces.ICustomerService;
 import com.veloProWeb.Service.Customer.Interfaces.ITicketHistoryService;
+import com.veloProWeb.Utils.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,6 +22,7 @@ public class TicketHistoryService implements ITicketHistoryService {
 
     @Autowired private TicketHistoryRepo ticketHistoryRepo;
     @Autowired private ICustomerService customerService;
+    @Autowired @Lazy private EmailService emailService;
     private LocalDate lastValidationDate;
 
     /**
@@ -57,31 +61,6 @@ public class TicketHistoryService implements ITicketHistoryService {
     }
 
     /**
-     * Válida los tickets de un cliente y actualiza el estado de la deuda.
-     *
-     * <p>Se encarga de validar si {@code lastValidationDate} es nulo o si la fecha no es igual al día actual.
-     * Si el estado del ticket es falso y el método {@code validateDate} devuelve verdadero, se actualiza
-     * el estado del cliente a {@code PaymentStatus.VENCIDA}.
-     * Asigna la fecha actual a la variable {@code lastValidationDate} cuando se validan los tickets.</p>
-     *
-     * @param customer el cliente cuyos tickets se deben validar
-     */
-    @Override
-    public void valideTicketByCustomer(Customer customer) {
-        LocalDate today = LocalDate.now();
-        if (lastValidationDate == null || !lastValidationDate.equals(today)) {
-            List<TicketHistory> tickets = getByCustomerId(customer.getId());
-            for (TicketHistory ticket : tickets) {
-                if (!ticket.isStatus() && validateDate(ticket)) {
-                    customer.setStatus(PaymentStatus.VENCIDA);
-                    customerService.updateTotalDebt(customer);
-                }
-            }
-            lastValidationDate = today;
-        }
-    }
-
-    /**
      * Actualiza el estado del ticket seleccionado a verdadero
      * @param ticket ticket para actualizar su estado
      */
@@ -99,6 +78,30 @@ public class TicketHistoryService implements ITicketHistoryService {
     @Override
     public TicketHistory getTicketByID(Long Id) {
         return ticketHistoryRepo.findById(Id).orElseThrow(() -> new IllegalArgumentException("Ticket no encontrado"));
+    }
+
+    /**
+     * Válida los tickets de todos los clientes diariamente a las 12:00 PM.
+     * Si la fecha de validación es diferente a la fecha actual, se valida cada ticket
+     * y se envía un correo electrónico al cliente si el ticket está vencido.
+     */
+    @Scheduled(cron = "0 0 12 * * ?")
+    public void validateTicketsDaily() {
+        LocalDate today = LocalDate.now();
+        if (lastValidationDate == null || !lastValidationDate.equals(today)) {
+            List<Customer> customers = customerService.getAll();
+            for (Customer customer : customers) {
+                List<TicketHistory> tickets = getByCustomerId(customer.getId());
+                for (TicketHistory ticket : tickets) {
+                    if (!ticket.isStatus() && validateDate(ticket)) {
+                        customer.setStatus(PaymentStatus.VENCIDA);
+                        customerService.updateTotalDebt(customer);
+                        emailService.sendOverdueTicketNotification(customer, ticket);
+                    }
+                }
+            }
+            lastValidationDate = today;
+        }
     }
 
     /**
