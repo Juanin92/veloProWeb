@@ -58,25 +58,6 @@ public class TicketHistoryController {
     }
 
     /**
-     * Válida los tickets de un cliente
-     * @param customer - Cliente cuyo tickets se desea validar.
-     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
-     */
-    @PutMapping("/validar")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'SELLER', 'MASTER', 'GUEST')")
-    public ResponseEntity<Map<String, String>> valideTicketByCustomer(@RequestBody Customer customer){
-        Map<String, String> response = new HashMap<>();
-        try{
-            ticketHistoryService.valideTicketByCustomer(customer);
-            response.put("message","Tickets validados para el cliente " + customer.getName());
-            return ResponseEntity.ok(response);
-        }catch (Exception e){
-            response.put("message", "Ocurrió un error inesperado. " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
-    }
-
-    /**
      * Actualiza el estado de un ticket
      * @param ticket - Ticket que se desea actualizar el estado.
      * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
