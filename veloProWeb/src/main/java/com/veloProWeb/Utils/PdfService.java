@@ -12,6 +12,7 @@ import com.veloProWeb.Service.Sale.Interface.ISaleDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -79,8 +80,6 @@ public class PdfService {
         table.addCell(new PdfPCell(new Phrase("Precio", boldFont)));
 
         List<DetailSaleRequestDTO> detailList = saleDetailService.getSaleDetailsToSale(sale.getId());
-        System.out.println("detailList = " + detailList);
-        System.out.println("sale = " + sale);
         for (DetailSaleRequestDTO item : detailList) {
             table.addCell(new PdfPCell(new Phrase(String.valueOf(item.getQuantity()), normalFont)));
             table.addCell(new PdfPCell(new Phrase(item.getDescriptionProduct(), normalFont)));
@@ -105,5 +104,13 @@ public class PdfService {
 
         document.close();
         return filePath;
+    }
+
+    public void deleteSalesReceiptPDF(String documentNumber) {
+        String filePath = "src/main/resources/static/pdf/boleta_" + documentNumber + ".pdf";
+        File file = new File(filePath);
+        if (file.exists()) {
+            boolean deleted = file.delete();
+        }
     }
 }
