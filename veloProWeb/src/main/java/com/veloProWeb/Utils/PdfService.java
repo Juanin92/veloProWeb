@@ -22,6 +22,13 @@ public class PdfService {
 
     @Autowired private ISaleDetailService saleDetailService;
 
+    /**
+     * Genera un archivo PDF del comprobante de venta
+     * @param sale - Objeto con los datos de la venta
+     * @param companyData - Datos de la empresa
+     * @return - Ruta del archivo PDF generado
+     * @throws Exception - Excepción en caso de error al generar el PDF
+     */
     public String generateSalesReceiptPDF(Sale sale, LocalData companyData) throws Exception {
         String filePath = "src/main/resources/static/pdf/boleta_" + sale.getDocument() + ".pdf";
         Document document = new Document(PageSize.A4);
@@ -85,7 +92,6 @@ public class PdfService {
             table.addCell(new PdfPCell(new Phrase(item.getDescriptionProduct(), normalFont)));
             table.addCell(new PdfPCell(new Phrase("$" + item.getPrice(), normalFont)));
         }
-
         document.add(table);
 
         // Total general
@@ -93,6 +99,7 @@ public class PdfService {
 
         // Datos de la empresa
         if (companyData != null) {
+            document.add(new Paragraph(" "));
             document.add(new Paragraph("Teléfono: " + companyData.getPhone(), normalFont));
             document.add(new Paragraph("Email: " + companyData.getEmail(), normalFont));
             document.add(new Paragraph("Dirección: " + companyData.getAddress(), normalFont));
@@ -106,6 +113,10 @@ public class PdfService {
         return filePath;
     }
 
+    /**
+     * Elimina el archivo PDF de la boleta generada
+     * @param documentNumber - Número de documento de la boleta a eliminar
+     */
     public void deleteSalesReceiptPDF(String documentNumber) {
         String filePath = "src/main/resources/static/pdf/boleta_" + documentNumber + ".pdf";
         File file = new File(filePath);
