@@ -96,6 +96,7 @@ export class AddCategoriesComponent implements OnInit{
         console.log('Nueva categoría registrada', response);
         this.notification.showSuccessToast(`${this.newCategory.name} ha sido registrada`,'top', 3000);
         this.newCategory = this.helper.createEmptyCategory();
+        this.getAllCategories();
       }, (error) => {
         const message = error.error?.message || error.error?.error;
         console.error('Error:', error);
