@@ -114,13 +114,21 @@ public class EmailService {
     public void sendPasswordResetCode(User user, String code) {
         String to = user.getEmail();
         String subject = "Instrucciones para Restablecer tu Contraseña";
-        String text = "Hola " + user.getName() + ",\n\n" +
-                "Hemos recibido una solicitud para restablecer tu contraseña. " +
-                "Por favor, utiliza el siguiente código para proceder:\n\n" +
-                code + "\n\n" +
-                "Ingresa este código en el campo correspondiente para actualizar tu contraseña." +
-                "\nSi no solicitaste este cambio, puedes ignorar este mensaje." +
-                "\n\n¡Gracias!";
+        String text = String.format("""
+                Hola %s,
+
+                Hemos recibido una solicitud para restablecer tu contraseña. \
+                Por favor, utiliza el siguiente código momentáneo para proceder:
+
+                %s
+
+                Este código es válido solo por 3 horas. \
+                Al ingresar, deberás cambiar tu contraseña a una nueva, utilizando este código como tu contraseña actual.\
+
+                Si no solicitaste este cambio, puedes ignorar este mensaje.\
+
+
+                ¡Gracias!""", user.getName(), code);
 
         sendSimpleEmail(to, subject, text);
     }
