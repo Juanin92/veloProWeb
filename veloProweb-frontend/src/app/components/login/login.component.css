@@ -1,0 +1,145 @@
+/* #backgroundLogin {
+    background: #0F2027;
+    background: -webkit-linear-gradient(to top, #2C5364, #203A43, #0F2027);
+    background: linear-gradient(to top, #2C5364, #203A43, #0F2027);
+} */
+
+#backgroundLogin {
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #0b0b2b, #1b2735 70%, #090a0f);
+    overflow: hidden;
+}
+
+/* Cielo estrellado */
+.stars {
+    width: 1px;
+    height: 2px;
+    position: absolute;
+    background: white;
+    box-shadow:
+        2vw 5vh 2px rgb(234, 1, 1),
+        /* Rojo */
+        10vw 8vh 2px white,
+        15vw 15vh 1px rgb(0, 255, 255),
+        22vw 22vh 1px white,
+        28vw 12vh 2px rgb(255, 255, 0),
+        32vw 32vh 1px white,
+        38vw 18vh 2px rgb(255, 0, 255),
+        42vw 35vh 1px white,
+        48vw 25vh 2px rgb(255, 165, 0),
+        53vw 42vh 1px white,
+        58vw 15vh 2px white,
+        63vw 38vh 1px rgb(128, 0, 128),
+        68vw 28vh 2px white,
+        73vw 45vh 1px white,
+        78vw 32vh 2px rgb(0, 128, 0),
+        83vw 48vh 1px white,
+        88vw 20vh 2px rgb(255, 20, 147),
+        93vw 52vh 1px white,
+        98vw 35vh 2px white,
+        5vw 60vh 1px white,
+        12vw 65vh 2px white,
+        18vw 72vh 1px white,
+        25vw 78vh 2px white,
+        30vw 85vh 1px white,
+        35vw 68vh 2px white,
+        40vw 82vh 1px white,
+        45vw 92vh 1px white,
+        50vw 75vh 1px white,
+        55vw 88vh 2px white,
+        60vw 95vh 1px white,
+        65vw 72vh 2px white,
+        70vw 85vh 1px white,
+        75vw 78vh 2px white,
+        80vw 92vh 1px white,
+        85vw 82vh 1px white,
+        90vw 88vh 1px white,
+        95vw 75vh 2px white;
+    animation: twinkle 8s infinite linear;
+}
+
+/* Estrellas fugaces */
+.shooting-star {
+    position: absolute;
+    width: 8px; /* Tamaño de la estrella fugaz */
+    height: 8px; /* Tamaño de la estrella fugaz */
+    background: white; /* Color de la estrella fugaz */
+    border-radius: 50%; /* Hacer la forma redonda */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), /* Efecto de brillo */
+                0 0 20px rgba(255, 255, 255, 0.6); /* Estela desvanecida */
+    animation: shoot 3s infinite ease-in;
+}
+
+.shooting-star:nth-child(1) {
+    top: 20%;
+    left: -10px;
+    animation-delay: 0s;
+}
+
+.shooting-star:nth-child(2) {
+    top: 35%;
+    left: -10px;
+    animation-delay: 1s;
+}
+
+.shooting-star:nth-child(3) {
+    top: 50%;
+    left: -10px;
+    animation-delay: 2s;
+}
+
+/* Animación de parpadeo */
+@keyframes twinkle {
+    0%,
+    100% {
+        opacity: 0.8;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+}
+
+/* Animación de las estrellas fugaces */
+@keyframes shoot {
+    0% {
+        transform: translateX(0) translateY(0) rotate(25deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(120vw) translateY(50vh) rotate(25deg);
+        opacity: 0;
+    }
+}
+
+/* Estrellas adicionales con diferentes colores */
+.stars::after {
+    content: "";
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: white;
+    box-shadow:
+        8vw 12vh 2px rgb(234, 1, 1), 
+        16vw 18vh 1px white,
+        24vw 25vh 2px rgb(0, 255, 255), 
+        33vw 15vh 1px white,
+        41vw 28vh 2px rgb(255, 255, 0),
+        49vw 35vh 1px white,
+        57vw 22vh 2px rgb(255, 0, 255), 
+        65vw 42vh 1px white,
+        73vw 28vh 2px rgb(255, 165, 0), 
+        81vw 48vh 1px white,
+        89vw 32vh 2px rgb(255, 255, 255), 
+        97vw 45vh 1px white,
+        3vw 68vh 2px rgb(128, 0, 128), 
+        11vw 75vh 1px white,
+        19vw 82vh 2px rgb(0, 128, 0), 
+        27vw 88vh 1px white,
+        35vw 72vh 2px rgb(255, 20, 147),
+        43vw 85vh 1px white,
+        51vw 92vh 2px white,
+        59vw 78vh 1px white;
+    animation: twinkle 4s infinite linear reverse;
+}
