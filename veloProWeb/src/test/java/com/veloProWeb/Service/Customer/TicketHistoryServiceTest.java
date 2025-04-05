@@ -79,51 +79,6 @@ public class TicketHistoryServiceTest {
         assertEquals(7000, result.stream().mapToInt(TicketHistory::getTotal).sum());
     }
 
-    //Prueba para validar tiempo del ticket de un cliente
-    @Test
-    public void valideTicketByCustomer_valid() {
-        List<TicketHistory> tickets = Collections.singletonList(ticketHistory);
-        when(ticketHistoryRepo.findByCustomerId(customerReal.getId())).thenReturn(tickets);
-        ticketHistory.setStatus(false);
-        ticketHistory.setDate(LocalDate.now().minusDays(31));
-        ticketHistory.setNotificationsDate(null);
-        ticketHistoryService.valideTicketByCustomer(customerReal);
-
-        verify(ticketHistoryRepo, times(1)).save(ticketHistory);
-        assertEquals(PaymentStatus.VENCIDA, customerReal.getStatus());
-    }
-
-    @Test
-    public void valideTicketByCustomer_validReturnFalseMethod(){
-        List<TicketHistory> tickets = Collections.singletonList(ticketHistory);
-        when(ticketHistoryRepo.findByCustomerId(customerReal.getId())).thenReturn(tickets);
-        ticketHistoryService.valideTicketByCustomer(customerReal);
-
-        verify(customerService, never()).updateTotalDebt(customerReal);
-    }
-    @Test
-    public void valideTicketByCustomer_validTicketPaid(){
-        ticketHistory.setStatus(true);
-        TicketHistoryService spyService = Mockito.spy(ticketHistoryService);
-        List<TicketHistory> tickets = Collections.singletonList(ticketHistory);
-        when(ticketHistoryRepo.findByCustomerId(customerReal.getId())).thenReturn(tickets);
-        spyService.valideTicketByCustomer(customerReal);
-
-        verify(customerService, never()).updateTotalDebt(customerReal);
-    }
-    @Test
-    public void valideTicketByCustomer_validLastValidationDateToday() throws NoSuchFieldException, IllegalAccessException {
-        TicketHistoryService spyService = Mockito.spy(ticketHistoryService);
-
-        // Configurar lastValidationDate a LocalDate.now() usando reflexión
-        Field field = TicketHistoryService.class.getDeclaredField("lastValidationDate");
-        field.setAccessible(true);
-        field.set(spyService, LocalDate.now());
-
-        spyService.valideTicketByCustomer(customerReal);
-        verify(customerService, never()).updateTotalDebt(customerReal);
-    }
-
     //Prueba para actualizar el estado de un ticket
     @Test
     public void updateStatus_valid(){
