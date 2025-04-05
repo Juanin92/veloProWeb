@@ -115,33 +115,6 @@ public class TicketHistoryControllerTest {
                 .andExpect(jsonPath("$.message").value("Ocurrió un error inesperado. Por favor, intente más tarde."));
     }
 
-    //Prueba para validar el ticket del cliente
-    @Test
-    public void valideTicketByCustomer_valid() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        String request = mapper.writeValueAsString(customer);
-        mockMvc.perform(put("/Tickets/validar")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(request))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message", containsString("Tickets validados para el cliente " + customer.getName())));
-        verify(ticketHistoryService, times(1)).valideTicketByCustomer(any(Customer.class));
-    }
-    @Test
-    public void valideTicketByCustomer_error() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        String request = mapper.writeValueAsString(customer);
-        doThrow(new RuntimeException("Por favor, intente más tarde."))
-                .when(ticketHistoryService).valideTicketByCustomer(any(Customer.class));
-        mockMvc.perform(put("/Tickets/validar")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(request))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message", containsString("Ocurrió un error inesperado. Por favor, intente más tarde.")));
-    }
-
     //Prueba para actualizar el estado de la deuda de cliente
     @Test
     public void updateStatus_valid() throws Exception {
