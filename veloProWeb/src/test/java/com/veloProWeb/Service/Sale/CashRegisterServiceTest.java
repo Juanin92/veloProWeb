@@ -42,7 +42,7 @@ public class CashRegisterServiceTest {
         user.setUsername("jpp");
 
         dto = new CashRegisterDTO(1L, LocalDateTime.now(), null, 5000,
-                50000, 1000, null, null, "jpp");
+                50000, 1000, null, null, false, "jpp");
 
         cashRegister = new CashRegister();
         cashRegister.setId(1L);
