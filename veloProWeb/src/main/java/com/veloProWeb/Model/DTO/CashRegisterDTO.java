@@ -1,12 +1,8 @@
 package com.veloProWeb.Model.DTO;
 
-import com.veloProWeb.Model.Entity.User.User;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
