@@ -21,7 +21,7 @@ export class PdfService {
     
     // Logo en la esquina superior derecha
     const urlLogo = 'assets/img/principalLogo.png';
-    doc.addImage(urlLogo, 'PNG', 160, 10, 40, 40);
+    this.validateURLImage(urlLogo, doc);
     
     // Datos en una sola columna
     doc.setFontSize(10);
@@ -88,4 +88,23 @@ export class PdfService {
     // Generar el PDF
     doc.save(`boleta_${saleDetails.document}.pdf`);
   }
+
+  validateURLImage(url: string, doc: jsPDF): void {
+    if (!this.isValidUrl(url)) {
+      console.error('URL de imagen no válida o potencialmente peligrosa:', url);
+      return;
+    }
+  
+    try {
+      doc.addImage(url, "PNG", 160, 10, 40, 40);
+    } catch (err) {
+      console.error('Error al agregar la imagen:', err);
+    }
+  }
+  
+  // Método para validar URLs seguras
+  isValidUrl(url: string): boolean {
+    const regex = /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|svg))$/i;
+    return regex.test(url);
+  }  
 }
