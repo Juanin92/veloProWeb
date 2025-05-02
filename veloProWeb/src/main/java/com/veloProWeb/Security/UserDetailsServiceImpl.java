@@ -29,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<com.veloProWeb.Model.Entity.User.User> user = userRepo.findByUsername(username);
-        if (user.isPresent()){
+        if (user.isPresent() && user.get().isStatus()){
             // crea una lista para almacenar sus roles (autoridades).
             List<GrantedAuthority> authorities = new ArrayList<>();
             authorities.add(new SimpleGrantedAuthority(user.get().getRole().name()));
