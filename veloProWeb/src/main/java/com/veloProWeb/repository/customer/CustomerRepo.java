@@ -1,6 +1,6 @@
-package com.veloProWeb.Repository.Customer;
+package com.veloProWeb.repository.customer;
 
-import com.veloProWeb.Model.Entity.Customer.Customer;
+import com.veloProWeb.model.entity.customer.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

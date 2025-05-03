@@ -1,10 +1,10 @@
-package com.veloProWeb.Controller.Customer;
+package com.veloProWeb.controller.customer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.veloProWeb.Exceptions.GlobalExceptionHandler;
-import com.veloProWeb.Model.Entity.Customer.Customer;
-import com.veloProWeb.Model.Enum.PaymentStatus;
-import com.veloProWeb.Service.Customer.Interfaces.ICustomerService;
+import com.veloProWeb.exceptions.Handlers.GlobalExceptionHandler;
+import com.veloProWeb.model.entity.customer.Customer;
+import com.veloProWeb.model.Enum.PaymentStatus;
+import com.veloProWeb.service.customer.interfaces.ICustomerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
