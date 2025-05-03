@@ -1,4 +1,4 @@
-package com.veloProWeb.Security;
+package com.veloProWeb.Security.Service;
 
 import com.veloProWeb.Repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
