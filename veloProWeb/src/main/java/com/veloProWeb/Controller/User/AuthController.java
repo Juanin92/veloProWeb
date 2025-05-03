@@ -2,8 +2,8 @@ package com.veloProWeb.Controller.User;
 
 import com.veloProWeb.Model.DTO.AuthRequestDTO;
 import com.veloProWeb.Model.DTO.LoginRequest;
-import com.veloProWeb.Security.EncryptionService;
-import com.veloProWeb.Security.JwUtil;
+import com.veloProWeb.Security.Service.EncryptionService;
+import com.veloProWeb.Security.Jwt.JwtUtil;
 import com.veloProWeb.Service.Record.IRecordService;
 import com.veloProWeb.Service.User.Interface.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class AuthController {
     @Autowired private EncryptionService encryptionService;
     @Autowired private AuthenticationManager authenticationManager;
     @Autowired private UserDetailsService userDetailsService;
-    @Autowired private JwUtil jwtUtil;
+    @Autowired private JwtUtil jwtUtil;
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest user) {

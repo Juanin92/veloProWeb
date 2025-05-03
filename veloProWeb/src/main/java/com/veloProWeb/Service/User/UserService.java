@@ -4,7 +4,7 @@ import com.veloProWeb.Model.DTO.UpdateUserDTO;
 import com.veloProWeb.Model.DTO.UserDTO;
 import com.veloProWeb.Model.Entity.User.User;
 import com.veloProWeb.Repository.UserRepo;
-import com.veloProWeb.Security.CodeGenerator;
+import com.veloProWeb.Security.Service.CodeGenerator;
 import com.veloProWeb.Service.User.Interface.IUserService;
 import com.veloProWeb.Utils.EmailService;
 import com.veloProWeb.Validation.UserValidator;

@@ -5,7 +5,7 @@ import com.veloProWeb.Model.DTO.UserDTO;
 import com.veloProWeb.Model.Entity.User.User;
 import com.veloProWeb.Model.Enum.Rol;
 import com.veloProWeb.Repository.UserRepo;
-import com.veloProWeb.Security.CodeGenerator;
+import com.veloProWeb.Security.Service.CodeGenerator;
 import com.veloProWeb.Utils.EmailService;
 import com.veloProWeb.Validation.UserValidator;
 import org.junit.jupiter.api.BeforeEach;
