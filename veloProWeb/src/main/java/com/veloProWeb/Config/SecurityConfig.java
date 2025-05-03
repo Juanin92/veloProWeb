@@ -1,7 +1,7 @@
 package com.veloProWeb.Config;
 
-import com.veloProWeb.Model.Enum.Rol;
-import com.veloProWeb.Security.Jwt.JwtAuthenticationFilter;
+import com.veloProWeb.model.Enum.Rol;
+import com.veloProWeb.security.Jwt.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -105,7 +105,7 @@ public class SecurityConfig {
     /**
      * Configura y devuelve un bean de AuthenticationManager.
      * El AuthenticationManager es responsable de autenticar las credenciales del usuario.
-     * @param authenticationConfiguration - La configuración de autenticación proporcionada por Spring Security.
+     * @param authenticationConfiguration - La configuración de autenticación proporcionada por Spring security.
      * @return - Un bean de AuthenticationManager configurado.
      * @throws Exception - Si ocurre un error al obtener el AuthenticationManager.
      */
