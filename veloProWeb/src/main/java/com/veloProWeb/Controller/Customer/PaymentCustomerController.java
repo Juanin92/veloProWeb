@@ -18,7 +18,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/pagos")
-@CrossOrigin(origins = "http://localhost:4200")
 public class PaymentCustomerController {
 
     @Autowired private IPaymentCustomerService paymentCustomerService;

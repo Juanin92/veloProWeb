@@ -19,7 +19,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/Tickets")
-@CrossOrigin(origins = "http://localhost:4200")
 public class TicketHistoryController {
 
     @Autowired private ITicketHistoryService ticketHistoryService;
