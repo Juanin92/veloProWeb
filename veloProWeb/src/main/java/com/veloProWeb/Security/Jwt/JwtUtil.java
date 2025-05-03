@@ -1,4 +1,4 @@
-package com.veloProWeb.Security;
+package com.veloProWeb.Security.Jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Component
-public class JwUtil {
+public class JwtUtil {
 
     @Value("${jwt.secret}")
     private String secret;

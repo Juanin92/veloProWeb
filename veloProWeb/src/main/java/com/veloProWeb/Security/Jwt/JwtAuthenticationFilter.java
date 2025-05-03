@@ -1,5 +1,6 @@
-package com.veloProWeb.Security;
+package com.veloProWeb.Security.Jwt;
 
+import com.veloProWeb.Security.Service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +28,7 @@ import java.util.List;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    @Autowired private JwUtil jwtUtil;
+    @Autowired private JwtUtil jwtUtil;
     @Autowired private UserDetailsServiceImpl userDetailsService;
 
     /**
