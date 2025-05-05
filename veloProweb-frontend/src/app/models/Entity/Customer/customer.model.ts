@@ -12,6 +12,4 @@ export interface Customer {
     totalDebt: number;
     status: PaymentStatus;
     account: boolean;
-    paymentCustomerList: PaymentCustomer[];
-    ticketHistoryList: TicketHistory[];
 }
