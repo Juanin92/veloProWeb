@@ -3,6 +3,7 @@ package com.veloProWeb.model.entity.customer;
 import com.veloProWeb.model.Enum.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Entity
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Customer {
@@ -34,9 +36,4 @@ public class Customer {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private List<TicketHistory> ticketHistoryList = new ArrayList<>();
-
-    @Override
-    public String toString() {
-        return name + " " + surname;
-    }
 }
