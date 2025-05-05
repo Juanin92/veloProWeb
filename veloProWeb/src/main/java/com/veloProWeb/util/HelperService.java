@@ -1,6 +1,5 @@
 package com.veloProWeb.util;
 
-import org.mapstruct.Named;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,7 +10,6 @@ public class HelperService {
      * @param value cadena de texto a capitalizar
      * @return palabra capitalizada
      */
-    @Named("capitalize")
     public String capitalize(String value) {
         if (value == null || value.isEmpty()) {
             return value;
@@ -34,7 +32,6 @@ public class HelperService {
      * @param value - cadena de texto a convertir
      * @return - devuelve la cadena en mayúscula
      */
-    @Named("upperCaseWord")
     public String upperCaseWord(String value) {
         if (value == null || value.isEmpty()) {
             return value;
