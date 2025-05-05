@@ -10,8 +10,9 @@ import { CustomerHelperServiceService } from '../../services/customer/customer-h
 import { NotificationService } from '../../utils/notification-service.service';
 import { TooltipService } from '../../utils/tooltip.service';
 import { ModalService } from '../../utils/modal.service';
-import { Role } from '../../models/enum/role';
 import { CustomerPermissionsService } from '../../services/Permissions/customer-permissions.service';
+import { CustomerDTO } from '../../models/Entity/Customer/dto/customer-dto';
+import { ErrorMessageService } from '../../utils/error-message.service';
 
 @Component({
   selector: 'app-customer',
@@ -37,7 +38,8 @@ export class CustomerComponent implements OnInit, AfterViewInit {
     private notification: NotificationService,
     private tooltipService: TooltipService,
     private modalService: ModalService,
-    private renderer: Renderer2) {
+    private renderer: Renderer2,
+    private errorMessage: ErrorMessageService) {
     this.selectedCustomer = customerHelper.createEmptyCustomer();
   }
 
@@ -57,15 +59,15 @@ export class CustomerComponent implements OnInit, AfterViewInit {
    * llama al método para calcular el total de las deudas
    */
   getAllCustomer(): void {
-    this.customerService.getCustomer().subscribe(
-      (data) => {
+    this.customerService.getCustomer().subscribe({
+      next: (data) => {
         this.customers = data;
         this.filteredCustomers = data;
         this.updateTotalDebtLabel();
-      }, (error) => {
+      }, error: (error) => {
         console.log('Error no se encontró ningún cliente', error);
-      }
-    );
+      } 
+    });
   }
 
   /**
@@ -75,8 +77,8 @@ export class CustomerComponent implements OnInit, AfterViewInit {
    * @param customer - cliente seleccionado
    */
   deleteCustomer(customer: Customer): void {
-    this.selectedCustomer = customer;
-    if (this.selectedCustomer) {
+    const customerDTO: CustomerDTO = this.customerHelper.mapCustomerToDto(customer);
+    if (customerDTO) {
       this.notification.showConfirmation(
         "¿Estas seguro?",
         "No podrás revertir la acción!",
@@ -84,14 +86,16 @@ export class CustomerComponent implements OnInit, AfterViewInit {
         "Cancelar"
       ).then((result) => {
         if (result.isConfirmed) {
-          this.customerService.deleteCustomer(this.selectedCustomer!).subscribe((response) => {
-            console.log('Cliente eliminado exitosamente:', response);
-            this.notification.showSuccessToast(`Se Elimino el cliente ${this.selectedCustomer!.name} ${this.selectedCustomer!.surname} correctamente`, 'top', 3000);
-            this.getAllCustomer();
-          }, (error) => {
-            const message = error.error.error;
-            console.log('Error al eliminar cliente: ', message);
-            this.notification.showErrorToast(`Error al eliminar cliente \n${message}`, 'top', 5000);
+          this.customerService.deleteCustomer(customerDTO!).subscribe({
+            next: (response) => {
+              console.log('Cliente eliminado exitosamente:', response);
+              this.notification.showSuccessToast(`Se Elimino el cliente ${customerDTO!.name} ${customerDTO!.surname} correctamente`, 'top', 3000);
+              this.getAllCustomer();
+            }, error: (error) => {
+              const message = this.errorMessage.errorMessageExtractor(error);
+              console.log('Error al eliminar cliente: ', message);
+              this.notification.showErrorToast(`Error al eliminar cliente \n${message}`, 'top', 5000);
+            }
           });
         }
       });
