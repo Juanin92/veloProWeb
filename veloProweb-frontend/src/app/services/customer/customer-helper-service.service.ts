@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Customer } from '../../models/Entity/Customer/customer.model';
 import { PaymentStatus } from '../../models/enum/payment-status.enum';
+import { CustomerDTO } from '../../models/Entity/Customer/dto/customer-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -23,8 +24,26 @@ export class CustomerHelperServiceService {
       totalDebt: 0,
       status: PaymentStatus.NULO,
       account: true,
-      paymentCustomerList: [],
-      ticketHistoryList: []
     };
+  }
+
+  createEmptyCustomerDTO(): CustomerDTO {
+    return {
+      id: 0,
+      name: '',
+      surname: '',
+      phone: '+569 ',
+      email: ''
+    }
+  }
+
+  mapCustomerToDto(customer: Customer): CustomerDTO {
+    return {
+      id: customer.id,
+      name: customer.name,
+      surname: customer.surname,
+      phone: customer.phone,
+      email: customer.email
+    }
   }
 }
