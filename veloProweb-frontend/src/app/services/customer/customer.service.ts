@@ -1,8 +1,9 @@
-import { HttpClient, HttpHandler, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Customer } from '../../models/Entity/Customer/customer.model';
 import { AuthService } from '../User/auth.service';
+import { CustomerDTO } from '../../models/Entity/Customer/dto/customer-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,7 @@ export class CustomerService {
    * @param customer Cliente a agregar
    * @returns Observable que emite un mensaje de confirmación
    */
-  addCustomer(customer: Customer): Observable<{message: string}>{
+  addCustomer(customer: CustomerDTO): Observable<{message: string}>{
     return this.httpClient.post<{message: string}>(`${this.apiUrl}/agregar`, customer, {headers: this.auth.getAuthHeaders()});
   }
   
@@ -36,8 +37,8 @@ export class CustomerService {
    * @param customer Cliente con la nueva información
    * @returns Observable que emite un mensaje de confirmación
    */
-  updateCustomer(customer: Customer): Observable<string>{
-    return this.httpClient.put<string>(`${this.apiUrl}/actualizar`, customer, {headers: this.auth.getAuthHeaders()});
+  updateCustomer(customer: CustomerDTO): Observable<{message: string}>{
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/actualizar`, customer, {headers: this.auth.getAuthHeaders()});
   }
 
   /**
@@ -45,8 +46,8 @@ export class CustomerService {
    * @param customer cliente seleccionado
    * @returns Observable que emite un mensaje de confirmación
    */
-  deleteCustomer(customer: Customer): Observable<string>{
-    return this.httpClient.put<string>(`${this.apiUrl}/eliminar`, customer, {headers: this.auth.getAuthHeaders()});
+  deleteCustomer(customer: CustomerDTO): Observable<{message: string}>{
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/eliminar`, customer, {headers: this.auth.getAuthHeaders()});
   }
 
   /**
@@ -54,7 +55,7 @@ export class CustomerService {
    * @param customer cliente seleccionado
    * @returns Observable que emite un mensaje de confirmación
    */
-  activeCustomer(customer: Customer): Observable<string>{
-    return this.httpClient.put<string>(`${this.apiUrl}/activar`, customer, {headers: this.auth.getAuthHeaders()});
+  activeCustomer(customer: CustomerDTO): Observable<{message: string}>{
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/activar`, customer, {headers: this.auth.getAuthHeaders()});
   }
 }
