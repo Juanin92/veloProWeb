@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Customer } from '../../../models/Entity/Customer/customer.model';
 import { CustomerService } from '../../../services/customer/customer.service';
 import { CustomerValidator } from '../../../validation/customer-validator';
 import { CommonModule } from '@angular/common';
@@ -8,6 +7,8 @@ import { CustomerHelperServiceService } from '../../../services/customer/custome
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ModalService } from '../../../utils/modal.service';
 import { CustomerPermissionsService } from '../../../services/Permissions/customer-permissions.service';
+import { CustomerDTO } from '../../../models/Entity/Customer/dto/customer-dto';
+import { ErrorMessageService } from '../../../utils/error-message.service';
 
 @Component({
   selector: 'app-add-customer',
@@ -18,18 +19,19 @@ import { CustomerPermissionsService } from '../../../services/Permissions/custom
 })
 export class AddCustomerComponent {
 
-  newCustomer: Customer;
+  newCustomer: CustomerDTO;
   customerValidator = CustomerValidator; // Validador de para los datos del cliente.
   @Output() customerAdded = new EventEmitter<void>();
   touchedFields: Record<string, boolean> = {}; //Campo tocado en el DOM 
+
   constructor(
     private customerService: CustomerService,
     private customerHelper: CustomerHelperServiceService,
     private notification: NotificationService,
     protected permission: CustomerPermissionsService,
+    private errorMessage: ErrorMessageService,
     public modalService: ModalService) {
-    //Se inicializa la variable con valores vacíos mediante el helper
-    this.newCustomer = customerHelper.createEmptyCustomer();
+    this.newCustomer = customerHelper.createEmptyCustomerDTO();
     this.touchedFields = {};
   }
 
@@ -40,20 +42,19 @@ export class AddCustomerComponent {
    */
   addCustomer(): void {
     if (this.customerValidator.validateForm(this.newCustomer)) {
-      this.customerService.addCustomer(this.newCustomer).subscribe(
-        (response) => {
+      this.customerService.addCustomer(this.newCustomer).subscribe({
+        next: (response) =>{
           console.log('Cliente agregado exitosamente:', response);
           this.notification.showSuccessToast(`¡El cliente ${this.newCustomer.name} ${this.newCustomer.surname} fue agregado exitosamente!`, 'top', 3000);
-          this.customerHelper.createEmptyCustomer(); // Reinicia la variable del cliente vacío.
+          this.customerHelper.createEmptyCustomerDTO(); 
           this.customerAdded.emit();
           this.modalService.closeModal();
-        },
-        (error) => {
-          const message = error.error?.message || error.error?.error;
-          console.error('Error al agregar el cliente:', error);
-          this.notification.showErrorToast(`Error al agregar cliente \n${message}`, 'top', 5000);
+        }, error: (error) => {
+          const message = this.errorMessage.errorMessageExtractor(error);
+          console.error('Error al agregar el cliente:', message);
+          this.notification.showErrorToast(`Error al agregar cliente: ${message}`, 'top', 5000);
         }
-      );
+      });
     } else {
       this.notification.showWarning('Formulario incompleto', 'Por favor, complete correctamente todos los campos obligatorios.');
     }
@@ -63,7 +64,7 @@ export class AddCustomerComponent {
    * Reset el valor de todos los atributo del cliente 
    */
   resetCustomerForm(): void{
-    this.newCustomer = this.customerHelper.createEmptyCustomer();
+    this.newCustomer = this.customerHelper.createEmptyCustomerDTO();
     this.touchedFields = {};
   }
 }
