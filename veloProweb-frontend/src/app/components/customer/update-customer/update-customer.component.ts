@@ -8,6 +8,8 @@ import { CustomerHelperServiceService } from '../../../services/customer/custome
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ModalService } from '../../../utils/modal.service';
 import { CustomerPermissionsService } from '../../../services/Permissions/customer-permissions.service';
+import { CustomerDTO } from '../../../models/Entity/Customer/dto/customer-dto';
+import { ErrorMessageService } from '../../../utils/error-message.service';
 
 @Component({
   selector: 'app-update-customer',
@@ -21,16 +23,18 @@ export class UpdateCustomerComponent {
   @Input() selectedCustomer: Customer; //Cliente seleccionado desde un componente padre
   @Output() customerUpdated = new EventEmitter<void>();
   customerValidator = CustomerValidator; //Validador de los datos del cliente
+  customerDTO: CustomerDTO;
 
   constructor(
     private customerService: CustomerService,
     private customerHelper: CustomerHelperServiceService,
     private notification: NotificationService,
     protected permission: CustomerPermissionsService,
-    public modalService: ModalService) {
-    //Se inicializa la variable con valores vacíos mediante el helper
-    this.selectedCustomer = customerHelper.createEmptyCustomer();
-  }
+    public modalService: ModalService,
+    private errorMessage: ErrorMessageService) {
+      this.selectedCustomer = customerHelper.createEmptyCustomer();
+      this.customerDTO = customerHelper.createEmptyCustomerDTO();
+    }
 
   /**
    * Actualiza los datos de un cliente seleccionado
@@ -41,18 +45,19 @@ export class UpdateCustomerComponent {
   updateCustomer(): void {
     if (this.selectedCustomer && this.customerValidator.validateForm(this.selectedCustomer)) {
       const updateCustomer = { ...this.selectedCustomer }; // Crea una copia del cliente seleccionado para modificar
-      this.customerService.updateCustomer(updateCustomer).subscribe((response) => {
-        console.log('Se actualizo el cliente: ', updateCustomer);
-        this.notification.showSuccessToast(`Se actualizo el cliente ${updateCustomer.name} ${updateCustomer.surname} correctamente`, 'top', 3000);
-        this.customerUpdated.emit();
-        this.modalService.closeModal();
-      },
-        (error) => {
-          const message = error.error?.message || error.error?.error;
-          this.notification.showErrorToast(`Error al actualizar cliente \n${message}`, 'top', 5000);
-          console.log('Error al actualizar cliente: ', message);
+      this.customerDTO = this.customerHelper.mapCustomerToDto(updateCustomer);
+      this.customerService.updateCustomer(this.customerDTO).subscribe({
+        next:(response) => {
+          console.log('Se actualizo el cliente: ', this.customerDTO);
+          this.notification.showSuccessToast(`Se actualizo el cliente ${this.customerDTO.name} ${this.customerDTO.surname} correctamente`, 'top', 3000);
+          this.customerUpdated.emit();
+          this.modalService.closeModal();
+        }, error: (error) => {
+          const message = this.errorMessage.errorMessageExtractor(error);
+          this.notification.showErrorToast(`Error al actualizar cliente: ${message}`, 'top', 5000);
+          console.log('Errores al actualizar cliente: ', message);
         }
-      );
+      });
     }
   }
 
@@ -63,15 +68,18 @@ export class UpdateCustomerComponent {
    */
   activeCustomer(customer: Customer): void {
     if (customer) {
-      this.customerService.activeCustomer(customer).subscribe((response) => {
-        console.log("Cliente Activado");
-        this.notification.showSuccessToast(`Se activo nuevamente a ${customer!.name} ${customer!.surname}.`, 'top', 3000);
-        this.customerUpdated.emit();
-      }, (error) => {
-        const message = error.error.error;
-        console.log('Error al activar cliente: ', message);
-        this.notification.showErrorToast(`Error al activar al cliente \n${message}`, 'top', 5000);
-      })
+      this.customerDTO = this.customerHelper.mapCustomerToDto(customer);
+      this.customerService.activeCustomer(this.customerDTO).subscribe({
+        next:(response) => {
+          console.log("Cliente Activado: ", response.message);
+          this.notification.showSuccessToast(`Se activo nuevamente a ${this.customerDTO!.name} ${this.customerDTO!.surname}.`, 'top', 3000);
+          this.customerUpdated.emit();
+        }, error: (error) => {
+          const message = this.errorMessage.errorMessageExtractor(error);
+          console.log('Error al activar cliente: ', message);
+          this.notification.showErrorToast(`Error al activar al cliente \n${message}`, 'top', 5000);
+        }
+      });
     }
   }
 }
