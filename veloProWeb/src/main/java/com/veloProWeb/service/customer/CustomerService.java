@@ -28,19 +28,17 @@
 
         /**
          * Crea un nuevo cliente
-         * Sé válida que el cliente a crear no haya registro de este en la DB
+         * Se valida que el cliente a crear no haya registro de este en la DB
          * Se asigna un valor predeterminado a los emails que estén nulo o vacíos
          * @param dto contiene los detalles del cliente
          */
         @Transactional
         @Override
         public void addNewCustomer(CustomerDTO dto) {
-            Customer customerDB = getCostumerCreated(dto.getName(), dto.getSurname());
+            Customer customerDB = getCustomerCreated(dto.getName(), dto.getSurname());
             validator.existCustomer(customerDB);
             Customer customer = mapper.toEntity(dto);
-            if (customer.getEmail() == null || customer.getEmail().isEmpty()) {
-                customer.setEmail("x@x.xxx");
-            }
+            assignDefaultEmail(customer);
             customer.setId(null);
             customer.setAccount(true);
             customer.setStatus(PaymentStatus.NULO);
@@ -52,7 +50,7 @@
 
         /**
          * Actualizar los datos de un cliente seleccionado
-         * Sé válida que los nuevos datos del cliente a modificar no haya registro similar de este en la DB
+         * Se valida que los nuevos datos del cliente a modificar no haya registro similar de este en la DB
          * Se asigna un valor predeterminado a los emails que estén nulo o vacíos
          * @param dto contiene los nuevos detalles del cliente
          */
@@ -61,15 +59,13 @@
         public void updateCustomer(CustomerDTO dto) {
             Customer customerDB = getCustomerById(dto.getId());
             mapper.updateCustomerFromDto(dto, customerDB);
-            if (customerDB.getEmail() == null || customerDB.getEmail().isEmpty()) {
-                customerDB.setEmail("x@x.xxx");
-            }
+            assignDefaultEmail(customerDB);
             validator.validateInfoCustomer(customerDB);
             customerRepo.save(customerDB);
         }
 
         /**
-         * Obtiene un cliente espécifico
+         * Obtiene un cliente específico
          * @param ID - Identificador del cliente
          * @return - Objeto de cliente o una excepción si no encuentra nada
          */
@@ -129,8 +125,8 @@
             int number = Integer.parseInt(amount);
             validator.validateValuePayment(number, customer);
             customer.setDebt(customer.getDebt() - number);
-            customerRepo.save(customer);
             statusAssign(customer);
+            customerRepo.save(customer);
         }
 
         /**
@@ -141,14 +137,19 @@
         public void statusAssign(Customer customer) {
             if (customer.getTotalDebt() == 0) {
                 customer.setStatus(PaymentStatus.NULO);
-            }else if (customer.getDebt() == 0 && customer.getTotalDebt() > 0) {
+                return;
+            }
+            if (customer.getDebt() == 0 && customer.getTotalDebt() > 0) {
                 customer.setStatus(PaymentStatus.PAGADA);
-            } else if (customer.getDebt() <= (customer.getTotalDebt() / 2) && customer.getDebt() > 0) {
+                return;
+            }
+            if (customer.getDebt() <= (customer.getTotalDebt() / 2) && customer.getDebt() > 0) {
                 customer.setStatus(PaymentStatus.PARCIAL);
-            } else if (customer.getDebt() > 0 && customer.getTotalDebt() > 0) {
+                return;
+            }
+            if (customer.getDebt() > 0 && customer.getTotalDebt() > 0) {
                 customer.setStatus(PaymentStatus.PENDIENTE);
             }
-            customerRepo.save(customer);
         }
 
         /**
@@ -160,8 +161,8 @@
         @Override
         public void addSaleToCustomer(Customer customer) {
             customer.setDebt(customer.getTotalDebt());
-            customerRepo.save(customer);
             statusAssign(customer);
+            customerRepo.save(customer);
         }
 
         /**
@@ -181,9 +182,19 @@
          * @param surname apellido del cliente
          * @return cliente encontrado o null si no encuentra similitud
          */
-        private Customer getCostumerCreated(String name, String surname) {
+        private Customer getCustomerCreated(String name, String surname) {
             Optional<Customer> customerOptional = customerRepo.findBySimilarNameAndSurname(
                     helperService.capitalize(name), helperService.capitalize(surname));
             return customerOptional.orElse(null);
+        }
+
+        /**
+         * Asigna un valor predeterminado al email del cliente si este es nulo o vacio
+         * @param customer - cliente a asignar el email
+         */
+        private void assignDefaultEmail(Customer customer){
+            if (customer.getEmail() == null || customer.getEmail().isEmpty()) {
+                customer.setEmail("x@x.xxx");
+            }
         }
     }
