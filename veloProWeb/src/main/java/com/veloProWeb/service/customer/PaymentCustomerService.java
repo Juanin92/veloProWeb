@@ -1,13 +1,15 @@
 package com.veloProWeb.service.customer;
 
-import com.veloProWeb.model.dto.PaymentRequestDTO;
+import com.veloProWeb.exceptions.Customer.InvalidPaymentAmountException;
+import com.veloProWeb.exceptions.Customer.NoTicketSelectedException;
+import com.veloProWeb.model.dto.customer.PaymentRequestDTO;
 import com.veloProWeb.model.entity.customer.Customer;
 import com.veloProWeb.model.entity.customer.PaymentCustomer;
 import com.veloProWeb.model.entity.customer.TicketHistory;
 import com.veloProWeb.repository.customer.PaymentCustomerRepo;
 import com.veloProWeb.service.customer.interfaces.IPaymentCustomerService;
 import com.veloProWeb.validation.PaymentCustomerValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,12 +19,13 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class PaymentCustomerService implements IPaymentCustomerService {
 
-    @Autowired private PaymentCustomerRepo paymentCustomerRepo;
-    @Autowired private PaymentCustomerValidator validator;
-    @Autowired private TicketHistoryService ticketService;
-    @Autowired private CustomerService customerService;
+    private final PaymentCustomerRepo paymentCustomerRepo;
+    private final PaymentCustomerValidator validator;
+    private final TicketHistoryService ticketService;
+    private final CustomerService customerService;
 
     /**
      * Procesa la creación de un pago basado en los valores del dto.
@@ -48,7 +51,7 @@ public class PaymentCustomerService implements IPaymentCustomerService {
                         dto.setAmount(dto.getAmount() - ticket.getTotal());
                     }
                 }else {
-                    throw new IllegalArgumentException("El monto no es correcto para el pago de la deuda");
+                    throw new InvalidPaymentAmountException("El monto no es correcto para el pago de la deuda");
                 }
             }else {
                 if (dto.getAmount() == (ticketList.getFirst().getTotal() - dto.getTotalPaymentPaid())){
@@ -58,11 +61,11 @@ public class PaymentCustomerService implements IPaymentCustomerService {
                     createAdjustPayments(dto.getAmount(), ticketList.getFirst(), customer);
                     customerService.paymentDebt(customer, String.valueOf(dto.getAmount()));
                 }else {
-                    throw new IllegalArgumentException("El monto supera el valor de la deuda.");
+                    throw new InvalidPaymentAmountException("El monto supera el valor de la deuda.");
                 }
             }
         }else {
-            throw new IllegalArgumentException("No ha seleccionado ninguna boleta");
+            throw new NoTicketSelectedException("No ha seleccionado ninguna boleta");
         }
     }
 

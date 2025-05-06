@@ -1,5 +1,6 @@
 package com.veloProWeb.validation;
 
+import com.veloProWeb.exceptions.Validation.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,19 +33,19 @@ public class PaymentCustomerValidatorTest {
     @Test
     public void validatePaymentAmount_invalid(){
         amount = "test";
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> validator.validatePayment(amount, comment));
+        ValidationException exception = assertThrows(ValidationException.class, () -> validator.validatePayment(amount, comment));
         assertEquals("Ingrese solo números.", exception.getMessage());
     }
 
     //Pruebas para validar el comentario del proceso de abono
     @Test
     public void validateComment_invalidEmptyValue(){
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validatePayment(amount, " "));
+        ValidationException exception = assertThrows(ValidationException.class,() -> validator.validatePayment(amount, " "));
         assertEquals("Seleccione una forma de pago.", exception.getMessage());
     }
     @Test
     public void validateComment_invalidNullValue(){
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validatePayment(amount, null));
+        ValidationException exception = assertThrows(ValidationException.class,() -> validator.validatePayment(amount, null));
         assertEquals("Seleccione una forma de pago.", exception.getMessage());
     }
 }

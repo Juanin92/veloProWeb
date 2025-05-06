@@ -1,5 +1,6 @@
 package com.veloProWeb.validation;
 
+import com.veloProWeb.exceptions.Validation.ValidationException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,7 +23,7 @@ public class PaymentCustomerValidator {
      */
     private void validatePaymentAmount(String amount) {
         if (!amount.matches("\\d+")) {
-            throw new IllegalArgumentException("Ingrese solo números.");
+            throw new ValidationException("Ingrese solo números.");
         }
     }
 
@@ -32,7 +33,7 @@ public class PaymentCustomerValidator {
      */
     private void validateComment(String comment) {
         if (comment == null || comment.trim().isEmpty()) {
-            throw new IllegalArgumentException("Seleccione una forma de pago.");
+            throw new ValidationException("Seleccione una forma de pago.");
         }
     }
 }

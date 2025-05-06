@@ -1,6 +1,6 @@
 package com.veloProWeb.service.customer;
 
-import com.veloProWeb.model.dto.PaymentRequestDTO;
+import com.veloProWeb.model.dto.customer.PaymentRequestDTO;
 import com.veloProWeb.model.entity.customer.Customer;
 import com.veloProWeb.model.entity.customer.PaymentCustomer;
 import com.veloProWeb.model.entity.customer.TicketHistory;
