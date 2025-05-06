@@ -73,7 +73,7 @@ public class CustomerController {
      */
     @PutMapping("/eliminar")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
-    public ResponseEntity<Map<String, String>> deleteCustomer(@RequestBody CustomerDTO customer,
+    public ResponseEntity<Map<String, String>> deleteCustomer(@RequestBody @Valid CustomerDTO customer,
                                                               @AuthenticationPrincipal UserDetails userDetails){
         customerService.delete(customer);
         recordService.registerAction(userDetails, "DELETE",
@@ -88,7 +88,7 @@ public class CustomerController {
      */
     @PutMapping("/activar")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SELLER', 'MASTER')")
-    public ResponseEntity<Map<String, String>> activeCustomer(@RequestBody CustomerDTO customer,
+    public ResponseEntity<Map<String, String>> activeCustomer(@RequestBody @Valid CustomerDTO customer,
                                                               @AuthenticationPrincipal UserDetails userDetails){
         customerService.activeCustomer(customer);
         recordService.registerAction(userDetails, "ACTIVATE",
