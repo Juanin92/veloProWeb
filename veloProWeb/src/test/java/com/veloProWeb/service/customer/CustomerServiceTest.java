@@ -6,7 +6,7 @@ import com.veloProWeb.exceptions.Customer.CustomerAlreadyExistsException;
 import com.veloProWeb.exceptions.Customer.CustomerNotFoundException;
 import com.veloProWeb.exceptions.Validation.ValidationException;
 import com.veloProWeb.mapper.CustomerMapper;
-import com.veloProWeb.model.dto.customer.CustomerDTO;
+import com.veloProWeb.model.dto.customer.CustomerRequestDTO;
 import com.veloProWeb.model.dto.customer.CustomerResponseDTO;
 import com.veloProWeb.model.entity.customer.Customer;
 import com.veloProWeb.model.Enum.PaymentStatus;
@@ -37,14 +37,14 @@ public class CustomerServiceTest {
     @Mock private HelperService helperService;
     @Spy CustomerMapper mapper = new CustomerMapper(new HelperService());
     private Customer customer;
-    private CustomerDTO customerDTO;
+    private CustomerRequestDTO customerRequestDTO;
     private CustomerResponseDTO customerResponseDTO;
 
     @BeforeEach
     void setUp(){
         customer = new Customer(1L,"Juan", "Perez Gonzalez", "+569 12345678", "test@test.com",
                 0, 0, PaymentStatus.NULO, true, new ArrayList<>(), new ArrayList<>());
-        customerDTO = CustomerDTO.builder()
+        customerRequestDTO = CustomerRequestDTO.builder()
                 .id(1L)
                 .name("Juan").surname("Perez Gonzalez")
                 .phone("+569 12345600")
@@ -60,16 +60,16 @@ public class CustomerServiceTest {
     //Pruebas de creación de clientes nuevos
     @Test
     public void addNewCustomer_valid(){
-        customerDTO.setName("jose");
-        customerDTO.setSurname("perez");
+        customerRequestDTO.setName("jose");
+        customerRequestDTO.setSurname("perez");
         customer.setName("Jose");
         customer.setSurname("Perez Gonzalez");
         customer.setEmail(null);
-        when(customerRepo.findBySimilarNameAndSurname(helperService.capitalize(customerDTO.getName()),
-                helperService.capitalize(customerDTO.getSurname()))).thenReturn(Optional.empty());
-        when(mapper.toEntity(customerDTO)).thenReturn(customer);
+        when(customerRepo.findBySimilarNameAndSurname(helperService.capitalize(customerRequestDTO.getName()),
+                helperService.capitalize(customerRequestDTO.getSurname()))).thenReturn(Optional.empty());
+        when(mapper.toEntity(customerRequestDTO)).thenReturn(customer);
 
-        customerService.addNewCustomer(customerDTO);
+        customerService.addNewCustomer(customerRequestDTO);
         verify(validator, times(1)).existCustomer(null);
         verify(validator, times(1)).validateInfoCustomer(customer);
         verify(customerRepo, times(1)).save(customer);
@@ -83,16 +83,16 @@ public class CustomerServiceTest {
     }
     @Test
     public void addNewCustomer_existingCustomer(){
-        when(customerRepo.findBySimilarNameAndSurname(helperService.capitalize(customerDTO.getName()),
-                helperService.capitalize(customerDTO.getSurname()))).thenReturn(Optional.of(customer));
+        when(customerRepo.findBySimilarNameAndSurname(helperService.capitalize(customerRequestDTO.getName()),
+                helperService.capitalize(customerRequestDTO.getSurname()))).thenReturn(Optional.of(customer));
         doThrow(new CustomerAlreadyExistsException("Cliente Existente: Hay registro de este cliente."))
                 .when(validator).existCustomer(customer);
         CustomerAlreadyExistsException exception = assertThrows(CustomerAlreadyExistsException.class,
-                () -> customerService.addNewCustomer(customerDTO));
+                () -> customerService.addNewCustomer(customerRequestDTO));
         assertEquals("Cliente Existente: Hay registro de este cliente.", exception.getMessage());
         verify(validator, times(1)).existCustomer(customer);
         verify(validator, never()).validateInfoCustomer(customer);
-        verify(mapper, never()).toEntity(customerDTO);
+        verify(mapper, never()).toEntity(customerRequestDTO);
         verify(customerRepo, never()).save(customer);
     }
 
@@ -100,18 +100,18 @@ public class CustomerServiceTest {
     @Test
     public void updateCustomer_valid(){
         customer.setStatus(PaymentStatus.PAGADA);
-        when(customerRepo.findById(customerDTO.getId())).thenReturn(Optional.of(customer));
+        when(customerRepo.findById(customerRequestDTO.getId())).thenReturn(Optional.of(customer));
 
-        customerService.updateCustomer(customerDTO);
-        verify(customerRepo, times(1)).findById(customerDTO.getId());
-        verify(mapper, times(1)).updateCustomerFromDto(customerDTO, customer);
+        customerService.updateCustomer(customerRequestDTO);
+        verify(customerRepo, times(1)).findById(customerRequestDTO.getId());
+        verify(mapper, times(1)).updateCustomerFromDto(customerRequestDTO, customer);
         verify(validator, times(1)).validateInfoCustomer(customer);
         ArgumentCaptor<Customer> customerCaptor = ArgumentCaptor.forClass(Customer.class);
         verify(customerRepo, times(1)).save(customerCaptor.capture());
         Customer capturedCustomer = customerCaptor.getValue();
 
-        assertEquals(capturedCustomer.getName(), customerDTO.getName());
-        assertEquals(capturedCustomer.getSurname(), customerDTO.getSurname());
+        assertEquals(capturedCustomer.getName(), customerRequestDTO.getName());
+        assertEquals(capturedCustomer.getSurname(), customerRequestDTO.getSurname());
         assertEquals("+569 12345600", capturedCustomer.getPhone());
         assertEquals("x@x.xxx", capturedCustomer.getEmail());
         assertEquals(PaymentStatus.PAGADA, capturedCustomer.getStatus());
@@ -119,15 +119,15 @@ public class CustomerServiceTest {
     }
     @Test
     public void updateCustomer_ExistingCustomer(){
-        customerDTO.setId(2L);
-        when(customerRepo.findById(customerDTO.getId())).thenReturn(Optional.empty());
+        customerRequestDTO.setId(2L);
+        when(customerRepo.findById(customerRequestDTO.getId())).thenReturn(Optional.empty());
 
         CustomerNotFoundException exception = assertThrows(CustomerNotFoundException.class,
-                () -> customerService.updateCustomer(customerDTO));
+                () -> customerService.updateCustomer(customerRequestDTO));
         assertEquals("Cliente no encontrado", exception.getMessage());
-        verify(customerRepo, times(1)).findById(customerDTO.getId());
+        verify(customerRepo, times(1)).findById(customerRequestDTO.getId());
         verify(validator, never()).validateInfoCustomer(customer);
-        verify(mapper, never()).updateCustomerFromDto(customerDTO, customer);
+        verify(mapper, never()).updateCustomerFromDto(customerRequestDTO, customer);
         verify(customerRepo, never()).save(customer);
     }
 
@@ -149,10 +149,10 @@ public class CustomerServiceTest {
     //Prueba para eliminar cliente seleccionado
     @Test
     public void delete_valid(){
-        when(customerRepo.findById(customerDTO.getId())).thenReturn(Optional.of(customer));
-        customerService.delete(customerDTO);
+        when(customerRepo.findById(customerRequestDTO.getId())).thenReturn(Optional.of(customer));
+        customerService.delete(customerRequestDTO);
 
-        verify(customerRepo, times(1)).findById(customerDTO.getId());
+        verify(customerRepo, times(1)).findById(customerRequestDTO.getId());
         verify(validator, times(1)).deleteCustomer(customer);
         verify(customerRepo, times(1)).save(customer);
         assertFalse(customer.isAccount());
@@ -160,12 +160,12 @@ public class CustomerServiceTest {
     @Test
     public void delete_NotActiveException(){
         customer.setAccount(false);
-        when(customerRepo.findById(customerDTO.getId())).thenReturn(Optional.of(customer));
+        when(customerRepo.findById(customerRequestDTO.getId())).thenReturn(Optional.of(customer));
         doThrow(new CustomerAlreadyDeletedException("Cliente ya ha sido eliminado anteriormente.")).when(validator)
                 .deleteCustomer(customer);
         CustomerAlreadyDeletedException e = assertThrows(CustomerAlreadyDeletedException.class,
-                () -> customerService.delete(customerDTO));
-        verify(customerRepo, times(1)).findById(customerDTO.getId());
+                () -> customerService.delete(customerRequestDTO));
+        verify(customerRepo, times(1)).findById(customerRequestDTO.getId());
         verify(validator, times(1)).deleteCustomer(customer);
         verify(customerRepo, never()).save(customer);
         assertEquals("Cliente ya ha sido eliminado anteriormente.", e.getMessage());
@@ -173,11 +173,11 @@ public class CustomerServiceTest {
     @Test
     public void delete_HasDebtException(){
         customer.setDebt(2000);
-        when(customerRepo.findById(customerDTO.getId())).thenReturn(Optional.of(customer));
+        when(customerRepo.findById(customerRequestDTO.getId())).thenReturn(Optional.of(customer));
         doThrow(new ValidationException("El cliente tiene deuda pendiente, no se puede eliminar.")).when(validator)
                 .deleteCustomer(customer);
-        ValidationException e = assertThrows(ValidationException.class, () -> customerService.delete(customerDTO));
-        verify(customerRepo, times(1)).findById(customerDTO.getId());
+        ValidationException e = assertThrows(ValidationException.class, () -> customerService.delete(customerRequestDTO));
+        verify(customerRepo, times(1)).findById(customerRequestDTO.getId());
         verify(validator, times(1)).deleteCustomer(customer);
         verify(customerRepo, never()).save(customer);
         assertEquals("El cliente tiene deuda pendiente, no se puede eliminar.", e.getMessage());
@@ -187,22 +187,22 @@ public class CustomerServiceTest {
     @Test
     public void activate_valid(){
         customer.setAccount(false);
-        when(customerRepo.findById(customerDTO.getId())).thenReturn(Optional.of(customer));
-        customerService.activeCustomer(customerDTO);
+        when(customerRepo.findById(customerRequestDTO.getId())).thenReturn(Optional.of(customer));
+        customerService.activeCustomer(customerRequestDTO);
 
-        verify(customerRepo, times(1)).findById(customerDTO.getId());
+        verify(customerRepo, times(1)).findById(customerRequestDTO.getId());
         verify(validator, times(1)).isActive(customer);
         verify(customerRepo, times(1)).save(customer);
         assertTrue(customer.isAccount());
     }
     @Test
     public void activate_isActiveException(){
-        when(customerRepo.findById(customerDTO.getId())).thenReturn(Optional.of(customer));
+        when(customerRepo.findById(customerRequestDTO.getId())).thenReturn(Optional.of(customer));
         doThrow(new CustomerAlreadyActivatedException("El cliente tiene su cuenta activada")).when(validator)
                 .isActive(customer);
         CustomerAlreadyActivatedException e = assertThrows(CustomerAlreadyActivatedException.class,
-                () -> customerService.activeCustomer(customerDTO));
-        verify(customerRepo, times(1)).findById(customerDTO.getId());
+                () -> customerService.activeCustomer(customerRequestDTO));
+        verify(customerRepo, times(1)).findById(customerRequestDTO.getId());
         verify(validator, times(1)).isActive(customer);
         verify(customerRepo, never()).save(customer);
         assertEquals("El cliente tiene su cuenta activada", e.getMessage());

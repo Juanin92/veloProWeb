@@ -1,6 +1,6 @@
 package com.veloProWeb.mapper;
 
-import com.veloProWeb.model.dto.customer.CustomerDTO;
+import com.veloProWeb.model.dto.customer.CustomerRequestDTO;
 import com.veloProWeb.model.dto.customer.CustomerResponseDTO;
 import com.veloProWeb.model.entity.customer.Customer;
 import com.veloProWeb.util.HelperService;
@@ -13,7 +13,7 @@ public class CustomerMapper {
 
     private final HelperService helperService;
 
-    public Customer toEntity(CustomerDTO dto) {
+    public Customer toEntity(CustomerRequestDTO dto) {
         return Customer.builder()
                 .id(dto.getId())
                 .name(helperService.capitalize(dto.getName()))
@@ -37,7 +37,7 @@ public class CustomerMapper {
                 .build();
     }
 
-    public void updateCustomerFromDto(CustomerDTO dto, Customer customer) {
+    public void updateCustomerFromDto(CustomerRequestDTO dto, Customer customer) {
         customer.setPhone(dto.getPhone());
         customer.setName(helperService.capitalize(dto.getName()));
         customer.setSurname(helperService.capitalize(dto.getSurname()));

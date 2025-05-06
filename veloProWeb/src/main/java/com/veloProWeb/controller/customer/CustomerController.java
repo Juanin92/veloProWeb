@@ -1,6 +1,6 @@
 package com.veloProWeb.controller.customer;
 
-import com.veloProWeb.model.dto.customer.CustomerDTO;
+import com.veloProWeb.model.dto.customer.CustomerRequestDTO;
 import com.veloProWeb.model.dto.customer.CustomerResponseDTO;
 import com.veloProWeb.service.customer.interfaces.ICustomerService;
 import com.veloProWeb.service.Record.IRecordService;
@@ -42,7 +42,7 @@ public class CustomerController {
      */
     @PostMapping("/agregar")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SELLER', 'MASTER')")
-    public ResponseEntity<Map<String, String>> addCustomer(@RequestBody @Valid CustomerDTO customer,
+    public ResponseEntity<Map<String, String>> addCustomer(@RequestBody @Valid CustomerRequestDTO customer,
                                                            @AuthenticationPrincipal UserDetails userDetails){
         customerService.addNewCustomer(customer);
         recordService.registerAction(userDetails, "CREATE",
@@ -58,7 +58,7 @@ public class CustomerController {
      */
     @PutMapping("/actualizar")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SELLER', 'MASTER')")
-    public ResponseEntity<Map<String, String>> updateCustomer(@RequestBody @Valid CustomerDTO customer,
+    public ResponseEntity<Map<String, String>> updateCustomer(@RequestBody @Valid CustomerRequestDTO customer,
                                                  @AuthenticationPrincipal UserDetails userDetails){
         customerService.updateCustomer(customer);
         recordService.registerAction(userDetails, "UPDATE",
@@ -73,7 +73,7 @@ public class CustomerController {
      */
     @PutMapping("/eliminar")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
-    public ResponseEntity<Map<String, String>> deleteCustomer(@RequestBody @Valid CustomerDTO customer,
+    public ResponseEntity<Map<String, String>> deleteCustomer(@RequestBody @Valid CustomerRequestDTO customer,
                                                               @AuthenticationPrincipal UserDetails userDetails){
         customerService.delete(customer);
         recordService.registerAction(userDetails, "DELETE",
@@ -88,7 +88,7 @@ public class CustomerController {
      */
     @PutMapping("/activar")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SELLER', 'MASTER')")
-    public ResponseEntity<Map<String, String>> activeCustomer(@RequestBody @Valid CustomerDTO customer,
+    public ResponseEntity<Map<String, String>> activeCustomer(@RequestBody @Valid CustomerRequestDTO customer,
                                                               @AuthenticationPrincipal UserDetails userDetails){
         customerService.activeCustomer(customer);
         recordService.registerAction(userDetails, "ACTIVATE",

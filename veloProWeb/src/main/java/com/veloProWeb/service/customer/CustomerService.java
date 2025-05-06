@@ -2,7 +2,7 @@
 
     import com.veloProWeb.exceptions.Customer.*;
     import com.veloProWeb.mapper.CustomerMapper;
-    import com.veloProWeb.model.dto.customer.CustomerDTO;
+    import com.veloProWeb.model.dto.customer.CustomerRequestDTO;
     import com.veloProWeb.model.dto.customer.CustomerResponseDTO;
     import com.veloProWeb.model.entity.customer.Customer;
     import com.veloProWeb.model.Enum.PaymentStatus;
@@ -34,7 +34,7 @@
          */
         @Transactional
         @Override
-        public void addNewCustomer(CustomerDTO dto) {
+        public void addNewCustomer(CustomerRequestDTO dto) {
             Customer customerDB = getCustomerCreated(dto.getName(), dto.getSurname());
             validator.existCustomer(customerDB);
             Customer customer = mapper.toEntity(dto);
@@ -56,7 +56,7 @@
          */
         @Transactional
         @Override
-        public void updateCustomer(CustomerDTO dto) {
+        public void updateCustomer(CustomerRequestDTO dto) {
             Customer customerDB = getCustomerById(dto.getId());
             mapper.updateCustomerFromDto(dto, customerDB);
             assignDefaultEmail(customerDB);
@@ -92,7 +92,7 @@
          */
         @Transactional
         @Override
-        public void delete(CustomerDTO dto) {
+        public void delete(CustomerRequestDTO dto) {
             Customer customer = getCustomerById(dto.getId());
             validator.deleteCustomer(customer);
             customer.setAccount(false);
@@ -106,7 +106,7 @@
          */
         @Transactional
         @Override
-        public void activeCustomer(CustomerDTO dto) {
+        public void activeCustomer(CustomerRequestDTO dto) {
             Customer customer = getCustomerById(dto.getId());
             validator.isActive(customer);
             customer.setAccount(true);

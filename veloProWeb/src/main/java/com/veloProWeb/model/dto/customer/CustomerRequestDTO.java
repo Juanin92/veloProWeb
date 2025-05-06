@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CustomerDTO {
+public class CustomerRequestDTO {
 
     @NotNull(message = "El id es obligatorio")
     private Long id;
