@@ -215,7 +215,7 @@ public class CustomerServiceTest {
         customerService.paymentDebt(customer, "1000");
         assertEquals(1000, customer.getDebt());
         verify(validator).validateValuePayment(1000, customer);
-        verify(customerRepo, times(2)).save(customer);
+        verify(customerRepo, times(1)).save(customer);
     }
 
     //Pruebas para asignar el estado de los clientes por deudas vigentes
@@ -223,7 +223,6 @@ public class CustomerServiceTest {
     public void statusAssign_null(){
         customerService.statusAssign(customer);
         assertEquals(PaymentStatus.NULO, customer.getStatus());
-        verify(customerRepo).save(customer);
     }
     @Test
     public void statusAssign_pending(){
@@ -231,7 +230,6 @@ public class CustomerServiceTest {
         customer.setDebt(1500);
         customerService.statusAssign(customer);
         assertEquals(PaymentStatus.PENDIENTE, customer.getStatus());
-        verify(customerRepo).save(customer);
     }
     @Test
     public void statusAssign_partial(){
@@ -239,7 +237,6 @@ public class CustomerServiceTest {
         customer.setDebt(1000);
         customerService.statusAssign(customer);
         assertEquals(PaymentStatus.PARCIAL, customer.getStatus());
-        verify(customerRepo).save(customer);
     }
     @Test
     public void statusAssign_paid(){
@@ -247,7 +244,6 @@ public class CustomerServiceTest {
         customer.setDebt(0);
         customerService.statusAssign(customer);
         assertEquals(PaymentStatus.PAGADA, customer.getStatus());
-        verify(customerRepo).save(customer);
     }
 
     //Prueba para agregar una venta al cliente
@@ -256,7 +252,7 @@ public class CustomerServiceTest {
         customer.setTotalDebt(20000);
         customerService.addSaleToCustomer(customer);
         assertEquals(20000, customer.getDebt());
-        verify(customerRepo, times(2)).save(customer);
+        verify(customerRepo, times(1)).save(customer);
     }
 
     //Prueba para actualizar la deuda total del cliente
