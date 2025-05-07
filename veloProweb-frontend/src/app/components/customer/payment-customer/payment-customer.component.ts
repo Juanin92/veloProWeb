@@ -6,7 +6,7 @@ import { PaymentCustomer } from '../../../models/Entity/Customer/payment-custome
 import { CommonModule } from '@angular/common';
 import { TicketHistoryService } from '../../../services/customer/ticket-history.service';
 import { TicketHistory } from '../../../models/Entity/Customer/ticket-history.model';
-import { PaymentRequestDTO } from '../../../models/DTO/payment-request-dto';
+import { PaymentRequestDTO } from '../../../models/Entity/Customer/payment-request-dto';
 import { FormsModule } from '@angular/forms';
 import { PaymentValidator } from '../../../validation/payment-validator';
 import { NotificationService } from '../../../utils/notification-service.service';
