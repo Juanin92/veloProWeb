@@ -12,6 +12,7 @@ import { PaymentValidator } from '../../../validation/payment-validator';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ModalService } from '../../../utils/modal.service';
 import { CustomerPermissionsService } from '../../../services/Permissions/customer-permissions.service';
+import { ErrorMessageService } from '../../../utils/error-message.service';
 
 @Component({
   selector: 'app-payment-customer',
@@ -40,7 +41,8 @@ export class PaymentCustomerComponent implements OnChanges {
     private ticketService: TicketHistoryService,
     protected permission: CustomerPermissionsService,
     private notification: NotificationService,
-    public modalService: ModalService) {
+    public modalService: ModalService,
+    private errorMessage: ErrorMessageService) {
     this.selectedCustomer = customerHelper.createEmptyCustomer();
     this.paymentRequest = this.resetPayments();
   }
@@ -68,18 +70,19 @@ export class PaymentCustomerComponent implements OnChanges {
     this.paymentRequest.customerID = this.selectedCustomer.id;
     this.paymentRequest.totalPaymentPaid = this.paymentValue;
     if (this.validation.validateFormPayment(this.paymentRequest)) {
-      this.paymentService.createPaymentCustomer(this.paymentRequest).subscribe((response) => {
-        console.log('Pago Realizado: ', response);
-        this.notification.showSuccessToast("Pago realizado", 'center', 3000);
-        this.getPayments(this.selectedCustomer);
-        this.getListTicketByCustomer(this.selectedCustomer.id);
-        this.paymentRequest = this.resetPayments();
-        this.paymentRealized.emit();
-        this.modalService.closeModal();
-      }, (error) => {
-        const message = error.error?.message || error.error?.error;
-        console.error('Problema al realizar pago: \t', error);
-        this.notification.showErrorToast(`Error al realizar el pago \n${message}`, 'top', 5000);
+      this.paymentService.createPaymentCustomer(this.paymentRequest).subscribe({
+        next: (response) => {
+          this.notification.showSuccessToast("Pago realizado", 'center', 3000);
+          this.getPayments(this.selectedCustomer);
+          this.getListTicketByCustomer(this.selectedCustomer.id);
+          this.paymentRequest = this.resetPayments();
+          this.paymentRealized.emit();
+          this.modalService.closeModal();
+        }, error: (error) => {
+          const message = this.errorMessage.errorMessageExtractor(error);
+          console.error('Problema al realizar pago: \t', message);
+          this.notification.showErrorToast(`Error al realizar el pago \n${message}`, 'top', 5000);
+        }
       });
     } else {
       this.notification.showWarning("Advertencia", "Falta datos para realizar el pago");
@@ -93,13 +96,16 @@ export class PaymentCustomerComponent implements OnChanges {
    * @param customer - Cliente para el cual se recuperan los pagos.
    */
   getPayments(customer: CustomerResponse): void {
-    this.paymentService.getCustomerSelectedPayment(customer.id).subscribe((paymentList) => {
-      this.payments = paymentList;
-      this.updatePaymentValueLabel();
-      this.updateTotalDebtLabel();
-      this.getListTicketByCustomer(customer.id);
-    }, (error) => {
-      console.log('Error no se encontró información de pagos ', error);
+    this.paymentService.getCustomerSelectedPayment(customer.id).subscribe({
+      next: (paymentList) => {
+        this.payments = paymentList;
+        this.updatePaymentValueLabel();
+        this.updateTotalDebtLabel();
+        this.getListTicketByCustomer(customer.id);
+      }, error: (error) => {
+        const message = this.errorMessage.errorMessageExtractor(error);
+        console.log('Error no se encontró información de pagos ', message);
+      }
     });
   }
 
@@ -108,10 +114,13 @@ export class PaymentCustomerComponent implements OnChanges {
    * @param id - Identificador del cliente.
    */
   getListTicketByCustomer(id: number): void {
-    this.ticketService.getListTicketByCustomer(this.selectedCustomer.id).subscribe((ticketList) => {
-      this.tickets = ticketList;
-    }, (error) => {
-      console.log('Error no se encontró información de los tickets ', error);
+    this.ticketService.getListTicketByCustomer(this.selectedCustomer.id).subscribe({
+      next: (ticketList) => {
+        this.tickets = ticketList;
+      },error: (error) => {
+        const message = this.errorMessage.errorMessageExtractor(error);
+        console.log('Error no se encontró información de los tickets ', message);
+      }
     });
   }
 
@@ -135,7 +144,7 @@ export class PaymentCustomerComponent implements OnChanges {
       }
     }
     this.debtValue = Array.from(this.selectedTickets).reduce((collector, current) => {
-      const payment = this.payments.find(payment => payment.document.id === current.id);
+      const payment = this.payments.find(payment => payment.document === current.document);
       const ticketAmount = payment ? current.total - payment.amount : current.total;
       return collector + ticketAmount;
     }, 0);
