@@ -18,10 +18,10 @@ public class PaymentRequestDTO {
     @NotNull(message = "La lista de IDs de tickets no puede ser nula")
     private List<Long> ticketIDs;
 
-    @NotBlank(message = "El ID del cliente no puede estar vacío")
+    @NotNull(message = "El ID del cliente no puede estar vacío")
     private Long customerID;
 
-    @NotBlank(message = "El monto no puede estar vacío")
+    @NotNull(message = "El monto no puede estar vacío")
     @Positive(message = "El monto debe ser positivo")
     @Min(value = 1, message = "El monto debe ser mayor a 0")
     private int amount;
@@ -29,7 +29,7 @@ public class PaymentRequestDTO {
     @NotBlank(message = "El comentario no puede estar vacío")
     private String comment;
 
-    @NotBlank(message = "El monto total ya pagado no puede estar vacío")
-    @Positive(message = "El monto debe ser positivo")
+    @NotNull(message = "El monto total ya pagado no puede estar vacío")
+    @Min(value = 0, message = "El monto debe ser mayor o igual a cero")
     private int totalPaymentPaid;
 }
