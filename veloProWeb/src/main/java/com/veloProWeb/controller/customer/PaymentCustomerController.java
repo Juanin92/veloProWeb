@@ -1,27 +1,32 @@
 package com.veloProWeb.controller.customer;
 
 import com.veloProWeb.model.dto.customer.PaymentRequestDTO;
-import com.veloProWeb.model.entity.customer.PaymentCustomer;
+import com.veloProWeb.model.dto.customer.PaymentResponseDTO;
 import com.veloProWeb.service.customer.interfaces.IPaymentCustomerService;
 import com.veloProWeb.service.Record.IRecordService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.veloProWeb.util.ResponseMessage;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/pagos")
+@AllArgsConstructor
+@Validated
 public class PaymentCustomerController {
 
-    @Autowired private IPaymentCustomerService paymentCustomerService;
-    @Autowired private IRecordService recordService;
+    private final IPaymentCustomerService paymentCustomerService;
+    private final IRecordService recordService;
 
     /**
      * Obtiene una lista de todos los pagos realizados.
@@ -29,7 +34,7 @@ public class PaymentCustomerController {
      */
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SELLER', 'MASTER', 'GUEST')")
-    public ResponseEntity<List<PaymentCustomer>> getAllPayment(){
+    public ResponseEntity<List<PaymentResponseDTO>> getAllPayment(){
         return ResponseEntity.ok(paymentCustomerService.getAll());
     }
 
@@ -40,7 +45,8 @@ public class PaymentCustomerController {
      */
     @GetMapping("/abonos")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SELLER', 'MASTER', 'GUEST')")
-    public ResponseEntity<List<PaymentCustomer>> getCustomerSelectedPayment(@RequestParam Long customerId){
+    public ResponseEntity<List<PaymentResponseDTO>> getCustomerSelectedPayment(@RequestParam @NotNull(
+            message = "El ID no puede estar vacío") Long customerId){
         return ResponseEntity.ok(paymentCustomerService.getCustomerSelected(customerId));
     }
 
@@ -51,18 +57,12 @@ public class PaymentCustomerController {
      */
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SELLER', 'MASTER', 'GUEST')")
-    public ResponseEntity<Map<String, String>> createPaymentCustomer(@RequestBody PaymentRequestDTO dto, @AuthenticationPrincipal UserDetails userDetails){
-        Map<String, String> response = new HashMap<>();
-        try{
-            response.put("message", "Pago registrado");
-            paymentCustomerService.createPaymentProcess(dto);
-            recordService.registerAction(userDetails, "PAYMENT",
-                    "Abono cuenta cliente ID: " + dto.getCustomerID() + ", cantidad $" + dto.getAmount()
-                            + " - " + dto.getComment());
-            return ResponseEntity.ok(response);
-        }catch (IllegalArgumentException e){
-            response.put("message", e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
+    public ResponseEntity<Map<String, String>> createPaymentCustomer(@RequestBody @Valid PaymentRequestDTO dto,
+                                                                     @AuthenticationPrincipal UserDetails userDetails){
+        paymentCustomerService.createPaymentProcess(dto);
+        recordService.registerAction(userDetails, "PAYMENT",
+                "Abono cuenta cliente ID: " + dto.getCustomerID() + ", cantidad $" + dto.getAmount()
+                        + " - " + dto.getComment());
+        return new ResponseEntity<>(ResponseMessage.message("Pago registrado"), HttpStatus.CREATED);
     }
 }
