@@ -1,4 +1,5 @@
-<div *ngIf="permission.canViewUser()" class="modal fade" id="paymentCustomer" tabindex="-1" aria-labelledby="paymentCustomer" aria-hidden="true">
+<div *ngIf="permission.canViewUser()" class="modal fade" id="paymentCustomer" tabindex="-1"
+  aria-labelledby="paymentCustomer" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header text-center w-100">
@@ -7,43 +8,44 @@
       </div>
       <div class="modal-body">
         <div class="container-fluid">
-        <div class="row g-2 mb-4">
-          <div class="col-4">
-            <div class="card border border-danger">
-              <div class="card-body p-2 text-center">
-                <small class="d-block text-danger mb-1">Deuda Total</small>
-                <span class="fs-6 fw-bold text-danger">
-                  {{ totalDebt | currency : "CLP" : "$" : "1.0-0" }}
-                </span>
+          <div class="row g-2 mb-4">
+            <div class="col-4">
+              <div class="card border border-danger">
+                <div class="card-body p-2 text-center">
+                  <small class="d-block text-danger mb-1">Deuda Total</small>
+                  <span class="fs-6 fw-bold text-danger">
+                    {{ totalDebt | currency : "CLP" : "$" : "1.0-0" }}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card border border-primary">
+                <div class="card-body p-2 text-center">
+                  <small class="d-block text-primary mb-1">A Pagar</small>
+                  <span class="fs-6 fw-bold text-primary">
+                    {{ debtValue | currency : "CLP" : "$" : "1.0-0" }}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card border border-success">
+                <div class="card-body p-2 text-center">
+                  <small class="d-block text-success mb-1">Abonado</small>
+                  <span class="fs-6 fw-bold text-success">
+                    {{ paymentValue | currency : "CLP" : "$" : "1.0-0" }}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-          <div class="col-4">
-            <div class="card border border-primary">
-              <div class="card-body p-2 text-center">
-                <small class="d-block text-primary mb-1">A Pagar</small>
-                <span class="fs-6 fw-bold text-primary">
-                  {{ debtValue | currency : "CLP" : "$" : "1.0-0" }}
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="col-4">
-            <div class="card border border-success">
-              <div class="card-body p-2 text-center">
-                <small class="d-block text-success mb-1">Abonado</small>
-                <span class="fs-6 fw-bold text-success">
-                  {{ paymentValue | currency : "CLP" : "$" : "1.0-0" }}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
           <div class="d-flex flex-row justify-content-between text-center">
             <div class="m-3">
               <div *ngFor="let ticket of tickets; let i = index">
                 <div class="btn-group-vertical m-1" role="group" aria-label="Seleccionador de boletas a pagar">
-                  <input type="checkbox" class="btn-check" id="btncheck{{i}}" autocomplete="off" (change)="updateDebtValueLabel(ticket, $event)" />
+                  <input type="checkbox" class="btn-check" id="btncheck{{i}}" autocomplete="off"
+                    (change)="updateDebtValueLabel(ticket, $event)" />
                   <label class="btn btn-outline-primary" for="btncheck{{i}}">{{ticket.document}}</label>
                 </div>
               </div>
@@ -60,11 +62,10 @@
                 </div>
                 <div class="form-floating mb-1">
                   <input type="number" class="form-control form-control-lg" id="paymentDebt" placeholder="Ingrese monto"
-                    name="paymentDebt" [(ngModel)]="paymentRequest.amount" required/>
+                    name="paymentDebt" [(ngModel)]="paymentRequest.amount" required />
                   <label for="paymentDebt" class="form-label">Monto a abonar</label>
                 </div>
-                <button type="submit" class="btn btn-success mb-4" 
-                  (click)="createPaymentCustomer()"
+                <button type="submit" class="btn btn-success mb-4" (click)="createPaymentCustomer()"
                   [attr.data-bs-dismiss]="modalService.isModalVisible() ? 'modal' : null">
                   Ingresar
                 </button>
@@ -87,7 +88,7 @@
                   <td>
                     {{ payment.amount | currency : "CLP" : "$" : "1.0-0" }}
                   </td>
-                  <td>{{ payment.document.document }}</td>
+                  <td>{{ payment.document }}</td>
                   <td>{{ payment.comment }}</td>
                 </tr>
               </tbody>
