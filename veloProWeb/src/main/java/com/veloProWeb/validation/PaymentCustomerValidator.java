@@ -1,7 +1,12 @@
 package com.veloProWeb.validation;
 
+import com.veloProWeb.exceptions.Customer.InvalidPaymentAmountException;
+import com.veloProWeb.exceptions.Customer.NoTicketSelectedException;
 import com.veloProWeb.exceptions.Validation.ValidationException;
+import com.veloProWeb.model.entity.customer.TicketHistory;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class PaymentCustomerValidator {
@@ -14,6 +19,39 @@ public class PaymentCustomerValidator {
     public void validatePayment(String amount, String comment) {
         validatePaymentAmount(amount);
         validateComment(comment);
+    }
+
+    /**
+     * Válida que la lista de boletas no esté vacía.
+     * @param tickets - lista de boletas seleccionadas
+     */
+    public void validateTickets(List<TicketHistory> tickets){
+        if (tickets.isEmpty()) {
+            throw new NoTicketSelectedException("No ha seleccionado ninguna boleta");
+        }
+    }
+
+    /**
+     * Válida que el monto del pago sea igual al total de las boletas seleccionadas.
+     * @param amount - monto del pago
+     * @param tickets - boletas seleccionadas
+     */
+    public void validateExactPaymentForMultipleTickets(int amount, List<TicketHistory> tickets){
+        int totalSelectedTicket = tickets.stream().mapToInt(TicketHistory::getTotal).sum();
+        if (amount != totalSelectedTicket) {
+            throw new InvalidPaymentAmountException("El monto no es correcto para el pago de la deuda");
+        }
+    }
+
+    /**
+     * Válida que el monto del pago no exceda la deuda.
+     * @param amount - monto de la deuda
+     * @param paymentDebt - monto del pago
+     */
+    public void validatePaymentNotExceedDebt(int amount, int paymentDebt){
+        if (amount > paymentDebt) {
+            throw new InvalidPaymentAmountException("El monto supera el valor de la deuda.");
+        }
     }
 
     /**
