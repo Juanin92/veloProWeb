@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { PaymentCustomerService } from '../../../services/customer/payment-customer.service';
-import { Customer } from '../../../models/Entity/Customer/customer.model';
+import { CustomerResponse } from '../../../models/Entity/Customer/customer-response';
 import { CustomerHelperServiceService } from '../../../services/customer/customer-helper-service.service';
 import { PaymentCustomer } from '../../../models/Entity/Customer/payment-customer.model';
 import { CommonModule } from '@angular/common';
@@ -22,7 +22,7 @@ import { CustomerPermissionsService } from '../../../services/Permissions/custom
 })
 export class PaymentCustomerComponent implements OnChanges {
 
-  @Input() selectedCustomer: Customer; //Cliente seleccionado desde un componente padre
+  @Input() selectedCustomer: CustomerResponse; //Cliente seleccionado desde un componente padre
   @Output() paymentRealized = new EventEmitter<void>();
   payments: PaymentCustomer[] = []; //Lista de pagos 
   tickets: TicketHistory[] = []; //Lista de tickets
@@ -92,7 +92,7 @@ export class PaymentCustomerComponent implements OnChanges {
    * llama el método para obtener los ticket del cliente 
    * @param customer - Cliente para el cual se recuperan los pagos.
    */
-  getPayments(customer: Customer): void {
+  getPayments(customer: CustomerResponse): void {
     this.paymentService.getCustomerSelectedPayment(customer.id).subscribe((paymentList) => {
       this.payments = paymentList;
       this.updatePaymentValueLabel();

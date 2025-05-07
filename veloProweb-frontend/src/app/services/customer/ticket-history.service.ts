@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { TicketHistory } from '../../models/Entity/Customer/ticket-history.model';
 import { TicketRequestDTO } from '../../models/DTO/ticket-request-dto';
-import { Customer } from '../../models/Entity/Customer/customer.model';
+import { CustomerResponse } from '../../models/Entity/Customer/customer-response';
 import { AuthService } from '../User/auth.service';
 
 @Injectable({

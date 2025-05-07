@@ -1,7 +1,7 @@
-import { Customer } from "../Entity/Customer/customer.model";
+import { CustomerResponse } from "../Entity/Customer/customer-response";
 
 export interface TicketRequestDTO {
-    customer: Customer;
+    customer: CustomerResponse;
     number: number;
     total: number;
     date: Date;

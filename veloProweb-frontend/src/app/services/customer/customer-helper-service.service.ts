@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Customer } from '../../models/Entity/Customer/customer.model';
+import { CustomerResponse } from '../../models/Entity/Customer/customer-response';
 import { PaymentStatus } from '../../models/enum/payment-status.enum';
-import { CustomerDTO } from '../../models/Entity/Customer/dto/customer-dto';
+import { CustomerForm } from '../../models/Entity/Customer/customer-form';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ export class CustomerHelperServiceService {
    * Sirve para resetear los valores de objeto o evitar errores por ser null
    * @returns Cliente con valores predeterminados
    */
-  createEmptyCustomer(): Customer {
+  createEmptyCustomer(): CustomerResponse {
     return {
       id: 0,
       name: '',
@@ -27,7 +27,7 @@ export class CustomerHelperServiceService {
     };
   }
 
-  createEmptyCustomerDTO(): CustomerDTO {
+  createEmptyCustomerDTO(): CustomerForm {
     return {
       id: 0,
       name: '',
@@ -37,7 +37,7 @@ export class CustomerHelperServiceService {
     }
   }
 
-  mapCustomerToDto(customer: Customer): CustomerDTO {
+  mapCustomerToDto(customer: CustomerResponse): CustomerForm {
     return {
       id: customer.id,
       name: customer.name,

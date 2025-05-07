@@ -1,16 +1,16 @@
-import { CustomerDTO } from "../models/Entity/Customer/dto/customer-dto";
-import { Customer } from "../models/Entity/Customer/customer.model";
+import { CustomerForm } from "../models/Entity/Customer/customer-form";
+import { CustomerResponse } from "../models/Entity/Customer/customer-response";
 
 export class CustomerValidator {
 
-    static validateForm(selectedCustomer: CustomerDTO): boolean {
+    static validateForm(selectedCustomer: CustomerForm): boolean {
         return this.isFieldValid(selectedCustomer, 'name') &&
             this.isFieldValid(selectedCustomer, 'surname') &&
             this.isFieldValid(selectedCustomer, 'phone') &&
             this.isFieldValid(selectedCustomer, 'email');
     }
 
-    static isFieldValid(customer: CustomerDTO, fieldName: keyof CustomerDTO): boolean {
+    static isFieldValid(customer: CustomerForm, fieldName: keyof CustomerForm): boolean {
         const value = customer[fieldName];
         if (fieldName === 'email') {
             return !value || typeof value === 'string' && /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value);

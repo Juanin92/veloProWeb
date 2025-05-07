@@ -7,7 +7,7 @@ import { CustomerHelperServiceService } from '../../../services/customer/custome
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ModalService } from '../../../utils/modal.service';
 import { CustomerPermissionsService } from '../../../services/Permissions/customer-permissions.service';
-import { CustomerDTO } from '../../../models/Entity/Customer/dto/customer-dto';
+import { CustomerForm } from '../../../models/Entity/Customer/customer-form';
 import { ErrorMessageService } from '../../../utils/error-message.service';
 
 @Component({
@@ -19,7 +19,7 @@ import { ErrorMessageService } from '../../../utils/error-message.service';
 })
 export class AddCustomerComponent {
 
-  newCustomer: CustomerDTO;
+  newCustomer: CustomerForm;
   customerValidator = CustomerValidator; // Validador de para los datos del cliente.
   @Output() customerAdded = new EventEmitter<void>();
   touchedFields: Record<string, boolean> = {}; //Campo tocado en el DOM 

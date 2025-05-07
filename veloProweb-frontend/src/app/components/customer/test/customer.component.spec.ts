@@ -3,7 +3,7 @@ import { CustomerComponent } from "../customer.component";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { of, throwError } from "rxjs";
 import { PaymentStatus } from "../../../models/enum/payment-status.enum";
-import { Customer } from "../../../models/Entity/Customer/customer.model";
+import { CustomerResponse } from "../../../models/Entity/Customer/customer-response";
 import { provideHttpClient } from "@angular/common/http";
 import { CustomerService } from "../../../services/customer/customer.service";
 import { NotificationService } from "../../../utils/notification-service.service";
@@ -13,7 +13,7 @@ describe('CustomerComponent', () => {
     let fixture: ComponentFixture<CustomerComponent>;
     let customerService: jasmine.SpyObj<CustomerService>;
     let notification: jasmine.SpyObj<NotificationService>;
-    let mockCustomer: Customer;
+    let mockCustomer: CustomerResponse;
 
     beforeEach(async () => {
         const spy = jasmine.createSpyObj('CustomerService', ['getCustomer', 'deleteCustomer']);
@@ -47,7 +47,7 @@ describe('CustomerComponent', () => {
 
     //Prueba para traer lista de clientes
     it('Debería traer clientes, "getAllCustomer(): void"', () => {
-        const mockCustomers: Customer[] = [
+        const mockCustomers: CustomerResponse[] = [
             mockCustomer,
             { id: 2, name: 'Ignacio', surname: 'Lopez', debt: 0, totalDebt: 0, status: PaymentStatus.NULO, account: true, email: 'test@test.com', phone: '+569 12345678', paymentCustomerList: [], ticketHistoryList: [] }
         ];

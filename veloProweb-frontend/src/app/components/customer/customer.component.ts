@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
-import { Customer } from '../../models/Entity/Customer/customer.model';
+import { CustomerResponse } from '../../models/Entity/Customer/customer-response';
 import { CustomerService } from '../../services/customer/customer.service';
 import { CommonModule, NgStyle } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -11,7 +11,7 @@ import { NotificationService } from '../../utils/notification-service.service';
 import { TooltipService } from '../../utils/tooltip.service';
 import { ModalService } from '../../utils/modal.service';
 import { CustomerPermissionsService } from '../../services/Permissions/customer-permissions.service';
-import { CustomerDTO } from '../../models/Entity/Customer/dto/customer-dto';
+import { CustomerForm } from '../../models/Entity/Customer/customer-form';
 import { ErrorMessageService } from '../../utils/error-message.service';
 
 @Component({
@@ -23,9 +23,9 @@ import { ErrorMessageService } from '../../utils/error-message.service';
 })
 export class CustomerComponent implements OnInit, AfterViewInit {
 
-  customers: Customer[] = [];
-  filteredCustomers: Customer[] = [];
-  selectedCustomer: Customer;
+  customers: CustomerResponse[] = [];
+  filteredCustomers: CustomerResponse[] = [];
+  selectedCustomer: CustomerResponse;
   textFilter: string = '';
   totalDebts: number = 0;
   sortDebt: boolean = true;
@@ -76,8 +76,8 @@ export class CustomerComponent implements OnInit, AfterViewInit {
    * lanza una confirmación antes de eliminar al cliente
    * @param customer - cliente seleccionado
    */
-  deleteCustomer(customer: Customer): void {
-    const customerDTO: CustomerDTO = this.customerHelper.mapCustomerToDto(customer);
+  deleteCustomer(customer: CustomerResponse): void {
+    const customerDTO: CustomerForm = this.customerHelper.mapCustomerToDto(customer);
     if (customerDTO) {
       this.notification.showConfirmation(
         "¿Estas seguro?",
@@ -106,7 +106,7 @@ export class CustomerComponent implements OnInit, AfterViewInit {
    * Abrir modal con una copia de un cliente seleccionado
    * @param customer - cliente seleccionado
    */
-  openModalCustomer(customer: Customer): void {
+  openModalCustomer(customer: CustomerResponse): void {
     if (customer) {
       this.selectedCustomer = { ...customer };
       this.modalService.openModal();

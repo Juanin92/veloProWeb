@@ -3,7 +3,7 @@ import { TooltipService } from '../../../utils/tooltip.service';
 import { ProductListComponent } from "../../product/productList/product-list.component";
 import { Product } from '../../../models/Entity/Product/product.model';
 import { Sale } from '../../../models/Entity/Sale/sale';
-import { Customer } from '../../../models/Entity/Customer/customer.model';
+import { CustomerResponse } from '../../../models/Entity/Customer/customer-response';
 import { SaleDetail } from '../../../models/Entity/Sale/sale-detail';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { SaleHelperService } from '../../../services/Sale/sale-helper.service';
@@ -28,7 +28,7 @@ import { lastValueFrom } from 'rxjs';
 export class SaleComponent implements AfterViewInit, OnInit {
 
   sale: Sale;
-  customerList: Customer[] = [];
+  customerList: CustomerResponse[] = [];
   productSelected: Product | null = null;
   saleDetailList: SaleDetail[] = [];
   requestDTO: SaleRequestDTO | null = null;

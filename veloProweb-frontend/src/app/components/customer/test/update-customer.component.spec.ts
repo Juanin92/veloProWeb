@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { Customer } from "../../../models/Entity/Customer/customer.model";
+import { CustomerResponse } from "../../../models/Entity/Customer/customer-response";
 import { CustomerService } from "../../../services/customer/customer.service";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { CommonModule } from "@angular/common";
@@ -14,7 +14,7 @@ describe('UpdateCustomerComponent', () => {
   let component: UpdateCustomerComponent;
   let fixture: ComponentFixture<UpdateCustomerComponent>;
   let customerService: jasmine.SpyObj<CustomerService>;   
-  let mockCustomer: Customer;
+  let mockCustomer: CustomerResponse;
 
   beforeEach(async () => {
     const spy = jasmine.createSpyObj('CustomerService', ['updateCustomer', 'activeCustomer']);

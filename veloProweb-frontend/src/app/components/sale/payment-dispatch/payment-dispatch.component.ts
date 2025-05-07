@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Dispatch } from '../../../models/Entity/Sale/dispatch';
 import { DetailSaleRequestDTO } from '../../../models/DTO/detail-sale-request-dto';
 import { CustomerService } from '../../../services/customer/customer.service';
-import { Customer } from '../../../models/Entity/Customer/customer.model';
+import { CustomerResponse } from '../../../models/Entity/Customer/customer-response';
 import { SaleRequestDTO } from '../../../models/DTO/sale-request-dto';
 import { SaleService } from '../../../services/Sale/sale.service';
 import { PaymentMethod } from '../../../models/enum/payment-method';
@@ -25,7 +25,7 @@ export class PaymentDispatchComponent implements OnChanges, OnInit {
   @Input() saleDetailDispatchList: DetailSaleRequestDTO[] = [];
   @Output() dispatchPaid = new EventEmitter<boolean>();
   requestDTO: SaleRequestDTO;
-  customerList: Customer[] = [];
+  customerList: CustomerResponse[] = [];
   totalSum: number = 0;
   discountAmount: number = 0;
   cashAmount: number = 0;

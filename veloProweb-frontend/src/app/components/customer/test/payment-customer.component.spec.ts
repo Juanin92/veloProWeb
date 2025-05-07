@@ -4,7 +4,7 @@ import { PaymentCustomerService } from '../../../services/customer/payment-custo
 import { CustomerHelperServiceService } from '../../../services/customer/customer-helper-service.service';
 import { PaymentStatus } from '../../../models/enum/payment-status.enum';
 import { TicketHistory } from '../../../models/Entity/Customer/ticket-history.model';
-import { Customer } from '../../../models/Entity/Customer/customer.model';
+import { CustomerResponse } from '../../../models/Entity/Customer/customer-response';
 import { PaymentCustomerComponent } from '../payment-customer/payment-customer.component';
 import { TicketHistoryService } from '../../../services/customer/ticket-history.service';
 import { PaymentCustomer } from '../../../models/Entity/Customer/payment-customer.model';
@@ -48,12 +48,12 @@ describe('PaymentCustomerComponent', () => {
   //Prueba para obtener los pagos realizados de un cliente
   it('debería obtener pagos y actualizar valores correctamente, "getPayments(customer: Customer): void"', () => {
     const mockPayments = [
-      { id: 1, amount: 100, date: '2023-12-01', comment: 'prueba', document: {id: 1} as TicketHistory, customer: {id: 1} as Customer },
-      { id: 2, amount: 200, date: '2023-12-02', comment: 'prueba', document: {id: 2} as TicketHistory, customer: {id: 1} as Customer },
+      { id: 1, amount: 100, date: '2023-12-01', comment: 'prueba', document: {id: 1} as TicketHistory, customer: {id: 1} as CustomerResponse },
+      { id: 2, amount: 200, date: '2023-12-02', comment: 'prueba', document: {id: 2} as TicketHistory, customer: {id: 1} as CustomerResponse },
     ];
     paymentService.getCustomerSelectedPayment.and.returnValue(of(mockPayments));
   
-    component.getPayments({ id: 1} as Customer);
+    component.getPayments({ id: 1} as CustomerResponse);
   
     expect(paymentService.getCustomerSelectedPayment).toHaveBeenCalledWith(1);
     expect(component.payments).toEqual(mockPayments);
@@ -64,14 +64,14 @@ describe('PaymentCustomerComponent', () => {
     paymentService.getCustomerSelectedPayment.and.returnValue(throwError(() => errorResponse));
   
     spyOn(console, 'log');
-    component.getPayments({ id: 1} as Customer);
+    component.getPayments({ id: 1} as CustomerResponse);
   
     expect(console.log).toHaveBeenCalledWith('Error no se encontró información de pagos ', errorResponse);
   });
 
   //Prueba para obtener una lista de tickets de un cliente
   it('Debería listar los tickets de un cliente, "getListTicketByCustomer(id: number): void"', () => {
-    const mockCustomer = { id: 1, debt: 1000 } as Customer;
+    const mockCustomer = { id: 1, debt: 1000 } as CustomerResponse;
     component.selectedCustomer = mockCustomer;
     const mockTickets = [
       {id: 1, amount: 500, document: 'BO0020', total: 2000, status: true, date: '2025-01-01', notificationsDate: 'null', customer: mockCustomer},
@@ -87,8 +87,8 @@ describe('PaymentCustomerComponent', () => {
   //Prueba que la suma de los pagos sea calculada
   it('debería actualizar el valor de los pagos, "updatePaymentValueLabel(): void"', () => {
     component.payments = [
-        { id: 1, amount: 300, date: '2023-12-01', comment: 'prueba', document: {id: 1} as TicketHistory, customer: {id: 1} as Customer },
-        { id: 2, amount: 200, date: '2023-12-02', comment: 'prueba', document: {id: 2} as TicketHistory, customer: {id: 1} as Customer },
+        { id: 1, amount: 300, date: '2023-12-01', comment: 'prueba', document: {id: 1} as TicketHistory, customer: {id: 1} as CustomerResponse },
+        { id: 2, amount: 200, date: '2023-12-02', comment: 'prueba', document: {id: 2} as TicketHistory, customer: {id: 1} as CustomerResponse },
     ];
   
     component.updatePaymentValueLabel();
@@ -114,7 +114,7 @@ describe('PaymentCustomerComponent', () => {
   
   //Prueba de que se actualize label de la deuda total del cliente
   it('debería actualizar el valor total de la deuda, "updateTotalDebtLabel(): void "', () => {
-    component.selectedCustomer = { id: 1, debt: 800 } as Customer;
+    component.selectedCustomer = { id: 1, debt: 800 } as CustomerResponse;
   
     component.updateTotalDebtLabel();
   
@@ -126,7 +126,7 @@ describe('PaymentCustomerComponent', () => {
     spyOn(component, 'getPayments');
     const changes = {
       selectedCustomer: {
-        currentValue: { id: 1, debt: 700, name: 'Juan', surname: 'Perez' } as Customer,
+        currentValue: { id: 1, debt: 700, name: 'Juan', surname: 'Perez' } as CustomerResponse,
         previousValue: null,
         firstChange: true,
         isFirstChange: () => true,

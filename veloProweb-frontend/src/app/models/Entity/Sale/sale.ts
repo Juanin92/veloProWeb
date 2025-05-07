@@ -1,5 +1,5 @@
 import { PaymentMethod } from "../../enum/payment-method";
-import { Customer } from "../Customer/customer.model";
+import { CustomerResponse } from "../Customer/customer-response";
 
 export interface Sale {
     id: number;
@@ -11,5 +11,5 @@ export interface Sale {
     tax: number;
     totalSale: number;
     status: boolean;
-    customer: Customer | null;
+    customer: CustomerResponse | null;
 }

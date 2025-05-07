@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { CustomerService } from "../../../services/customer/customer.service";
-import { Customer } from "../../../models/Entity/Customer/customer.model";
+import { CustomerResponse } from "../../../models/Entity/Customer/customer-response";
 import { of } from "rxjs/internal/observable/of";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
@@ -13,7 +13,7 @@ describe('AddCustomerComponent', () => {
   let component: AddCustomerComponent;
   let fixture: ComponentFixture<AddCustomerComponent>;
   let customerService: jasmine.SpyObj<CustomerService>;
-  let mockCustomer: Customer;
+  let mockCustomer: CustomerResponse;
 
   beforeEach(async () => {
     const spy = jasmine.createSpyObj('CustomerService', ['addCustomer']);

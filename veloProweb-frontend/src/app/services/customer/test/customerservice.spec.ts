@@ -3,7 +3,7 @@ import { CustomerService } from "../customer.service";
 import { TestBed } from "@angular/core/testing";
 import { PaymentStatus } from "../../../models/enum/payment-status.enum";
 import { provideHttpClient, HttpClient } from "@angular/common/http";
-import { Customer } from "../../../models/Entity/Customer/customer.model";
+import { CustomerResponse } from "../../../models/Entity/Customer/customer-response";
 
 describe('CustomerService', () => {
     let service: CustomerService;
@@ -31,7 +31,7 @@ describe('CustomerService', () => {
 
     //Pruebas API para obtener todos los clientes
     it('Debería traer una lista de clientes, "getCustomer(): Observable<Customer[]>"', () => {
-        const mockCustomers: Customer[] = [
+        const mockCustomers: CustomerResponse[] = [
             {id: 1, name: 'Juan', surname: 'Perez', debt:0, totalDebt: 0, status: PaymentStatus.NULO, account: true, email: 'test@test.com', phone: '+569 12345678', paymentCustomerList: [], ticketHistoryList: []},
             {id: 2, name: 'Ignacio', surname: 'Lopez', debt:0, totalDebt: 0, status: PaymentStatus.NULO, account: true, email: 'test@test.com', phone: '+569 12345678', paymentCustomerList: [], ticketHistoryList: []}
         ];
@@ -48,7 +48,7 @@ describe('CustomerService', () => {
 
     //Pruebas API para crear cliente
     it('Debería crear un nuevo cliente, addCustomer(customer: Customer): Observable<string>', () => {
-        const mockCustomer: Customer = {
+        const mockCustomer: CustomerResponse = {
             id: 1, name: 'Juan', surname: 'Perez', debt:0, totalDebt: 0, status: PaymentStatus.NULO, account: true, email: 'test@test.com', phone: '+569 12345678', paymentCustomerList: [], ticketHistoryList: []
         };
         const responseMessage = {message: "Cliente agregado correctamente!"};
@@ -60,7 +60,7 @@ describe('CustomerService', () => {
         request.flush(responseMessage);
     });
     it('Debería manejar error al crear un nuevo cliente', () => {
-        const mockCustomer: Customer = {
+        const mockCustomer: CustomerResponse = {
             id: 1, name: 'Juan', surname: 'Perez', debt: 0, totalDebt: 0, status: PaymentStatus.NULO, account: true, email: 'test@test.com', phone: '+569 12345678', paymentCustomerList: [], ticketHistoryList: []
         };
         const errorMessage = { error: "Cliente Existente: Hay registro de este cliente." };
@@ -80,7 +80,7 @@ describe('CustomerService', () => {
     
     //Pruebas API para actualizar cliente
     it('Debería actualizar a un cliente, "updateCustomer(customer: Customer): Observable<string>"', () => {
-        const mockCustomers: Customer = {id: 1, name: 'Juan', surname: 'Perez', debt:0, totalDebt: 0, status: PaymentStatus.NULO, account: true, email: 'test@test.com', phone: '+569 12345678', paymentCustomerList: [], ticketHistoryList: []};
+        const mockCustomers: CustomerResponse = {id: 1, name: 'Juan', surname: 'Perez', debt:0, totalDebt: 0, status: PaymentStatus.NULO, account: true, email: 'test@test.com', phone: '+569 12345678', paymentCustomerList: [], ticketHistoryList: []};
         const message = "Cliente actualizado correctamente!";
 
         service.updateCustomer(mockCustomers).subscribe( response => {
@@ -92,7 +92,7 @@ describe('CustomerService', () => {
         req.flush(message);
     });
     it('Debería manejar error al actualizar un cliente', () => {
-        const mockCustomer: Customer = {
+        const mockCustomer: CustomerResponse = {
             id: 1, name: 'Juan', surname: 'Perez', debt: 0, totalDebt: 0, status: PaymentStatus.NULO, account: true, email: 'test@test.com', phone: '+569 12345678', paymentCustomerList: [], ticketHistoryList: []
         };
         const errorMessage = { error: "Cliente Existente: Hay registro de este cliente." };
@@ -112,7 +112,7 @@ describe('CustomerService', () => {
 
     //Pruebas API para eliminar un cliente
     it('Debería eliminar un cliente seleccionado, deleteCustomer(customer: Customer): Observable<string>', () =>{
-        const mockCustomer: Customer = {
+        const mockCustomer: CustomerResponse = {
             id: 1, name: 'Juan', surname: 'Perez', debt: 0, totalDebt: 0, status: PaymentStatus.NULO, account: true, email: 'test@test.com', phone: '+569 12345678', paymentCustomerList: [], ticketHistoryList: []
         };
         const responseMessage = "Cliente eliminado correctamente!";
@@ -126,7 +126,7 @@ describe('CustomerService', () => {
         request.flush(responseMessage);
     });
     it('Debería manejar error al eliminar un cliente ya eliminado', () => {
-        const mockCustomer: Customer = {
+        const mockCustomer: CustomerResponse = {
             id: 1, name: 'Juan', surname: 'Perez', debt: 0, totalDebt: 0, status: PaymentStatus.NULO, account: false, email: 'test@test.com', phone: '+569 12345678', paymentCustomerList: [], ticketHistoryList: []
         };
         const errorMessage = "Cliente ya ha sido eliminado anteriormente.";
@@ -146,7 +146,7 @@ describe('CustomerService', () => {
 
     //Pruebas API para activar cliente
     it('Debería activar un cliente eliminado, activeCustomer(customer: Customer): Observable<string>', () =>{
-        const mockCustomer: Customer = {
+        const mockCustomer: CustomerResponse = {
             id: 1, name: 'Juan', surname: 'Perez', debt: 0, totalDebt: 0, status: PaymentStatus.NULO, account: false, email: 'test@test.com', phone: '+569 12345678', paymentCustomerList: [], ticketHistoryList: []
         };
         const responseMessage = "Cliente ha sido activado";
@@ -160,7 +160,7 @@ describe('CustomerService', () => {
         request.flush(responseMessage);
     });
     it('Debería manejar error al activar un cliente ya activado', () => {
-        const mockCustomer: Customer = {
+        const mockCustomer: CustomerResponse = {
             id: 1, name: 'Juan', surname: 'Perez', debt: 0, totalDebt: 0, status: PaymentStatus.NULO, account: false, email: 'test@test.com', phone: '+569 12345678', paymentCustomerList: [], ticketHistoryList: []
         };
         const errorMessage = "El cliente tiene su cuenta activada";

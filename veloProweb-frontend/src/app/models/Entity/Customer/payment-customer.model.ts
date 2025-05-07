@@ -1,4 +1,4 @@
-import { Customer } from "./customer.model";
+import { CustomerResponse } from "./customer-response";
 import { TicketHistory } from "./ticket-history.model";
 
 export interface PaymentCustomer {
@@ -6,6 +6,6 @@ export interface PaymentCustomer {
     amount: number;
     comment: string;
     date: string;
-    customer: Customer;
+    customer: CustomerResponse;
     document: TicketHistory;
 }

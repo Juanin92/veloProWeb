@@ -1,14 +1,14 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Customer } from '../../../models/Entity/Customer/customer.model';
+import { CustomerResponse } from '../../../models/Entity/Customer/customer-response';
 import { CustomerService } from '../../../services/customer/customer.service';
 import { CustomerValidator } from '../../../validation/customer-validator';
 import { CustomerHelperServiceService } from '../../../services/customer/customer-helper-service.service';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ModalService } from '../../../utils/modal.service';
 import { CustomerPermissionsService } from '../../../services/Permissions/customer-permissions.service';
-import { CustomerDTO } from '../../../models/Entity/Customer/dto/customer-dto';
+import { CustomerForm } from '../../../models/Entity/Customer/customer-form';
 import { ErrorMessageService } from '../../../utils/error-message.service';
 
 @Component({
@@ -20,10 +20,10 @@ import { ErrorMessageService } from '../../../utils/error-message.service';
 })
 export class UpdateCustomerComponent {
 
-  @Input() selectedCustomer: Customer; //Cliente seleccionado desde un componente padre
+  @Input() selectedCustomer: CustomerResponse; //Cliente seleccionado desde un componente padre
   @Output() customerUpdated = new EventEmitter<void>();
   customerValidator = CustomerValidator; //Validador de los datos del cliente
-  customerDTO: CustomerDTO;
+  customerDTO: CustomerForm;
 
   constructor(
     private customerService: CustomerService,
@@ -66,7 +66,7 @@ export class UpdateCustomerComponent {
    * Valida si cliente no es nulo y si es correcto, llama al servicio para activar al cliente
    * @param customer cliente seleccionado para activar
    */
-  activeCustomer(customer: Customer): void {
+  activeCustomer(customer: CustomerResponse): void {
     if (customer) {
       this.customerDTO = this.customerHelper.mapCustomerToDto(customer);
       this.customerService.activeCustomer(this.customerDTO).subscribe({
