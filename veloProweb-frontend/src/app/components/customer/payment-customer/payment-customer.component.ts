@@ -80,7 +80,7 @@ export class PaymentCustomerComponent implements OnChanges {
           this.modalService.closeModal();
         }, error: (error) => {
           const message = this.errorMessage.errorMessageExtractor(error);
-          console.error('Problema al realizar pago: \t', message);
+          console.log('Problema al realizar pago: \t', message);
           this.notification.showErrorToast(`Error al realizar el pago \n${message}`, 'top', 5000);
         }
       });
@@ -117,6 +117,8 @@ export class PaymentCustomerComponent implements OnChanges {
     this.ticketService.getListTicketByCustomer(this.selectedCustomer.id).subscribe({
       next: (ticketList) => {
         this.tickets = ticketList;
+        console.log('ID cliente seleccionado; ', id);
+        console.log('lista ticket: ',  ticketList);
       },error: (error) => {
         const message = this.errorMessage.errorMessageExtractor(error);
         console.log('Error no se encontró información de los tickets ', message);
@@ -148,6 +150,7 @@ export class PaymentCustomerComponent implements OnChanges {
       const ticketAmount = payment ? current.total - payment.amount : current.total;
       return collector + ticketAmount;
     }, 0);
+    console.log('debtValue: ', this.debtValue);
   }
 
   /**
