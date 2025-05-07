@@ -31,9 +31,9 @@ public class Customer {
     private PaymentStatus status;
     private boolean account;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<PaymentCustomer> paymentCustomerList = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<TicketHistory> ticketHistoryList = new ArrayList<>();
 }
