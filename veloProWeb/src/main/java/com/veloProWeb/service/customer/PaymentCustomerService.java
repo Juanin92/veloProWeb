@@ -1,8 +1,8 @@
 package com.veloProWeb.service.customer;
 
-import com.veloProWeb.exceptions.Customer.InvalidPaymentAmountException;
-import com.veloProWeb.exceptions.Customer.NoTicketSelectedException;
+import com.veloProWeb.mapper.PaymentCustomerMapper;
 import com.veloProWeb.model.dto.customer.PaymentRequestDTO;
+import com.veloProWeb.model.dto.customer.PaymentResponseDTO;
 import com.veloProWeb.model.entity.customer.Customer;
 import com.veloProWeb.model.entity.customer.PaymentCustomer;
 import com.veloProWeb.model.entity.customer.TicketHistory;
@@ -11,11 +11,12 @@ import com.veloProWeb.service.customer.interfaces.IPaymentCustomerService;
 import com.veloProWeb.validation.PaymentCustomerValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,90 +27,87 @@ public class PaymentCustomerService implements IPaymentCustomerService {
     private final PaymentCustomerValidator validator;
     private final TicketHistoryService ticketService;
     private final CustomerService customerService;
+    private final PaymentCustomerMapper mapper;
 
     /**
-     * Procesa la creación de un pago basado en los valores del dto.
-     * Gestiona el proceso de pago para uno o varios tickets.
-     * Si el pago cubre una parte de la deuda, se genera un ajuste en el sistema.
-     * @param dto - Contiene los detalles del pago
-     */
-    @Override
-    public void createPaymentProcess(PaymentRequestDTO dto) {
-        Customer customer = customerService.getCustomerById(dto.getCustomerID());
-        List<TicketHistory> ticketList = new java.util.ArrayList<>(List.of());
-        for (Long id : dto.getTicketIDs()){
-            TicketHistory ticketHistory = ticketService.getTicketByID(id);
-            ticketList.add(ticketHistory);
-        }
-        if (!ticketList.isEmpty()){
-            int totalSelectedTicket = ticketList.stream().mapToInt(TicketHistory::getTotal).sum();
-            if (ticketList.size() > 1){
-                if (dto.getAmount() == totalSelectedTicket){
-                    for (TicketHistory ticket : ticketList){
-                        paymentDebtCustomer(ticket, dto.getComment(), dto.getAmount(), true);
-                        ticketService.updateStatus(ticket);
-                        dto.setAmount(dto.getAmount() - ticket.getTotal());
-                    }
-                }else {
-                    throw new InvalidPaymentAmountException("El monto no es correcto para el pago de la deuda");
-                }
-            }else {
-                if (dto.getAmount() == (ticketList.getFirst().getTotal() - dto.getTotalPaymentPaid())){
-                    paymentDebtCustomer(ticketList.getFirst(), dto.getComment(), dto.getAmount(), false);
-                    ticketService.updateStatus(ticketList.getFirst());
-                } else if (dto.getAmount() < (ticketList.getFirst().getTotal() - dto.getTotalPaymentPaid())) {
-                    createAdjustPayments(dto.getAmount(), ticketList.getFirst(), customer);
-                    customerService.paymentDebt(customer, String.valueOf(dto.getAmount()));
-                }else {
-                    throw new InvalidPaymentAmountException("El monto supera el valor de la deuda.");
-                }
-            }
-        }else {
-            throw new NoTicketSelectedException("No ha seleccionado ninguna boleta");
-        }
-    }
-
-    /**
-     * Obtiene los registro de pagos del cliente
+     * Obtiene los registro de pagos del cliente.
      * @return una lista con los registros de pagos.
      */
     @Override
-    public List<PaymentCustomer> getAll() {
-        return paymentCustomerRepo.findAll();
+    public List<PaymentResponseDTO> getAll() {
+        return paymentCustomerRepo.findAll().stream()
+                .map(mapper::toDto)
+                .toList();
+    }
+
+    /**
+     * Procesa la creación de un pago.
+     * Gestiona el proceso de pago para uno o varios tickets.
+     * @param dto - Contiene los detalles del pago
+     */
+    @Transactional
+    @Override
+    public void createPaymentProcess(PaymentRequestDTO dto) {
+        List<TicketHistory> ticketList = loadTicketHistories(dto.getTicketIDs());
+        validator.validateTickets(ticketList);
+        if (ticketList.size() > 1){
+            processMultipleTicketPayment(dto, ticketList);
+        }else {
+            processSingleTicketPayment(dto, ticketList.getFirst());
+        }
     }
 
     /**
      * Obtiene los pagos realizados de un cliente por su ID
      * filtrando que los pagos sean similares a un ticket y ordenando por fecha menor a mayor
      * y solo dejar una lista filtrada con los tickets que tenga pagos
+     *
      * @param idCustomer ID del cliente
      * @return lista de registro de pagos realizados
      */
     @Override
-    public List<PaymentCustomer> getCustomerSelected(Long  idCustomer) {
-        List<PaymentCustomer> payments =  paymentCustomerRepo.findByCustomerId(idCustomer);
-        List<TicketHistory> tickets = ticketService.getByCustomerId(idCustomer);
+    public List<PaymentResponseDTO> getCustomerSelected(Long idCustomer) {
+        Set<Long> ticketIds = ticketService.getByCustomerId(idCustomer).stream()
+                .map(TicketHistory::getId)
+                .collect(Collectors.toSet());
 
-        return payments.stream()
-                .filter(payment -> tickets.stream()
-                        .anyMatch(ticket -> Objects.equals(ticket.getId(), payment.getDocument().getId())))
+        return paymentCustomerRepo.findByCustomerId(idCustomer).stream()
+                .filter(payment -> ticketIds.contains(payment.getDocument().getId()))
                 .sorted(Comparator.comparing(PaymentCustomer::getDate))
-                .collect(Collectors.toList());
+                .map(mapper::toDto)
+                .toList();
+
     }
 
-    /**
-     * Agrega un pago a la deuda de un cliente.
-     * Se encarga de válidar el pago y asignar los detalles antes de registrar el pago
-     * @param paymentCustomer contiene el detalle del pago
-     */
-    private void addPayments(PaymentCustomer paymentCustomer) {
-        validator.validatePayment(String.valueOf(paymentCustomer.getAmount()),paymentCustomer.getComment());
-        paymentCustomer.setCustomer(paymentCustomer.getCustomer());
-        paymentCustomer.setDate(LocalDate.now());
-        paymentCustomer.setDocument(paymentCustomer.getDocument());
-        paymentCustomer.setAmount(paymentCustomer.getAmount());
-        paymentCustomer.setComment(paymentCustomer.getComment());
-        paymentCustomerRepo.save(paymentCustomer);
+    private List<TicketHistory> loadTicketHistories(List<Long> ticketIds) {
+        return ticketIds.stream()
+                .map(ticketService::getTicketByID)
+                .toList();
+    }
+
+    private void processMultipleTicketPayment(PaymentRequestDTO dto, List<TicketHistory> tickets){
+        int remainingAmount = dto.getAmount();
+        validator.validateExactPaymentForMultipleTickets(remainingAmount, tickets);
+
+        for (TicketHistory ticket : tickets) {
+            int ticketTotal = ticket.getTotal();
+            paymentDebtCustomer(ticket, dto.getComment(), ticketTotal, true);
+            ticketService.updateStatus(ticket);
+            remainingAmount -= ticketTotal;
+        }
+    }
+
+    private void processSingleTicketPayment(PaymentRequestDTO dto, TicketHistory ticket){
+        Customer customer = customerService.getCustomerById(dto.getCustomerID());
+        int paymentDebt = ticket.getTotal() - dto.getTotalPaymentPaid();
+        validator.validatePaymentNotExceedDebt(dto.getAmount(), paymentDebt);
+        if (dto.getAmount() == paymentDebt){
+            paymentDebtCustomer(ticket, dto.getComment(), dto.getAmount(), false);
+            ticketService.updateStatus(ticket);
+        } else {
+            createAdjustPayments(dto.getAmount(), ticket, customer);
+            customerService.paymentDebt(customer, String.valueOf(dto.getAmount()));
+        }
     }
 
     /**
@@ -120,12 +118,14 @@ public class PaymentCustomerService implements IPaymentCustomerService {
      */
     private void createAdjustPayments(int amount, TicketHistory ticket, Customer customer) {
         if (amount > 0) {
-            PaymentCustomer paymentCustomer = new PaymentCustomer();
-            paymentCustomer.setCustomer(customer);
-            paymentCustomer.setDocument(ticket);
-            paymentCustomer.setAmount(amount);
-            paymentCustomer.setComment("Ajuste");
-            addPayments(paymentCustomer);
+            PaymentCustomer payment = PaymentCustomer.builder()
+                    .customer(customer)
+                    .document(ticket)
+                    .amount(amount)
+                    .comment("Ajuste")
+                    .date(LocalDate.now())
+                    .build();
+            addPayments(payment);
         }
     }
 
@@ -139,12 +139,25 @@ public class PaymentCustomerService implements IPaymentCustomerService {
      * @param list - Indica si el pago desde una lista de tickets o no
      */
     private void paymentDebtCustomer(TicketHistory ticket, String comment, int amount, boolean list){
-        PaymentCustomer paymentCustomer = new PaymentCustomer();
-        paymentCustomer.setCustomer(ticket.getCustomer());
-        paymentCustomer.setDocument(ticket);
-        paymentCustomer.setComment(comment);
-        paymentCustomer.setAmount(amount);
-        addPayments(paymentCustomer);
-        customerService.paymentDebt(ticket.getCustomer(), list ? String.valueOf(ticket.getTotal()) : String.valueOf(amount));
+        PaymentCustomer payment = PaymentCustomer.builder()
+                .customer(ticket.getCustomer())
+                .document(ticket)
+                .amount(amount)
+                .comment(comment)
+                .date(LocalDate.now())
+                .build();
+        addPayments(payment);
+        customerService.paymentDebt(ticket.getCustomer(),
+                list ? String.valueOf(ticket.getTotal()) : String.valueOf(amount));
+    }
+
+    /**
+     * Agrega un pago a la deuda de un cliente.
+     * Se encarga de válidar el pago y asignar los detalles antes de registrar el pago
+     * @param paymentCustomer contiene el detalle del pago
+     */
+    private void addPayments(PaymentCustomer paymentCustomer) {
+        validator.validatePayment(String.valueOf(paymentCustomer.getAmount()),paymentCustomer.getComment());
+        paymentCustomerRepo.save(paymentCustomer);
     }
 }
