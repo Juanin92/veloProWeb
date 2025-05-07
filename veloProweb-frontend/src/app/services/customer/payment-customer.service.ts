@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PaymentCustomer } from '../../models/Entity/Customer/payment-customer.model';
-import { PaymentRequestDTO } from '../../models/DTO/payment-request-dto';
+import { PaymentCustomerResponse } from '../../models/Entity/Customer/payment-customer-response';
+import { PaymentDetails } from '../../models/Entity/Customer/payment-details';
 import { AuthService } from '../User/auth.service';
 
 @Injectable({
@@ -18,8 +18,8 @@ export class PaymentCustomerService {
    * Obtiene todos los pagos realizados
    * @returns Observable emite una lista de pagos
    */
-  getAllPayments(): Observable<PaymentCustomer[]>{
-    return this.httpClient.get<PaymentCustomer[]>(this.apiUrl);
+  getAllPayments(): Observable<PaymentCustomerResponse[]>{
+    return this.httpClient.get<PaymentCustomerResponse[]>(this.apiUrl);
   }
 
   /**
@@ -27,9 +27,9 @@ export class PaymentCustomerService {
    * @param customerID ID del cliente por consultar
    * @returns Observable emite una lista con los pagos del cliente
    */
-  getCustomerSelectedPayment(customerID: number): Observable<PaymentCustomer[]>{
+  getCustomerSelectedPayment(customerID: number): Observable<PaymentCustomerResponse[]>{
     let params = new HttpParams().set('customerId', customerID.toString())
-    return this.httpClient.get<PaymentCustomer[]>(`${this.apiUrl}/abonos`, {params});
+    return this.httpClient.get<PaymentCustomerResponse[]>(`${this.apiUrl}/abonos`, {params});
   }
 
   /**
@@ -37,7 +37,7 @@ export class PaymentCustomerService {
    * @param dto - Objeto con los valores para la acción
    * @returns - Observable emite un mensaje de confirmación o error
    */
-  createPaymentCustomer(dto: PaymentRequestDTO): Observable<{message: string}>{
+  createPaymentCustomer(dto: PaymentDetails): Observable<{message: string}>{
     return this.httpClient.post<{message: string}>(`${this.apiUrl}`, dto, {headers: this.auth.getAuthHeaders()});
   }
 }

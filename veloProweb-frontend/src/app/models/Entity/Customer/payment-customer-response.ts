@@ -1,7 +1,7 @@
 import { CustomerResponse } from "./customer-response";
 import { TicketHistory } from "./ticket-history.model";
 
-export interface PaymentCustomer {
+export interface PaymentCustomerResponse {
     id: number;
     amount: number;
     comment: string;

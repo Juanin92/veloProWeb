@@ -1,4 +1,4 @@
-export interface PaymentRequestDTO {
+export interface PaymentDetails {
     ticketIDs: number[];
     customerID: number;
     amount: number;

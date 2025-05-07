@@ -7,7 +7,7 @@ import { TicketHistory } from '../../../models/Entity/Customer/ticket-history.mo
 import { CustomerResponse } from '../../../models/Entity/Customer/customer-response';
 import { PaymentCustomerComponent } from '../payment-customer/payment-customer.component';
 import { TicketHistoryService } from '../../../services/customer/ticket-history.service';
-import { PaymentCustomer } from '../../../models/Entity/Customer/payment-customer.model';
+import { PaymentCustomerResponse } from '../../../models/Entity/Customer/payment-customer-response';
 
 describe('PaymentCustomerComponent', () => {
   let component: PaymentCustomerComponent;
@@ -99,7 +99,7 @@ describe('PaymentCustomerComponent', () => {
   //Prueba que se actualize label de la deuda del cliente
   it('debería actualizar el valor de la deuda, "updateDebtValueLabel(): void"', () => {
     const mockTicket = {id:1, total: 10000} as TicketHistory;
-    const mockPayment = { document: { id: 1 }, amount: 200 } as PaymentCustomer;
+    const mockPayment = { document: { id: 1 }, amount: 200 } as PaymentCustomerResponse;
     const mockEvent = { target: { checked: true } } as unknown as Event;
 
     component.payments = [mockPayment];

@@ -2,11 +2,11 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 import { PaymentCustomerService } from '../../../services/customer/payment-customer.service';
 import { CustomerResponse } from '../../../models/Entity/Customer/customer-response';
 import { CustomerHelperServiceService } from '../../../services/customer/customer-helper-service.service';
-import { PaymentCustomer } from '../../../models/Entity/Customer/payment-customer.model';
+import { PaymentCustomerResponse } from '../../../models/Entity/Customer/payment-customer-response';
 import { CommonModule } from '@angular/common';
 import { TicketHistoryService } from '../../../services/customer/ticket-history.service';
 import { TicketHistory } from '../../../models/Entity/Customer/ticket-history.model';
-import { PaymentRequestDTO } from '../../../models/Entity/Customer/payment-request-dto';
+import { PaymentDetails } from '../../../models/Entity/Customer/payment-details';
 import { FormsModule } from '@angular/forms';
 import { PaymentValidator } from '../../../validation/payment-validator';
 import { NotificationService } from '../../../utils/notification-service.service';
@@ -24,9 +24,9 @@ export class PaymentCustomerComponent implements OnChanges {
 
   @Input() selectedCustomer: CustomerResponse; //Cliente seleccionado desde un componente padre
   @Output() paymentRealized = new EventEmitter<void>();
-  payments: PaymentCustomer[] = []; //Lista de pagos 
+  payments: PaymentCustomerResponse[] = []; //Lista de pagos 
   tickets: TicketHistory[] = []; //Lista de tickets
-  paymentRequest: PaymentRequestDTO;
+  paymentRequest: PaymentDetails;
   totalDebt: number = 0;
   debtValue: number = 0;
   paymentValue: number = 0;
@@ -159,7 +159,7 @@ export class PaymentCustomerComponent implements OnChanges {
    * Inicializa los valores del objeto DTO
    * @returns - DTO con sus valores predeterminados inicializados
    */
-  resetPayments(): PaymentRequestDTO {
+  resetPayments(): PaymentDetails {
     return {
       ticketIDs: [],
       customerID: 0,

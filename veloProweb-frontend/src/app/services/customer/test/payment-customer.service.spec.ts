@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { PaymentCustomerService } from '../payment-customer.service';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { PaymentCustomer } from '../../../models/Entity/Customer/payment-customer.model';
+import { PaymentCustomerResponse } from '../../../models/Entity/Customer/payment-customer-response';
 import { CustomerResponse } from '../../../models/Entity/Customer/customer-response';
 import { TicketHistory } from '../../../models/Entity/Customer/ticket-history.model';
 
@@ -33,7 +33,7 @@ describe('PaymentCustomerService', () => {
 
   //Pruebas API para obtener todos los pagos
   it('Debería traer una lista de pagos de clientes, "getAllPayments(): Observable<PaymentCustomer[]>"', () => {
-    const mockPaymentCustomers: PaymentCustomer[] = [
+    const mockPaymentCustomers: PaymentCustomerResponse[] = [
       { id: 1, amount: 1000, comment: 'Prueba', date: "2024-12-01", customer: {id: 1} as CustomerResponse, document: {id: 1} as TicketHistory},
       { id: 2, amount: 5000, comment: 'Prueba2', date: "2024-12-02", customer: {id: 2} as CustomerResponse, document: {id: 2} as TicketHistory}
     ];
@@ -50,7 +50,7 @@ describe('PaymentCustomerService', () => {
 
   //Pruebas API para obtener todos los pagos de un cliente seleccionado
   it('Debería traer una lista de pagos de un clientes seleccionado, "getCustomerSelectedPayment(customerID: number): Observable<PaymentCustomer[]>"', () => {
-    const mockPaymentCustomers: PaymentCustomer[] = [
+    const mockPaymentCustomers: PaymentCustomerResponse[] = [
       { id: 1, amount: 1000, comment: 'Prueba', date: "2024-12-01", customer: {id: 1} as CustomerResponse, document: {id: 1} as TicketHistory},
       { id: 2, amount: 5000, comment: 'Prueba2', date: "2024-12-02", customer: {id: 2} as CustomerResponse, document: {id: 2} as TicketHistory}
     ];
