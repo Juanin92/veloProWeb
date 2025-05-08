@@ -16,13 +16,14 @@ public class CustomerExceptionsHandler extends BaseExceptionHandler {
             CustomerAlreadyExistsException.class,
             CustomerAlreadyActivatedException.class,
             CustomerAlreadyDeletedException.class,
-            InvalidPaymentAmountException.class
+            InvalidPaymentAmountException.class,
+            NoTicketSelectedException.class
     })
     public ResponseEntity<Map<String, String>> handleCustomerException(Exception e){
         return buildResponse(e.getMessage(), HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(CustomerNotFoundException.class)
+    @ExceptionHandler({CustomerNotFoundException.class, TicketNotFoundException.class})
     public ResponseEntity<Map<String, String>> handleCustomerNotFound(CustomerNotFoundException e) {
         return buildResponse(e.getMessage(), HttpStatus.NOT_FOUND);
     }
