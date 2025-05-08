@@ -50,6 +50,15 @@ public class TicketValidatorScheduler {
         }
     }
 
+    /**
+     * Válida la fecha de un ticket y actualiza la fecha de notificación si es necesario.
+     * Verifica si el estado del ticket es falso y si han pasado más de 30 días desde la fecha del ticket.
+     * También verifica si la fecha de notificación es nula o si han pasado más de 15 días desde la fecha de última notificación.
+     * Si se cumplen estas condiciones, actualiza la fecha de notificación del ticket a la fecha actual y guarda el ticket en el repositorio.
+     *
+     * @param ticket ticket que se debe validar
+     * @return verdadero si el ticket fue validado y la fecha de notificación fue actualizada, falso en caso contrario
+     */
     private boolean shouldNotify(TicketHistory ticket) {
         LocalDate now = LocalDate.now();
         LocalDate ticketDate = ticket.getDate();
