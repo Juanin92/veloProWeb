@@ -17,7 +17,8 @@ public class CustomerExceptionsHandler extends BaseExceptionHandler {
             CustomerAlreadyActivatedException.class,
             CustomerAlreadyDeletedException.class,
             InvalidPaymentAmountException.class,
-            NoTicketSelectedException.class
+            NoTicketSelectedException.class,
+            TicketAlreadyPaidException.class
     })
     public ResponseEntity<Map<String, String>> handleCustomerException(Exception e){
         return buildResponse(e.getMessage(), HttpStatus.CONFLICT);
