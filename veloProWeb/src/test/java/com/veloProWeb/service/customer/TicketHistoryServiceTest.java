@@ -1,5 +1,7 @@
 package com.veloProWeb.service.customer;
 
+import com.veloProWeb.exceptions.Customer.TicketAlreadyPaidException;
+import com.veloProWeb.exceptions.Customer.TicketNotFoundException;
 import com.veloProWeb.model.entity.customer.Customer;
 import com.veloProWeb.model.entity.customer.TicketHistory;
 import com.veloProWeb.repository.customer.TicketHistoryRepo;
@@ -24,27 +26,40 @@ public class TicketHistoryServiceTest {
 
     @InjectMocks private TicketHistoryService ticketHistoryService;
     @Mock private TicketHistoryRepo ticketHistoryRepo;
-    @Mock private Customer customer;
+    @Mock private Customer customers;
     @Mock private CustomerService customerService;
-    private TicketHistory ticketHistory;
+    private TicketHistory ticketHistory, ticketHistoryFirst, ticketHistorySecond, ticketHistoryThird;
     private LocalDate lastValidationDate;
-    private Customer customerReal;
+    private Customer customer;
 
     @BeforeEach
     void setUp(){
-        ticketHistory = new TicketHistory(1L, "BO001", 2000, false, LocalDate.now(), LocalDate.now(), customer);
-        customerReal = new Customer();
-        customerReal.setId(1L);
+        customer  = Customer.builder()
+                .id(1L).name("John").surname("Doe").build();
+        ticketHistory = TicketHistory.builder()
+                .id(1L).document("BO001").total(2000).status(false).notificationsDate(LocalDate.now())
+                .date(LocalDate.now()).customer(customer).build();
+        ticketHistoryFirst = TicketHistory.builder()
+                .id(2L).document("BO002").total(2000).status(false).notificationsDate(LocalDate.now())
+                .date(LocalDate.now()).customer(customer).build();
+        ticketHistorySecond = TicketHistory.builder()
+                .id(3L).document("BO003").total(2000).status(true).notificationsDate(LocalDate.now())
+                .date(LocalDate.now()).customer(customer).build();
+        ticketHistoryThird = TicketHistory.builder()
+                .id(4L).document("BO004").total(3000).status(false).notificationsDate(LocalDate.now())
+                .date(LocalDate.now()).customer(customer).build();
     }
     //Prueba para agregar un ticket al cliente
     @Test
     public void AddTicketToCustomer_valid(){
-        ticketHistoryService.AddTicketToCustomer(customer, 1L, 2000, LocalDate.now());
+        when(ticketHistoryRepo.findLastCreated()).thenReturn(ticketHistoryThird);
+
+        ticketHistoryService.AddTicketToCustomer(customer, 2000);
         ArgumentCaptor<TicketHistory> ticketHistoryCaptor = ArgumentCaptor.forClass(TicketHistory.class);
         verify(ticketHistoryRepo).save(ticketHistoryCaptor.capture());
         TicketHistory ticketHistoryCaptured = ticketHistoryCaptor.getValue();
         assertEquals(ticketHistory.getTotal(), ticketHistoryCaptured.getTotal());
-        assertEquals(ticketHistory.getDocument(), ticketHistoryCaptured.getDocument());
+        assertEquals("T-0525-0001", ticketHistoryCaptured.getDocument());
         assertEquals(ticketHistory.isStatus(), ticketHistoryCaptured.isStatus());
         assertEquals(ticketHistory.getDate(), ticketHistoryCaptured.getDate());
         assertEquals(ticketHistory.getCustomer(), ticketHistoryCaptured.getCustomer());
@@ -52,23 +67,14 @@ public class TicketHistoryServiceTest {
 
     //Prueba para obtener todos los tickets de un cliente
     @Test
-    public void getByCustomerId_valid(){
-        ticketHistoryService.getByCustomerId(1L);
-        verify(ticketHistoryRepo).findByCustomerId(1L);
-    }
-    @Test
     public void getByCustomerId_validValues(){
-        List<TicketHistory> mockTickets = Arrays.asList(
-                ticketHistory,
-                new TicketHistory(1L, "BO002", 2000, false, LocalDate.now(), LocalDate.now(), customer),
-                new TicketHistory(1L, "BO003", 2000, true, LocalDate.now(), LocalDate.now(), customer),
-                new TicketHistory(1L, "BO004", 3000, false, LocalDate.now(), LocalDate.now(), customer));
+        List<TicketHistory> mockTickets =
+                Arrays.asList(ticketHistory, ticketHistoryFirst, ticketHistorySecond, ticketHistoryThird);
         when(ticketHistoryRepo.findByCustomerId(1L)).thenReturn(mockTickets);
-        List<TicketHistory> expectedTickets = Arrays.asList(
-                ticketHistory,
-                new TicketHistory(1L, "BO002", 2000, false, LocalDate.now(), LocalDate.now(), customer),
-                new TicketHistory(1L, "BO004", 3000, false, LocalDate.now(), LocalDate.now(), customer));
+        List<TicketHistory> expectedTickets = Arrays.asList(ticketHistory, ticketHistoryFirst, ticketHistoryThird);
+
         List<TicketHistory> result = ticketHistoryService.getByCustomerId(1L);
+
         verify(ticketHistoryRepo).findByCustomerId(1L);
         assertEquals(3, result.size());
         assertEquals(expectedTickets, result);
@@ -80,26 +86,39 @@ public class TicketHistoryServiceTest {
     public void updateStatus_valid(){
         ticketHistoryService.updateStatus(ticketHistory);
         ArgumentCaptor<TicketHistory> ticketHistoryCaptor = ArgumentCaptor.forClass(TicketHistory.class);
+
         verify(ticketHistoryRepo).save(ticketHistoryCaptor.capture());
+
         TicketHistory ticketHistoryCaptured = ticketHistoryCaptor.getValue();
         assertTrue(ticketHistoryCaptured.isStatus());
     }
+    @Test
+    public void updateStatus_ThrowException(){
+        ticketHistory.setStatus(true);
 
-    //Prueba para obtener un ticket por id
+        TicketAlreadyPaidException e = assertThrows(TicketAlreadyPaidException.class,
+                () -> ticketHistoryService.updateStatus(ticketHistory));
+
+        verify(ticketHistoryRepo, never()).save(ticketHistory);
+        assertEquals("El ticket BO001 ya fue pagado", e.getMessage());
+    }
+
+    //Prueba para obtener un ticket por ID
     @Test
     public void getTicketByID_valid(){
-        Long id = 1L;
-        when(ticketHistoryRepo.findById(id)).thenReturn(Optional.of(ticketHistory));
-        TicketHistory result = ticketHistoryService.getTicketByID(id);
+        when(ticketHistoryRepo.findById(1L)).thenReturn(Optional.of(ticketHistory));
 
-        verify(ticketHistoryRepo).findById(id);
+        TicketHistory result = ticketHistoryService.getTicketByID(1L);
+
+        verify(ticketHistoryRepo).findById(1L);
         assertEquals(1L, result.getId());
     }
     @Test
     public void getTicketByID_invalid(){
-        Long id = 2L;
-        when(ticketHistoryRepo.findById(id)).thenReturn(Optional.empty());
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() -> ticketHistoryService.getTicketByID(id));
+        when(ticketHistoryRepo.findById(2L)).thenReturn(Optional.empty());
+
+        TicketNotFoundException e = assertThrows(TicketNotFoundException.class,
+                () -> ticketHistoryService.getTicketByID(2L));
 
         assertEquals("Ticket no encontrado", e.getMessage());
     }
