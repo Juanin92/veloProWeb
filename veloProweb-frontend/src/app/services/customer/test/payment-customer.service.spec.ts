@@ -5,7 +5,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { provideHttpClient } from '@angular/common/http';
 import { PaymentCustomerResponse } from '../../../models/Entity/Customer/payment-customer-response';
 import { CustomerResponse } from '../../../models/Entity/Customer/customer-response';
-import { TicketHistory } from '../../../models/Entity/Customer/ticket-history.model';
+import { TicketHistory } from '../../../models/Entity/Customer/ticket-history';
 
 describe('PaymentCustomerService', () => {
   let service: PaymentCustomerService;

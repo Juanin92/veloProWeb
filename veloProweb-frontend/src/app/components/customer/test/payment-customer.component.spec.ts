@@ -3,7 +3,7 @@ import { of, throwError } from 'rxjs';
 import { PaymentCustomerService } from '../../../services/customer/payment-customer.service';
 import { CustomerHelperServiceService } from '../../../services/customer/customer-helper-service.service';
 import { PaymentStatus } from '../../../models/enum/payment-status.enum';
-import { TicketHistory } from '../../../models/Entity/Customer/ticket-history.model';
+import { TicketHistory } from '../../../models/Entity/Customer/ticket-history';
 import { CustomerResponse } from '../../../models/Entity/Customer/customer-response';
 import { PaymentCustomerComponent } from '../payment-customer/payment-customer.component';
 import { TicketHistoryService } from '../../../services/customer/ticket-history.service';
@@ -37,7 +37,7 @@ describe('PaymentCustomerComponent', () => {
     customerHelper = TestBed.inject(CustomerHelperServiceService) as jasmine.SpyObj<CustomerHelperServiceService>;
     ticketService = TestBed.inject(TicketHistoryService) as jasmine.SpyObj<TicketHistoryService>;
 
-    customerHelper.createEmptyCustomer.and.returnValue({ id: 0, name: '', surname: '', debt: 0, totalDebt: 0, status: PaymentStatus.NULO, account: true, email: 'test@test.com', phone: '+569 12345678', paymentCustomerList: [], ticketHistoryList: [] });
+    customerHelper.createEmptyCustomer.and.returnValue({ id: 0, name: '', surname: '', debt: 0, totalDebt: 0, status: PaymentStatus.NULO, account: true, email: 'test@test.com', phone: '+569 12345678');
     component.selectedCustomer = customerHelper.createEmptyCustomer();
   });
 
