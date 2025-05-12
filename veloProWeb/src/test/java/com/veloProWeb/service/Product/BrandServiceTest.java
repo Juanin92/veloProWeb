@@ -1,8 +1,8 @@
 package com.veloProWeb.service.Product;
 
+import com.veloProWeb.exceptions.product.BrandAlreadyExistsException;
 import com.veloProWeb.model.entity.Product.BrandProduct;
 import com.veloProWeb.repository.Product.BrandProductRepo;
-import com.veloProWeb.util.HelperService;
 import com.veloProWeb.validation.CategoriesValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,51 +24,53 @@ public class BrandServiceTest {
     @InjectMocks private BrandService brandService;
     @Mock private BrandProductRepo brandRepo;
     @Mock private CategoriesValidator validator;
-    @Mock private HelperService helperService;
-    private BrandProduct brand;
-    private BrandProduct existingBrand;
+    private BrandProduct brand, brand2, brand3, existingBrand;
 
     @BeforeEach
     void setUp(){
-        brand = new BrandProduct();
-        existingBrand = new BrandProduct();
-        existingBrand.setName("Samsung");
+        brand = BrandProduct.builder().id(1L).name("Asus").build();
+        brand2 = BrandProduct.builder().id(2L).name("Apple").build();
+        brand3 = BrandProduct.builder().id(3L).name("Sony").build();
+        existingBrand = BrandProduct.builder().id(6L).name("Samsung").build();
     }
 
     //Prueba para crear una nueva marca
     @Test
     public void save_valid(){
-        brand.setName("asus");
-        doNothing().when(validator).validateBrand("asus");
         when(brandRepo.findByName("Asus")).thenReturn(Optional.empty());
-        when(helperService.capitalize("asus")).thenReturn("Asus");
+        doNothing().when(validator).validateBrand(null);
+
         brandService.save(brand);
 
-        verify(validator).validateBrand("asus");
-        verify(brandRepo).findByName("Asus");
-        verify(brandRepo).save(brand);
+        verify(brandRepo, times(1)).findByName("Asus");
+        verify(brandRepo, times(1)).save(brand);
         assertEquals("Asus", brand.getName());
     }
     @Test
     public void save_invalidExistingBrand(){
-        brand.setName("Samsung");
-        doNothing().when(validator).validateBrand("Samsung");
         when(brandRepo.findByName("Samsung")).thenReturn(Optional.of(existingBrand));
-        when(helperService.capitalize("Samsung")).thenReturn("Samsung");
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            brandService.save(brand);
-        });
+        doThrow(new BrandAlreadyExistsException("Nombre Existente: Hay registro de esta marca.")).when(validator)
+                .validateBrand(existingBrand);
 
-        assertEquals("Nombre Existente: Hay registro de este marca.", exception.getMessage());
-        verify(validator).validateBrand("Samsung");
-        verify(brandRepo).findByName("Samsung");
-        verify(brandRepo, never()).save(brand);
+        BrandAlreadyExistsException exception = assertThrows(BrandAlreadyExistsException.class,
+                () -> brandService.save(existingBrand));
+        verify(brandRepo, times(1)).findByName("Samsung");
+        verify(brandRepo, never()).save(existingBrand);
+
+        assertEquals("Nombre Existente: Hay registro de esta marca.", exception.getMessage());
     }
 
     //Prueba para obtener todas las marcas
     @Test
     public void getAll_valid(){
-        brandService.getAll();
-        verify(brandRepo).findAll();
+        List<BrandProduct> brands = List.of(brand2, brand, existingBrand, brand3);
+        when(brandRepo.findAllOrderByNameAsc()).thenReturn(brands);
+
+        List<BrandProduct> result = brandService.getAll();
+
+        verify(brandRepo).findAllOrderByNameAsc();
+
+        assertEquals(brands.size(), result.size());
+        assertEquals(List.of(brand2, brand, existingBrand, brand3), result);
     }
 }

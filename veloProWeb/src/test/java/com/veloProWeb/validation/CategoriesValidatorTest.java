@@ -1,5 +1,6 @@
 package com.veloProWeb.validation;
 
+import com.veloProWeb.exceptions.product.BrandAlreadyExistsException;
 import com.veloProWeb.model.entity.Product.BrandProduct;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,24 +16,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class CategoriesValidatorTest {
 
     @InjectMocks private CategoriesValidator validator;
-    private BrandProduct brand;
 
-    //Prueba para validar el nombre de una marca
-    @ParameterizedTest
-    @ValueSource(strings = {"asus", "marca123"})
-    public void validateBrand_valid(String value){
-        validator.validateBrand(value);
-    }
-    @ParameterizedTest
-    @ValueSource(strings = {" ", "a", "1"})
-    public void validateBrand_invalid(String value){
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validateBrand(value));
-        assertEquals("Ingrese un nombre válido.", exception.getMessage());
-    }
+    //Prueba para validar la existencia de una marca
     @Test
-    public void validateBrand_invalidNull(){
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validateBrand(null));
-        assertEquals("Ingrese un nombre válido.", exception.getMessage());
+    public void validateBrand_validException(){
+        BrandProduct brand = BrandProduct.builder().build();
+        BrandAlreadyExistsException e = assertThrows(BrandAlreadyExistsException.class,
+                () -> validator.validateBrand(brand));
+        assertEquals("Nombre Existente: Hay registro de esta marca.", e.getMessage());
     }
 
     //Prueba para validar el nombre de una categoría
