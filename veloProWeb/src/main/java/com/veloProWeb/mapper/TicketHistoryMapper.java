@@ -9,10 +9,8 @@ public class TicketHistoryMapper {
 
     public TicketResponseDTO toDto(TicketHistory ticketHistory){
         return TicketResponseDTO.builder()
+                .id(ticketHistory.getId())
                 .document(ticketHistory.getDocument())
-                .total(ticketHistory.getTotal())
-                .status(ticketHistory.isStatus())
-                .customer(String.format("%s %s", ticketHistory.getCustomer().getName(),
-                        ticketHistory.getCustomer().getSurname())).build();
+                .total(ticketHistory.getTotal()).build();
     }
 }
