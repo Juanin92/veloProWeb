@@ -5,7 +5,7 @@ import { CustomerHelperServiceService } from '../../../services/customer/custome
 import { PaymentCustomerResponse } from '../../../models/Entity/Customer/payment-customer-response';
 import { CommonModule } from '@angular/common';
 import { TicketHistoryService } from '../../../services/customer/ticket-history.service';
-import { TicketHistory } from '../../../models/Entity/Customer/ticket-history.model';
+import { TicketHistory } from '../../../models/Entity/Customer/ticket-history';
 import { PaymentDetails } from '../../../models/Entity/Customer/payment-details';
 import { FormsModule } from '@angular/forms';
 import { PaymentValidator } from '../../../validation/payment-validator';
@@ -31,7 +31,7 @@ export class PaymentCustomerComponent implements OnChanges {
   totalDebt: number = 0;
   debtValue: number = 0;
   paymentValue: number = 0;
-  selectedTickets: TicketHistory[] = []; //Lista de tickets seleccionados
+  selectedTickets: TicketHistory[] = [];
   validation = PaymentValidator;
 
 
