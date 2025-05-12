@@ -1,16 +1,13 @@
 package com.veloProWeb.util;
 
-import org.springframework.stereotype.Service;
-
-@Service
-public class HelperService {
+public class TextFormatter {
 
     /**
      * Convierte la primera letra de cada palabra en mayúscula
      * @param value cadena de texto a capitalizar
      * @return palabra capitalizada
      */
-    public String capitalize(String value) {
+    public static String capitalize(String value) {
         if (value == null || value.isEmpty()) {
             return value;
         }
@@ -32,7 +29,7 @@ public class HelperService {
      * @param value - cadena de texto a convertir
      * @return - devuelve la cadena en mayúscula
      */
-    public String upperCaseWord(String value) {
+    public static String upperCaseWord(String value) {
         if (value == null || value.isEmpty()) {
             return value;
         }
