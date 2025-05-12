@@ -1,4 +1,4 @@
-package com.veloProWeb.exceptions.Handlers;
+package com.veloProWeb.exceptions.handlers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
 package com.veloProWeb.service.Sale;
 
-import com.veloProWeb.exceptions.Customer.CustomerNotFoundException;
+import com.veloProWeb.exceptions.customer.CustomerNotFoundException;
 import com.veloProWeb.model.dto.SaleRequestDTO;
 import com.veloProWeb.model.entity.customer.Customer;
 import com.veloProWeb.model.entity.Sale.Sale;

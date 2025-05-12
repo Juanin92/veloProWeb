@@ -1,7 +1,7 @@
 package com.veloProWeb.service.customer;
 
-import com.veloProWeb.exceptions.Customer.TicketAlreadyPaidException;
-import com.veloProWeb.exceptions.Customer.TicketNotFoundException;
+import com.veloProWeb.exceptions.customer.TicketAlreadyPaidException;
+import com.veloProWeb.exceptions.customer.TicketNotFoundException;
 import com.veloProWeb.mapper.TicketHistoryMapper;
 import com.veloProWeb.model.dto.customer.TicketResponseDTO;
 import com.veloProWeb.model.entity.customer.Customer;
@@ -58,12 +58,14 @@ public class TicketHistoryService implements ITicketHistoryService {
                 .toList();
     }
 
+    /**
+     * Convierte la lista de tickets de un cliente a lista de DTO
+     * @param id - ID del cliente
+     * @return - lista de tickets DTO
+     */
     @Override
     public List<TicketResponseDTO> getByCustomerIdDTO(Long id) {
-        return ticketHistoryRepo.findByCustomerId(id)
-                .stream()
-                .filter(ticketHistory -> !ticketHistory.isStatus())
-                .sorted(Comparator.comparing(TicketHistory::getTotal))
+        return getByCustomerId(id).stream()
                 .map(mapper::toDto)
                 .toList();
     }
@@ -93,6 +95,10 @@ public class TicketHistoryService implements ITicketHistoryService {
         return ticketHistoryRepo.findById(Id).orElseThrow(() -> new TicketNotFoundException("Ticket no encontrado"));
     }
 
+    /**
+     * Obtiene el último ticket creado
+     * @return - ticket creado
+     */
     private TicketHistory getLastTicketCreated() {
         return ticketHistoryRepo.findLastCreated();
     }

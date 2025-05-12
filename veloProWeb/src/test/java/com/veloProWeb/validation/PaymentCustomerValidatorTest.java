@@ -1,8 +1,8 @@
 package com.veloProWeb.validation;
 
-import com.veloProWeb.exceptions.Customer.InvalidPaymentAmountException;
-import com.veloProWeb.exceptions.Customer.NoTicketSelectedException;
-import com.veloProWeb.exceptions.Validation.ValidationException;
+import com.veloProWeb.exceptions.customer.InvalidPaymentAmountException;
+import com.veloProWeb.exceptions.customer.NoTicketSelectedException;
+import com.veloProWeb.exceptions.validation.ValidationException;
 import com.veloProWeb.model.entity.customer.TicketHistory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

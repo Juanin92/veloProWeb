@@ -1,7 +1,7 @@
-package com.veloProWeb.exceptions.Handlers;
+package com.veloProWeb.exceptions.handlers;
 
 import com.veloProWeb.exceptions.BaseExceptionHandler;
-import com.veloProWeb.exceptions.Customer.*;
+import com.veloProWeb.exceptions.customer.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

@@ -1,7 +1,7 @@
 package com.veloProWeb.service.customer;
 
-import com.veloProWeb.exceptions.Customer.TicketAlreadyPaidException;
-import com.veloProWeb.exceptions.Customer.TicketNotFoundException;
+import com.veloProWeb.exceptions.customer.TicketAlreadyPaidException;
+import com.veloProWeb.exceptions.customer.TicketNotFoundException;
 import com.veloProWeb.model.entity.customer.Customer;
 import com.veloProWeb.model.entity.customer.TicketHistory;
 import com.veloProWeb.repository.customer.TicketHistoryRepo;

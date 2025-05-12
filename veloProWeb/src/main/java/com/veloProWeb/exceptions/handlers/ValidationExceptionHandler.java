@@ -1,7 +1,7 @@
-package com.veloProWeb.exceptions.Handlers;
+package com.veloProWeb.exceptions.handlers;
 
 import com.veloProWeb.exceptions.BaseExceptionHandler;
-import com.veloProWeb.exceptions.Validation.ValidationException;
+import com.veloProWeb.exceptions.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

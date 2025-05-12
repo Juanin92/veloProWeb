@@ -1,4 +1,4 @@
-package com.veloProWeb.exceptions.Validation;
+package com.veloProWeb.exceptions.validation;
 
 public class ValidationException extends RuntimeException{
     public ValidationException(String message){

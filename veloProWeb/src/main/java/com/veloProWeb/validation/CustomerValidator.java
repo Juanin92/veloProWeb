@@ -1,10 +1,10 @@
 package com.veloProWeb.validation;
 
-import com.veloProWeb.exceptions.Customer.CustomerAlreadyActivatedException;
-import com.veloProWeb.exceptions.Customer.CustomerAlreadyDeletedException;
-import com.veloProWeb.exceptions.Customer.CustomerAlreadyExistsException;
-import com.veloProWeb.exceptions.Customer.InvalidPaymentAmountException;
-import com.veloProWeb.exceptions.Validation.ValidationException;
+import com.veloProWeb.exceptions.customer.CustomerAlreadyActivatedException;
+import com.veloProWeb.exceptions.customer.CustomerAlreadyDeletedException;
+import com.veloProWeb.exceptions.customer.CustomerAlreadyExistsException;
+import com.veloProWeb.exceptions.customer.InvalidPaymentAmountException;
+import com.veloProWeb.exceptions.validation.ValidationException;
 import com.veloProWeb.model.entity.customer.Customer;
 import org.springframework.stereotype.Component;
 

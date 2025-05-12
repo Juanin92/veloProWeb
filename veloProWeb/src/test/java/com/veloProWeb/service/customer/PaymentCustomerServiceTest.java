@@ -1,6 +1,6 @@
 package com.veloProWeb.service.customer;
 
-import com.veloProWeb.exceptions.Customer.InvalidPaymentAmountException;
+import com.veloProWeb.exceptions.customer.InvalidPaymentAmountException;
 import com.veloProWeb.mapper.PaymentCustomerMapper;
 import com.veloProWeb.model.dto.customer.PaymentRequestDTO;
 import com.veloProWeb.model.dto.customer.PaymentResponseDTO;

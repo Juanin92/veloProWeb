@@ -1,17 +1,17 @@
 package com.veloProWeb.service.customer;
 
-import com.veloProWeb.exceptions.Customer.CustomerAlreadyActivatedException;
-import com.veloProWeb.exceptions.Customer.CustomerAlreadyDeletedException;
-import com.veloProWeb.exceptions.Customer.CustomerAlreadyExistsException;
-import com.veloProWeb.exceptions.Customer.CustomerNotFoundException;
-import com.veloProWeb.exceptions.Validation.ValidationException;
+import com.veloProWeb.exceptions.customer.CustomerAlreadyActivatedException;
+import com.veloProWeb.exceptions.customer.CustomerAlreadyDeletedException;
+import com.veloProWeb.exceptions.customer.CustomerAlreadyExistsException;
+import com.veloProWeb.exceptions.customer.CustomerNotFoundException;
+import com.veloProWeb.exceptions.validation.ValidationException;
 import com.veloProWeb.mapper.CustomerMapper;
 import com.veloProWeb.model.dto.customer.CustomerRequestDTO;
 import com.veloProWeb.model.dto.customer.CustomerResponseDTO;
 import com.veloProWeb.model.entity.customer.Customer;
 import com.veloProWeb.model.Enum.PaymentStatus;
 import com.veloProWeb.repository.customer.CustomerRepo;
-import com.veloProWeb.util.HelperService;
+import com.veloProWeb.util.TextFormatter;
 import com.veloProWeb.validation.CustomerValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,8 +34,8 @@ public class CustomerServiceTest {
     @InjectMocks private CustomerService customerService;
     @Mock private CustomerRepo customerRepo;
     @Spy private CustomerValidator validator;
-    @Mock private HelperService helperService;
-    @Spy CustomerMapper mapper = new CustomerMapper(new HelperService());
+    @Spy private TextFormatter textFormatter;
+    @Spy CustomerMapper mapper = new CustomerMapper(textFormatter);
     private Customer customer;
     private CustomerRequestDTO customerRequestDTO;
     private CustomerResponseDTO customerResponseDTO;
@@ -65,8 +65,8 @@ public class CustomerServiceTest {
         customer.setName("Jose");
         customer.setSurname("Perez Gonzalez");
         customer.setEmail(null);
-        when(customerRepo.findBySimilarNameAndSurname(helperService.capitalize(customerRequestDTO.getName()),
-                helperService.capitalize(customerRequestDTO.getSurname()))).thenReturn(Optional.empty());
+        when(customerRepo.findBySimilarNameAndSurname(TextFormatter.capitalize(customerRequestDTO.getName()),
+                TextFormatter.capitalize(customerRequestDTO.getSurname()))).thenReturn(Optional.empty());
         when(mapper.toEntity(customerRequestDTO)).thenReturn(customer);
 
         customerService.addNewCustomer(customerRequestDTO);
@@ -83,8 +83,8 @@ public class CustomerServiceTest {
     }
     @Test
     public void addNewCustomer_existingCustomer(){
-        when(customerRepo.findBySimilarNameAndSurname(helperService.capitalize(customerRequestDTO.getName()),
-                helperService.capitalize(customerRequestDTO.getSurname()))).thenReturn(Optional.of(customer));
+        when(customerRepo.findBySimilarNameAndSurname(TextFormatter.capitalize(customerRequestDTO.getName()),
+                TextFormatter.capitalize(customerRequestDTO.getSurname()))).thenReturn(Optional.of(customer));
         doThrow(new CustomerAlreadyExistsException("Cliente Existente: Hay registro de este cliente."))
                 .when(validator).existCustomer(customer);
         CustomerAlreadyExistsException exception = assertThrows(CustomerAlreadyExistsException.class,
