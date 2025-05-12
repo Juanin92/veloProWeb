@@ -1,18 +1,19 @@
 package com.veloProWeb.validation;
 
+import com.veloProWeb.exceptions.product.BrandAlreadyExistsException;
+import com.veloProWeb.model.entity.Product.BrandProduct;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CategoriesValidator {
 
     /**
-     * Válida el nombre de una marca, lanzará excepciones:
-     * Si la cadena es nula, esta vacía, contiene 2 o menos caracteres.
-     * @param name - cadena que contiene el nombre de la marca
+     * Válida la existencia de una marca ya registrada
+     * @param brand - marca a validar
      */
-    public void validateBrand(String name){
-        if (name == null || name.trim().isBlank() || name.trim().length() <= 2){
-            throw new IllegalArgumentException("Ingrese un nombre válido.");
+    public void validateBrand(BrandProduct brand){
+        if (brand != null ){
+            throw new BrandAlreadyExistsException("Nombre Existente: Hay registro de esta marca.");
         }
     }
 
