@@ -1,6 +1,6 @@
     package com.veloProWeb.service.customer;
 
-    import com.veloProWeb.exceptions.Customer.*;
+    import com.veloProWeb.exceptions.customer.*;
     import com.veloProWeb.mapper.CustomerMapper;
     import com.veloProWeb.model.dto.customer.CustomerRequestDTO;
     import com.veloProWeb.model.dto.customer.CustomerResponseDTO;
@@ -8,7 +8,7 @@
     import com.veloProWeb.model.Enum.PaymentStatus;
     import com.veloProWeb.repository.customer.CustomerRepo;
     import com.veloProWeb.service.customer.interfaces.ICustomerService;
-    import com.veloProWeb.util.HelperService;
+    import com.veloProWeb.util.TextFormatter;
     import com.veloProWeb.validation.CustomerValidator;
     import lombok.AllArgsConstructor;
     import org.springframework.stereotype.Service;
@@ -23,7 +23,6 @@
 
         private final CustomerRepo customerRepo;
         private final CustomerValidator validator;
-        private final HelperService helperService;
         private final CustomerMapper mapper;
 
         /**
@@ -184,7 +183,7 @@
          */
         private Customer getCustomerCreated(String name, String surname) {
             Optional<Customer> customerOptional = customerRepo.findBySimilarNameAndSurname(
-                    helperService.capitalize(name), helperService.capitalize(surname));
+                    TextFormatter.capitalize(name), TextFormatter.capitalize(surname));
             return customerOptional.orElse(null);
         }
 

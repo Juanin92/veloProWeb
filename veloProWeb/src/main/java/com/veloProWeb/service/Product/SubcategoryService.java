@@ -5,7 +5,7 @@ import com.veloProWeb.model.entity.Product.SubcategoryProduct;
 import com.veloProWeb.repository.Product.CategoryProductRepo;
 import com.veloProWeb.repository.Product.SubcategoryProductRepo;
 import com.veloProWeb.service.Product.Interfaces.ISubcategoryService;
-import com.veloProWeb.util.HelperService;
+import com.veloProWeb.util.TextFormatter;
 import com.veloProWeb.validation.CategoriesValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class SubcategoryService implements ISubcategoryService {
     @Autowired private SubcategoryProductRepo subcategoryProductRepo;
     @Autowired private CategoryProductRepo categoryProductRepo;
     @Autowired private CategoriesValidator validator;
-    @Autowired private HelperService helperService;
+    @Autowired private TextFormatter textFormatter;
 
     /**
      * Método para crear un objeto de subcategoría (nombre)
@@ -32,12 +32,12 @@ public class SubcategoryService implements ISubcategoryService {
     public void save(SubcategoryProduct subcategory) {
         if (subcategory.getCategory() != null){
             validator.validateSubcategory(subcategory.getName());
-            SubcategoryProduct subcategoryProduct = getSubcategoryCreated(helperService.capitalize(subcategory.getName()), subcategory.getCategory().getId());
+            SubcategoryProduct subcategoryProduct = getSubcategoryCreated(textFormatter.capitalize(subcategory.getName()), subcategory.getCategory().getId());
             if (subcategoryProduct != null){
                 throw new IllegalArgumentException("Nombre Existente: Hay registro de esta Subcategoría en la Categoría " + subcategory.getCategory().getName() + " .");
             } else {
                 subcategory.setId(null);
-                subcategory.setName(helperService.capitalize(subcategory.getName()));
+                subcategory.setName(textFormatter.capitalize(subcategory.getName()));
                 subcategoryProductRepo.save(subcategory);
             }
         }else {

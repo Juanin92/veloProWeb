@@ -2,7 +2,7 @@ package com.veloProWeb.service.Product;
 
 import com.veloProWeb.model.entity.Product.CategoryProduct;
 import com.veloProWeb.repository.Product.CategoryProductRepo;
-import com.veloProWeb.util.HelperService;
+import com.veloProWeb.util.TextFormatter;
 import com.veloProWeb.validation.CategoriesValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ public class CategoryServiceTest {
     @InjectMocks private CategoryService categoryService;
     @Mock private CategoryProductRepo categoryProductRepo;
     @Mock private CategoriesValidator validator;
-    @Mock private HelperService helperService;
+    @Mock private TextFormatter textFormatter;
     private CategoryProduct category;
     private CategoryProduct existingCategory;
 
@@ -40,7 +40,7 @@ public class CategoryServiceTest {
     @Test
     public void save_valid(){
         doNothing().when(validator).validateCategory("combustible");
-        when(helperService.capitalize("combustible")).thenReturn("Combustible");
+        when(textFormatter.capitalize("combustible")).thenReturn("Combustible");
         when(categoryProductRepo.findByName("Combustible")).thenReturn(Optional.empty());
         categoryService.save(category);
 
@@ -54,7 +54,7 @@ public class CategoryServiceTest {
         category.setName("Comida");
         doNothing().when(validator).validateCategory("Comida");
         when(categoryProductRepo.findByName("Comida")).thenReturn(Optional.of(existingCategory));
-        when(helperService.capitalize("Comida")).thenReturn("Comida");
+        when(textFormatter.capitalize("Comida")).thenReturn("Comida");
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             categoryService.save(category);
         });

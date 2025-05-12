@@ -4,7 +4,7 @@ import com.veloProWeb.model.entity.Product.CategoryProduct;
 import com.veloProWeb.model.entity.Product.SubcategoryProduct;
 import com.veloProWeb.repository.Product.CategoryProductRepo;
 import com.veloProWeb.repository.Product.SubcategoryProductRepo;
-import com.veloProWeb.util.HelperService;
+import com.veloProWeb.util.TextFormatter;
 import com.veloProWeb.validation.CategoriesValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ public class SubcategoryServiceTest {
     @Mock private SubcategoryProductRepo subcategoryProductRepo;
     @Mock private CategoryProductRepo categoryProductRepo;
     @Mock private CategoriesValidator validator;
-    @Mock private HelperService helperService;
+    @Mock private TextFormatter textFormatter;
     private SubcategoryProduct subcategory;
     private SubcategoryProduct existingSubcategory;
     private SubcategoryProduct existingSubcategory2;
@@ -58,7 +58,7 @@ public class SubcategoryServiceTest {
     public void save_valid(){
         doNothing().when(validator).validateSubcategory("Leche");
         when(subcategoryProductRepo.findByNameAndCategoryId("Leche",1L)).thenReturn(Optional.empty());
-        when(helperService.capitalize("Leche")).thenReturn("Leche");
+        when(textFormatter.capitalize("Leche")).thenReturn("Leche");
         subcategoryService.save(subcategory);
 
         verify(validator).validateSubcategory("Leche");
@@ -71,7 +71,7 @@ public class SubcategoryServiceTest {
         subcategory.setName("Arroz");
         doNothing().when(validator).validateSubcategory("Arroz");
         when(subcategoryProductRepo.findByNameAndCategoryId("Arroz", 1L)).thenReturn(Optional.of(existingSubcategory));
-        when(helperService.capitalize("Arroz")).thenReturn("Arroz");
+        when(textFormatter.capitalize("Arroz")).thenReturn("Arroz");
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             subcategoryService.save(subcategory);
         });

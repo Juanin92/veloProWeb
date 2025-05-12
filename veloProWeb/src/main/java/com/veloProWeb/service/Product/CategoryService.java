@@ -3,7 +3,7 @@ package com.veloProWeb.service.Product;
 import com.veloProWeb.model.entity.Product.CategoryProduct;
 import com.veloProWeb.repository.Product.CategoryProductRepo;
 import com.veloProWeb.service.Product.Interfaces.ICategoryService;
-import com.veloProWeb.util.HelperService;
+import com.veloProWeb.util.TextFormatter;
 import com.veloProWeb.validation.CategoriesValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ public class CategoryService implements ICategoryService {
 
     @Autowired private CategoryProductRepo categoryProductRepo;
     @Autowired private CategoriesValidator validator;
-    @Autowired private HelperService helperService;
+    @Autowired private TextFormatter textFormatter;
 
     /**
      * Método para crear un objeto de categoría (nombre)
@@ -27,12 +27,12 @@ public class CategoryService implements ICategoryService {
     @Override
     public void save(CategoryProduct category) {
         validator.validateCategory(category.getName());
-        CategoryProduct categoryProduct = getCategoryCreated(helperService.capitalize(category.getName()));
+        CategoryProduct categoryProduct = getCategoryCreated(textFormatter.capitalize(category.getName()));
         if (categoryProduct != null){
             throw new IllegalArgumentException("Nombre Existente: Hay registro de esta categoría.");
         } else {
             category.setId(null);
-            category.setName(helperService.capitalize(category.getName()));
+            category.setName(textFormatter.capitalize(category.getName()));
             categoryProductRepo.save(category);
         }
     }

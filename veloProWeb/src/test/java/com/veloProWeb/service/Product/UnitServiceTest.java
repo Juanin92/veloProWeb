@@ -2,7 +2,7 @@ package com.veloProWeb.service.Product;
 
 import com.veloProWeb.model.entity.Product.UnitProduct;
 import com.veloProWeb.repository.Product.UnitProductRepo;
-import com.veloProWeb.util.HelperService;
+import com.veloProWeb.util.TextFormatter;
 import com.veloProWeb.validation.CategoriesValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ public class UnitServiceTest {
     @InjectMocks private UnitService unitService;
     @Mock private UnitProductRepo unitRepo;
     @Mock private CategoriesValidator validator;
-    @Mock private HelperService helperService;
+    @Mock private TextFormatter textFormatter;
     private UnitProduct unit;
     private UnitProduct existingUnit;
 
@@ -40,7 +40,7 @@ public class UnitServiceTest {
         unit.setNameUnit("1 KG");
         doNothing().when(validator).validateUnit("1 KG");
         when(unitRepo.findByNameUnit("1 KG")).thenReturn(Optional.empty());
-        when(helperService.upperCaseWord("1 KG")).thenReturn("1 KG");
+        when(textFormatter.upperCaseWord("1 KG")).thenReturn("1 KG");
         unitService.save(unit);
 
         verify(validator).validateUnit("1 KG");
@@ -54,7 +54,7 @@ public class UnitServiceTest {
         existingUnit.setNameUnit("2 KG");
         doNothing().when(validator).validateUnit("2 KG");
         when(unitRepo.findByNameUnit("2 KG")).thenReturn(Optional.of(existingUnit));
-        when(helperService.upperCaseWord("2 KG")).thenReturn("2 KG");
+        when(textFormatter.upperCaseWord("2 KG")).thenReturn("2 KG");
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             unitService.save(unit);
         });
@@ -69,7 +69,7 @@ public class UnitServiceTest {
         unit.setNameUnit("2 KILO");
         doNothing().when(validator).validateUnit("2 KILO");
         when(unitRepo.findByNameUnit("2 KILO")).thenReturn(Optional.empty());
-        when(helperService.upperCaseWord("2 KILO")).thenReturn("2 KILO");
+        when(textFormatter.upperCaseWord("2 KILO")).thenReturn("2 KILO");
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             unitService.save(unit);
         });
@@ -84,7 +84,7 @@ public class UnitServiceTest {
         unit.setNameUnit("200 KG");
         doNothing().when(validator).validateUnit("200 KG");
         when(unitRepo.findByNameUnit("200 KG")).thenReturn(Optional.empty());
-        when(helperService.upperCaseWord("200 KG")).thenReturn("200 KG");
+        when(textFormatter.upperCaseWord("200 KG")).thenReturn("200 KG");
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             unitService.save(unit);
         });

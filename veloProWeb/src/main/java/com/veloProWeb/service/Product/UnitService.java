@@ -3,7 +3,7 @@ package com.veloProWeb.service.Product;
 import com.veloProWeb.model.entity.Product.UnitProduct;
 import com.veloProWeb.repository.Product.UnitProductRepo;
 import com.veloProWeb.service.Product.Interfaces.IUnitService;
-import com.veloProWeb.util.HelperService;
+import com.veloProWeb.util.TextFormatter;
 import com.veloProWeb.validation.CategoriesValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ public class UnitService implements IUnitService {
 
     @Autowired private UnitProductRepo unitProductRepo;
     @Autowired private CategoriesValidator validator;
-    @Autowired private HelperService helperService;
+    @Autowired private TextFormatter textFormatter;
 
     /**
      * Método para crear un objeto de unidad de medida (nombre)
@@ -28,7 +28,7 @@ public class UnitService implements IUnitService {
     @Override
     public void save(UnitProduct unit) {
         validator.validateUnit(unit.getNameUnit());
-        UnitProduct unitProduct = getUnitCreated(helperService.upperCaseWord(unit.getNameUnit()));
+        UnitProduct unitProduct = getUnitCreated(textFormatter.upperCaseWord(unit.getNameUnit()));
         if (unitProduct != null){
             throw new IllegalArgumentException("Nombre Existente: Hay registro de esta unidad de medida.");
         } else {
@@ -36,7 +36,7 @@ public class UnitService implements IUnitService {
             int letterCount = unit.getNameUnit().replaceAll("[^a-zA-Z]", "").length();
             if (digitCount <= 2 && letterCount <= 2) {
                 unit.setId(null);
-                unit.setNameUnit(helperService.upperCaseWord(unit.getNameUnit()));
+                unit.setNameUnit(textFormatter.upperCaseWord(unit.getNameUnit()));
                 unitProductRepo.save(unit);
             } else {
                 throw new IllegalArgumentException("El nombre debe tener máximo 2 dígitos y 2 letras.");
