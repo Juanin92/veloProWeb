@@ -1,5 +1,6 @@
 package com.veloProWeb.service.Sale;
 
+import com.veloProWeb.exceptions.Customer.CustomerNotFoundException;
 import com.veloProWeb.model.dto.SaleRequestDTO;
 import com.veloProWeb.model.entity.customer.Customer;
 import com.veloProWeb.model.entity.Sale.Sale;
@@ -144,7 +145,7 @@ public class SaleServiceTest {
         assertTrue(savedSale.isStatus());
         verify(customerService).getCustomerById(saleRequestDTO.getIdCustomer());
         verify(customerService).updateTotalDebt(customer);
-        verify(ticketService).AddTicketToCustomer(customer, (long) saleRequestDTO.getNumberDocument(), saleRequestDTO.getTotal(), saleRequestDTO.getDate());
+        verify(ticketService).AddTicketToCustomer(customer, saleRequestDTO.getTotal());
     }
     @Test
     public void createSale_validMixPayment() {
@@ -164,15 +165,17 @@ public class SaleServiceTest {
         assertTrue(savedSale.isStatus());
         verify(customerService).getCustomerById(saleRequestDTO.getIdCustomer());
         verify(customerService).updateTotalDebt(customer);
-        verify(ticketService).AddTicketToCustomer(customer, (long) saleRequestDTO.getNumberDocument(), saleRequestDTO.getTotal(), saleRequestDTO.getDate());
+        verify(ticketService).AddTicketToCustomer(customer, saleRequestDTO.getTotal());
     }
     @Test
     public void createSale_customerNotFound() {
         saleRequestDTO.setPaymentMethod(PaymentMethod.PRESTAMO);
         saleRequestDTO.setComment(null);
         saleRequestDTO.setIdCustomer(4L);
-        when(customerService.getCustomerById(saleRequestDTO.getIdCustomer())).thenThrow(new IllegalArgumentException("Cliente no encontrado"));
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> saleService.createSale(saleRequestDTO));
+        when(customerService.getCustomerById(saleRequestDTO.getIdCustomer()))
+                .thenThrow(new CustomerNotFoundException("Cliente no encontrado"));
+        CustomerNotFoundException exception = assertThrows(CustomerNotFoundException.class,
+                () -> saleService.createSale(saleRequestDTO));
 
         assertEquals("Cliente no encontrado", exception.getMessage());
         verify(saleRepo , never()).save(any(Sale.class));
@@ -198,7 +201,7 @@ public class SaleServiceTest {
         assertNotNull(result);
         assertEquals(1, result.size());
 
-        SaleRequestDTO dto = result.get(0);
+        SaleRequestDTO dto = result.getFirst();
         assertEquals(sale.getId(), dto.getId());
         assertEquals(sale.getDate(), dto.getDate());
         assertEquals(sale.getPaymentMethod(), dto.getPaymentMethod());
