@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TicketResponseDTO {
+    private Long id;
     private String document;
     private int total;
-    private boolean status;
-    private String customer;
 }
