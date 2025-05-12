@@ -3,47 +3,45 @@ package com.veloProWeb.service.Product;
 import com.veloProWeb.model.entity.Product.BrandProduct;
 import com.veloProWeb.repository.Product.BrandProductRepo;
 import com.veloProWeb.service.Product.Interfaces.IBrandService;
-import com.veloProWeb.util.HelperService;
+import com.veloProWeb.util.TextFormatter;
 import com.veloProWeb.validation.CategoriesValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class BrandService implements IBrandService {
 
-    @Autowired private BrandProductRepo brandProductRepo;
-    @Autowired private CategoriesValidator validator;
-    @Autowired private HelperService helperService;
+    private final BrandProductRepo brandProductRepo;
+    private final CategoriesValidator validator;
 
     /**
-     * Método para crear un objeto de marca (nombre)
-     * Válida el parametro de nombre
-     * Se busca si existe ya un registro del objeto, si no lanza una excepción
+     * Método para crear un objeto de marca
+     * Válida la existencia de la marca
      * @param brand - Marca con los detalles
      */
+    @Transactional
     @Override
     public void save(BrandProduct brand) {
-        validator.validateBrand(brand.getName());
-        BrandProduct brandProduct = getBrandCreated(helperService.capitalize(brand.getName()));
-        if (brandProduct != null){
-            throw new IllegalArgumentException("Nombre Existente: Hay registro de esta marca.");
-        } else {
-            brand.setId(null);
-            brand.setName(helperService.capitalize(brand.getName()));
-            brandProductRepo.save(brand);
-        }
+        String capitalizedName = TextFormatter.capitalize(brand.getName());
+        BrandProduct brandProduct = getBrandCreated(capitalizedName);
+        validator.validateBrand(brandProduct);
+        brand.setId(null);
+        brand.setName(capitalizedName);
+        brandProductRepo.save(brand);
     }
 
     /**
      * Obtiene una lista de marcas registradas
-     * @return - devuelve una lista de marcas
+     * @return - devuelve una lista de marcas ordenadas alfabéticamente
      */
     @Override
     public List<BrandProduct> getAll() {
-        return brandProductRepo.findAll();
+        return brandProductRepo.findAllOrderByNameAsc();
     }
 
     /**
