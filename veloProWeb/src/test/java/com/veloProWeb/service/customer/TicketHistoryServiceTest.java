@@ -51,10 +51,10 @@ public class TicketHistoryServiceTest {
     }
     //Prueba para agregar un ticket al cliente
     @Test
-    public void AddTicketToCustomer_valid(){
+    public void addTicketToCustomer_valid(){
         when(ticketHistoryRepo.findLastCreated()).thenReturn(ticketHistoryThird);
 
-        ticketHistoryService.AddTicketToCustomer(customer, 2000);
+        ticketHistoryService.addTicketToCustomer(customer, 2000);
         ArgumentCaptor<TicketHistory> ticketHistoryCaptor = ArgumentCaptor.forClass(TicketHistory.class);
         verify(ticketHistoryRepo).save(ticketHistoryCaptor.capture());
         TicketHistory ticketHistoryCaptured = ticketHistoryCaptor.getValue();
@@ -105,20 +105,20 @@ public class TicketHistoryServiceTest {
 
     //Prueba para obtener un ticket por ID
     @Test
-    public void getTicketByID_valid(){
+    public void getTicketById_valid(){
         when(ticketHistoryRepo.findById(1L)).thenReturn(Optional.of(ticketHistory));
 
-        TicketHistory result = ticketHistoryService.getTicketByID(1L);
+        TicketHistory result = ticketHistoryService.getTicketById(1L);
 
         verify(ticketHistoryRepo).findById(1L);
         assertEquals(1L, result.getId());
     }
     @Test
-    public void getTicketByID_invalid(){
+    public void getTicketById_invalid(){
         when(ticketHistoryRepo.findById(2L)).thenReturn(Optional.empty());
 
         TicketNotFoundException e = assertThrows(TicketNotFoundException.class,
-                () -> ticketHistoryService.getTicketByID(2L));
+                () -> ticketHistoryService.getTicketById(2L));
 
         assertEquals("Ticket no encontrado", e.getMessage());
     }

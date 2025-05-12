@@ -98,7 +98,7 @@ public class SaleService implements ISaleService {
                 customer.setTotalDebt(customer.getDebt() + dto.getTotal());
                 customerService.updateTotalDebt(customer);
                 customerService.addSaleToCustomer(customer);
-                ticketHistoryService.AddTicketToCustomer(customer, dto.getTotal());
+                ticketHistoryService.addTicketToCustomer(customer, dto.getTotal());
                 break;
             }
             case MIXTO -> {
@@ -108,7 +108,7 @@ public class SaleService implements ISaleService {
                 sale.setCustomer(customer);
                 customer.setTotalDebt(customer.getDebt() + dto.getTotal());
                 customerService.updateTotalDebt(customer);
-                ticketHistoryService.AddTicketToCustomer(customer, dto.getTotal());
+                ticketHistoryService.addTicketToCustomer(customer, dto.getTotal());
                 break;
             }
             case DEBITO -> {

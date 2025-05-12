@@ -81,7 +81,7 @@ public class PaymentCustomerService implements IPaymentCustomerService {
 
     private List<TicketHistory> loadTicketHistories(List<Long> ticketIds) {
         return ticketIds.stream()
-                .map(ticketService::getTicketByID)
+                .map(ticketService::getTicketById)
                 .toList();
     }
 

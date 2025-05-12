@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface ITicketHistoryService {
 
-    void AddTicketToCustomer(Customer customer, int total);
+    void addTicketToCustomer(Customer customer, int total);
     List<TicketHistory> getByCustomerId(Long id);
     List<TicketResponseDTO> getByCustomerIdDTO(Long id);
     void updateStatus(TicketHistory  ticket);
-    TicketHistory getTicketByID(Long Id);
+    TicketHistory getTicketById(Long Id);
 }

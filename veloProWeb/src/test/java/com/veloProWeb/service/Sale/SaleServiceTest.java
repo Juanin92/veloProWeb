@@ -145,7 +145,7 @@ public class SaleServiceTest {
         assertTrue(savedSale.isStatus());
         verify(customerService).getCustomerById(saleRequestDTO.getIdCustomer());
         verify(customerService).updateTotalDebt(customer);
-        verify(ticketService).AddTicketToCustomer(customer, saleRequestDTO.getTotal());
+        verify(ticketService).addTicketToCustomer(customer, saleRequestDTO.getTotal());
     }
     @Test
     public void createSale_validMixPayment() {
@@ -165,7 +165,7 @@ public class SaleServiceTest {
         assertTrue(savedSale.isStatus());
         verify(customerService).getCustomerById(saleRequestDTO.getIdCustomer());
         verify(customerService).updateTotalDebt(customer);
-        verify(ticketService).AddTicketToCustomer(customer, saleRequestDTO.getTotal());
+        verify(ticketService).addTicketToCustomer(customer, saleRequestDTO.getTotal());
     }
     @Test
     public void createSale_customerNotFound() {

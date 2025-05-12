@@ -31,7 +31,7 @@ public class TicketHistoryService implements ITicketHistoryService {
      */
     @Transactional
     @Override
-    public void AddTicketToCustomer(Customer customer, int total) {
+    public void addTicketToCustomer(Customer customer, int total) {
         String lastDocument = getLastTicketCreated().getDocument();
         TicketHistory ticket = new TicketHistory();
         ticket.setTotal(total);
@@ -89,7 +89,7 @@ public class TicketHistoryService implements ITicketHistoryService {
      * @return - Ticket encontrado o excepción depende del caso
      */
     @Override
-    public TicketHistory getTicketByID(Long Id) {
+    public TicketHistory getTicketById(Long Id) {
         return ticketHistoryRepo.findById(Id).orElseThrow(() -> new TicketNotFoundException("Ticket no encontrado"));
     }
 

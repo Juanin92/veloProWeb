@@ -81,8 +81,8 @@ public class PaymentCustomerServiceTest {
     public void createPaymentProcess_validMultiplesTickets(){
         dto.setTicketIDs(List.of(ticketFirst.getId(), ticketSecond.getId()));
 
-        when(ticketService.getTicketByID(ticketFirst.getId())).thenReturn(ticketFirst);
-        when(ticketService.getTicketByID(ticketSecond.getId())).thenReturn(ticketSecond);
+        when(ticketService.getTicketById(ticketFirst.getId())).thenReturn(ticketFirst);
+        when(ticketService.getTicketById(ticketSecond.getId())).thenReturn(ticketSecond);
 
         paymentCustomerService.createPaymentProcess(dto);
 
@@ -108,8 +108,8 @@ public class PaymentCustomerServiceTest {
         dto.setAmount(800);
         dto.setTicketIDs(Arrays.asList(ticketFirst.getId(), ticketSecond.getId()));
 
-        when(ticketService.getTicketByID(1L)).thenReturn(ticketFirst);
-        when(ticketService.getTicketByID(2L)).thenReturn(ticketSecond);
+        when(ticketService.getTicketById(1L)).thenReturn(ticketFirst);
+        when(ticketService.getTicketById(2L)).thenReturn(ticketSecond);
         doThrow(new InvalidPaymentAmountException("El monto no es correcto para el pago de la deuda")).when(validator)
                 .validateExactPaymentForMultipleTickets(dto.getAmount(), Arrays.asList(ticketFirst, ticketSecond));
 
@@ -129,7 +129,7 @@ public class PaymentCustomerServiceTest {
         ticketFirst.setTotal(5000);
         dto.setTicketIDs(List.of(ticketFirst.getId()));
 
-        when(ticketService.getTicketByID(ticketFirst.getId())).thenReturn(ticketFirst);
+        when(ticketService.getTicketById(ticketFirst.getId())).thenReturn(ticketFirst);
         when(customerService.getCustomerById(dto.getCustomerID())).thenReturn(customer);
 
         paymentCustomerService.createPaymentProcess(dto);
@@ -152,7 +152,7 @@ public class PaymentCustomerServiceTest {
         ticketFirst.setTotal(5000);
         dto.setTicketIDs(List.of(ticketFirst.getId()));
 
-        when(ticketService.getTicketByID(ticketFirst.getId())).thenReturn(ticketFirst);
+        when(ticketService.getTicketById(ticketFirst.getId())).thenReturn(ticketFirst);
         when(customerService.getCustomerById(dto.getCustomerID())).thenReturn(customer);
         doThrow(new InvalidPaymentAmountException("El monto supera el valor de la deuda.")).when(validator)
                         .validatePaymentNotExceedDebt(dto.getAmount(), ticketFirst.getTotal());
@@ -174,7 +174,7 @@ public class PaymentCustomerServiceTest {
         dto.setTicketIDs(List.of(ticketFirst.getId()));
 
         when(customerService.getCustomerById(dto.getCustomerID())).thenReturn(customer);
-        when(ticketService.getTicketByID(ticketFirst.getId())).thenReturn(ticketFirst);
+        when(ticketService.getTicketById(ticketFirst.getId())).thenReturn(ticketFirst);
 
         paymentCustomerService.createPaymentProcess(dto);
 
