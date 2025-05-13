@@ -19,7 +19,6 @@ public class ProductResponseDTO {
     private int stock;
     private int reserve;
     private int threshold;
-    private boolean status;
     private StatusProduct statusProduct;
     private String brand;
     private String unit;
