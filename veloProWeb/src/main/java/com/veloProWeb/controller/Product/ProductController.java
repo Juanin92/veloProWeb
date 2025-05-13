@@ -1,9 +1,14 @@
 package com.veloProWeb.controller.Product;
 
+import com.veloProWeb.model.dto.product.ProductRequestDTO;
+import com.veloProWeb.model.dto.product.ProductResponseDTO;
+import com.veloProWeb.model.dto.product.ProductUpdatedRequestDTO;
 import com.veloProWeb.model.entity.Product.Product;
 import com.veloProWeb.service.Product.Interfaces.IProductService;
 import com.veloProWeb.service.Record.IRecordService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.veloProWeb.util.ResponseMessage;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,50 +22,28 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/stock")
-@CrossOrigin(origins = "http://localhost:4200")
+@AllArgsConstructor
 public class ProductController {
 
-    @Autowired private IProductService productService;
-    @Autowired private IRecordService recordService;
+    private final IProductService productService;
+    private final IRecordService recordService;
 
-    /**
-     * Obtiene una lista de todas los productos
-     * @return - ResponseEntity con una lista de los productos
-     */
     @GetMapping()
     @PreAuthorize("hasAnyAuthority('ADMIN','MASTER','SELLER', 'WAREHOUSE', 'GUEST')")
-    public ResponseEntity<List<Product>> getListProducts(){
+    public ResponseEntity<List<ProductResponseDTO>> getListProducts(){
         return ResponseEntity.ok(productService.getAll());
     }
 
-    /**
-     * Crea un nuevo producto
-     * @param product - Producto con los datos a crear
-     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
-     */
     @PostMapping()
     @PreAuthorize("hasAnyAuthority('ADMIN','MASTER', 'WAREHOUSE')")
-    public ResponseEntity<Map<String, String>> createProduct(@RequestBody Product product,
+    public ResponseEntity<Map<String, String>> createProduct(@RequestBody @Valid ProductRequestDTO product,
                                                              @AuthenticationPrincipal UserDetails userDetails){
-        Map<String, String> response =  new HashMap<>();
-        try{
-            productService.create(product);
-            response.put("message","Producto creado exitosamente!");
-            recordService.registerAction(userDetails, "CREATE", "Producto creado: " + product.getDescription());
-            return ResponseEntity.ok(response);
-        }catch (IllegalArgumentException e){
-            response.put("message",e.getMessage());
-            recordService.registerAction(userDetails, "CREATE_FAILURE",
-                    "ERROR: crear producto(" + product.getDescription() + "): " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
+        productService.create(product);
+        recordService.registerAction(userDetails, "CREATE",
+                String.format("Producto creado: %s", product.getDescription()));
+        return new ResponseEntity<>(ResponseMessage.message("Producto creado exitosamente!"), HttpStatus.CREATED);
     }
 
-    /**
-     * Actualizar un producto seleccionado
-     * @param product - Producto con los valores actualizar
-     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
-     */
     @PutMapping()
     @PreAuthorize("hasAnyAuthority('ADMIN','MASTER', 'WAREHOUSE')")
     public ResponseEntity<Map<String, String>> updateProduct(@RequestBody Product product,
@@ -79,49 +62,23 @@ public class ProductController {
         }
     }
 
-    /**
-     * Eliminar un producto seleccionado
-     * @param product - Producto seleccionado para eliminar
-     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
-     */
     @PutMapping("/eliminar_producto")
     @PreAuthorize("hasAnyAuthority('ADMIN','MASTER', 'WAREHOUSE')")
-    public ResponseEntity<Map<String, String>> deleteProduct(@RequestBody Product product,
+    public ResponseEntity<Map<String, String>> deleteProduct(@RequestBody @Valid ProductUpdatedRequestDTO product,
                                                              @AuthenticationPrincipal UserDetails userDetails){
-        Map<String, String> response = new HashMap<>();
-        try{
-            productService.delete(product);
-            response.put("message", "Producto eliminado exitosamente!");
-            recordService.registerAction(userDetails, "DELETE", "Producto eliminado: " + product.getDescription());
-            return ResponseEntity.ok(response);
-        }catch (IllegalArgumentException e){
-            response.put("message",e.getMessage());
-            recordService.registerAction(userDetails, "DELETE_FAILURE",
-                    "ERROR: eliminado producto(" + product.getDescription() + "): " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
+        productService.delete(product);
+        recordService.registerAction(userDetails, "DELETE",
+                String.format("Producto eliminado: %s", product.getDescription()));
+        return new ResponseEntity<>(ResponseMessage.message("Producto eliminado exitosamente!"), HttpStatus.OK);
     }
 
-    /**
-     * Activar un producto seleccionado
-     * @param product - Producto seleccionado para activar
-     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
-     */
     @PutMapping("/activar_producto")
     @PreAuthorize("hasAnyAuthority('ADMIN','MASTER', 'WAREHOUSE')")
-    public ResponseEntity<Map<String, String>> activeProduct(@RequestBody Product product,
+    public ResponseEntity<Map<String, String>> activeProduct(@RequestBody @Valid ProductUpdatedRequestDTO product,
                                                              @AuthenticationPrincipal UserDetails userDetails){
-        Map<String, String> response = new HashMap<>();
-        try{
-            productService.active(product);
-            response.put("message", "Producto activado exitosamente!");
-            recordService.registerAction(userDetails, "ACTIVATE", "Producto activado: " + product.getDescription());
-            return ResponseEntity.ok(response);
-        }catch (IllegalArgumentException e){
-            response.put("message",e.getMessage());
-            recordService.registerAction(userDetails, "ACTIVATE_FAILURE",
-                    "ERROR: activar producto(" + product.getDescription() + "): " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
+        productService.active(product);
+        recordService.registerAction(userDetails, "ACTIVATE",
+                String.format("Producto activado: %S", product.getDescription()));
+        return new ResponseEntity<>(ResponseMessage.message("Producto activado exitosamente!"), HttpStatus.OK);
     }
 }
