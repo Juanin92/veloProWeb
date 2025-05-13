@@ -41,12 +41,20 @@ public class ProductValidator {
         }
     }
 
+    /**
+     * Válida si el producto está activado
+     * @param product - producto a validar
+     */
     public void isActivated(Product product){
         if (product.isStatus()) {
             throw new ProductAlreadyActivatedException("El producto ya está activado.");
         }
     }
 
+    /**
+     * Válida si el producto está desactivado
+     * @param product - Producto a validar
+     */
     public void isDeleted(Product product){
         if (!product.isStatus()) {
             throw new ProductAlreadyDeletedException("El producto ya está desactivado.");
