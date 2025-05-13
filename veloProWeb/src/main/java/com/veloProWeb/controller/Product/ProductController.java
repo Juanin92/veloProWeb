@@ -18,7 +18,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/stock")
 @CrossOrigin(origins = "http://localhost:4200")
-public class StockController {
+public class ProductController {
 
     @Autowired private IProductService productService;
     @Autowired private IRecordService recordService;
