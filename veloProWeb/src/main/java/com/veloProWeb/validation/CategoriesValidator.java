@@ -48,17 +48,24 @@ public class CategoriesValidator {
     }
 
     /**
-     * Válida una unidad de medida. Lanzará excepciones
-     * Si la unidad es nula, contiene menos o igual 3 caracteres en letras y dígitos.
+     * Válida una unidad de medida.
      * @param unit - unidad de medida
      */
     public void validateUnit(UnitProduct unit){
-        if (unit == null){
+        if (unit != null){
             throw new UnitAlreadyExistsException("Nombre Existente: Hay registro de esta unidad de medida.");
         }
+    }
+
+    /**
+     * Válida el nombre de una unidad de medida,
+     * lanzará excepciones si el nombre tiene más de 2 dígitos y 2 letras.
+     * @param unit - unidad de medida a validar
+     */
+    public void validateUnitName(UnitProduct unit){
         int digitCount = unit.getNameUnit().replaceAll("[^0-9]", "").length();
         int letterCount = unit.getNameUnit().replaceAll("[^a-zA-Z]", "").length();
-        if (digitCount > 3 && letterCount > 3) {
+        if (digitCount > 3 || letterCount > 3) {
             throw new ValidationException("El nombre debe tener máximo 2 dígitos y 2 letras.");
         }
     }
