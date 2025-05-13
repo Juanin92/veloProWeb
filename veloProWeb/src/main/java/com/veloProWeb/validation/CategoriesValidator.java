@@ -1,7 +1,9 @@
 package com.veloProWeb.validation;
 
 import com.veloProWeb.exceptions.product.BrandAlreadyExistsException;
+import com.veloProWeb.exceptions.product.CategoryAlreadyExistsException;
 import com.veloProWeb.model.entity.Product.BrandProduct;
+import com.veloProWeb.model.entity.Product.CategoryProduct;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,17 +20,12 @@ public class CategoriesValidator {
     }
 
     /**
-     * Válida el nombre de una categoría, lanzará excepciones:
-     * Si la cadena es nula, esta vacía, contiene menos de 3 caracteres.
-     * Si la cadena contiene dígitos.
-     * @param name - cadena que contiene el nombre de la categoría
+     * Válida la existencia de una categoría ya registrada
+     * @param category - categoría a validar
      */
-    public void validateCategory(String name){
-        if (name == null || name.trim().isBlank() || name.trim().length() < 3){
-            throw new IllegalArgumentException("Ingrese un nombre válido.");
-        }
-        if (name.matches(".*\\d.*")){
-            throw new IllegalArgumentException("El nombre no debe contener dígitos.");
+    public void validateCategory(CategoryProduct category){
+        if (category != null ){
+            throw new CategoryAlreadyExistsException("Nombre Existente: Hay registro de esta categoría.");
         }
     }
 
