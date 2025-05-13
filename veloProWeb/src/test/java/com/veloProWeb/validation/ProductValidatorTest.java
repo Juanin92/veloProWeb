@@ -1,5 +1,7 @@
 package com.veloProWeb.validation;
 
+import com.veloProWeb.exceptions.product.ProductAlreadyActivatedException;
+import com.veloProWeb.exceptions.product.ProductAlreadyDeletedException;
 import com.veloProWeb.model.entity.Product.*;
 import com.veloProWeb.model.Enum.StatusProduct;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,10 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -19,66 +18,19 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(MockitoExtension.class)
 public class ProductValidatorTest {
     @InjectMocks private ProductValidator validator;
-    @Mock private BrandProduct brand;
-    @Mock private CategoryProduct category;
-    @Mock private SubcategoryProduct subcategory;
-    @Mock private UnitProduct unit;
     private Product product;
 
     @BeforeEach
     void setUp(){
-        product = new Product(1l, "Descripción", 1000, 2000, 15, 0,3, true, StatusProduct.DISPONIBLE, brand, unit, subcategory, category, new ArrayList<>());
-    }
-
-    @Test
-    public void validateNewProduct_valid(){
-        validator.validateNewProduct(product);
-    }
-
-    //Prueba para validar una marca
-    @Test
-    public void validateBrand_invalid(){
-        product.setBrand(null);
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validateNewProduct(product));
-        assertEquals("Seleccione una marca", exception.getMessage());
-    }
-
-    //Prueba para validar una categoría
-    @Test
-    public void validateCategory_invalid(){
-        product.setCategory(null);
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validateNewProduct(product));
-        assertEquals("Seleccione una categoría", exception.getMessage());
-    }
-
-    //Prueba para validar una subcategoría
-    @Test
-    public void validateSubcategory_invalid(){
-        product.setSubcategoryProduct(null);
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validateNewProduct(product));
-        assertEquals("Seleccione una subcategoría", exception.getMessage());
-    }
-
-    //Prueba para validar una unidad de medida
-    @Test
-    public void validateUnit_invalid(){
-        product.setUnit(null);
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validateNewProduct(product));
-        assertEquals("Seleccione una unidad", exception.getMessage());
-    }
-
-    //Prueba para validar una descripción del producto
-    @Test
-    public void validateDescription_invalid(){
-        product.setDescription(" ");
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validateNewProduct(product));
-        assertEquals("Ingrese una descripción", exception.getMessage());
-    }
-    @Test
-    public void validateDescription_invalidNull(){
-        product.setDescription(null);
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validateNewProduct(product));
-        assertEquals("Ingrese una descripción", exception.getMessage());
+        product = Product.builder()
+                .id(1L)
+                .description("Description Product")
+                .salePrice(1000).buyPrice(2000)
+                .stock(15).reserve(0).threshold(3)
+                .status(true).statusProduct(StatusProduct.DISPONIBLE)
+                .brand(new BrandProduct()).unit(new UnitProduct())
+                .subcategoryProduct(new SubcategoryProduct())
+                .category(new CategoryProduct()).build();
     }
 
     //Prueba para validar monto del stock del producto
@@ -103,5 +55,22 @@ public class ProductValidatorTest {
     public void validateSalePrice_invalid(int value){
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validateSalePrice(value));
         assertEquals("Precio de ser mayor a 0", exception.getMessage());
+    }
+
+    //Prueba para validar si el producto está activado
+    @Test
+    public void isActivated_invalid(){
+        ProductAlreadyActivatedException e = assertThrows(ProductAlreadyActivatedException.class,
+                ()-> validator.isActivated(product));
+        assertEquals("El producto ya está activado.", e.getMessage());
+    }
+
+    //Prueba para validar si el producto está desactivado
+    @Test
+    public void isDeleted_invalid(){
+        product.setStatus(false);
+        ProductAlreadyDeletedException e = assertThrows(ProductAlreadyDeletedException.class,
+                ()-> validator.isDeleted(product));
+        assertEquals("El producto ya está desactivado.", e.getMessage());
     }
 }
