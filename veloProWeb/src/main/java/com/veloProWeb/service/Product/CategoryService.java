@@ -5,18 +5,18 @@ import com.veloProWeb.repository.Product.CategoryProductRepo;
 import com.veloProWeb.service.Product.Interfaces.ICategoryService;
 import com.veloProWeb.util.TextFormatter;
 import com.veloProWeb.validation.CategoriesValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class CategoryService implements ICategoryService {
 
-    @Autowired private CategoryProductRepo categoryProductRepo;
-    @Autowired private CategoriesValidator validator;
-    @Autowired private TextFormatter textFormatter;
+   private final CategoryProductRepo categoryProductRepo;
+   private final CategoriesValidator validator;
 
     /**
      * Método para crear un objeto de categoría (nombre)
@@ -26,24 +26,21 @@ public class CategoryService implements ICategoryService {
      */
     @Override
     public void save(CategoryProduct category) {
-        validator.validateCategory(category.getName());
-        CategoryProduct categoryProduct = getCategoryCreated(textFormatter.capitalize(category.getName()));
-        if (categoryProduct != null){
-            throw new IllegalArgumentException("Nombre Existente: Hay registro de esta categoría.");
-        } else {
-            category.setId(null);
-            category.setName(textFormatter.capitalize(category.getName()));
-            categoryProductRepo.save(category);
-        }
+        String capitalizedName = TextFormatter.capitalize(category.getName());
+        CategoryProduct categoryProduct = getCategoryCreated(capitalizedName);
+        validator.validateCategory(categoryProduct);
+        category.setId(null);
+        category.setName(capitalizedName);
+        categoryProductRepo.save(category);
     }
 
     /**
      * Obtiene una lista de categorías registradas
-     * @return - devuelve una lista de categorías
+     * @return - devuelve una lista de categorías ordenadas alfabéticamente
      */
     @Override
     public List<CategoryProduct> getAll() {
-        return categoryProductRepo.findAll();
+        return categoryProductRepo.findAllOrderByNameAsc();
     }
 
     /**
