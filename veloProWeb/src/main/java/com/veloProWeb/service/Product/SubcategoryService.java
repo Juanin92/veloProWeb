@@ -1,70 +1,60 @@
 package com.veloProWeb.service.Product;
 
-import com.veloProWeb.model.entity.Product.CategoryProduct;
 import com.veloProWeb.model.entity.Product.SubcategoryProduct;
 import com.veloProWeb.repository.Product.CategoryProductRepo;
 import com.veloProWeb.repository.Product.SubcategoryProductRepo;
 import com.veloProWeb.service.Product.Interfaces.ISubcategoryService;
 import com.veloProWeb.util.TextFormatter;
-import com.veloProWeb.validation.CategoriesValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.veloProWeb.validation.SubcategoryValidator;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class SubcategoryService implements ISubcategoryService {
 
-    @Autowired private SubcategoryProductRepo subcategoryProductRepo;
-    @Autowired private CategoryProductRepo categoryProductRepo;
-    @Autowired private CategoriesValidator validator;
-    @Autowired private TextFormatter textFormatter;
+    private final SubcategoryProductRepo subcategoryProductRepo;
+    private final CategoryProductRepo categoryProductRepo;
+    private final SubcategoryValidator validator;
 
     /**
-     * Método para crear un objeto de subcategoría (nombre)
-     * Válida que tenga una categoría seleccionada y el parametro de nombre
-     * Se busca si existe ya un registro del objeto, si no lanza una excepción
-//     * @param category - Categoría con los detalles
+     * Crea un objeto de subcategoría
+     * Válida que tenga una categoría seleccionada y
+     * se busca si existe ya un registro del objeto, si no lanza una excepción
      * @param subcategory - Subcategoría con los detalles
      */
+    @Transactional
     @Override
     public void save(SubcategoryProduct subcategory) {
-        if (subcategory.getCategory() != null){
-            validator.validateSubcategory(subcategory.getName());
-            SubcategoryProduct subcategoryProduct = getSubcategoryCreated(textFormatter.capitalize(subcategory.getName()), subcategory.getCategory().getId());
-            if (subcategoryProduct != null){
-                throw new IllegalArgumentException("Nombre Existente: Hay registro de esta Subcategoría en la Categoría " + subcategory.getCategory().getName() + " .");
-            } else {
-                subcategory.setId(null);
-                subcategory.setName(textFormatter.capitalize(subcategory.getName()));
-                subcategoryProductRepo.save(subcategory);
-            }
-        }else {
-            throw new IllegalArgumentException("Dede seleccionar una categoría.");
-        }
-    }
-
-    /**
-     * Obtiene una lista de subcategorías registradas
-     * @return - devuelve una lista de subcategorías
-     */
-    @Override
-    public List<SubcategoryProduct> getAll() {
-        return subcategoryProductRepo.findAll();
+        String capitalizedName = TextFormatter.capitalize(subcategory.getName());
+        validator.validateSubcategoryHasCategory(subcategory);
+        SubcategoryProduct subcategoryProduct = getSubcategoryCreated(capitalizedName,
+                subcategory.getCategory().getId());
+        validator.validateSubcategoryDoesNotExist(subcategoryProduct);
+        subcategory.setId(null);
+        subcategory.setName(capitalizedName);
+        subcategoryProductRepo.save(subcategory);
     }
 
     /**
      * Obtiene una lista de subcategorías asociadas una categoría por su ID.
-     * assert comprueba en tiempo de ejecución que no sea un valor nulo si no detiene la ejecución
      * @param id - Identificador de la categoría
-     * @return - lista de subcategorías asociada a la categoría
+     * @return - lista de subcategorías asociada a la categoría ordenadas alfabéticamente
      */
     @Override
     public List<SubcategoryProduct> getSubcategoryByCategoryID(Long id) {
-        CategoryProduct category = categoryProductRepo.findById(id).orElse(null);
-        assert category != null;
-        return subcategoryProductRepo.findByCategoryId(category.getId());
+        return categoryProductRepo.findById(id)
+                .map(category -> subcategoryProductRepo.findByCategoryId(category.getId()).stream()
+                        .sorted(Comparator.comparing(SubcategoryProduct::getName))
+                        .collect(Collectors.toList()))
+                .orElse(Collections.emptyList());
     }
 
     /**
