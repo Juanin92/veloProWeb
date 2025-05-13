@@ -8,19 +8,20 @@ import com.veloProWeb.service.Product.Interfaces.IProductService;
 import com.veloProWeb.service.Report.IkardexService;
 import com.veloProWeb.service.User.Interface.IAlertService;
 import com.veloProWeb.validation.ProductValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class ProductService implements IProductService {
 
-    @Autowired private ProductRepo productRepo;
-    @Autowired private ProductValidator validator;
-    @Autowired private IkardexService kardexService;
-    @Autowired private IAlertService alertService;
+    private final ProductRepo productRepo;
+    private final ProductValidator validator;
+    private final IkardexService kardexService;
+    private final IAlertService alertService;
 
     /**
      * Creación de un nuevo producto
