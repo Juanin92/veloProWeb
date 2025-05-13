@@ -1,7 +1,9 @@
 package com.veloProWeb.validation;
 
 import com.veloProWeb.exceptions.product.BrandAlreadyExistsException;
+import com.veloProWeb.exceptions.product.CategoryAlreadyExistsException;
 import com.veloProWeb.model.entity.Product.BrandProduct;
+import com.veloProWeb.model.entity.Product.CategoryProduct;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,28 +28,13 @@ public class CategoriesValidatorTest {
         assertEquals("Nombre Existente: Hay registro de esta marca.", e.getMessage());
     }
 
-    //Prueba para validar el nombre de una categoría
-    @ParameterizedTest
-    @ValueSource(strings = {"comida", "agua"})
-    public void validateCategory_valid(String value){
-        validator.validateCategory(value);
-    }
-    @ParameterizedTest
-    @ValueSource(strings = {" ", "nn"})
-    public void validateCategory_invalid(String value){
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validateCategory(value));
-        assertEquals("Ingrese un nombre válido.", exception.getMessage());
-    }
-    @ParameterizedTest
-    @ValueSource(strings = {"12455", "comida2"})
-    public void validateCategory_invalidNumeric(String value){
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validateCategory(value));
-        assertEquals("El nombre no debe contener dígitos.", exception.getMessage());
-    }
+    //Prueba para validar la existencia de una categoría
     @Test
-    public void validateCategory_invalidNull(){
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validateCategory(null));
-        assertEquals("Ingrese un nombre válido.", exception.getMessage());
+    public void validateCategory_validException(){
+        CategoryProduct category = CategoryProduct.builder().build();
+        CategoryAlreadyExistsException e = assertThrows(CategoryAlreadyExistsException.class,
+                () -> validator.validateCategory(category));
+        assertEquals("Nombre Existente: Hay registro de esta categoría.", e.getMessage());
     }
 
     //Prueba para validar el nombre de una subcategoría
