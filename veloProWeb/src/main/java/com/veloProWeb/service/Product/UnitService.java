@@ -5,52 +5,41 @@ import com.veloProWeb.repository.Product.UnitProductRepo;
 import com.veloProWeb.service.Product.Interfaces.IUnitService;
 import com.veloProWeb.util.TextFormatter;
 import com.veloProWeb.validation.CategoriesValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class UnitService implements IUnitService {
 
-    @Autowired private UnitProductRepo unitProductRepo;
-    @Autowired private CategoriesValidator validator;
-    @Autowired private TextFormatter textFormatter;
+    private final UnitProductRepo unitProductRepo;
+    private final CategoriesValidator validator;
 
     /**
-     * Método para crear un objeto de unidad de medida (nombre)
-     * Válida que el objeto no sea nulo y el parametro de nombre
-     * Se busca si existe ya un registro del objeto, si no lanza una excepción
-     * Separa el nombre por números y letra y válida que sean menor a 2 caracteres
+     * Método para crear un objeto de unidad de medida
+     * Válida que el objeto
      * @param unit - Unidad de medida con los detalles
      */
     @Override
     public void save(UnitProduct unit) {
-        validator.validateUnit(unit.getNameUnit());
-        UnitProduct unitProduct = getUnitCreated(textFormatter.upperCaseWord(unit.getNameUnit()));
-        if (unitProduct != null){
-            throw new IllegalArgumentException("Nombre Existente: Hay registro de esta unidad de medida.");
-        } else {
-            int digitCount = unit.getNameUnit().replaceAll("[^0-9]", "").length();
-            int letterCount = unit.getNameUnit().replaceAll("[^a-zA-Z]", "").length();
-            if (digitCount <= 2 && letterCount <= 2) {
-                unit.setId(null);
-                unit.setNameUnit(textFormatter.upperCaseWord(unit.getNameUnit()));
-                unitProductRepo.save(unit);
-            } else {
-                throw new IllegalArgumentException("El nombre debe tener máximo 2 dígitos y 2 letras.");
-            }
-        }
+        String capitalizedName = TextFormatter.capitalize((unit.getNameUnit()));
+        UnitProduct unitProduct = getUnitCreated(capitalizedName);
+        validator.validateUnit(unitProduct);
+        unit.setId(null);
+        unit.setNameUnit(capitalizedName);
+        unitProductRepo.save(unit);
     }
 
     /**
      * Obtiene una lista de unidades de medidas registradas
-     * @return - devuelve una lista de unidades de medidas
+     * @return - devuelve una lista de unidades de medidas ordenadas alfabéticamente
      */
     @Override
     public List<UnitProduct> getAll() {
-        return unitProductRepo.findAll();
+        return unitProductRepo.findAllOrderByNameAsc();
     }
 
     /**
