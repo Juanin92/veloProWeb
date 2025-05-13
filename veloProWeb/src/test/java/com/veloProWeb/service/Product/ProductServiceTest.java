@@ -35,7 +35,7 @@ public class ProductServiceTest {
     @Mock private ProductValidator validator;
     @Mock private IAlertService alertService;
     @Mock private IkardexService kardexService;
-    @Spy private ProductMapper mapper;
+    @Spy private ProductMapper mapper = new ProductMapper();
     private Product product;
     private BrandProduct brand;
     private UnitProduct unit;
