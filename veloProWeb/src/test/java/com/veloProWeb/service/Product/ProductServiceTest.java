@@ -1,6 +1,11 @@
 package com.veloProWeb.service.Product;
 
-import com.veloProWeb.model.entity.Product.Product;
+import com.veloProWeb.exceptions.product.ProductAlreadyActivatedException;
+import com.veloProWeb.exceptions.product.ProductAlreadyDeletedException;
+import com.veloProWeb.mapper.ProductMapper;
+import com.veloProWeb.model.dto.product.ProductRequestDTO;
+import com.veloProWeb.model.dto.product.ProductUpdatedRequestDTO;
+import com.veloProWeb.model.entity.Product.*;
 import com.veloProWeb.model.Enum.StatusProduct;
 import com.veloProWeb.repository.Product.ProductRepo;
 import com.veloProWeb.service.Report.IkardexService;
@@ -9,12 +14,15 @@ import com.veloProWeb.validation.ProductValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -27,25 +35,43 @@ public class ProductServiceTest {
     @Mock private ProductValidator validator;
     @Mock private IAlertService alertService;
     @Mock private IkardexService kardexService;
+    @Spy private ProductMapper mapper;
     private Product product;
+    private BrandProduct brand;
+    private UnitProduct unit;
+    private CategoryProduct category;
+    private SubcategoryProduct subcategory;
 
     @BeforeEach
     void setUp(){
-        product = new Product();
+        brand = BrandProduct.builder().id(1L).name("Sony").build();
+        unit = UnitProduct.builder().id(1L).nameUnit("1 UN").build();
+        category = CategoryProduct.builder().id(1L).name("Tech").build();
+        subcategory = SubcategoryProduct.builder().id(1L).name("TV").category(category).build();
     }
 
     //Prueba para crear un nuevo producto
     @Test
     public void create_valid(){
-        productService.create(product);
+        ProductRequestDTO dto = ProductRequestDTO.builder()
+                .description("Product 1").brand(brand).unit(unit)
+                .subcategoryProduct(subcategory).category(category).build();
 
-        verify(validator).validateNewProduct(product);
-        verify(productRepo).save(product);
-        assertFalse(product.isStatus());
-        assertEquals(StatusProduct.NODISPONIBLE, product.getStatusProduct());
-        assertEquals(0, product.getBuyPrice());
-        assertEquals(0, product.getSalePrice());
-        assertEquals(0, product.getStock());
+        productService.create(dto);
+
+        ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
+        verify(productRepo, times(1)).save(productArgumentCaptor.capture());
+
+        Product result = productArgumentCaptor.getValue();
+        assertEquals(result.getDescription(), dto.getDescription());
+        assertEquals(result.getBrand(), dto.getBrand());
+        assertEquals(result.getUnit(), dto.getUnit());
+        assertEquals(result.getSubcategoryProduct(), dto.getSubcategoryProduct());
+        assertFalse(result.isStatus());
+        assertEquals(StatusProduct.NODISPONIBLE, result.getStatusProduct());
+        assertEquals(0, result.getBuyPrice());
+        assertEquals(0, result.getSalePrice());
+        assertEquals(0, result.getStock());
     }
 
     //Prueba para actualizar un producto
@@ -73,10 +99,32 @@ public class ProductServiceTest {
     //Prueba para activar un producto
     @Test
     public void active_valid(){
-        productService.update(product);
+        ProductUpdatedRequestDTO dto = ProductUpdatedRequestDTO.builder().id(1L).build();
+        Product product = Product.builder().id(1L).status(false).build();
+        when(productRepo.findById(dto.getId())).thenReturn(Optional.of(product));
+        doNothing().when(validator).isActivated(product);
 
-        verify(productRepo).save(product);
-        assertEquals(StatusProduct.NODISPONIBLE, product.getStatusProduct());
+        productService.active(dto);
+
+        ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
+        verify(productRepo, times(1)).findById(dto.getId());
+        verify(productRepo, times(1)).save(productArgumentCaptor.capture());
+
+        Product result = productArgumentCaptor.getValue();
+        assertEquals(StatusProduct.NODISPONIBLE, result.getStatusProduct());
+    }
+    @Test
+    public void active_ThrowException(){
+        ProductUpdatedRequestDTO dto = ProductUpdatedRequestDTO.builder().id(1L).build();
+        Product product = Product.builder().id(1L).status(true).build();
+        when(productRepo.findById(dto.getId())).thenReturn(Optional.of(product));
+        doThrow(new ProductAlreadyActivatedException("El producto ya está activado."))
+                .when(validator).isActivated(product);
+
+        assertThrows(ProductAlreadyActivatedException.class, () -> productService.active(dto));
+
+        verify(productRepo, times(1)).findById(dto.getId());
+        verify(productRepo, never()).save(product);
     }
 
     //Prueba para actualizar el stock después de una compra un producto
@@ -100,10 +148,33 @@ public class ProductServiceTest {
     //Prueba para eliminar un producto
     @Test
     public void delete_valid(){
-        productService.delete(product);
-        assertFalse(product.isStatus());
-        assertEquals(StatusProduct.DESCONTINUADO, product.getStatusProduct());
-        verify(productRepo).save(product);
+        ProductUpdatedRequestDTO dto = ProductUpdatedRequestDTO.builder().id(1L).build();
+        Product product = Product.builder().id(1L).status(true).build();
+        when(productRepo.findById(dto.getId())).thenReturn(Optional.of(product));
+        doNothing().when(validator).isDeleted(product);
+
+        productService.delete(dto);
+
+        ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
+        verify(productRepo, times(1)).findById(dto.getId());
+        verify(productRepo, times(1)).save(productArgumentCaptor.capture());
+
+        Product result = productArgumentCaptor.getValue();
+        assertFalse(result.isStatus());
+        assertEquals(StatusProduct.DESCONTINUADO, result.getStatusProduct());
+    }
+    @Test
+    public void delete_ThrowException(){
+        ProductUpdatedRequestDTO dto = ProductUpdatedRequestDTO.builder().id(1L).build();
+        Product product = Product.builder().id(1L).status(false).build();
+        when(productRepo.findById(dto.getId())).thenReturn(Optional.of(product));
+        doThrow(new ProductAlreadyDeletedException("El producto ya está desactivado."))
+                .when(validator).isDeleted(product);
+
+        assertThrows(ProductAlreadyDeletedException.class, () -> productService.delete(dto));
+
+        verify(productRepo, times(1)).findById(dto.getId());
+        verify(productRepo, never()).save(product);
     }
 
     //Prueba para obtener todos los productos
