@@ -25,11 +25,12 @@ public class UnitService implements IUnitService {
      */
     @Override
     public void save(UnitProduct unit) {
-        String capitalizedName = TextFormatter.capitalize((unit.getNameUnit()));
+        String capitalizedName = TextFormatter.upperCaseWord((unit.getNameUnit()));
         UnitProduct unitProduct = getUnitCreated(capitalizedName);
         validator.validateUnit(unitProduct);
         unit.setId(null);
         unit.setNameUnit(capitalizedName);
+        validator.validateUnitName(unit);
         unitProductRepo.save(unit);
     }
 
