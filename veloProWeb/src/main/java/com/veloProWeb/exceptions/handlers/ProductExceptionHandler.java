@@ -16,7 +16,9 @@ public class ProductExceptionHandler extends BaseExceptionHandler {
             BrandAlreadyExistsException.class,
             CategoryAlreadyExistsException.class,
             UnitAlreadyExistsException.class,
-            SubcategoryAlreadyExistsException.class
+            SubcategoryAlreadyExistsException.class,
+            ProductAlreadyDeletedException.class,
+            ProductAlreadyActivatedException.class
     })
     public ResponseEntity<Map<String, String>> handleCustomerException(Exception e){
         return buildResponse(e.getMessage(), HttpStatus.CONFLICT);
