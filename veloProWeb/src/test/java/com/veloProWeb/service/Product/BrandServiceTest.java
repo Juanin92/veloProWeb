@@ -3,7 +3,7 @@ package com.veloProWeb.service.Product;
 import com.veloProWeb.exceptions.product.BrandAlreadyExistsException;
 import com.veloProWeb.model.entity.Product.BrandProduct;
 import com.veloProWeb.repository.Product.BrandProductRepo;
-import com.veloProWeb.validation.CategoriesValidator;
+import com.veloProWeb.validation.BrandValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +23,7 @@ public class BrandServiceTest {
 
     @InjectMocks private BrandService brandService;
     @Mock private BrandProductRepo brandRepo;
-    @Mock private CategoriesValidator validator;
+    @Mock private BrandValidator validator;
     private BrandProduct brand, brand2, brand3, existingBrand;
 
     @BeforeEach
@@ -38,7 +38,7 @@ public class BrandServiceTest {
     @Test
     public void save_valid(){
         when(brandRepo.findByName("Asus")).thenReturn(Optional.empty());
-        doNothing().when(validator).validateBrand(null);
+        doNothing().when(validator).validateBrandDoesNotExist(null);
 
         brandService.save(brand);
 
@@ -50,7 +50,7 @@ public class BrandServiceTest {
     public void save_invalidExistingBrand(){
         when(brandRepo.findByName("Samsung")).thenReturn(Optional.of(existingBrand));
         doThrow(new BrandAlreadyExistsException("Nombre Existente: Hay registro de esta marca.")).when(validator)
-                .validateBrand(existingBrand);
+                .validateBrandDoesNotExist(existingBrand);
 
         BrandAlreadyExistsException exception = assertThrows(BrandAlreadyExistsException.class,
                 () -> brandService.save(existingBrand));

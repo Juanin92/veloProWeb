@@ -4,7 +4,7 @@ import com.veloProWeb.model.entity.Product.BrandProduct;
 import com.veloProWeb.repository.Product.BrandProductRepo;
 import com.veloProWeb.service.Product.Interfaces.IBrandService;
 import com.veloProWeb.util.TextFormatter;
-import com.veloProWeb.validation.CategoriesValidator;
+import com.veloProWeb.validation.BrandValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +17,7 @@ import java.util.Optional;
 public class BrandService implements IBrandService {
 
     private final BrandProductRepo brandProductRepo;
-    private final CategoriesValidator validator;
+    private final BrandValidator validator;
 
     /**
      * Método para crear un objeto de marca
@@ -29,7 +29,7 @@ public class BrandService implements IBrandService {
     public void save(BrandProduct brand) {
         String capitalizedName = TextFormatter.capitalize(brand.getName());
         BrandProduct brandProduct = getBrandCreated(capitalizedName);
-        validator.validateBrand(brandProduct);
+        validator.validateBrandDoesNotExist(brandProduct);
         brand.setId(null);
         brand.setName(capitalizedName);
         brandProductRepo.save(brand);
