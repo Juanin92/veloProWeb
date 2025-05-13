@@ -24,7 +24,7 @@ public class ProductExceptionHandler extends BaseExceptionHandler {
         return buildResponse(e.getMessage(), HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler({CategoryNotFoundException.class})
+    @ExceptionHandler({CategoryNotFoundException.class, ProductNotFoundException.class})
     public ResponseEntity<Map<String, String>> handleCustomerNotFound(CategoryNotFoundException e) {
         return buildResponse(e.getMessage(), HttpStatus.NOT_FOUND);
     }
