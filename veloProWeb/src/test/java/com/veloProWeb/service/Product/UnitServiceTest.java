@@ -1,16 +1,19 @@
 package com.veloProWeb.service.Product;
 
+import com.veloProWeb.exceptions.product.UnitAlreadyExistsException;
+import com.veloProWeb.exceptions.validation.ValidationException;
 import com.veloProWeb.model.entity.Product.UnitProduct;
 import com.veloProWeb.repository.Product.UnitProductRepo;
-import com.veloProWeb.util.TextFormatter;
 import com.veloProWeb.validation.CategoriesValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,81 +27,78 @@ public class UnitServiceTest {
     @InjectMocks private UnitService unitService;
     @Mock private UnitProductRepo unitRepo;
     @Mock private CategoriesValidator validator;
-    @Mock private TextFormatter textFormatter;
-    private UnitProduct unit;
-    private UnitProduct existingUnit;
+    private UnitProduct unit, unitUn, unitGr, existingUnit;
 
     @BeforeEach
     void setUp(){
-        unit = new UnitProduct();
-        existingUnit = new UnitProduct();
+        unit = UnitProduct.builder().id(1L).nameUnit("10 KG").build();
+        unitUn = UnitProduct.builder().id(2L).nameUnit("1 UN").build();
+        unitGr = UnitProduct.builder().id(3L).nameUnit("50 GR").build();
+        existingUnit = UnitProduct.builder().id(5L).nameUnit("35 KG").build();
     }
 
     //Prueba para crear una nueva unidad de medida
     @Test
     public void save_valid(){
-        unit.setNameUnit("1 KG");
-        doNothing().when(validator).validateUnit("1 KG");
-        when(unitRepo.findByNameUnit("1 KG")).thenReturn(Optional.empty());
-        when(textFormatter.upperCaseWord("1 KG")).thenReturn("1 KG");
+        when(unitRepo.findByNameUnit("10 KG")).thenReturn(Optional.empty());
+        doNothing().when(validator).validateUnit(null);
+        doNothing().when(validator).validateUnitName(unit);
+
         unitService.save(unit);
 
-        verify(validator).validateUnit("1 KG");
-        verify(unitRepo).findByNameUnit("1 KG");
-        verify(unitRepo).save(unit);
-        assertEquals("1 KG", unit.getNameUnit());
+        ArgumentCaptor<UnitProduct> unitProductArgumentCaptor = ArgumentCaptor.forClass(UnitProduct.class);
+        verify(unitRepo, times(1)).findByNameUnit("10 KG");
+        verify(unitRepo, times(1)).save(unitProductArgumentCaptor.capture());
+
+        UnitProduct result = unitProductArgumentCaptor.getValue();
+        assertEquals(result.getNameUnit(), unit.getNameUnit());
     }
     @Test
     public void save_invalidExistingUnit(){
-        unit.setNameUnit("2 KG");
-        existingUnit.setNameUnit("2 KG");
-        doNothing().when(validator).validateUnit("2 KG");
-        when(unitRepo.findByNameUnit("2 KG")).thenReturn(Optional.of(existingUnit));
-        when(textFormatter.upperCaseWord("2 KG")).thenReturn("2 KG");
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            unitService.save(unit);
-        });
+        when(unitRepo.findByNameUnit("35 KG")).thenReturn(Optional.of(existingUnit));
+        doThrow(new UnitAlreadyExistsException("Nombre Existente: Hay registro de esta unidad de medida."))
+                .when(validator).validateUnit(existingUnit);
 
+        UnitAlreadyExistsException exception = assertThrows(UnitAlreadyExistsException.class,
+                () -> unitService.save(existingUnit));
+
+        verify(unitRepo, times(1)).findByNameUnit("35 KG");
+        verify(validator, times(1)).validateUnit(existingUnit);
+        verify(unitRepo, never()).save(existingUnit);
         assertEquals("Nombre Existente: Hay registro de esta unidad de medida.", exception.getMessage());
-        verify(validator).validateUnit("2 KG");
-        verify(unitRepo).findByNameUnit("2 KG");
-        verify(unitRepo, never()).save(unit);
     }
     @Test
-    public void save_invalidNameLong(){
-        unit.setNameUnit("2 KILO");
-        doNothing().when(validator).validateUnit("2 KILO");
-        when(unitRepo.findByNameUnit("2 KILO")).thenReturn(Optional.empty());
-        when(textFormatter.upperCaseWord("2 KILO")).thenReturn("2 KILO");
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            unitService.save(unit);
-        });
+    void save_invalidNameException() {
+        UnitProduct unit = UnitProduct.builder().nameUnit("35 kilogramos").build(); // entrada no válida
+        when(unitRepo.findByNameUnit("35 KILOGRAMOS")).thenReturn(Optional.empty());
+
+        doNothing().when(validator).validateUnit(null);
+        doThrow(new ValidationException("El nombre debe tener máximo 2 dígitos y 2 letras."))
+                .when(validator).validateUnitName(unit);
+
+        ValidationException exception = assertThrows(ValidationException.class,
+                () -> unitService.save(unit));
+
+        verify(unitRepo).findByNameUnit("35 KILOGRAMOS");
+        verify(validator).validateUnit(null);
+        verify(validator).validateUnitName(unit);
+        verify(unitRepo, never()).save(any());
 
         assertEquals("El nombre debe tener máximo 2 dígitos y 2 letras.", exception.getMessage());
-        verify(validator).validateUnit("2 KILO");
-        verify(unitRepo).findByNameUnit("2 KILO");
-        verify(unitRepo, never()).save(unit);
     }
-    @Test
-    public void save_invalidNumberLong(){
-        unit.setNameUnit("200 KG");
-        doNothing().when(validator).validateUnit("200 KG");
-        when(unitRepo.findByNameUnit("200 KG")).thenReturn(Optional.empty());
-        when(textFormatter.upperCaseWord("200 KG")).thenReturn("200 KG");
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            unitService.save(unit);
-        });
 
-        assertEquals("El nombre debe tener máximo 2 dígitos y 2 letras.", exception.getMessage());
-        verify(validator).validateUnit("200 KG");
-        verify(unitRepo).findByNameUnit("200 KG");
-        verify(unitRepo, never()).save(unit);
-    }
 
     //Prueba para obtener todas las unidades de medida
     @Test
     public void getAll_valid(){
-        unitService.getAll();
-        verify(unitRepo).findAll();
+        List<UnitProduct> units = List.of(unitGr, unit, existingUnit, unitUn);
+        when(unitRepo.findAllOrderByNameAsc()).thenReturn(units);
+
+        List<UnitProduct> result = unitService.getAll();
+
+        verify(unitRepo, times(1)).findAllOrderByNameAsc();
+
+        assertEquals(units.size(), result.size());
+        assertEquals(List.of(unitGr, unit, existingUnit, unitUn), result);
     }
 }
