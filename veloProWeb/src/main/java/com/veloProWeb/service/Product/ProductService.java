@@ -1,5 +1,10 @@
 package com.veloProWeb.service.Product;
 
+import com.veloProWeb.exceptions.product.ProductNotFoundException;
+import com.veloProWeb.mapper.ProductMapper;
+import com.veloProWeb.model.dto.product.ProductRequestDTO;
+import com.veloProWeb.model.dto.product.ProductResponseDTO;
+import com.veloProWeb.model.dto.product.ProductUpdatedRequestDTO;
 import com.veloProWeb.model.entity.Product.Product;
 import com.veloProWeb.model.Enum.MovementsType;
 import com.veloProWeb.model.Enum.StatusProduct;
@@ -11,6 +16,7 @@ import com.veloProWeb.validation.ProductValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,17 +28,16 @@ public class ProductService implements IProductService {
     private final ProductValidator validator;
     private final IkardexService kardexService;
     private final IAlertService alertService;
+    private final ProductMapper mapper;
 
     /**
      * Creación de un nuevo producto
-     * Válida los detalle del producto
-     * Asigna valores predeterminados al nuevo producto
-     * @param product - Producto con los detalles
+     * @param dto - Producto con los detalles
      */
+    @Transactional
     @Override
-    public void create(Product product) {
-        validator.validateNewProduct(product);
-        product.setId(null);
+    public void create(ProductRequestDTO dto) {
+        Product product = mapper.toEntity(dto);
         product.setStatus(false);
         product.setStatusProduct(StatusProduct.NODISPONIBLE);
         product.setBuyPrice(0);
@@ -67,13 +72,32 @@ public class ProductService implements IProductService {
     /**
      * Activa un producto que no estaba disponible
      * Asigna un valor de status al producto como no disponible
-     * @param product - producto para activar
+     * @param dto - producto para activar
      */
+    @Transactional
     @Override
-    public void active(Product product) {
+    public void active(ProductUpdatedRequestDTO dto) {
+        Product product = getProductById(dto.getId());
+        validator.isActivated(product);
         product.setStatusProduct(StatusProduct.NODISPONIBLE);
         productRepo.save(product);
         kardexService.addKardex(product, 0, "Activado", MovementsType.AJUSTE);
+    }
+
+    /**
+     * Cambia el estado del producto como Descontinuado
+     * Asigna un estado negativo al producto para no estar disponible para ventas
+     * @param dto - producto a eliminar
+     */
+    @Transactional
+    @Override
+    public void delete(ProductUpdatedRequestDTO dto) {
+        Product product = getProductById(dto.getId());
+        validator.isDeleted(product);
+        product.setStatus(false);
+        product.setStatusProduct(StatusProduct.DESCONTINUADO);
+        productRepo.save(product);
+        kardexService.addKardex(product, 0, "Eliminado / Descontinuado", MovementsType.AJUSTE);
     }
 
     /**
@@ -146,25 +170,14 @@ public class ProductService implements IProductService {
     }
 
     /**
-     * Cambia el estado del producto como Descontinuado
-     * Asigna un estado negativo al producto para no estar disponible para ventas
-     * @param product - producto a eliminar
-     */
-    @Override
-    public void delete(Product product) {
-        product.setStatus(false);
-        product.setStatusProduct(StatusProduct.DESCONTINUADO);
-        productRepo.save(product);
-        kardexService.addKardex(product, 0, "Eliminado / Descontinuado", MovementsType.AJUSTE);
-    }
-
-    /**
      * Obtiene una lista del registro de todos los productos
      * @return - lista de productos
      */
     @Override
-    public List<Product> getAll() {
-        return productRepo.findAll();
+    public List<ProductResponseDTO> getAll() {
+        return productRepo.findAll().stream()
+                .map(mapper::toResponse)
+                .toList();
     }
 
     /**
@@ -174,8 +187,6 @@ public class ProductService implements IProductService {
      */
     @Override
     public Product getProductById(Long id) {
-        return productRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("No ha seleccionado un producto registrado"));
+        return productRepo.findById(id).orElseThrow(() -> new ProductNotFoundException("Producto no encontrado"));
     }
-
-
 }

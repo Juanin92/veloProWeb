@@ -1,17 +1,20 @@
 package com.veloProWeb.service.Product.Interfaces;
 
+import com.veloProWeb.model.dto.product.ProductRequestDTO;
+import com.veloProWeb.model.dto.product.ProductResponseDTO;
+import com.veloProWeb.model.dto.product.ProductUpdatedRequestDTO;
 import com.veloProWeb.model.entity.Product.Product;
 
 import java.util.List;
 
 public interface IProductService {
 
-    void create(Product product);
-    List<Product> getAll();
+    void create(ProductRequestDTO dto);
+    List<ProductResponseDTO> getAll();
     Product getProductById(Long id);
-    void delete(Product product);
+    void delete(ProductUpdatedRequestDTO dto);
     void update(Product product);
-    void active(Product product);
+    void active(ProductUpdatedRequestDTO dto);
     void updateStockPurchase(Product product, int price, int quantity);
     void updateStockSale(Product product, int quantity);
     void checkAndCreateAlertsByProduct();
