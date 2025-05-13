@@ -4,20 +4,16 @@ import com.veloProWeb.model.dto.customer.CustomerRequestDTO;
 import com.veloProWeb.model.dto.customer.CustomerResponseDTO;
 import com.veloProWeb.model.entity.customer.Customer;
 import com.veloProWeb.util.TextFormatter;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-@AllArgsConstructor
 public class CustomerMapper {
-
-    private final TextFormatter textFormatter;
 
     public Customer toEntity(CustomerRequestDTO dto) {
         return Customer.builder()
                 .id(dto.getId())
-                .name(textFormatter.capitalize(dto.getName()))
-                .surname(textFormatter.capitalize(dto.getSurname()))
+                .name(TextFormatter.capitalize(dto.getName()))
+                .surname(TextFormatter.capitalize(dto.getSurname()))
                 .phone(dto.getPhone())
                 .email(dto.getEmail())
                 .build();
@@ -39,8 +35,8 @@ public class CustomerMapper {
 
     public void updateCustomerFromDto(CustomerRequestDTO dto, Customer customer) {
         customer.setPhone(dto.getPhone());
-        customer.setName(textFormatter.capitalize(dto.getName()));
-        customer.setSurname(textFormatter.capitalize(dto.getSurname()));
+        customer.setName(TextFormatter.capitalize(dto.getName()));
+        customer.setSurname(TextFormatter.capitalize(dto.getSurname()));
         customer.setEmail(dto.getEmail());
     }
 }
