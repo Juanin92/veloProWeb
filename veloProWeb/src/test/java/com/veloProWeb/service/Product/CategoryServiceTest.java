@@ -3,7 +3,7 @@ package com.veloProWeb.service.Product;
 import com.veloProWeb.exceptions.product.CategoryAlreadyExistsException;
 import com.veloProWeb.model.entity.Product.CategoryProduct;
 import com.veloProWeb.repository.Product.CategoryProductRepo;
-import com.veloProWeb.validation.CategoriesValidator;
+import com.veloProWeb.validation.CategoryValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +24,7 @@ public class CategoryServiceTest {
 
     @InjectMocks private CategoryService categoryService;
     @Mock private CategoryProductRepo categoryProductRepo;
-    @Mock private CategoriesValidator validator;
+    @Mock private CategoryValidator validator;
     private CategoryProduct category, category2, category3, existingCategory;
 
     @BeforeEach
@@ -39,7 +39,7 @@ public class CategoryServiceTest {
     @Test
     public void save_valid(){
         when(categoryProductRepo.findByName("Tech")).thenReturn(Optional.empty());
-        doNothing().when(validator).validateCategory(null);
+        doNothing().when(validator).validateCategoryDoesNotExist(null);
 
         categoryService.save(category);
 
@@ -51,7 +51,7 @@ public class CategoryServiceTest {
     public void save_invalidExistingCategory(){
         when(categoryProductRepo.findByName("Cleaning")).thenReturn(Optional.of(existingCategory));
         doThrow(new CategoryAlreadyExistsException("Nombre Existente: Hay registro de esta categoría.")).when(validator)
-                .validateCategory(existingCategory);
+                .validateCategoryDoesNotExist(existingCategory);
 
         CategoryAlreadyExistsException exception = assertThrows(CategoryAlreadyExistsException.class,
                 () -> categoryService.save(existingCategory));

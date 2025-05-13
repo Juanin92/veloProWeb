@@ -4,7 +4,7 @@ import com.veloProWeb.model.entity.Product.CategoryProduct;
 import com.veloProWeb.repository.Product.CategoryProductRepo;
 import com.veloProWeb.service.Product.Interfaces.ICategoryService;
 import com.veloProWeb.util.TextFormatter;
-import com.veloProWeb.validation.CategoriesValidator;
+import com.veloProWeb.validation.CategoryValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ import java.util.Optional;
 public class CategoryService implements ICategoryService {
 
    private final CategoryProductRepo categoryProductRepo;
-   private final CategoriesValidator validator;
+   private final CategoryValidator validator;
 
     /**
      * Método para crear un objeto de categoría (nombre)
@@ -28,7 +28,7 @@ public class CategoryService implements ICategoryService {
     public void save(CategoryProduct category) {
         String capitalizedName = TextFormatter.capitalize(category.getName());
         CategoryProduct categoryProduct = getCategoryCreated(capitalizedName);
-        validator.validateCategory(categoryProduct);
+        validator.validateCategoryDoesNotExist(categoryProduct);
         category.setId(null);
         category.setName(capitalizedName);
         categoryProductRepo.save(category);
