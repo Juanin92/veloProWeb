@@ -34,8 +34,7 @@ public class CustomerServiceTest {
     @InjectMocks private CustomerService customerService;
     @Mock private CustomerRepo customerRepo;
     @Spy private CustomerValidator validator;
-    @Spy private TextFormatter textFormatter;
-    @Spy CustomerMapper mapper = new CustomerMapper(textFormatter);
+    @Spy CustomerMapper mapper = new CustomerMapper();
     private Customer customer;
     private CustomerRequestDTO customerRequestDTO;
     private CustomerResponseDTO customerResponseDTO;
