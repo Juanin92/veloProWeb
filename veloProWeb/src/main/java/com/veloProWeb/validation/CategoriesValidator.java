@@ -2,8 +2,11 @@ package com.veloProWeb.validation;
 
 import com.veloProWeb.exceptions.product.BrandAlreadyExistsException;
 import com.veloProWeb.exceptions.product.CategoryAlreadyExistsException;
+import com.veloProWeb.exceptions.product.UnitAlreadyExistsException;
+import com.veloProWeb.exceptions.validation.ValidationException;
 import com.veloProWeb.model.entity.Product.BrandProduct;
 import com.veloProWeb.model.entity.Product.CategoryProduct;
+import com.veloProWeb.model.entity.Product.UnitProduct;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -45,21 +48,18 @@ public class CategoriesValidator {
     }
 
     /**
-     * Válida el nombre de una unidad de medida. Lanzará excepciones
-     * Si la cadena es nula, esta vacía, contiene menos o igual 3 caracteres.
-     * Si la cadena no contiene letras y números.
-     * Si la cadena no contiene un espacio entre números y letras.
-     * @param name - cadena que contiene el nombre de la unidad de medida
+     * Válida una unidad de medida. Lanzará excepciones
+     * Si la unidad es nula, contiene menos o igual 3 caracteres en letras y dígitos.
+     * @param unit - unidad de medida
      */
-    public void validateUnit(String name){
-        if (name == null || name.trim().isBlank() || name.trim().length() <= 3){
-            throw new IllegalArgumentException("Ingrese un nombre válido.");
+    public void validateUnit(UnitProduct unit){
+        if (unit == null){
+            throw new UnitAlreadyExistsException("Nombre Existente: Hay registro de esta unidad de medida.");
         }
-        if (!name.matches("[a-zA-Z0-9 ]+")){
-            throw new IllegalArgumentException("El nombre debe contener solo letras y números.");
-        }
-        if (!name.matches("[0-9]+ [a-zA-Z]+")){
-            throw new IllegalArgumentException("El nombre debe tener un espacio entre dígitos y letras.");
+        int digitCount = unit.getNameUnit().replaceAll("[^0-9]", "").length();
+        int letterCount = unit.getNameUnit().replaceAll("[^a-zA-Z]", "").length();
+        if (digitCount > 3 && letterCount > 3) {
+            throw new ValidationException("El nombre debe tener máximo 2 dígitos y 2 letras.");
         }
     }
 }
