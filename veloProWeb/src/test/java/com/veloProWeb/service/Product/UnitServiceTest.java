@@ -4,7 +4,7 @@ import com.veloProWeb.exceptions.product.UnitAlreadyExistsException;
 import com.veloProWeb.exceptions.validation.ValidationException;
 import com.veloProWeb.model.entity.Product.UnitProduct;
 import com.veloProWeb.repository.Product.UnitProductRepo;
-import com.veloProWeb.validation.CategoriesValidator;
+import com.veloProWeb.validation.UnitValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +26,7 @@ public class UnitServiceTest {
 
     @InjectMocks private UnitService unitService;
     @Mock private UnitProductRepo unitRepo;
-    @Mock private CategoriesValidator validator;
+    @Mock private UnitValidator validator;
     private UnitProduct unit, unitUn, unitGr, existingUnit;
 
     @BeforeEach
@@ -41,8 +41,8 @@ public class UnitServiceTest {
     @Test
     public void save_valid(){
         when(unitRepo.findByNameUnit("10 KG")).thenReturn(Optional.empty());
-        doNothing().when(validator).validateUnit(null);
-        doNothing().when(validator).validateUnitName(unit);
+        doNothing().when(validator).validateUnitDoesNotExist(null);
+        doNothing().when(validator).validateUnitNameFormat(unit);
 
         unitService.save(unit);
 
@@ -57,13 +57,13 @@ public class UnitServiceTest {
     public void save_invalidExistingUnit(){
         when(unitRepo.findByNameUnit("35 KG")).thenReturn(Optional.of(existingUnit));
         doThrow(new UnitAlreadyExistsException("Nombre Existente: Hay registro de esta unidad de medida."))
-                .when(validator).validateUnit(existingUnit);
+                .when(validator).validateUnitDoesNotExist(existingUnit);
 
         UnitAlreadyExistsException exception = assertThrows(UnitAlreadyExistsException.class,
                 () -> unitService.save(existingUnit));
 
         verify(unitRepo, times(1)).findByNameUnit("35 KG");
-        verify(validator, times(1)).validateUnit(existingUnit);
+        verify(validator, times(1)).validateUnitDoesNotExist(existingUnit);
         verify(unitRepo, never()).save(existingUnit);
         assertEquals("Nombre Existente: Hay registro de esta unidad de medida.", exception.getMessage());
     }
@@ -72,16 +72,16 @@ public class UnitServiceTest {
         UnitProduct unit = UnitProduct.builder().nameUnit("35 kilogramos").build(); // entrada no válida
         when(unitRepo.findByNameUnit("35 KILOGRAMOS")).thenReturn(Optional.empty());
 
-        doNothing().when(validator).validateUnit(null);
+        doNothing().when(validator).validateUnitDoesNotExist(null);
         doThrow(new ValidationException("El nombre debe tener máximo 2 dígitos y 2 letras."))
-                .when(validator).validateUnitName(unit);
+                .when(validator).validateUnitNameFormat(unit);
 
         ValidationException exception = assertThrows(ValidationException.class,
                 () -> unitService.save(unit));
 
         verify(unitRepo).findByNameUnit("35 KILOGRAMOS");
-        verify(validator).validateUnit(null);
-        verify(validator).validateUnitName(unit);
+        verify(validator).validateUnitDoesNotExist(null);
+        verify(validator).validateUnitNameFormat(unit);
         verify(unitRepo, never()).save(any());
 
         assertEquals("El nombre debe tener máximo 2 dígitos y 2 letras.", exception.getMessage());

@@ -4,7 +4,7 @@ import com.veloProWeb.model.entity.Product.UnitProduct;
 import com.veloProWeb.repository.Product.UnitProductRepo;
 import com.veloProWeb.service.Product.Interfaces.IUnitService;
 import com.veloProWeb.util.TextFormatter;
-import com.veloProWeb.validation.CategoriesValidator;
+import com.veloProWeb.validation.UnitValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ import java.util.Optional;
 public class UnitService implements IUnitService {
 
     private final UnitProductRepo unitProductRepo;
-    private final CategoriesValidator validator;
+    private final UnitValidator validator;
 
     /**
      * Método para crear un objeto de unidad de medida
@@ -27,10 +27,10 @@ public class UnitService implements IUnitService {
     public void save(UnitProduct unit) {
         String capitalizedName = TextFormatter.upperCaseWord((unit.getNameUnit()));
         UnitProduct unitProduct = getUnitCreated(capitalizedName);
-        validator.validateUnit(unitProduct);
+        validator.validateUnitDoesNotExist(unitProduct);
         unit.setId(null);
         unit.setNameUnit(capitalizedName);
-        validator.validateUnitName(unit);
+        validator.validateUnitNameFormat(unit);
         unitProductRepo.save(unit);
     }
 
