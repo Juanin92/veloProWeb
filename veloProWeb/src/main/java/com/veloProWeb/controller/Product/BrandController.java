@@ -18,7 +18,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/marcas")
-@CrossOrigin(origins = "http://localhost:4200")
 @AllArgsConstructor
 public class BrandController {
 
