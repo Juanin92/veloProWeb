@@ -2,8 +2,11 @@ package com.veloProWeb.validation;
 
 import com.veloProWeb.exceptions.product.BrandAlreadyExistsException;
 import com.veloProWeb.exceptions.product.CategoryAlreadyExistsException;
+import com.veloProWeb.exceptions.product.UnitAlreadyExistsException;
+import com.veloProWeb.exceptions.validation.ValidationException;
 import com.veloProWeb.model.entity.Product.BrandProduct;
 import com.veloProWeb.model.entity.Product.CategoryProduct;
+import com.veloProWeb.model.entity.Product.UnitProduct;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -61,33 +64,21 @@ public class CategoriesValidatorTest {
         assertEquals("Ingrese un nombre válido.", exception.getMessage());
     }
 
-    //Prueba para validar el nombre de una unidad de medida
-    @ParameterizedTest
-    @ValueSource(strings = {"12 kg", "1 cm", "1 un"})
-    public void validateUnit_valid(String value){
-        validator.validateUnit(value);
-    }
-    @ParameterizedTest
-    @ValueSource(strings = {"2 kilo ", "1 unidad", " "})
-    public void validateUnit_invalid(String value){
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validateUnit(value));
-        assertEquals("Ingrese un nombre válido.", exception.getMessage());
-    }
-    @ParameterizedTest
-    @ValueSource(strings = {"kilogr@mo", "2@22"})
-    public void validateUnit_invalidContainsLettersAndNumbers(String value){
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validateUnit(value));
-        assertEquals("El nombre debe contener solo letras y números.", exception.getMessage());
-    }
-    @ParameterizedTest
-    @ValueSource(strings = {"01cm", "20kg"})
-    public void validateUnit_invalidContainsSpace(String value){
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validateUnit(value));
-        assertEquals("El nombre debe tener un espacio entre dígitos y letras.", exception.getMessage());
-    }
+    //Prueba para validar una unidad de medida
     @Test
-    public void validateUnit_invalidNull(){
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validateUnit(null));
-        assertEquals("Ingrese un nombre válido.", exception.getMessage());
+    public void validateUnit_validExistsException(){
+        UnitProduct unit = UnitProduct.builder().build();
+        UnitAlreadyExistsException e = assertThrows(UnitAlreadyExistsException.class,
+                () -> validator.validateUnit(unit));
+        assertEquals("Nombre Existente: Hay registro de esta unidad de medida.", e.getMessage());
+    }
+
+    //Prueba para validar el formato del nombre de la unidad de medida
+    @ParameterizedTest
+    @ValueSource(strings = {"2 kilo ", "1 unidad"})
+    public void validateUnit_invalid(String value){
+        UnitProduct unit = UnitProduct.builder().nameUnit(value).build();
+        ValidationException exception = assertThrows(ValidationException.class,() -> validator.validateUnitName(unit));
+        assertEquals("El nombre debe tener máximo 2 dígitos y 2 letras.", exception.getMessage());
     }
 }
