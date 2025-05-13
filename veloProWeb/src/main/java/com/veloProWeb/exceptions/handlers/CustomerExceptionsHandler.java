@@ -25,7 +25,7 @@ public class CustomerExceptionsHandler extends BaseExceptionHandler {
     }
 
     @ExceptionHandler({CustomerNotFoundException.class, TicketNotFoundException.class})
-    public ResponseEntity<Map<String, String>> handleCustomerNotFound(CustomerNotFoundException e) {
+    public ResponseEntity<Map<String, String>> handleCustomerNotFound(Exception e) {
         return buildResponse(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
