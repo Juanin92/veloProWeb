@@ -1,10 +1,9 @@
 package com.veloProWeb.exceptions.handlers;
 
 import com.veloProWeb.exceptions.BaseExceptionHandler;
-import com.veloProWeb.exceptions.product.BrandAlreadyExistsException;
-import com.veloProWeb.exceptions.product.CategoryAlreadyExistsException;
-import com.veloProWeb.exceptions.product.SubcategoryAlreadyExistsException;
-import com.veloProWeb.exceptions.product.UnitAlreadyExistsException;
+import com.veloProWeb.exceptions.customer.CustomerNotFoundException;
+import com.veloProWeb.exceptions.customer.TicketNotFoundException;
+import com.veloProWeb.exceptions.product.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,5 +20,10 @@ public class ProductExceptionHandler extends BaseExceptionHandler {
     })
     public ResponseEntity<Map<String, String>> handleCustomerException(Exception e){
         return buildResponse(e.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler({CategoryNotFoundException.class})
+    public ResponseEntity<Map<String, String>> handleCustomerNotFound(CategoryNotFoundException e) {
+        return buildResponse(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 }
