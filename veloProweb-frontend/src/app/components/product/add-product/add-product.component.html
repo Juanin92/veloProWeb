@@ -17,7 +17,7 @@
                                     [(ngModel)]="brandSelected"
                                     [ngClass]="{'is-invalid': !validator.isFieldValid(newProduct, 'brand'), 'is-valid': validator.isFieldValid(newProduct, 'brand')}">
                                     <option [ngValue]="null" selected disabled>Marca</option>
-                                    <option *ngFor="let brand of brandList" [ngValue]="brand">{{brand.name}}</option>
+                                    <option *ngFor="let brand of brandList; trackBy: trackById" [ngValue]="brand">{{brand.name}}</option>
                                 </select>
                                 <div *ngIf="!validator.isFieldValid(newProduct,'brand')" class="invalid-feedback">
                                     Debe seleccionar una marca
@@ -32,7 +32,7 @@
                                     [(ngModel)]="categorySelected"
                                     [ngClass]="{'is-invalid': !validator.isFieldValid(newProduct, 'category'), 'is-valid': validator.isFieldValid(newProduct, 'category')}">
                                     <option [ngValue]="null" selected disabled>Categoría</option>
-                                    <option *ngFor="let category of categoryList" [ngValue]="category">{{category.name}}
+                                    <option *ngFor="let category of categoryList; trackBy: trackById" [ngValue]="category">{{category.name}}
                                     </option>
                                 </select>
                                 <div *ngIf="!validator.isFieldValid(newProduct,'category')" class="invalid-feedback">
@@ -47,7 +47,7 @@
                                     [(ngModel)]="subcategorySelected" (change)="updateNewProductFields()"
                                     [ngClass]="{'is-invalid': !validator.isFieldValid(newProduct, 'subcategoryProduct'), 'is-valid': validator.isFieldValid(newProduct, 'subcategoryProduct')}">
                                     <option [ngValue]="null" disabled>Subcategoría</option>
-                                    <option *ngFor="let subcategory of subcategoryList" [ngValue]="subcategory">
+                                    <option *ngFor="let subcategory of subcategoryList; trackBy: trackById" [ngValue]="subcategory">
                                         {{subcategory.name}}</option>
                                 </select>
                                 <div *ngIf="!validator.isFieldValid(newProduct,'subcategoryProduct')"
@@ -63,7 +63,7 @@
                                     [(ngModel)]="unitSelected" (change)="updateNewProductFields()"
                                     [ngClass]="{'is-invalid': !validator.isFieldValid(newProduct, 'unit'), 'is-valid': validator.isFieldValid(newProduct, 'unit')}">
                                     <option [ngValue]="null" selected disabled>Unidad de medida</option>
-                                    <option *ngFor="let unit of unitList" [ngValue]="unit">{{ unit.nameUnit }}</option>
+                                    <option *ngFor="let unit of unitList; trackBy: trackById" [ngValue]="unit">{{ unit.nameUnit }}</option>
                                 </select>
                                 <div *ngIf="!validator.isFieldValid(newProduct,'unit')" class="invalid-feedback">
                                     Debe seleccionar una unidad de medida

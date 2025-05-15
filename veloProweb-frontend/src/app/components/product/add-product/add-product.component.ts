@@ -178,4 +178,8 @@ export class AddProductComponent implements OnInit {
     this.subcategoryList = [];
     this.touchedFields = {};
   }
+
+  trackById(index: number, item: { id: number }): number {
+    return item.id;
+  }
 }
