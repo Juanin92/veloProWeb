@@ -114,7 +114,6 @@ export class AddProductComponent implements OnInit {
     if (this.validator.validateForm(this.newProduct)) {
       this.productService.createProduct(this.newProduct).subscribe({
         next: (response) => {
-          console.log('Producto creado exitosamente! ', this.newProduct);
           this.notification.showSuccessToast(
             'Producto creado exitosamente!',
             'top',
@@ -126,7 +125,6 @@ export class AddProductComponent implements OnInit {
         },
         error: (error) => {
           const message = this.errorMessage.errorMessageExtractor(error);
-          console.error('Error:', message);
           this.notification.showErrorToast(`Error: ${message}`, 'top', 5000);
         },
       });
