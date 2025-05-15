@@ -50,11 +50,11 @@
             <tbody class="table-group-divider text-center align-middle" style="cursor: pointer">
               <tr *ngFor="let product of filteredProductsList" (click)="selectProduct(product)">
                 <th scope="row">{{ product.id }}</th>
-                <td>{{ product.brand.name }}</td>
-                <td>{{ product.category.name }}</td>
-                <td>{{ product.subcategoryProduct.name }}</td>
+                <td>{{ product.brand }}</td>
+                <td>{{ product.category }}</td>
+                <td>{{ product.subcategoryProduct }}</td>
                 <td>{{ product.description }}</td>
-                <td>{{ product.unit.nameUnit }}</td>
+                <td>{{ product.unit }}</td>
                 <td *ngIf="showStatusColumn" [ngStyle]="{
                     'background-color': statusColor(product.statusProduct)
                   }"></td>
