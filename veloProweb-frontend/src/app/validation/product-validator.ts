@@ -1,6 +1,6 @@
 import { Brand } from "../models/Entity/Product/brand";
 import { Category } from "../models/Entity/Product/category";
-import { Product } from "../models/Entity/Product/product.model";
+import { Product } from "../models/Entity/Product/product";
 import { Subcategory } from "../models/Entity/Product/subcategory";
 import { UnitProduct } from "../models/Entity/Product/unit-product";
 
@@ -19,10 +19,7 @@ export class ProductValidator {
             return value !== null && typeof value === 'string' && value.trim().length > 0;
         }
         if (fieldName === 'brand' || fieldName === 'category' || fieldName === 'subcategoryProduct' || fieldName === 'unit') {
-            if (value === null) {
-                return false;
-            }
-            return typeof value === 'object' && value !== null && 'id' in value && value.id !== null && value.id !== 0;
+            return value !== null && typeof value === 'string' && value.trim().length > 0;
         }
         return true;
     }
