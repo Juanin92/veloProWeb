@@ -17,6 +17,7 @@ import { ModalService } from '../../../utils/modal.service';
 import { ProductPermissionsService } from '../../../services/Permissions/product-permissions.service';
 import { ErrorMessageService } from '../../../utils/error-message.service';
 import { ProductForm } from '../../../models/Entity/Product/product-form';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-add-product',
@@ -65,42 +66,18 @@ export class AddProductComponent implements OnInit {
    * Encargado de cargar los métodos
    */
   loadData(): void {
-    this.getAllBrands();
-    this.getAllUnits();
-    this.getAllCategories();
-    this.touchedFields = {};
-  }
-
-  /**
-   * Obtiene una lista de todas las marcas.
-   * asigna una lista con marcas a la lista brandList
-   */
-  getAllBrands(): void {
-    this.brandService.getBrands().subscribe({
-      next: (list) => this.brandList = list,
-      error: (error) => console.log('Error no se encontró ninguna marca', error),
-    });
-  }
-
-  /**
-   * Obtiene una lista de todas las unidades.
-   * asigna una lista con unidades a la lista unitList
-   */
-  getAllUnits(): void {
-    this.unitService.getUnits().subscribe({
-      next: (list) => this.unitList = list,
-      error: (error) => console.log('Error no se encontró ninguna unidad de medida', error),
-    });
-  }
-
-  /**
-   * Obtiene una lista de todas las categorías.
-   * asigna una lista con categorías a la lista categoryList
-   */
-  getAllCategories(): void {
-    this.categoryService.getCategories().subscribe({
-      next: (list) => this.categoryList = list,
-      error: (error) => console.log('Error no se encontró ninguna categoría', error),
+    forkJoin({
+      brands: this.brandService.getBrands(),
+      units: this.unitService.getUnits(),
+      categories: this.categoryService.getCategories()
+    }).subscribe({
+      next: ({brands, units, categories}) => {
+        this.brandList  = brands,
+        this.unitList = units,
+        this.categoryList = categories,
+        this.touchedFields = {}
+      },
+      error: (error) => this.notification.showErrorToast('Error cargando datos', 'top', 3000),
     });
   }
 
@@ -111,7 +88,7 @@ export class AddProductComponent implements OnInit {
   getAllSubcategories(categoryID: number): void {
     this.subcategoryService.getSubCategoriesByCategory(categoryID).subscribe({
       next: (list) => this.subcategoryList = list,
-      error: (error) => console.log('Error no se encontró ninguna subcategoría', error),
+      error: (error) => this.notification.showErrorToast('Error no se encontró ninguna subcategoría', 'top', 3000),
     });
   }
 
