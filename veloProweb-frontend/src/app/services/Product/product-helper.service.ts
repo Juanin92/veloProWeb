@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Product } from '../../models/Entity/Product/product.model';
+import { Product } from '../../models/Entity/Product/product';
 import { StatusProduct } from '../../models/enum/status-product';
 import { Brand } from '../../models/Entity/Product/brand';
 import { UnitProduct } from '../../models/Entity/Product/unit-product';
@@ -26,12 +26,11 @@ export class ProductHelperService {
       buyPrice: 0,
       stock: 0,
       reserve: 0,
-      status: false,
       statusProduct: StatusProduct.UNAVAILABLE,
-      brand: this.createEmptyBrand(),
-      unit: this.createEmptyUnit(),
-      subcategoryProduct: this.createEmptySubcategory(),
-      category: this.createEmptyCategory()
+      brand: '',
+      unit: '',
+      subcategoryProduct: '',
+      category: ''
     };
   }
 
