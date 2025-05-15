@@ -1,18 +1,18 @@
-<div *ngIf="permission.canAddProduct()" class="modal fade" id="addProduct" tabindex="-1" aria-labelledby="addProduct" aria-hidden="true"
+<div *ngIf="permission.canAddProduct()" class="modal fade" id="addProduct" tabindex="-1" aria-labelledby="addProductTitle" aria-hidden="true"
     (hidden.bs.modal)="resetProductForm()" (shown.bs.modal)="loadData()">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content border-0 shadow-lg rounded-3">
             <div class="modal-header bg-dark-subtle text-center w-100 border-bottom">
-                <h1 class="modal-title fs-4 w-100 text-white">Registro de Productos</h1>
+                <h3 id="addProductTitle" class="modal-title fs-4 w-100 text-white">Registro de Productos</h3>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-3">
-                <form>
+                <form id="addProductForm" name="addProductForm">
                     <div class="row row-cols-1 row-cols-lg-2 g-3">
                         <div class="col">
                             <div class="form-floating">
                                 <p *ngIf="brandList.length === 0">Sin marcas disponibles.</p>
-                                <select *ngIf="brandList.length !== 0" class="form-select" name="brand"
+                                <select *ngIf="brandList.length !== 0" class="form-select" id="brandSelect" name="brand"
                                     (change)="addToDescription(brandSelected?.name); updateNewProductFields()"
                                     [(ngModel)]="brandSelected"
                                     [ngClass]="{'is-invalid': !validator.isFieldValid(newProduct, 'brand'), 'is-valid': validator.isFieldValid(newProduct, 'brand')}">
@@ -27,7 +27,7 @@
                         <div class="col">
                             <div class="form-floating">
                                 <p *ngIf="categoryList.length === 0">Sin categorías disponibles.</p>
-                                <select class="form-select" name="category" *ngIf="categoryList.length !== 0"
+                                <select class="form-select" id="categorySelect" name="category" *ngIf="categoryList.length !== 0"
                                     (change)="onCategoryChange($event); addToDescription(categorySelected?.name); updateNewProductFields()"
                                     [(ngModel)]="categorySelected"
                                     [ngClass]="{'is-invalid': !validator.isFieldValid(newProduct, 'category'), 'is-valid': validator.isFieldValid(newProduct, 'category')}">
@@ -43,7 +43,7 @@
                         <div class="col">
                             <div class="form-floating">
                                 <p *ngIf="subcategoryList.length === 0">Sin subcategorías disponibles.</p>
-                                <select *ngIf="subcategoryList.length !== 0" class="form-select" name="subcategory"
+                                <select *ngIf="subcategoryList.length !== 0" class="form-select" id="subcategorySelect" name="subcategory"
                                     [(ngModel)]="subcategorySelected" (change)="updateNewProductFields()"
                                     [ngClass]="{'is-invalid': !validator.isFieldValid(newProduct, 'subcategoryProduct'), 'is-valid': validator.isFieldValid(newProduct, 'subcategoryProduct')}">
                                     <option [ngValue]="null" disabled>Subcategoría</option>
@@ -59,7 +59,7 @@
                         <div class="col">
                             <div class="form-floating">
                                 <p *ngIf="unitList.length === 0">Sin unidades disponibles.</p>
-                                <select class="form-select" name="unit" *ngIf="unitList.length !== 0"
+                                <select class="form-select" id="unitSelect" name="unit" *ngIf="unitList.length !== 0"
                                     [(ngModel)]="unitSelected" (change)="updateNewProductFields()"
                                     [ngClass]="{'is-invalid': !validator.isFieldValid(newProduct, 'unit'), 'is-valid': validator.isFieldValid(newProduct, 'unit')}">
                                     <option [ngValue]="null" selected disabled>Unidad de medida</option>
@@ -73,7 +73,7 @@
                     </div>
                     <div class="form-floating mt-3">
                         <input type="text" class="form-control" id="descriptionAddProduct"
-                            placeholder="Ingrese una descripción general" name="description"
+                            placeholder="Ingrese una descripción general" id="descriptionAddProduct" name="description"
                             [(ngModel)]="newProduct.description" (keydown)="touchedFields['description'] = true"
                             [ngClass]="{'is-invalid':touchedFields['description'] && !validator.isFieldValid(newProduct, 'description'), 'is-valid':touchedFields['description']  && validator.isFieldValid(newProduct, 'description')}"
                             required />
