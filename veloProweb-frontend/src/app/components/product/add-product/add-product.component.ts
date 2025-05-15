@@ -77,12 +77,8 @@ export class AddProductComponent implements OnInit {
    */
   getAllBrands(): void {
     this.brandService.getBrands().subscribe({
-      next: (list) => {
-        this.brandList = list;
-      },
-      error: (error) => {
-        console.log('Error no se encontró ninguna marca', error);
-      },
+      next: (list) => this.brandList = list,
+      error: (error) => console.log('Error no se encontró ninguna marca', error),
     });
   }
 
@@ -92,12 +88,8 @@ export class AddProductComponent implements OnInit {
    */
   getAllUnits(): void {
     this.unitService.getUnits().subscribe({
-      next: (list) => {
-        this.unitList = list;
-      },
-      error: (error) => {
-        console.log('Error no se encontró ninguna unidad de medida', error);
-      },
+      next: (list) => this.unitList = list,
+      error: (error) => console.log('Error no se encontró ninguna unidad de medida', error),
     });
   }
 
@@ -107,12 +99,8 @@ export class AddProductComponent implements OnInit {
    */
   getAllCategories(): void {
     this.categoryService.getCategories().subscribe({
-      next: (list) => {
-        this.categoryList = list;
-      },
-      error: (error) => {
-        console.log('Error no se encontró ninguna categoría', error);
-      },
+      next: (list) => this.categoryList = list,
+      error: (error) => console.log('Error no se encontró ninguna categoría', error),
     });
   }
 
@@ -122,12 +110,8 @@ export class AddProductComponent implements OnInit {
    */
   getAllSubcategories(categoryID: number): void {
     this.subcategoryService.getSubCategoriesByCategory(categoryID).subscribe({
-      next: (list) => {
-        this.subcategoryList = list;
-      },
-      error: (error) => {
-        console.log('Error no se encontró ninguna subcategoría', error);
-      },
+      next: (list) => this.subcategoryList = list,
+      error: (error) => console.log('Error no se encontró ninguna subcategoría', error),
     });
   }
 
