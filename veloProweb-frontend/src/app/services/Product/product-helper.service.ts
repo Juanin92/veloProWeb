@@ -5,6 +5,8 @@ import { Brand } from '../../models/Entity/Product/brand';
 import { UnitProduct } from '../../models/Entity/Product/unit-product';
 import { Subcategory } from '../../models/Entity/Product/subcategory';
 import { Category } from '../../models/Entity/Product/category';
+import { ProductForm } from '../../models/Entity/Product/product-form';
+import { ProductUpdateForm } from '../../models/Entity/Product/product-update-form';
 
 @Injectable({
   providedIn: 'root'
@@ -79,6 +81,25 @@ export class ProductHelperService {
     return {
       id: 0,
       nameUnit: ''
+    }
+  }
+
+  createEmptyProductForm(): ProductForm{
+    return {
+      description: '',
+      brand: this.createEmptyBrand(),
+      unit: this.createEmptyUnit(),
+      category: this.createEmptyCategory(),
+      subcategoryProduct: this.createEmptySubcategory()
+    }
+  }
+
+  createEmptyProductUpdateForm(): ProductUpdateForm{
+    return {
+      id: 0,
+      description: '',
+      salePrice: 0,
+      stock: 0
     }
   }
 }
