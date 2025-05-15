@@ -1,4 +1,4 @@
-import { Product } from "../Product/product.model";
+import { Product } from "../Product/product";
 import { Sale } from "./sale";
 
 export interface SaleDetail {

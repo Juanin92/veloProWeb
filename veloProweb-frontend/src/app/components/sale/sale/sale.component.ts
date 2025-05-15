@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { TooltipService } from '../../../utils/tooltip.service';
 import { ProductListComponent } from "../../product/productList/product-list.component";
-import { Product } from '../../../models/Entity/Product/product.model';
+import { Product } from '../../../models/Entity/Product/product';
 import { Sale } from '../../../models/Entity/Sale/sale';
 import { CustomerResponse } from '../../../models/Entity/Customer/customer-response';
 import { SaleDetail } from '../../../models/Entity/Sale/sale-detail';
@@ -17,6 +17,7 @@ import { DispatchModalComponent } from "../dispatch-modal/dispatch-modal.compone
 import { SalePermissionsService } from '../../../services/Permissions/sale-permissions.service';
 import { CashRegisterService } from '../../../services/Sale/cash-register.service';
 import { lastValueFrom } from 'rxjs';
+import { ProductResponse } from '../../../models/Entity/Product/product-response';
 
 @Component({
   selector: 'app-sale',
@@ -29,7 +30,7 @@ export class SaleComponent implements AfterViewInit, OnInit {
 
   sale: Sale;
   customerList: CustomerResponse[] = [];
-  productSelected: Product | null = null;
+  productSelected: ProductResponse | null = null;
   saleDetailList: SaleDetail[] = [];
   requestDTO: SaleRequestDTO | null = null;
   total: number = 0; //Total acumulado de la venta
@@ -101,7 +102,7 @@ export class SaleComponent implements AfterViewInit, OnInit {
      * calcula los valores de impuesto y precio total del detalle
      * @param product - Producto seleccionado para agregar a la lista
      */
-  addSelectedProductToSaleDetailList(product: Product): void {
+  addSelectedProductToSaleDetailList(product: ProductResponse): void {
     this.productSelected = product;
     const isProductAdded = this.saleDetailList.some((detail) => detail.product.id === product.id);
     if (!isProductAdded) {

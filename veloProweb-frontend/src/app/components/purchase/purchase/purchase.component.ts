@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { SupplierService } from '../../../services/Purchase/supplier.service';
 import { Supplier } from '../../../models/Entity/Purchase/supplier';
 import { FormsModule } from '@angular/forms';
-import { Product } from '../../../models/Entity/Product/product.model';
+import { Product } from '../../../models/Entity/Product/product';
 import { TooltipService } from '../../../utils/tooltip.service';
 import { PurchaseDetails } from '../../../models/Entity/Purchase/purchase-details';
 import { NotificationService } from '../../../utils/notification-service.service';
