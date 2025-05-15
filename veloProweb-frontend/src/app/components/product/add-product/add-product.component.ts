@@ -18,6 +18,8 @@ import { ProductPermissionsService } from '../../../services/Permissions/product
 import { ErrorMessageService } from '../../../utils/error-message.service';
 import { ProductForm } from '../../../models/Entity/Product/product-form';
 import { forkJoin } from 'rxjs';
+import { Product } from '../../../models/Entity/Product/product';
+import { ProductMapperService } from '../../../mapper/product-mapper.service';
 
 @Component({
   selector: 'app-add-product',
@@ -28,6 +30,7 @@ import { forkJoin } from 'rxjs';
 })
 export class AddProductComponent implements OnInit {
   @Output() productAdded = new EventEmitter<void>();
+  product: Product;
   newProduct: ProductForm;
   brandSelected: Brand | null = null;
   unitSelected: UnitProduct | null = null;
@@ -47,11 +50,13 @@ export class AddProductComponent implements OnInit {
     private categoryService: CategoryService,
     private subcategoryService: SubcategoryService,
     private helper: ProductHelperService,
+    private mapper: ProductMapperService,
     private notification: NotificationService,
     private errorMessage: ErrorMessageService,
     public modalService: ModalService,
     protected permission: ProductPermissionsService
   ) {
+    this.product = helper.createEmptyProduct()
     this.newProduct = helper.createEmptyProductForm();
   }
 
@@ -111,7 +116,9 @@ export class AddProductComponent implements OnInit {
    * y refresca la pagina.
    */
   addProduct(): void {
-    if (this.validator.validateForm(this.newProduct)) {
+    if (this.validator.validateForm(this.product)) {
+      this.newProduct = this.mapper.toProductForm(this.product, this.brandSelected!, 
+        this.unitSelected!, this.categorySelected!, this.subcategorySelected!);
       this.productService.createProduct(this.newProduct).subscribe({
         next: (response) => {
           this.notification.showSuccessToast(
@@ -141,16 +148,16 @@ export class AddProductComponent implements OnInit {
    */
   updateNewProductFields(): void {
     if (this.brandSelected) {
-      this.newProduct.brand = this.brandSelected;
+      this.product.brand = this.brandSelected.name;
     }
     if (this.categorySelected) {
-      this.newProduct.category = this.categorySelected;
+      this.product.category = this.categorySelected.name;
     }
     if (this.subcategorySelected) {
-      this.newProduct.subcategoryProduct = this.subcategorySelected;
+      this.product.subcategoryProduct = this.subcategorySelected.name;
     }
     if (this.unitSelected) {
-      this.newProduct.unit = this.unitSelected;
+      this.product.unit = this.unitSelected.nameUnit;
     }
   }
 
@@ -160,7 +167,7 @@ export class AddProductComponent implements OnInit {
    */
   addToDescription(value: string | undefined): void {
     if (value) {
-      this.newProduct.description += value + ' ';
+      this.product.description += value + ' ';
     }
   }
 
@@ -168,6 +175,7 @@ export class AddProductComponent implements OnInit {
    * Reset todos los valores sus atributos de los objetos
    */
   resetProductForm(): void {
+    this.product = this.helper.createEmptyProduct();
     this.newProduct = this.helper.createEmptyProductForm();
     this.brandSelected = null;
     this.categorySelected = null;
