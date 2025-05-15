@@ -5,16 +5,16 @@ import { Observable } from 'rxjs';
 import { AuthService } from '../User/auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SubcategoryService {
-  
   private apiUrl = 'http://localhost:8080/subcategoria';
 
-  constructor(private httpClient: HttpClient, private auth: AuthService) { }
+  constructor(private httpClient: HttpClient, private auth: AuthService) {}
 
   /**
-   * Obtiene una lista de todas las subcategorías dependiendo de la categoría seleccionada desde el endpoint
+   * Obtiene una lista de todas las subcategorías dependiendo de la categoría seleccionada 
+   * desde el endpoint
    * @param id - Identificador de la categoría
    * @returns - observable que emite una lista de subcategorías
    */
@@ -27,7 +27,11 @@ export class SubcategoryService {
    * @param subcategory - subcategoría para agregar
    * @returns - Observable que emite un mensaje de confirmación o error
    */
-  createSubcategory(subcategory: Subcategory): Observable<{message: string}>{
-    return this.httpClient.post<{message: string}>(`${this.apiUrl}`,subcategory, {headers: this.auth.getAuthHeaders()});
+  createSubcategory(subcategory: Subcategory): Observable<{ message: string }> {
+    return this.httpClient.post<{ message: string }>(
+      `${this.apiUrl}`,
+      subcategory,
+      { headers: this.auth.getAuthHeaders() }
+    );
   }
 }

@@ -5,12 +5,12 @@ import { Category } from '../../models/Entity/Product/category';
 import { AuthService } from '../User/auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CategoryService {
   private apiUrl = 'http://localhost:8080/categoria';
 
-  constructor(private httpClient: HttpClient, private auth: AuthService) { }
+  constructor(private httpClient: HttpClient, private auth: AuthService) {}
 
   /**
    * Obtiene una lista de todas las categorías desde el endpoint
@@ -26,6 +26,10 @@ export class CategoryService {
    * @returns - Observable que emite un mensaje de confirmación o error
    */
   createCategory(category: Category): Observable<{ message: string }> {
-    return this.httpClient.post<{ message: string }>(`${this.apiUrl}`, category, {headers: this.auth.getAuthHeaders()});
+    return this.httpClient.post<{ message: string }>(
+      `${this.apiUrl}`,
+      category,
+      { headers: this.auth.getAuthHeaders() }
+    );
   }
 }
