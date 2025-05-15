@@ -2,7 +2,7 @@ import { Brand } from "../models/Entity/Product/brand";
 import { Category } from "../models/Entity/Product/category";
 import { Product } from "../models/Entity/Product/product.model";
 import { Subcategory } from "../models/Entity/Product/subcategory";
-import { UnitProductModel } from "../models/Entity/Product/unit-product";
+import { UnitProduct } from "../models/Entity/Product/unit-product";
 
 export class ProductValidator {
     static validateForm(selectedProduct: Product): boolean {
@@ -53,7 +53,7 @@ export class ProductValidator {
         return newSubcategory.name !== null && newSubcategory.name.trim().length >= 3 && !/\d/.test(newSubcategory.name);
     }
 
-    static validateUnit(newUnit: UnitProductModel): boolean {
+    static validateUnit(newUnit: UnitProduct): boolean {
         return newUnit.nameUnit !== null && newUnit.nameUnit.trim().length >= 3 && /^[0-9]+ [a-zA-Z]+$/.test(newUnit.nameUnit);
     }
 }

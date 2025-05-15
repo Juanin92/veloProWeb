@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Product } from '../../models/Entity/Product/product.model';
 import { StatusProduct } from '../../models/enum/status-product';
 import { Brand } from '../../models/Entity/Product/brand';
-import { UnitProductModel } from '../../models/Entity/Product/unit-product';
+import { UnitProduct } from '../../models/Entity/Product/unit-product';
 import { Subcategory } from '../../models/Entity/Product/subcategory';
 import { Category } from '../../models/Entity/Product/category';
 
@@ -75,7 +75,7 @@ export class ProductHelperService {
    * Sirve para resetear los valores de objeto o evitar errores por ser null
    * @returns unidad de medida con valores predeterminados
    */
-  createEmptyUnit(): UnitProductModel {
+  createEmptyUnit(): UnitProduct {
     return {
       id: 0,
       nameUnit: ''

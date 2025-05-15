@@ -6,7 +6,7 @@ import { UnitService } from '../../../services/Product/unit.service';
 import { Brand } from '../../../models/Entity/Product/brand';
 import { Category } from '../../../models/Entity/Product/category';
 import { Subcategory } from '../../../models/Entity/Product/subcategory';
-import { UnitProductModel } from '../../../models/Entity/Product/unit-product';
+import { UnitProduct } from '../../../models/Entity/Product/unit-product';
 import { ProductHelperService } from '../../../services/Product/product-helper.service';
 import { ProductValidator } from '../../../validation/product-validator';
 import { FormsModule } from '@angular/forms';
@@ -27,7 +27,7 @@ export class AddCategoriesComponent implements OnInit{
   newCategory: Category;
   category: Category | null = null;
   newSubcategory: Subcategory;
-  newUnit: UnitProductModel;
+  newUnit: UnitProduct;
   validator = ProductValidator;
   categoryList: Category[] = [];
   touchedFields: Record<string, boolean> = {};

@@ -1,6 +1,5 @@
-import { Product } from "./product.model";
-
-export interface UnitProductModel {
+export interface UnitProduct {
+    
     id: number;
     nameUnit: string;
 }

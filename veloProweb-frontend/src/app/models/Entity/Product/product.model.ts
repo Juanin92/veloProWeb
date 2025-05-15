@@ -2,7 +2,7 @@ import { StatusProduct } from "../../enum/status-product";
 import { Brand } from "./brand";
 import { Category } from "./category";
 import { Subcategory } from "./subcategory";
-import { UnitProductModel } from "./unit-product";
+import { UnitProduct } from "./unit-product";
 
 export interface Product {
     id: number;
@@ -14,7 +14,7 @@ export interface Product {
     status: boolean;
     statusProduct: StatusProduct;
     brand: Brand;
-    unit: UnitProductModel;
+    unit: UnitProduct;
     subcategoryProduct: Subcategory;
     category: Category;
 }
