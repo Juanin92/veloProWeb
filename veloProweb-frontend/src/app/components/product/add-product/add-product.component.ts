@@ -1,5 +1,4 @@
-import { Component, EventEmitter, OnInit, output, Output} from '@angular/core';
-import { Product } from '../../../models/Entity/Product/product.model';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ProductValidator } from '../../../validation/product-validator';
 import { ProductService } from '../../../services/Product/product.service';
 import { ProductHelperService } from '../../../services/Product/product-helper.service';
@@ -16,18 +15,19 @@ import { Category } from '../../../models/Entity/Product/category';
 import { Subcategory } from '../../../models/Entity/Product/subcategory';
 import { ModalService } from '../../../utils/modal.service';
 import { ProductPermissionsService } from '../../../services/Permissions/product-permissions.service';
+import { ErrorMessageService } from '../../../utils/error-message.service';
+import { ProductForm } from '../../../models/Entity/Product/product-form';
 
 @Component({
   selector: 'app-add-product',
   standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './add-product.component.html',
-  styleUrl: './add-product.component.css'
+  styleUrl: './add-product.component.css',
 })
 export class AddProductComponent implements OnInit {
-
   @Output() productAdded = new EventEmitter<void>();
-  newProduct: Product;
+  newProduct: ProductForm;
   brandSelected: Brand | null = null;
   unitSelected: UnitProduct | null = null;
   categorySelected: Category | null = null;
@@ -47,9 +47,11 @@ export class AddProductComponent implements OnInit {
     private subcategoryService: SubcategoryService,
     private helper: ProductHelperService,
     private notification: NotificationService,
+    private errorMessage: ErrorMessageService,
     public modalService: ModalService,
-    protected permission: ProductPermissionsService) {
-    this.newProduct = helper.createEmptyProduct();
+    protected permission: ProductPermissionsService
+  ) {
+    this.newProduct = helper.createEmptyProductForm();
   }
 
   /**
@@ -62,7 +64,7 @@ export class AddProductComponent implements OnInit {
   /**
    * Encargado de cargar los métodos
    */
-  loadData(): void{
+  loadData(): void {
     this.getAllBrands();
     this.getAllUnits();
     this.getAllCategories();
@@ -74,11 +76,14 @@ export class AddProductComponent implements OnInit {
    * asigna una lista con marcas a la lista brandList
    */
   getAllBrands(): void {
-    this.brandService.getBrands().subscribe((list) => {
-      this.brandList = list;
-    }, (error) => {
-      console.log('Error no se encontró ninguna marca', error);
-    })
+    this.brandService.getBrands().subscribe({
+      next: (list) => {
+        this.brandList = list;
+      },
+      error: (error) => {
+        console.log('Error no se encontró ninguna marca', error);
+      },
+    });
   }
 
   /**
@@ -86,11 +91,14 @@ export class AddProductComponent implements OnInit {
    * asigna una lista con unidades a la lista unitList
    */
   getAllUnits(): void {
-    this.unitService.getUnits().subscribe((list) => {
-      this.unitList = list;
-    }, (error) => {
-      console.log('Error no se encontró ninguna unidad de medida', error);
-    })
+    this.unitService.getUnits().subscribe({
+      next: (list) => {
+        this.unitList = list;
+      },
+      error: (error) => {
+        console.log('Error no se encontró ninguna unidad de medida', error);
+      },
+    });
   }
 
   /**
@@ -98,11 +106,14 @@ export class AddProductComponent implements OnInit {
    * asigna una lista con categorías a la lista categoryList
    */
   getAllCategories(): void {
-    this.categoryService.getCategories().subscribe((list) => {
-      this.categoryList = list;
-    }, (error) => {
-      console.log('Error no se encontró ninguna categoría', error);
-    })
+    this.categoryService.getCategories().subscribe({
+      next: (list) => {
+        this.categoryList = list;
+      },
+      error: (error) => {
+        console.log('Error no se encontró ninguna categoría', error);
+      },
+    });
   }
 
   /**
@@ -110,11 +121,14 @@ export class AddProductComponent implements OnInit {
    * asigna una lista con subcategorías a la lista subcategoryList
    */
   getAllSubcategories(categoryID: number): void {
-    this.subcategoryService.getSubCategoriesByCategory(categoryID).subscribe((list) => {
-      this.subcategoryList = list;
-    }, (error) => {
-      console.log('Error no se encontró ninguna subcategoría', error);
-    })
+    this.subcategoryService.getSubCategoriesByCategory(categoryID).subscribe({
+      next: (list) => {
+        this.subcategoryList = list;
+      },
+      error: (error) => {
+        console.log('Error no se encontró ninguna subcategoría', error);
+      },
+    });
   }
 
   /**
@@ -137,19 +151,29 @@ export class AddProductComponent implements OnInit {
    */
   addProduct(): void {
     if (this.validator.validateForm(this.newProduct)) {
-      this.productService.createProduct(this.newProduct).subscribe((response) => {
-        console.log("Producto creado exitosamente! ", this.newProduct);
-        this.notification.showSuccessToast("Producto creado exitosamente!", 'top', 3000);
-        this.resetProductForm();
-        this.productAdded.emit();
-        this.modalService.closeModal();
-      }, (error) => {
-        const message = error.error?.message || error.error?.error;
-          console.error('Error:', error);
+      this.productService.createProduct(this.newProduct).subscribe({
+        next: (response) => {
+          console.log('Producto creado exitosamente! ', this.newProduct);
+          this.notification.showSuccessToast(
+            'Producto creado exitosamente!',
+            'top',
+            3000
+          );
+          this.resetProductForm();
+          this.productAdded.emit();
+          this.modalService.closeModal();
+        },
+        error: (error) => {
+          const message = this.errorMessage.errorMessageExtractor(error);
+          console.error('Error:', message);
           this.notification.showErrorToast(`Error: ${message}`, 'top', 5000);
+        },
       });
     } else {
-      this.notification.showWarning('Formulario incompleto', 'Por favor, complete correctamente todos los campos obligatorios.');
+      this.notification.showWarning(
+        'Formulario incompleto',
+        'Por favor, complete correctamente todos los campos obligatorios.'
+      );
     }
   }
 
@@ -182,10 +206,10 @@ export class AddProductComponent implements OnInit {
   }
 
   /**
-   * Reset todos los valores sus atributos de los objetos 
+   * Reset todos los valores sus atributos de los objetos
    */
   resetProductForm(): void {
-    this.newProduct = this.helper.createEmptyProduct();
+    this.newProduct = this.helper.createEmptyProductForm();
     this.brandSelected = null;
     this.categorySelected = null;
     this.subcategorySelected = null;
