@@ -15,11 +15,11 @@
                                 <select *ngIf="brandList.length !== 0" class="form-select" id="brandSelect" name="brand"
                                     (change)="addToDescription(brandSelected?.name); updateNewProductFields()"
                                     [(ngModel)]="brandSelected"
-                                    [ngClass]="{'is-invalid': !validator.isFieldValid(newProduct, 'brand'), 'is-valid': validator.isFieldValid(newProduct, 'brand')}">
+                                    [ngClass]="{'is-invalid': !validator.isFieldValid(product, 'brand'), 'is-valid': validator.isFieldValid(product, 'brand')}">
                                     <option [ngValue]="null" selected disabled>Marca</option>
                                     <option *ngFor="let brand of brandList; trackBy: trackById" [ngValue]="brand">{{brand.name}}</option>
                                 </select>
-                                <div *ngIf="!validator.isFieldValid(newProduct,'brand')" class="invalid-feedback">
+                                <div *ngIf="!validator.isFieldValid(product,'brand')" class="invalid-feedback">
                                     Debe seleccionar una marca
                                 </div>
                             </div>
@@ -30,12 +30,12 @@
                                 <select class="form-select" id="categorySelect" name="category" *ngIf="categoryList.length !== 0"
                                     (change)="onCategoryChange($event); addToDescription(categorySelected?.name); updateNewProductFields()"
                                     [(ngModel)]="categorySelected"
-                                    [ngClass]="{'is-invalid': !validator.isFieldValid(newProduct, 'category'), 'is-valid': validator.isFieldValid(newProduct, 'category')}">
+                                    [ngClass]="{'is-invalid': !validator.isFieldValid(product, 'category'), 'is-valid': validator.isFieldValid(product, 'category')}">
                                     <option [ngValue]="null" selected disabled>Categoría</option>
                                     <option *ngFor="let category of categoryList; trackBy: trackById" [ngValue]="category">{{category.name}}
                                     </option>
                                 </select>
-                                <div *ngIf="!validator.isFieldValid(newProduct,'category')" class="invalid-feedback">
+                                <div *ngIf="!validator.isFieldValid(product,'category')" class="invalid-feedback">
                                     Debe seleccionar una categoría
                                 </div>
                             </div>
@@ -45,12 +45,12 @@
                                 <p *ngIf="subcategoryList.length === 0">Sin subcategorías disponibles.</p>
                                 <select *ngIf="subcategoryList.length !== 0" class="form-select" id="subcategorySelect" name="subcategory"
                                     [(ngModel)]="subcategorySelected" (change)="updateNewProductFields()"
-                                    [ngClass]="{'is-invalid': !validator.isFieldValid(newProduct, 'subcategoryProduct'), 'is-valid': validator.isFieldValid(newProduct, 'subcategoryProduct')}">
+                                    [ngClass]="{'is-invalid': !validator.isFieldValid(product, 'subcategoryProduct'), 'is-valid': validator.isFieldValid(product, 'subcategoryProduct')}">
                                     <option [ngValue]="null" disabled>Subcategoría</option>
                                     <option *ngFor="let subcategory of subcategoryList; trackBy: trackById" [ngValue]="subcategory">
                                         {{subcategory.name}}</option>
                                 </select>
-                                <div *ngIf="!validator.isFieldValid(newProduct,'subcategoryProduct')"
+                                <div *ngIf="!validator.isFieldValid(product,'subcategoryProduct')"
                                     class="invalid-feedback">
                                     Debe seleccionar una subcategoría
                                 </div>
@@ -61,11 +61,11 @@
                                 <p *ngIf="unitList.length === 0">Sin unidades disponibles.</p>
                                 <select class="form-select" id="unitSelect" name="unit" *ngIf="unitList.length !== 0"
                                     [(ngModel)]="unitSelected" (change)="updateNewProductFields()"
-                                    [ngClass]="{'is-invalid': !validator.isFieldValid(newProduct, 'unit'), 'is-valid': validator.isFieldValid(newProduct, 'unit')}">
+                                    [ngClass]="{'is-invalid': !validator.isFieldValid(product, 'unit'), 'is-valid': validator.isFieldValid(product, 'unit')}">
                                     <option [ngValue]="null" selected disabled>Unidad de medida</option>
                                     <option *ngFor="let unit of unitList; trackBy: trackById" [ngValue]="unit">{{ unit.nameUnit }}</option>
                                 </select>
-                                <div *ngIf="!validator.isFieldValid(newProduct,'unit')" class="invalid-feedback">
+                                <div *ngIf="!validator.isFieldValid(product,'unit')" class="invalid-feedback">
                                     Debe seleccionar una unidad de medida
                                 </div>
                             </div>
@@ -74,18 +74,18 @@
                     <div class="form-floating mt-3">
                         <input type="text" class="form-control" id="descriptionAddProduct"
                             placeholder="Ingrese una descripción general" id="descriptionAddProduct" name="description"
-                            [(ngModel)]="newProduct.description" (keydown)="touchedFields['description'] = true"
-                            [ngClass]="{'is-invalid':touchedFields['description'] && !validator.isFieldValid(newProduct, 'description'), 'is-valid':touchedFields['description']  && validator.isFieldValid(newProduct, 'description')}"
+                            [(ngModel)]="product.description" (keydown)="touchedFields['description'] = true"
+                            [ngClass]="{'is-invalid':touchedFields['description'] && !validator.isFieldValid(product, 'description'), 'is-valid':touchedFields['description']  && validator.isFieldValid(product, 'description')}"
                             required />
                         <label for="descriptionAddProduct">Descripción</label>
-                        <div *ngIf="!validator.isFieldValid(newProduct,'description')" class="invalid-feedback">
+                        <div *ngIf="!validator.isFieldValid(product,'description')" class="invalid-feedback">
                             Debe ingresar una descripción del producto
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer bg-dark-subtle d-flex justify-content-center">
-                <button type="submit" class="btn btn-success px-4" [disabled]="!validator.validateForm(newProduct)"
+                <button type="submit" class="btn btn-success px-4" [disabled]="!validator.validateForm(product)"
                     (click)="addProduct()" [attr.data-bs-dismiss]="modalService.isModalVisible() ? 'modal':null">
                     <i class="bi bi-save"></i> Guardar
                 </button>
