@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { ProductService } from '../product.service';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { Product } from '../../../models/Entity/Product/product.model';
+import { Product } from '../../../models/Entity/Product/product';
 import { StatusProduct } from '../../../models/enum/status-product';
 
 describe('ProductService', () => {

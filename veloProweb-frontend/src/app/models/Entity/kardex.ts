@@ -1,5 +1,5 @@
 import { MovementsType } from "../enum/movements-type";
-import { Product } from "./Product/product.model";
+import { Product } from "./Product/product";
 import { User } from "./user";
 
 export interface Kardex {

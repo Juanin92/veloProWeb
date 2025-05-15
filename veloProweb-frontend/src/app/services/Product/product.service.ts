@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Product } from '../../models/Entity/Product/product.model';
+import { Product } from '../../models/Entity/Product/product';
 import { AuthService } from '../User/auth.service';
 import { ProductResponse } from '../../models/Entity/Product/product-response';
 import { ProductForm } from '../../models/Entity/Product/product-form';
