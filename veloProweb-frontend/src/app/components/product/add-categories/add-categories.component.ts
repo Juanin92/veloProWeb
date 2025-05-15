@@ -13,16 +13,16 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ProductPermissionsService } from '../../../services/Permissions/product-permissions.service';
+import { ErrorMessageService } from '../../../utils/error-message.service';
 
 @Component({
   selector: 'app-add-categories',
   standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './add-categories.component.html',
-  styleUrl: './add-categories.component.css'
+  styleUrl: './add-categories.component.css',
 })
-export class AddCategoriesComponent implements OnInit{
-
+export class AddCategoriesComponent implements OnInit {
   newBrand: Brand;
   newCategory: Category;
   category: Category | null = null;
@@ -39,8 +39,9 @@ export class AddCategoriesComponent implements OnInit{
     private unitService: UnitService,
     private helper: ProductHelperService,
     private notification: NotificationService,
-    protected permission: ProductPermissionsService
-  ){
+    protected permission: ProductPermissionsService,
+    private errorMessage: ErrorMessageService
+  ) {
     this.newBrand = helper.createEmptyBrand();
     this.newCategory = helper.createEmptyCategory();
     this.newSubcategory = helper.createEmptySubcategory();
@@ -59,28 +60,37 @@ export class AddCategoriesComponent implements OnInit{
    * asigna una lista con categorías a la lista categoryList
    */
   getAllCategories(): void {
-    this.categoryService.getCategories().subscribe((list) => {
-      this.categoryList = list;
-    }, (error) => {
-      console.log('Error no se encontró ninguna categoría', error);
-    })
+    this.categoryService.getCategories().subscribe({
+      next: (list) => {
+        this.categoryList = list;
+      },error:(error) => {
+        console.log('Error no se encontró ninguna categoría', error);
+      }
+    });
   }
 
   /**
    * Agregar un nueva marca.
    * Valida el formulario y si es correcto, llama al servicio para agregar la marca.
-   * Muestra notificaciones dependiendo el estado de la acción y reset los valores del objeto marca.
+   * Muestra notificaciones dependiendo el estado de la acción 
+   * y reset los valores del objeto marca.
    */
-  createBrand(): void{
-    if(this.validator.validateBrand(this.newBrand)){
-      this.brandService.createBrand(this.newBrand).subscribe((response) => {
-        console.log('Nueva marca registrada', response);
-        this.notification.showSuccessToast(`${this.newBrand.name} ha sido registrada`,'top', 3000);
-        this.newBrand = this.helper.createEmptyBrand();
-      }, (error) => {
-        const message = error.error?.message || error.error?.error;
-        console.error('Error:', error);
-        this.notification.showErrorToast(`${message}`, 'top', 5000);
+  createBrand(): void {
+    if (this.validator.validateBrand(this.newBrand)) {
+      this.brandService.createBrand(this.newBrand).subscribe({
+        next: (response) => {
+          console.log('Nueva marca registrada', response);
+          this.notification.showSuccessToast(
+            `${this.newBrand.name} ha sido registrada`,
+            'top',
+            3000
+          );
+          this.newBrand = this.helper.createEmptyBrand();
+        }, error: (error) => {
+          const message = this.errorMessage.errorMessageExtractor(error);
+          console.error('Error:', message);
+          this.notification.showErrorToast(`${message}`, 'top', 5000);
+        }
       });
     }
   }
@@ -88,19 +98,26 @@ export class AddCategoriesComponent implements OnInit{
   /**
    * Agregar un nueva categoría.
    * Valida el formulario y si es correcto, llama al servicio para agregar la categoría.
-   * Muestra notificaciones dependiendo el estado de la acción y reset los valores del objeto categoría.
+   * Muestra notificaciones dependiendo el estado de la acción 
+   * y reset los valores del objeto categoría.
    */
-  createCategory(): void{
-    if(this.validator.validateCategory(this.newCategory)){
-      this.categoryService.createCategory(this.newCategory).subscribe((response) => {
-        console.log('Nueva categoría registrada', response);
-        this.notification.showSuccessToast(`${this.newCategory.name} ha sido registrada`,'top', 3000);
-        this.newCategory = this.helper.createEmptyCategory();
-        this.getAllCategories();
-      }, (error) => {
-        const message = error.error?.message || error.error?.error;
-        console.error('Error:', error);
-        this.notification.showErrorToast(`${message}`, 'top', 5000);
+  createCategory(): void {
+    if (this.validator.validateCategory(this.newCategory)) {
+      this.categoryService.createCategory(this.newCategory).subscribe({
+        next: (response) => {
+          console.log('Nueva categoría registrada', response);
+          this.notification.showSuccessToast(
+            `${this.newCategory.name} ha sido registrada`,
+            'top',
+            3000
+          );
+          this.newCategory = this.helper.createEmptyCategory();
+          this.getAllCategories();
+        }, error: (error) => {
+          const message = this.errorMessage.errorMessageExtractor(error);
+          console.error('Error:', message);
+          this.notification.showErrorToast(`${message}`, 'top', 5000);
+        }
       });
     }
   }
@@ -109,19 +126,26 @@ export class AddCategoriesComponent implements OnInit{
    * Agregar un nueva subcategoría.
    * Valida si categoría no esta nula y asigna el valor a la variable category
    * Valida el formulario y si es correcto, llama al servicio para agregar la subcategoría.
-   * Muestra notificaciones dependiendo el estado de la acción y reset los valores del objeto subcategoría.
+   * Muestra notificaciones dependiendo el estado de la acción 
+   * y reset los valores del objeto subcategoría.
    */
-  createSubcategory(): void{
+  createSubcategory(): void {
     this.category && (this.newSubcategory.category = this.category);
-    if(this.validator.validateSubcategory(this.newSubcategory)){
-      this.subcategoryService.createSubcategory(this.newSubcategory).subscribe((response) => {
-        console.log('Nueva subcategoría registrada', response);
-        this.notification.showSuccessToast(`${this.newSubcategory.name} ha sido registrada`,'top', 3000);
-        this.newSubcategory = this.helper.createEmptySubcategory();
-      }, (error) => {
-        const message = error.error?.message || error.error?.error;
-        console.error('Error:', error);
-        this.notification.showErrorToast(`${message}`, 'top', 5000);
+    if (this.validator.validateSubcategory(this.newSubcategory)) {
+      this.subcategoryService.createSubcategory(this.newSubcategory).subscribe({
+        next: (response) => {
+          console.log('Nueva subcategoría registrada', response);
+          this.notification.showSuccessToast(
+            `${this.newSubcategory.name} ha sido registrada`,
+            'top',
+            3000
+          );
+          this.newSubcategory = this.helper.createEmptySubcategory();
+        }, error: (error) => {
+          const message = this.errorMessage.errorMessageExtractor(error);
+          console.error('Error:', message);
+          this.notification.showErrorToast(`${message}`, 'top', 5000);
+        }
       });
     }
   }
@@ -129,26 +153,33 @@ export class AddCategoriesComponent implements OnInit{
   /**
    * Agregar un nueva unidad de medida.
    * Valida el formulario y si es correcto, llama al servicio para agregar la unidad de medida.
-   * Muestra notificaciones dependiendo el estado de la acción y reset los valores del objeto unidad de medida.
+   * Muestra notificaciones dependiendo el estado de la acción 
+   * y reset los valores del objeto unidad de medida.
    */
-  createUnit(): void{
-    if(this.validator.validateUnit(this.newUnit)){
-      this.unitService.createUnit(this.newUnit).subscribe((response) => {
-        console.log('Nueva categoría registrada', response);
-        this.notification.showSuccessToast(`${this.newUnit.nameUnit} ha sido registrada`,'top', 3000);
-        this.newUnit = this.helper.createEmptyUnit();
-      }, (error) => {
-        const message = error.error?.message || error.error?.error;
-        console.error('Error:', error);
-        this.notification.showErrorToast(`${message}`, 'top', 5000);
+  createUnit(): void {
+    if (this.validator.validateUnit(this.newUnit)) {
+      this.unitService.createUnit(this.newUnit).subscribe({
+        next:(response) => {
+          console.log('Nueva categoría registrada', response);
+          this.notification.showSuccessToast(
+            `${this.newUnit.nameUnit} ha sido registrada`,
+            'top',
+            3000
+          );
+          this.newUnit = this.helper.createEmptyUnit();
+        }, error: (error) => {
+          const message = this.errorMessage.errorMessageExtractor(error);
+          console.error('Error:', message);
+          this.notification.showErrorToast(`${message}`, 'top', 5000);
+        }
       });
     }
   }
-  
+
   /**
-   * Reset todos los valores sus atributos de los objetos 
+   * Reset todos los valores sus atributos de los objetos
    */
-  resetForms(): void{
+  resetForms(): void {
     this.newBrand = this.helper.createEmptyBrand();
     this.newCategory = this.helper.createEmptyCategory();
     this.newSubcategory = this.helper.createEmptySubcategory();
