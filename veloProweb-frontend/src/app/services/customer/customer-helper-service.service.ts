@@ -4,10 +4,9 @@ import { PaymentStatus } from '../../models/enum/payment-status.enum';
 import { CustomerForm } from '../../models/Entity/Customer/customer-form';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CustomerHelperServiceService {
-
   /**
    * Crea un cliente con valores predeterminados
    * Sirve para resetear los valores de objeto o evitar errores por ser null
@@ -33,8 +32,8 @@ export class CustomerHelperServiceService {
       name: '',
       surname: '',
       phone: '+569 ',
-      email: ''
-    }
+      email: '',
+    };
   }
 
   mapCustomerToDto(customer: CustomerResponse): CustomerForm {
@@ -43,7 +42,7 @@ export class CustomerHelperServiceService {
       name: customer.name,
       surname: customer.surname,
       phone: customer.phone,
-      email: customer.email
-    }
+      email: customer.email,
+    };
   }
 }

@@ -6,19 +6,18 @@ import { PaymentDetails } from '../../models/Entity/Customer/payment-details';
 import { AuthService } from '../User/auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PaymentCustomerService {
-  
   private apiUrl = 'http://localhost:8080/pagos';
 
-  constructor(private httpClient: HttpClient, private auth: AuthService) { }
+  constructor(private httpClient: HttpClient, private auth: AuthService) {}
 
   /**
    * Obtiene todos los pagos realizados
    * @returns Observable emite una lista de pagos
    */
-  getAllPayments(): Observable<PaymentCustomerResponse[]>{
+  getAllPayments(): Observable<PaymentCustomerResponse[]> {
     return this.httpClient.get<PaymentCustomerResponse[]>(this.apiUrl);
   }
 
@@ -27,9 +26,14 @@ export class PaymentCustomerService {
    * @param customerID ID del cliente por consultar
    * @returns Observable emite una lista con los pagos del cliente
    */
-  getCustomerSelectedPayment(customerID: number): Observable<PaymentCustomerResponse[]>{
-    let params = new HttpParams().set('customerId', customerID.toString())
-    return this.httpClient.get<PaymentCustomerResponse[]>(`${this.apiUrl}/abonos`, {params});
+  getCustomerSelectedPayment(
+    customerID: number
+  ): Observable<PaymentCustomerResponse[]> {
+    let params = new HttpParams().set('customerId', customerID.toString());
+    return this.httpClient.get<PaymentCustomerResponse[]>(
+      `${this.apiUrl}/abonos`,
+      { params }
+    );
   }
 
   /**
@@ -37,7 +41,9 @@ export class PaymentCustomerService {
    * @param dto - Objeto con los valores para la acción
    * @returns - Observable emite un mensaje de confirmación o error
    */
-  createPaymentCustomer(dto: PaymentDetails): Observable<{message: string}>{
-    return this.httpClient.post<{message: string}>(`${this.apiUrl}`, dto, {headers: this.auth.getAuthHeaders()});
+  createPaymentCustomer(dto: PaymentDetails): Observable<{ message: string }> {
+    return this.httpClient.post<{ message: string }>(`${this.apiUrl}`, dto, {
+      headers: this.auth.getAuthHeaders(),
+    });
   }
 }

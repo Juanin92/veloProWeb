@@ -5,21 +5,20 @@ import { TicketHistory } from '../../models/Entity/Customer/ticket-history';
 import { AuthService } from '../User/auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TicketHistoryService {
-
   private apiUrl = 'http://localhost:8080/Tickets';
 
-  constructor(private httpClient: HttpClient, private auth: AuthService) { }
+  constructor(private httpClient: HttpClient, private auth: AuthService) {}
 
   /**
    * Obtiene los ticket de un cliente seleccionado
    * @param customerId - Identificador del cliente
    * @returns - Observable emite una lista de tickets
    */
-  getListTicketByCustomer(customerId: number): Observable<TicketHistory[]>{
+  getListTicketByCustomer(customerId: number): Observable<TicketHistory[]> {
     let params = new HttpParams().set('customerId', customerId.toString());
-    return this.httpClient.get<TicketHistory[]>(this.apiUrl, {params});
+    return this.httpClient.get<TicketHistory[]>(this.apiUrl, { params });
   }
 }
