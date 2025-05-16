@@ -80,6 +80,7 @@ public class ProductService implements IProductService {
         Product product = getProductById(dto.getId());
         validator.isActivated(product);
         product.setStatusProduct(StatusProduct.NODISPONIBLE);
+        product.setStatus(true);
         productRepo.save(product);
         kardexService.addKardex(product, 0, "Activado", MovementsType.AJUSTE);
     }
