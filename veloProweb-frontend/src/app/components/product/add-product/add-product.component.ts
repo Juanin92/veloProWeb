@@ -29,6 +29,7 @@ import { ProductMapperService } from '../../../mapper/product-mapper.service';
   styleUrl: './add-product.component.css',
 })
 export class AddProductComponent implements OnInit {
+
   @Output() productAdded = new EventEmitter<void>();
   product: Product;
   newProduct: ProductForm;
@@ -59,10 +60,7 @@ export class AddProductComponent implements OnInit {
     this.product = helper.createEmptyProduct()
     this.newProduct = helper.createEmptyProductForm();
   }
-
-  /**
-   * Inicializa el componente cargando las lista de categorías, marcas y unidades de medidas
-   */
+  
   ngOnInit(): void {
     this.loadData();
   }
