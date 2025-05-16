@@ -33,6 +33,7 @@ export class UpdateProductComponent implements OnChanges {
   updatedProduct: ProductUpdateForm;
   stockChanged: boolean = false;
   originalStock: number;
+  commentInput: string = '';
 
   constructor(
     private productService: ProductService,
@@ -54,8 +55,9 @@ export class UpdateProductComponent implements OnChanges {
    * @param changes - Cambio detectado
    */
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['selectedProduct']) {
+    if (changes['selectedProduct'] && this.selectedProduct) {
       this.originalStock = changes['selectedProduct'].currentValue.stock;
+      this.selectedProduct = JSON.parse(JSON.stringify(changes['selectedProduct'].currentValue));
     }
   }
 
@@ -77,7 +79,7 @@ export class UpdateProductComponent implements OnChanges {
       this.stockChanged = true;
     }
     if (!this.stockChanged) {
-      this.updateProduct();
+      this.updateProductInfo();
     }
   }
 
@@ -89,14 +91,14 @@ export class UpdateProductComponent implements OnChanges {
    * Muestra notificaciones dependiendo el estado de la acción y emite un evento para refrescar todos los productos.
    * Cambio los valores de las variables reiniciando esos valores
    */
-  updateProduct(): void {
+  updateProductInfo(): void {
     if (
       this.selectedProduct &&
       this.validator.validateForm(this.selectedProduct)
     ) {
       const productCopied = { ...this.selectedProduct };
       this.updatedProduct = this.mapper.mapProductToUpdate(productCopied);
-      console.log('Se actualizo el producto: ', this.updatedProduct);
+      this.updatedProduct.comment = this.commentInput;
       this.productService.updateProduct(this.updatedProduct).subscribe({
         next: (response) => {
           this.notification.showSuccessToast(
