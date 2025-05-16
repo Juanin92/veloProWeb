@@ -60,4 +60,8 @@ public class ProductValidator {
             throw new ProductAlreadyDeletedException("El producto ya está desactivado.");
         }
     }
+
+    public boolean isChangeStockOriginalValue(Product product, int newStock){
+        return product.getStock() != newStock;
+    }
 }
