@@ -46,12 +46,8 @@ export class AddCategoriesComponent implements OnInit {
     this.newCategory = helper.createEmptyCategory();
     this.newSubcategory = helper.createEmptySubcategory();
     this.newUnit = helper.createEmptyUnit();
-    console.log('Apertura Modal crear categoría');
   }
 
-  /**
-   * Inicializa el componente cargando las lista de categorías
-   */
   ngOnInit(): void {
     this.getAllCategories();
   }
@@ -62,11 +58,7 @@ export class AddCategoriesComponent implements OnInit {
    */
   getAllCategories(): void {
     this.categoryService.getCategories().subscribe({
-      next: (list) => {
-        this.categoryList = list;
-      },error:(error) => {
-        console.log('Error no se encontró ninguna categoría', error);
-      }
+      next: (list) => this.categoryList = list,
     });
   }
 
@@ -80,7 +72,6 @@ export class AddCategoriesComponent implements OnInit {
     if (this.validator.validateBrand(this.newBrand)) {
       this.brandService.createBrand(this.newBrand).subscribe({
         next: (response) => {
-          console.log('Nueva marca registrada', response);
           this.notification.showSuccessToast(
             `${this.newBrand.name} ha sido registrada`,
             'top',
@@ -89,7 +80,6 @@ export class AddCategoriesComponent implements OnInit {
           this.newBrand = this.helper.createEmptyBrand();
         }, error: (error) => {
           const message = this.errorMessage.errorMessageExtractor(error);
-          console.error('Error:', message);
           this.notification.showErrorToast(`${message}`, 'top', 5000);
         }
       });
@@ -106,7 +96,6 @@ export class AddCategoriesComponent implements OnInit {
     if (this.validator.validateCategory(this.newCategory)) {
       this.categoryService.createCategory(this.newCategory).subscribe({
         next: (response) => {
-          console.log('Nueva categoría registrada', response);
           this.notification.showSuccessToast(
             `${this.newCategory.name} ha sido registrada`,
             'top',
@@ -116,7 +105,6 @@ export class AddCategoriesComponent implements OnInit {
           this.getAllCategories();
         }, error: (error) => {
           const message = this.errorMessage.errorMessageExtractor(error);
-          console.error('Error:', message);
           this.notification.showErrorToast(`${message}`, 'top', 5000);
         }
       });
@@ -135,7 +123,6 @@ export class AddCategoriesComponent implements OnInit {
     if (this.validator.validateSubcategory(this.newSubcategory)) {
       this.subcategoryService.createSubcategory(this.newSubcategory).subscribe({
         next: (response) => {
-          console.log('Nueva subcategoría registrada', response);
           this.notification.showSuccessToast(
             `${this.newSubcategory.name} ha sido registrada`,
             'top',
@@ -144,7 +131,6 @@ export class AddCategoriesComponent implements OnInit {
           this.newSubcategory = this.helper.createEmptySubcategory();
         }, error: (error) => {
           const message = this.errorMessage.errorMessageExtractor(error);
-          console.error('Error:', message);
           this.notification.showErrorToast(`${message}`, 'top', 5000);
         }
       });
@@ -161,7 +147,6 @@ export class AddCategoriesComponent implements OnInit {
     if (this.validator.validateUnit(this.newUnit)) {
       this.unitService.createUnit(this.newUnit).subscribe({
         next:(response) => {
-          console.log('Nueva categoría registrada', response);
           this.notification.showSuccessToast(
             `${this.newUnit.nameUnit} ha sido registrada`,
             'top',
@@ -170,7 +155,6 @@ export class AddCategoriesComponent implements OnInit {
           this.newUnit = this.helper.createEmptyUnit();
         }, error: (error) => {
           const message = this.errorMessage.errorMessageExtractor(error);
-          console.error('Error:', message);
           this.notification.showErrorToast(`${message}`, 'top', 5000);
         }
       });
