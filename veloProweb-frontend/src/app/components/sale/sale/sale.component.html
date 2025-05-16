@@ -85,7 +85,7 @@
                 <tr *ngFor="let saleDetail of saleDetailList; let i = index">
                   <th scope="row">{{ i + 1 }}</th>
                   <td>{{ saleDetail.product.description }}</td>
-                  <td>{{ saleDetail.product.unit.nameUnit }}</td>
+                  <td>{{ saleDetail.product.unit }}</td>
                   <td>
                     {{ saleDetail.price | currency : "CLP" : "$" : "1.0-0" }}
                   </td>
