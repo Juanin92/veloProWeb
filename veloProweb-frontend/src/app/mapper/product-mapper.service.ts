@@ -6,12 +6,14 @@ import { Brand } from '../models/Entity/Product/brand';
 import { UnitProduct } from '../models/Entity/Product/unit-product';
 import { Category } from '../models/Entity/Product/category';
 import { Subcategory } from '../models/Entity/Product/subcategory';
+import { ProductUpdateForm } from '../models/Entity/Product/product-update-form';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductMapperService {
-  toProduct(response: ProductResponse): Product {
+  
+  mapResponseToProduct(response: ProductResponse): Product {
     return {
       id: response.id,
       description: response.description,
@@ -27,7 +29,7 @@ export class ProductMapperService {
     };
   }
 
-  toProductForm(
+  mapToProductForm(
     product: Product,
     brand: Brand,
     unit: UnitProduct,
@@ -41,5 +43,14 @@ export class ProductMapperService {
       category: category,
       subcategoryProduct: subcategory,
     };
+  }
+
+  mapProductToUpdate(product: Product): ProductUpdateForm{
+    return {
+      id: product.id,
+      description: product.description,
+      salePrice: product.salePrice,
+      stock: product.stock
+    }
   }
 }
