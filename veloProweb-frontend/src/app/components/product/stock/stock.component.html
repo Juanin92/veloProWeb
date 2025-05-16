@@ -164,7 +164,7 @@
                 (click)="openModalProduct(product)" data-bs-toggle="tooltip" data-bs-placement="top"
                 title="Editar info" />
             </button>
-            <button *ngIf="product.statusProduct === statusProduct.UNAVAILABLE" (click)="deleteProduct(product)"
+            <button *ngIf="product.statusProduct === statusProduct.UNAVAILABLE && product.buyPrice" (click)="deleteProduct(product)"
               class="btn btn-sm btn-danger">
               <img src="/assets/icons/btnDeleteIcon.png" alt="borrar" width="24" height="24" class="img-fluid"
                 data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" />
@@ -183,6 +183,6 @@
 <!-- Modal Add Product -->
 <app-add-product (productAdded)="getProducts()"></app-add-product>
 <!-- Modal Update Product -->
-<app-update-product [selectedProduct]="selectedProduct" (productUpdated)="getProducts()"></app-update-product>
+<app-update-product [selectedProduct]="selectedProductStock" (productUpdated)="getProducts()"></app-update-product>
 <!-- Modal Add Categories and Extras -->
 <app-add-categories></app-add-categories>
