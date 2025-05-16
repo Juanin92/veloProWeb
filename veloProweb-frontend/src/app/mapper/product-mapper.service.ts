@@ -50,7 +50,8 @@ export class ProductMapperService {
       id: product.id,
       description: product.description,
       salePrice: product.salePrice,
-      stock: product.stock
+      stock: product.stock,
+      comment: ''
     }
   }
 }

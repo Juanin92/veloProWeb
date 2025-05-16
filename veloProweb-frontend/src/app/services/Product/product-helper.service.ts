@@ -98,7 +98,8 @@ export class ProductHelperService {
       id: 0,
       description: '',
       salePrice: 0,
-      stock: 0
+      stock: 0,
+      comment: ''
     }
   }
 }

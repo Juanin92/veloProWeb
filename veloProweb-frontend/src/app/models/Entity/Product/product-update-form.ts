@@ -4,4 +4,5 @@ export interface ProductUpdateForm {
     description: string;
     salePrice: number;
     stock: number;
+    comment: string;
 }
