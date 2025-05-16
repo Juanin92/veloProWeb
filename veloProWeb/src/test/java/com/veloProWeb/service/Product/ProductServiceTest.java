@@ -76,9 +76,9 @@ public class ProductServiceTest {
 
     //Prueba para actualizar un producto
     @Test
-    public void update_validMoreStock(){
+    public void update_StockStatus_validMoreStock(){
         product.setStock(10);
-        productService.update(product);
+        productService.updateStockStatus(product);
 
         verify(productRepo).save(product);
         assertTrue(product.isStatus());
@@ -86,9 +86,9 @@ public class ProductServiceTest {
         assertEquals(10, product.getStock());
     }
     @Test
-    public void update_validNonStock(){
+    public void update_StockStatus_validNonStock(){
         product.setStock(0);
-        productService.update(product);
+        productService.updateStockStatus(product);
 
         verify(productRepo).save(product);
         assertFalse(product.isStatus());
@@ -129,7 +129,7 @@ public class ProductServiceTest {
 
     //Prueba para actualizar el stock después de una compra un producto
     @Test
-    public void updateStockPurchase_valid(){
+    public void updateStockStatusStockPurchase_valid(){
         productService.updateStockPurchase(product, 20000, 10);
         assertEquals(20000, product.getBuyPrice());
         assertEquals(10, product.getStock());
@@ -138,7 +138,7 @@ public class ProductServiceTest {
 
     //Prueba para actualizar el stock después de una venta un producto
     @Test
-    public void updateStockSale_valid(){
+    public void updateStockStatusStockSale_valid(){
         product.setStock(30);
         productService.updateStockSale(product, 10);
         assertEquals(20, product.getStock());
@@ -244,7 +244,7 @@ public class ProductServiceTest {
 
     //Prueba para actualizar el stock y reserva de un producto después de un despacho
     @Test
-    public void updateStockAndReserveDispatch_validSuccess(){
+    public void updateStockStatusStockAndReserveDispatch_validSuccess(){
         product.setStock(30);
         product.setReserve(0);
         productService.updateStockAndReserveDispatch(product, 10, true);
@@ -253,7 +253,7 @@ public class ProductServiceTest {
         verify(productRepo).save(product);
     }
     @Test
-    public void updateStockAndReserveDispatch_validNoSuccess(){
+    public void updateStockStatusStockAndReserveDispatch_validNoSuccess(){
         product.setStock(30);
         product.setReserve(10);
         productService.updateStockAndReserveDispatch(product, 10, false);
