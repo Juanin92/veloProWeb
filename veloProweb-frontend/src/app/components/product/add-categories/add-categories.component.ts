@@ -46,6 +46,7 @@ export class AddCategoriesComponent implements OnInit {
     this.newCategory = helper.createEmptyCategory();
     this.newSubcategory = helper.createEmptySubcategory();
     this.newUnit = helper.createEmptyUnit();
+    console.log('Apertura Modal crear categoría');
   }
 
   /**
