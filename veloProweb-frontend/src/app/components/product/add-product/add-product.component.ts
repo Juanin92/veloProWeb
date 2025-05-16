@@ -115,12 +115,12 @@ export class AddProductComponent implements OnInit {
    */
   addProduct(): void {
     if (this.validator.validateForm(this.product)) {
-      this.newProduct = this.mapper.toProductForm(this.product, this.brandSelected!, 
+      this.newProduct = this.mapper.mapToProductForm(this.product, this.brandSelected!, 
         this.unitSelected!, this.categorySelected!, this.subcategorySelected!);
       this.productService.createProduct(this.newProduct).subscribe({
         next: (response) => {
           this.notification.showSuccessToast(
-            'Producto creado exitosamente!',
+            response.message,
             'top',
             3000
           );
