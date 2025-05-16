@@ -25,9 +25,9 @@ import java.util.List;
 public class ProductService implements IProductService {
 
     private final ProductRepo productRepo;
-    private final ProductValidator validator;
     private final IkardexService kardexService;
     private final IAlertService alertService;
+    private final ProductValidator validator;
     private final ProductMapper mapper;
 
     /**
@@ -48,6 +48,25 @@ public class ProductService implements IProductService {
         kardexService.addKardex(product, 0, "Creación Producto", MovementsType.AJUSTE);
     }
 
+    @Transactional
+    @Override
+    public void updateProductInfo(ProductUpdatedRequestDTO dto) {
+        Product product = getProductById(dto.getId());
+        boolean change = validator.isChangeStockOriginalValue(product, dto.getStock());
+        validator.isDeleted(product);
+        product.setDescription(dto.getDescription());
+        product.setSalePrice(dto.getSalePrice());
+        if (change) {
+            String comment = String.format("%s - stock original: %s, stock nuevo: %s", dto.getComment(),
+                    product.getStock(), dto.getStock());
+            int quantity = product.getStock() - dto.getStock();
+            kardexService.addKardex(product, quantity, comment, MovementsType.AJUSTE);
+            alertService.createAlert(product, comment);
+        }
+        product.setStock(dto.getStock());
+        productRepo.save(product);
+    }
+
     /**
      * Actualiza detalle de un producto seleccionado
      * Verifica que si el producto tiene un stock mayor a 0 para darle un valor predeterminado como disponible
@@ -55,7 +74,7 @@ public class ProductService implements IProductService {
      * @param product - Producto a actualizar
      */
     @Override
-    public void update(Product product){
+    public void updateStockStatus(Product product){
         if (product.getStock() > 0){
             product.setStatus(true);
             product.setStatusProduct(StatusProduct.DISPONIBLE);
@@ -112,7 +131,7 @@ public class ProductService implements IProductService {
     public void updateStockPurchase(Product product, int price, int quantity) {
         product.setBuyPrice(price);
         product.setStock(product.getStock() + quantity);
-        update(product);
+        updateStockStatus(product);
     }
 
     /**
@@ -124,7 +143,7 @@ public class ProductService implements IProductService {
     @Override
     public void updateStockSale(Product product, int quantity) {
         product.setStock(product.getStock() - quantity);
-        update(product);
+        updateStockStatus(product);
     }
 
     /**
@@ -162,11 +181,11 @@ public class ProductService implements IProductService {
         if (success) {
             product.setStock(product.getStock() - quantity);
             product.setReserve(product.getReserve() + quantity);
-            update(product);
+            updateStockStatus(product);
         }else{
             product.setStock(product.getStock() + quantity);
             product.setReserve(product.getReserve() - quantity);
-            update(product);
+            updateStockStatus(product);
         }
     }
 
