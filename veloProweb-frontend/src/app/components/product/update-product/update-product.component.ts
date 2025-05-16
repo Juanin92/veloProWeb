@@ -1,36 +1,50 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { ProductService } from '../../../services/Product/product.service';
 import { ProductHelperService } from '../../../services/Product/product-helper.service';
 import { NotificationService } from '../../../utils/notification-service.service';
-import { Product } from '../../../models/Entity/Product/product.model';
+import { Product } from '../../../models/Entity/Product/product';
 import { ProductValidator } from '../../../validation/product-validator';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ModalService } from '../../../utils/modal.service';
 import { ProductPermissionsService } from '../../../services/Permissions/product-permissions.service';
+import { ProductMapperService } from '../../../mapper/product-mapper.service';
+import { ErrorMessageService } from '../../../utils/error-message.service';
+import { ProductUpdateForm } from '../../../models/Entity/Product/product-update-form';
 
 @Component({
   selector: 'app-update-product',
   standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './update-product.component.html',
-  styleUrl: './update-product.component.css'
+  styleUrl: './update-product.component.css',
 })
-export class UpdateProductComponent implements OnChanges{
-
+export class UpdateProductComponent implements OnChanges {
   @Input() selectedProduct: Product;
   @Output() productUpdated = new EventEmitter<void>();
   validator = ProductValidator;
+  updatedProduct: ProductUpdateForm;
   stockChanged: boolean = false;
   originalStock: number;
 
   constructor(
     private productService: ProductService,
     private helper: ProductHelperService,
+    private mapper: ProductMapperService,
     private notification: NotificationService,
     public modalService: ModalService,
-    protected permission: ProductPermissionsService) {
+    protected permission: ProductPermissionsService,
+    private errorMessage: ErrorMessageService
+  ) {
     this.selectedProduct = helper.createEmptyProduct();
+    this.updatedProduct = helper.createEmptyProductUpdateForm();
     this.originalStock = this.selectedProduct.stock;
   }
 
@@ -54,7 +68,7 @@ export class UpdateProductComponent implements OnChanges{
    * @var stockChanged - Indica si hubo cambio del valor de stock (true) o no (false).
    * @returns - Retornar sin hacer nada más
    */
-  stockChangeValidation(status: boolean): void{
+  stockChangeValidation(status: boolean): void {
     if (!status) {
       this.stockChanged = false;
       return;
@@ -63,7 +77,7 @@ export class UpdateProductComponent implements OnChanges{
       this.stockChanged = true;
     }
     if (!this.stockChanged) {
-      this.updateProduct(); 
+      this.updateProduct();
     }
   }
 
@@ -75,20 +89,34 @@ export class UpdateProductComponent implements OnChanges{
    * Muestra notificaciones dependiendo el estado de la acción y emite un evento para refrescar todos los productos.
    * Cambio los valores de las variables reiniciando esos valores
    */
-  updateProduct(): void{
-    if (this.selectedProduct && this.validator.validateForm(this.selectedProduct)) {
-      const updatedProduct = {...this.selectedProduct};
-      this.productService.updateProduct(updatedProduct).subscribe((response) =>{
-        console.log('Se actualizo el producto: ', updatedProduct);
-        this.notification.showSuccessToast(`Se actualizo el producto ${updatedProduct.description} correctamente`, 'top', 3000);
-        this.productUpdated.emit();
-        this.originalStock = this.selectedProduct.stock;
-        this.stockChanged = false;
-        this.modalService.closeModal();
-      }, (error) => {
-        const message = error.error?.message || error.error?.error;
-        this.notification.showErrorToast(`Error al actualizar producto \n${message}`, 'top', 5000);
-        console.log('Error al actualizar producto: ', message);
+  updateProduct(): void {
+    if (
+      this.selectedProduct &&
+      this.validator.validateForm(this.selectedProduct)
+    ) {
+      const productCopied = { ...this.selectedProduct };
+      this.updatedProduct = this.mapper.mapProductToUpdate(productCopied);
+      console.log('Se actualizo el producto: ', this.updatedProduct);
+      this.productService.updateProduct(this.updatedProduct).subscribe({
+        next: (response) => {
+          this.notification.showSuccessToast(
+            `${response.message} <br>${this.updatedProduct.description}`,
+            'top',
+            3000
+          );
+          this.productUpdated.emit();
+          this.originalStock = this.selectedProduct.stock;
+          this.stockChanged = false;
+          this.modalService.closeModal();
+        },
+        error: (error) => {
+          const message = this.errorMessage.errorMessageExtractor(error);
+          this.notification.showErrorToast(
+            `Error al actualizar producto \n${message}`,
+            'top',
+            5000
+          );
+        },
       });
     }
   }
