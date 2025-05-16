@@ -24,4 +24,6 @@ public class ProductUpdatedRequestDTO {
 
     @NotNull(message = "La cantidad de stock es obligatorio")
     private int stock;
+
+    private String comment;
 }
