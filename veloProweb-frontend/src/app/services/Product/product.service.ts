@@ -41,7 +41,7 @@ export class ProductService {
    * @param product - Producto a actualizar
    * @returns - Observable emite un mensaje de confirmación o error
    */
-  updateProduct(product: Product): Observable<{ message: string }> {
+  updateProduct(product: ProductUpdateForm): Observable<{ message: string }> {
     return this.httpClient.put<{ message: string }>(`${this.apiUrl}`, product, {
       headers: this.auth.getAuthHeaders(),
     });
