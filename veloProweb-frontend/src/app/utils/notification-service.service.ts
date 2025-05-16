@@ -56,7 +56,7 @@ export class NotificationService {
 
     Toast.fire({
       icon: 'success',
-      title: title
+      html: title
     });
   }
 
@@ -77,7 +77,7 @@ export class NotificationService {
 
     Toast.fire({
       icon: 'error',
-      title: title
+      html: title
     });
   }
 
@@ -98,7 +98,7 @@ export class NotificationService {
 
     Toast.fire({
       icon: 'warning',
-      title: title
+      html: title
     });
   }
 
