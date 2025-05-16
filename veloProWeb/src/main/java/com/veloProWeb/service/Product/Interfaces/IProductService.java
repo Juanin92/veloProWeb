@@ -10,10 +10,11 @@ import java.util.List;
 public interface IProductService {
 
     void create(ProductRequestDTO dto);
+    void updateProductInfo(ProductUpdatedRequestDTO dto);
     List<ProductResponseDTO> getAll();
     Product getProductById(Long id);
     void delete(ProductUpdatedRequestDTO dto);
-    void update(Product product);
+    void updateStockStatus(Product product);
     void active(ProductUpdatedRequestDTO dto);
     void updateStockPurchase(Product product, int price, int quantity);
     void updateStockSale(Product product, int quantity);
