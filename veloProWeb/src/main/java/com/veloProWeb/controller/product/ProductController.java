@@ -56,7 +56,7 @@ public class ProductController {
     @PreAuthorize("hasAnyAuthority('ADMIN','MASTER', 'WAREHOUSE')")
     public ResponseEntity<Map<String, String>> deleteProduct(@RequestBody @Valid ProductUpdatedRequestDTO product,
                                                              @AuthenticationPrincipal UserDetails userDetails){
-        productService.delete(product);
+        productService.discontinueProduct(product);
         recordService.registerAction(userDetails, "DELETE",
                 String.format("Producto eliminado: %s", product.getDescription()));
         return new ResponseEntity<>(ResponseMessage.message("Producto eliminado exitosamente!"), HttpStatus.OK);
@@ -66,7 +66,7 @@ public class ProductController {
     @PreAuthorize("hasAnyAuthority('ADMIN','MASTER', 'WAREHOUSE')")
     public ResponseEntity<Map<String, String>> activeProduct(@RequestBody @Valid ProductUpdatedRequestDTO product,
                                                              @AuthenticationPrincipal UserDetails userDetails){
-        productService.active(product);
+        productService.reactive(product);
         recordService.registerAction(userDetails, "ACTIVATE",
                 String.format("Producto activado: %S", product.getDescription()));
         return new ResponseEntity<>(ResponseMessage.message("Producto activado exitosamente!"), HttpStatus.OK);

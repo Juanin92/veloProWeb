@@ -101,7 +101,7 @@ public class ProductService implements IProductService {
      */
     @Transactional
     @Override
-    public void active(ProductUpdatedRequestDTO dto) {
+    public void reactive(ProductUpdatedRequestDTO dto) {
         Product product = getProductById(dto.getId());
         validator.isActivated(product);
         product.setStatusProduct(StatusProduct.NODISPONIBLE);
@@ -117,7 +117,7 @@ public class ProductService implements IProductService {
      */
     @Transactional
     @Override
-    public void delete(ProductUpdatedRequestDTO dto) {
+    public void discontinueProduct(ProductUpdatedRequestDTO dto) {
         Product product = getProductById(dto.getId());
         validator.isDeleted(product);
         product.setStatus(false);

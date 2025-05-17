@@ -149,13 +149,13 @@ public class ProductServiceTest {
 
     //Prueba para activar un producto
     @Test
-    public void active_valid(){
+    public void reactive_valid(){
         ProductUpdatedRequestDTO dto = ProductUpdatedRequestDTO.builder().id(1L).build();
         Product product = Product.builder().id(1L).status(false).build();
         when(productRepo.findById(dto.getId())).thenReturn(Optional.of(product));
         doNothing().when(validator).isActivated(product);
 
-        productService.active(dto);
+        productService.reactive(dto);
 
         ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
         verify(productRepo, times(1)).findById(dto.getId());
@@ -165,14 +165,14 @@ public class ProductServiceTest {
         assertEquals(StatusProduct.NODISPONIBLE, result.getStatusProduct());
     }
     @Test
-    public void active_ThrowException(){
+    public void reactive_ThrowException(){
         ProductUpdatedRequestDTO dto = ProductUpdatedRequestDTO.builder().id(1L).build();
         Product product = Product.builder().id(1L).status(true).build();
         when(productRepo.findById(dto.getId())).thenReturn(Optional.of(product));
         doThrow(new ProductAlreadyActivatedException("El producto ya está activado."))
                 .when(validator).isActivated(product);
 
-        assertThrows(ProductAlreadyActivatedException.class, () -> productService.active(dto));
+        assertThrows(ProductAlreadyActivatedException.class, () -> productService.reactive(dto));
 
         verify(productRepo, times(1)).findById(dto.getId());
         verify(productRepo, never()).save(product);
@@ -198,13 +198,13 @@ public class ProductServiceTest {
 
     //Prueba para eliminar un producto
     @Test
-    public void delete_valid(){
+    public void discontinueProduct_valid(){
         ProductUpdatedRequestDTO dto = ProductUpdatedRequestDTO.builder().id(1L).build();
         Product product = Product.builder().id(1L).status(true).build();
         when(productRepo.findById(dto.getId())).thenReturn(Optional.of(product));
         doNothing().when(validator).isDeleted(product);
 
-        productService.delete(dto);
+        productService.discontinueProduct(dto);
 
         ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
         verify(productRepo, times(1)).findById(dto.getId());
@@ -215,14 +215,14 @@ public class ProductServiceTest {
         assertEquals(StatusProduct.DESCONTINUADO, result.getStatusProduct());
     }
     @Test
-    public void delete_ThrowException(){
+    public void discontinueProduct_ThrowException(){
         ProductUpdatedRequestDTO dto = ProductUpdatedRequestDTO.builder().id(1L).build();
         Product product = Product.builder().id(1L).status(false).build();
         when(productRepo.findById(dto.getId())).thenReturn(Optional.of(product));
         doThrow(new ProductAlreadyDeletedException("El producto ya está desactivado."))
                 .when(validator).isDeleted(product);
 
-        assertThrows(ProductAlreadyDeletedException.class, () -> productService.delete(dto));
+        assertThrows(ProductAlreadyDeletedException.class, () -> productService.discontinueProduct(dto));
 
         verify(productRepo, times(1)).findById(dto.getId());
         verify(productRepo, never()).save(product);
@@ -277,7 +277,7 @@ public class ProductServiceTest {
         verify(kardexService, times(1)).checkLowSales(product);
     }
     @Test
-    public void checkAndCreateAlertsByProduct_validWithAlertActive(){
+    public void checkAndCreateAlertsByProduct_validWithAlertReactive(){
         product.setStock(0);
         product.setThreshold(15);
         product.setDescription("product 1");
