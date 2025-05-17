@@ -6,12 +6,9 @@ import com.veloProWeb.model.dto.product.ProductRequestDTO;
 import com.veloProWeb.model.dto.product.ProductResponseDTO;
 import com.veloProWeb.model.dto.product.ProductUpdatedRequestDTO;
 import com.veloProWeb.model.entity.product.Product;
-import com.veloProWeb.model.Enum.MovementsType;
 import com.veloProWeb.model.Enum.StatusProduct;
 import com.veloProWeb.repository.product.ProductRepo;
 import com.veloProWeb.service.product.interfaces.IProductService;
-import com.veloProWeb.service.Report.IkardexService;
-import com.veloProWeb.service.User.Interface.IAlertService;
 import com.veloProWeb.validation.ProductValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,8 +21,7 @@ import java.util.List;
 public class ProductService implements IProductService {
 
     private final ProductRepo productRepo;
-    private final IkardexService kardexService;
-    private final IAlertService alertService;
+    private final ProductEventService productEventService;
     private final ProductValidator validator;
     private final ProductMapper mapper;
 
@@ -44,7 +40,7 @@ public class ProductService implements IProductService {
         product.setStock(0);
         product.setThreshold(0);
         productRepo.save(product);
-        kardexService.addKardex(product, 0, "Creación Producto", MovementsType.AJUSTE);
+        productEventService.handleCreateRegister(product, "Creación Producto");
     }
 
     /**
@@ -57,19 +53,12 @@ public class ProductService implements IProductService {
     public void updateProductInfo(ProductUpdatedRequestDTO dto) {
         Product product = getProductById(dto.getId());
         int originalStock = product.getStock();
-        boolean change = validator.isChangeStockOriginalValue(originalStock, dto.getStock());
         validator.isDeleted(product);
         product.setDescription(dto.getDescription());
         product.setSalePrice(dto.getSalePrice());
         product.setStock(dto.getStock());
         productRepo.save(product);
-        if (change) {
-            String comment = String.format("%s - stock original: %s, stock nuevo: %s", dto.getComment(),
-                    originalStock, dto.getStock());
-            int quantity = Math.abs(originalStock - dto.getStock());
-            kardexService.addKardex(product, quantity, comment, MovementsType.AJUSTE);
-            alertService.createAlert(product, comment);
-        }
+        productEventService.isChangeStockOriginalValue(product, originalStock, dto);
     }
 
     /**
@@ -107,7 +96,7 @@ public class ProductService implements IProductService {
         product.setStatusProduct(StatusProduct.NODISPONIBLE);
         product.setStatus(true);
         productRepo.save(product);
-        kardexService.addKardex(product, 0, "Activado", MovementsType.AJUSTE);
+        productEventService.handleCreateRegister(product, "Activado");
     }
 
     /**
@@ -123,7 +112,7 @@ public class ProductService implements IProductService {
         product.setStatus(false);
         product.setStatusProduct(StatusProduct.DESCONTINUADO);
         productRepo.save(product);
-        kardexService.addKardex(product, 0, "Eliminado / Descontinuado", MovementsType.AJUSTE);
+        productEventService.handleCreateRegister(product, "Eliminado / Descontinuado");
     }
 
     /**
