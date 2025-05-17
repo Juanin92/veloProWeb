@@ -134,6 +134,7 @@ public class ProductService implements IProductService {
      * @param price - precio de compra
      * @param quantity - cantidad comprada
      */
+    @Transactional
     @Override
     public void updateStockPurchase(Product product, int price, int quantity) {
         product.setBuyPrice(price);
@@ -147,6 +148,7 @@ public class ProductService implements IProductService {
      * @param product - producto vendido
      * @param quantity - cantidad vendida
      */
+    @Transactional
     @Override
     public void updateStockSale(Product product, int quantity) {
         product.setStock(product.getStock() - quantity);
