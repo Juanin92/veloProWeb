@@ -77,13 +77,13 @@ public class ProductValidatorTest {
     @Test
     public void isChangeStockOriginalValue_validChange(){
         int newStock = 11;
-        boolean result = validator.isChangeStockOriginalValue(product, newStock);
+        boolean result = validator.isChangeStockOriginalValue(product.getStock(), newStock);
         assertTrue(result);
     }
     @Test
     public void isChangeStockOriginalValue_validNotChange(){
         int newStock = 15;
-        boolean result = validator.isChangeStockOriginalValue(product, newStock);
+        boolean result = validator.isChangeStockOriginalValue(product.getStock(), newStock);
         assertFalse(result);
     }
 }
