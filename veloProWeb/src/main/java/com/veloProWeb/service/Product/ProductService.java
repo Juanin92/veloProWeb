@@ -48,6 +48,11 @@ public class ProductService implements IProductService {
         kardexService.addKardex(product, 0, "Creación Producto", MovementsType.AJUSTE);
     }
 
+    /**
+     * Actualiza la info de un producto.
+     * Verifica si hubo cambio de stock para crear una alerta.
+     * @param dto - producto con los datos actualizados
+     */
     @Transactional
     @Override
     public void updateProductInfo(ProductUpdatedRequestDTO dto) {
@@ -56,6 +61,8 @@ public class ProductService implements IProductService {
         validator.isDeleted(product);
         product.setDescription(dto.getDescription());
         product.setSalePrice(dto.getSalePrice());
+        product.setStock(dto.getStock());
+        productRepo.save(product);
         if (change) {
             String comment = String.format("%s - stock original: %s, stock nuevo: %s", dto.getComment(),
                     product.getStock(), dto.getStock());
@@ -63,8 +70,6 @@ public class ProductService implements IProductService {
             kardexService.addKardex(product, quantity, comment, MovementsType.AJUSTE);
             alertService.createAlert(product, comment);
         }
-        product.setStock(dto.getStock());
-        productRepo.save(product);
     }
 
     /**
