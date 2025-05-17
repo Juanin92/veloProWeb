@@ -12,8 +12,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductValidatorTest {
@@ -72,5 +71,19 @@ public class ProductValidatorTest {
         ProductAlreadyDeletedException e = assertThrows(ProductAlreadyDeletedException.class,
                 ()-> validator.isDeleted(product));
         assertEquals("El producto ya está desactivado.", e.getMessage());
+    }
+
+    //Prueba para validar el cambio de stock
+    @Test
+    public void isChangeStockOriginalValue_validChange(){
+        int newStock = 11;
+        boolean result = validator.isChangeStockOriginalValue(product, newStock);
+        assertTrue(result);
+    }
+    @Test
+    public void isChangeStockOriginalValue_validNotChange(){
+        int newStock = 15;
+        boolean result = validator.isChangeStockOriginalValue(product, newStock);
+        assertFalse(result);
     }
 }

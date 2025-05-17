@@ -61,6 +61,12 @@ public class ProductValidator {
         }
     }
 
+    /**
+     * Válida si el valor del stock cambio
+     * @param product - Producto que contiene el stock original
+     * @param newStock - nuevo valor del stock
+     * @return - devuelve true o false dependiendo del caso
+     */
     public boolean isChangeStockOriginalValue(Product product, int newStock){
         return product.getStock() != newStock;
     }
