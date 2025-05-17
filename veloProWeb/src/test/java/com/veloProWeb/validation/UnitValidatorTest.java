@@ -2,7 +2,7 @@ package com.veloProWeb.validation;
 
 import com.veloProWeb.exceptions.product.UnitAlreadyExistsException;
 import com.veloProWeb.exceptions.validation.ValidationException;
-import com.veloProWeb.model.entity.Product.UnitProduct;
+import com.veloProWeb.model.entity.product.UnitProduct;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;

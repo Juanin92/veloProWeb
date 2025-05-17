@@ -2,7 +2,7 @@ package com.veloProWeb.validation;
 
 import com.veloProWeb.exceptions.product.CategoryNotFoundException;
 import com.veloProWeb.exceptions.product.SubcategoryAlreadyExistsException;
-import com.veloProWeb.model.entity.Product.SubcategoryProduct;
+import com.veloProWeb.model.entity.product.SubcategoryProduct;
 import org.springframework.stereotype.Component;
 
 @Component

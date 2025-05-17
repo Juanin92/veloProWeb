@@ -2,7 +2,7 @@ package com.veloProWeb.validation;
 
 import com.veloProWeb.exceptions.product.ProductAlreadyActivatedException;
 import com.veloProWeb.exceptions.product.ProductAlreadyDeletedException;
-import com.veloProWeb.model.entity.Product.*;
+import com.veloProWeb.model.entity.product.*;
 import org.springframework.stereotype.Component;
 
 @Component

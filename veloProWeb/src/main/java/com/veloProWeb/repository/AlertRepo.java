@@ -1,6 +1,6 @@
 package com.veloProWeb.repository;
 
-import com.veloProWeb.model.entity.Product.Product;
+import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.model.entity.User.Alert;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

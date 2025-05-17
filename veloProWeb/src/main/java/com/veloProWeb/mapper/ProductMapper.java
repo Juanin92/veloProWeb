@@ -2,7 +2,7 @@ package com.veloProWeb.mapper;
 
 import com.veloProWeb.model.dto.product.ProductRequestDTO;
 import com.veloProWeb.model.dto.product.ProductResponseDTO;
-import com.veloProWeb.model.entity.Product.Product;
+import com.veloProWeb.model.entity.product.Product;
 import org.springframework.stereotype.Component;
 
 @Component

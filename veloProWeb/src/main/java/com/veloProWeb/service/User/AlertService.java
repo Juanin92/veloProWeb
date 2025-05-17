@@ -1,7 +1,7 @@
 package com.veloProWeb.service.User;
 
 import com.veloProWeb.model.entity.User.Alert;
-import com.veloProWeb.model.entity.Product.Product;
+import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.repository.AlertRepo;
 import com.veloProWeb.service.User.Interface.IAlertService;
 import org.springframework.beans.factory.annotation.Autowired;

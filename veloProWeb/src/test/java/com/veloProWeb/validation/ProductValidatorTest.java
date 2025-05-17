@@ -2,7 +2,7 @@ package com.veloProWeb.validation;
 
 import com.veloProWeb.exceptions.product.ProductAlreadyActivatedException;
 import com.veloProWeb.exceptions.product.ProductAlreadyDeletedException;
-import com.veloProWeb.model.entity.Product.*;
+import com.veloProWeb.model.entity.product.*;
 import com.veloProWeb.model.Enum.StatusProduct;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ public class ProductValidatorTest {
     void setUp(){
         product = Product.builder()
                 .id(1L)
-                .description("Description Product")
+                .description("Description product")
                 .salePrice(1000).buyPrice(2000)
                 .stock(15).reserve(0).threshold(3)
                 .status(true).statusProduct(StatusProduct.DISPONIBLE)

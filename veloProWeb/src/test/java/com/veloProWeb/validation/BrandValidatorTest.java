@@ -1,7 +1,7 @@
 package com.veloProWeb.validation;
 
 import com.veloProWeb.exceptions.product.BrandAlreadyExistsException;
-import com.veloProWeb.model.entity.Product.BrandProduct;
+import com.veloProWeb.model.entity.product.BrandProduct;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

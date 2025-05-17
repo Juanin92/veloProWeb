@@ -1,9 +1,9 @@
 package com.veloProWeb.model.dto.product;
 
-import com.veloProWeb.model.entity.Product.BrandProduct;
-import com.veloProWeb.model.entity.Product.CategoryProduct;
-import com.veloProWeb.model.entity.Product.SubcategoryProduct;
-import com.veloProWeb.model.entity.Product.UnitProduct;
+import com.veloProWeb.model.entity.product.BrandProduct;
+import com.veloProWeb.model.entity.product.CategoryProduct;
+import com.veloProWeb.model.entity.product.SubcategoryProduct;
+import com.veloProWeb.model.entity.product.UnitProduct;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

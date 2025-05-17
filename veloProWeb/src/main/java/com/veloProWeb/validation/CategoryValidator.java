@@ -1,7 +1,7 @@
 package com.veloProWeb.validation;
 
 import com.veloProWeb.exceptions.product.*;
-import com.veloProWeb.model.entity.Product.CategoryProduct;
+import com.veloProWeb.model.entity.product.CategoryProduct;
 import org.springframework.stereotype.Component;
 
 @Component

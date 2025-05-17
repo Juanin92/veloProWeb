@@ -2,12 +2,12 @@ package com.veloProWeb.service.Purchase;
 
 import com.veloProWeb.model.dto.DetailPurchaseDTO;
 import com.veloProWeb.model.dto.DetailPurchaseRequestDTO;
-import com.veloProWeb.model.entity.Product.Product;
+import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.model.entity.Purchase.Purchase;
 import com.veloProWeb.model.entity.Purchase.PurchaseDetail;
 import com.veloProWeb.model.Enum.MovementsType;
 import com.veloProWeb.repository.Purchase.PurchaseDetailRepo;
-import com.veloProWeb.service.Product.Interfaces.IProductService;
+import com.veloProWeb.service.product.interfaces.IProductService;
 import com.veloProWeb.service.Purchase.Interfaces.IPurchaseDetailService;
 import com.veloProWeb.service.Purchase.Interfaces.IPurchaseService;
 import com.veloProWeb.service.Report.IkardexService;

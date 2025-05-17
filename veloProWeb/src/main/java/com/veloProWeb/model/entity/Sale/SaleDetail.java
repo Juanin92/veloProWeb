@@ -1,6 +1,6 @@
 package com.veloProWeb.model.entity.Sale;
 
-import com.veloProWeb.model.entity.Product.Product;
+import com.veloProWeb.model.entity.product.Product;
 import jakarta.persistence.*;
 import lombok.Data;
 

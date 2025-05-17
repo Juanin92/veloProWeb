@@ -2,10 +2,10 @@ package com.veloProWeb.service.Report;
 
 import com.veloProWeb.model.dto.KardexRequestDTO;
 import com.veloProWeb.model.entity.Kardex;
-import com.veloProWeb.model.entity.Product.Product;
+import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.model.Enum.MovementsType;
 import com.veloProWeb.repository.KardexRepo;
-import com.veloProWeb.service.Product.ProductService;
+import com.veloProWeb.service.product.ProductService;
 import com.veloProWeb.service.User.AlertService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

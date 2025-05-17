@@ -1,7 +1,7 @@
 package com.veloProWeb.validation;
 
 import com.veloProWeb.exceptions.product.CategoryAlreadyExistsException;
-import com.veloProWeb.model.entity.Product.CategoryProduct;
+import com.veloProWeb.model.entity.product.CategoryProduct;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
