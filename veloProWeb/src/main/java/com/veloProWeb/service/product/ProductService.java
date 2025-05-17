@@ -14,7 +14,6 @@ import com.veloProWeb.service.Report.IkardexService;
 import com.veloProWeb.service.User.Interface.IAlertService;
 import com.veloProWeb.validation.ProductValidator;
 import lombok.AllArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
