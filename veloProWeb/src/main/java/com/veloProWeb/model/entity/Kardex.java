@@ -4,13 +4,19 @@ import com.veloProWeb.model.entity.Product.Product;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.model.Enum.MovementsType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 
 @Entity
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Kardex {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
