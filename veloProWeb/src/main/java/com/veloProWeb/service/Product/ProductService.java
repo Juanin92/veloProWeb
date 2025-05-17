@@ -57,7 +57,8 @@ public class ProductService implements IProductService {
     @Override
     public void updateProductInfo(ProductUpdatedRequestDTO dto) {
         Product product = getProductById(dto.getId());
-        boolean change = validator.isChangeStockOriginalValue(product, dto.getStock());
+        int originalStock = product.getStock();
+        boolean change = validator.isChangeStockOriginalValue(originalStock, dto.getStock());
         validator.isDeleted(product);
         product.setDescription(dto.getDescription());
         product.setSalePrice(dto.getSalePrice());
@@ -65,8 +66,8 @@ public class ProductService implements IProductService {
         productRepo.save(product);
         if (change) {
             String comment = String.format("%s - stock original: %s, stock nuevo: %s", dto.getComment(),
-                    product.getStock(), dto.getStock());
-            int quantity = product.getStock() - dto.getStock();
+                    originalStock, dto.getStock());
+            int quantity = Math.abs(originalStock - dto.getStock());
             kardexService.addKardex(product, quantity, comment, MovementsType.AJUSTE);
             alertService.createAlert(product, comment);
         }
