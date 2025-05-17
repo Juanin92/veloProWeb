@@ -79,6 +79,7 @@ public class ProductService implements IProductService {
      * y si tiene un stock menor a 0 lo deja como no disponible predeterminado.
      * @param product - Producto a actualizar
      */
+    @Transactional
     @Override
     public void updateStockStatus(Product product){
         if (product.getStock() > 0){
