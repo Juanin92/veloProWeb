@@ -60,14 +60,4 @@ public class ProductValidator {
             throw new ProductAlreadyDeletedException("El producto ya está desactivado.");
         }
     }
-
-    /**
-     * Válida si el valor del stock cambio
-     * @param product - Producto que contiene el stock original
-     * @param newStock - nuevo valor del stock
-     * @return - devuelve true o false dependiendo del caso
-     */
-    public boolean isChangeStockOriginalValue(int originalStock, int newStock){
-        return originalStock != newStock;
-    }
 }
