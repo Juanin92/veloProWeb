@@ -3,6 +3,7 @@ package com.veloProWeb.service.Product;
 import com.veloProWeb.exceptions.product.ProductAlreadyActivatedException;
 import com.veloProWeb.exceptions.product.ProductAlreadyDeletedException;
 import com.veloProWeb.mapper.ProductMapper;
+import com.veloProWeb.model.Enum.MovementsType;
 import com.veloProWeb.model.dto.product.ProductRequestDTO;
 import com.veloProWeb.model.dto.product.ProductUpdatedRequestDTO;
 import com.veloProWeb.model.entity.Product.*;
@@ -72,6 +73,56 @@ public class ProductServiceTest {
         assertEquals(0, result.getBuyPrice());
         assertEquals(0, result.getSalePrice());
         assertEquals(0, result.getStock());
+    }
+
+    //Prueba para actualizar info de producto
+    @Test
+    public void updateProductInfo_normalNoStockChange(){
+        ProductUpdatedRequestDTO dto = ProductUpdatedRequestDTO.builder().id(1L).description("Sony TV 50p").comment("")
+                .salePrice(1000).stock(2).build();
+        Product product = Product.builder().id(1L).description("Sony Tv").salePrice(900).stock(2).build();
+        when(productRepo.findById(dto.getId())).thenReturn(Optional.of(product));
+        doNothing().when(validator).isDeleted(product);
+        when(validator.isChangeStockOriginalValue(product.getStock(), dto.getStock())).thenReturn(false);
+
+        productService.updateProductInfo(dto);
+
+        ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
+        verify(productRepo, times(1)).save(productArgumentCaptor.capture());
+        verify(productRepo, times(1)).findById(dto.getId());
+
+        Product result = productArgumentCaptor.getValue();
+        assertEquals(result.getDescription(), dto.getDescription());
+        assertEquals(result.getStock(), dto.getStock());
+        assertEquals(result.getSalePrice(), dto.getSalePrice());
+    }
+    @Test
+    public void updateProductInfo_StockChange(){
+        ProductUpdatedRequestDTO dto = ProductUpdatedRequestDTO.builder().id(1L).description("Sony TV 50p")
+                .comment("Comment change stock").salePrice(1000).stock(5).build();
+        Product product = Product.builder().id(1L).description("Sony Tv").salePrice(900).stock(2).build();
+        int originalStock = product.getStock();
+        when(productRepo.findById(dto.getId())).thenReturn(Optional.of(product));
+        doNothing().when(validator).isDeleted(product);
+        when(validator.isChangeStockOriginalValue(product.getStock(), dto.getStock())).thenReturn(true);
+
+        productService.updateProductInfo(dto);
+
+        ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
+        verify(productRepo, times(1)).save(productArgumentCaptor.capture());
+        verify(productRepo, times(1)).findById(dto.getId());
+
+        Product result = productArgumentCaptor.getValue();
+        assertEquals(result.getDescription(), dto.getDescription());
+        assertEquals(result.getStock(), dto.getStock());
+        assertEquals(result.getSalePrice(), dto.getSalePrice());
+
+        String expectedComment = String.format("%s - stock original: %s, stock nuevo: %s", dto.getComment(),
+                originalStock, dto.getStock());
+        int expectedQuantity = Math.abs(originalStock - dto.getStock());
+        verify(kardexService, times(1)).addKardex(product, expectedQuantity, expectedComment,
+                MovementsType.AJUSTE);
+        verify(alertService, times(1)).createAlert(product, expectedComment);
     }
 
     //Prueba para actualizar un producto
