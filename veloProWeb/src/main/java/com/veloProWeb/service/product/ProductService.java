@@ -156,29 +156,6 @@ public class ProductService implements IProductService {
     }
 
     /**
-     * Verifica y crea alertas para cada producto en intervalos regulares.
-     * Crea una alerta si no hay stock disponible o umbral bajo y no existe ya una alerta activa.
-     * Llama al servicio de Kardex para verificar y manejar las bajas ventas del producto.
-     * @Scheduled - Está programado para actuar cada 6 hr automáticamente
-     */
-    @Override
-    @Scheduled(fixedRate = 21600000)
-    public void checkAndCreateAlertsByProduct() {
-        List<Product> products =  productRepo.findAll();
-        for (Product product : products){
-            String noStockDescription = "Sin Stock (" + product.getDescription() + " )";
-            if (product.getStock() == 0 && !alertService.isAlertActive(product, noStockDescription)){
-                alertService.createAlert(product, noStockDescription);
-            }
-            String criticalStockDescription = "Stock Crítico (" + product.getDescription() + " - " + product.getStock() + " unidades)";
-            if (product.getStock() < product.getThreshold() && !alertService.isAlertActive(product, criticalStockDescription) ) {
-                alertService.createAlert(product, criticalStockDescription);
-            }
-            kardexService.checkLowSales(product);
-        }
-    }
-
-    /**
      * Actualiza el estado del stock y reserva de un producto dependiendo del éxito del despacho.
      * Si exitoso se resta el stock y se suma reservar del producto,
      * si no suma el stock y resta la reserva del producto en caso contrario.

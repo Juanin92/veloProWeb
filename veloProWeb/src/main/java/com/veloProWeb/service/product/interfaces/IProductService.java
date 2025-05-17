@@ -18,6 +18,5 @@ public interface IProductService {
     void reactive(ProductUpdatedRequestDTO dto);
     void updateStockPurchase(Product product, int price, int quantity);
     void updateStockSale(Product product, int quantity);
-    void checkAndCreateAlertsByProduct();
     void updateStockAndReserveDispatch(Product product, int quantity, boolean success);
 }
