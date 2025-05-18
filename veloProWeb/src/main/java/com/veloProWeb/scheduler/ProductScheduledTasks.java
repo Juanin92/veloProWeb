@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -25,18 +27,25 @@ public class ProductScheduledTasks {
      * @Scheduled - Está programado para actuar cada 6 hr automáticamente
      */
     @Scheduled(fixedRate = 21600000)
-    public void checkAndCreateAlertsByProduct() {
-        List<Product> products =  productRepo.findAll();
-        for (Product product : products){
+    public void checkAndHandleProductAlerts() {
+        List<Product> noStockProducts = productRepo.findOutOfStock();
+        noStockProducts.forEach(product -> {
             String noStockDescription = "Sin Stock (" + product.getDescription() + " )";
-            if (product.getStock() == 0 && !alertService.isAlertActive(product, noStockDescription)){
+            if (!alertService.isAlertActive(product, noStockDescription)){
                 alertService.createAlert(product, noStockDescription);
             }
-            String criticalStockDescription = "Stock Crítico (" + product.getDescription() + " - " + product.getStock() + " unidades)";
-            if (product.getStock() < product.getThreshold() && !alertService.isAlertActive(product, criticalStockDescription) ) {
+        });
+        List<Product> criticalStockProducts = productRepo.findCriticalStock();
+        criticalStockProducts.forEach(product -> {
+            String criticalStockDescription = String.format("Stock Crítico (%s - %s unidades)",
+                    product.getDescription(), product.getStock());
+            if (!alertService.isAlertActive(product, criticalStockDescription) ) {
                 alertService.createAlert(product, criticalStockDescription);
             }
-            kardexService.checkLowSales(product);
-        }
+        });
+        Set<Product> allChecked = new HashSet<>();
+        allChecked.addAll(noStockProducts);
+        allChecked.addAll(criticalStockProducts);
+        allChecked.forEach(kardexService::checkLowSales);
     }
 }
