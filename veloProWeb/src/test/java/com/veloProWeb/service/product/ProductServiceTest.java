@@ -3,14 +3,11 @@ package com.veloProWeb.service.product;
 import com.veloProWeb.exceptions.product.ProductAlreadyActivatedException;
 import com.veloProWeb.exceptions.product.ProductAlreadyDeletedException;
 import com.veloProWeb.mapper.ProductMapper;
-import com.veloProWeb.model.Enum.MovementsType;
 import com.veloProWeb.model.dto.product.ProductRequestDTO;
 import com.veloProWeb.model.dto.product.ProductUpdatedRequestDTO;
 import com.veloProWeb.model.entity.product.*;
 import com.veloProWeb.model.Enum.StatusProduct;
 import com.veloProWeb.repository.product.ProductRepo;
-import com.veloProWeb.service.Report.IkardexService;
-import com.veloProWeb.service.User.Interface.IAlertService;
 import com.veloProWeb.validation.ProductValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,8 +18,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,8 +29,7 @@ public class ProductServiceTest {
     @InjectMocks private ProductService productService;
     @Mock private ProductRepo productRepo;
     @Mock private ProductValidator validator;
-    @Mock private IAlertService alertService;
-    @Mock private IkardexService kardexService;
+    @Mock private ProductEventService productEventService;
     @Spy private ProductMapper mapper = new ProductMapper();
     private Product product;
     private BrandProduct brand;
@@ -62,6 +56,8 @@ public class ProductServiceTest {
 
         ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
         verify(productRepo, times(1)).save(productArgumentCaptor.capture());
+        verify(productEventService, times(1))
+                .handleCreateRegister(productArgumentCaptor.capture(), eq("Creación Producto"));
 
         Product result = productArgumentCaptor.getValue();
         assertEquals(result.getDescription(), dto.getDescription());
@@ -83,13 +79,14 @@ public class ProductServiceTest {
         Product product = Product.builder().id(1L).description("Sony Tv").salePrice(900).stock(2).build();
         when(productRepo.findById(dto.getId())).thenReturn(Optional.of(product));
         doNothing().when(validator).isDeleted(product);
-        when(validator.isChangeStockOriginalValue(product.getStock(), dto.getStock())).thenReturn(false);
 
         productService.updateProductInfo(dto);
 
         ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
         verify(productRepo, times(1)).save(productArgumentCaptor.capture());
         verify(productRepo, times(1)).findById(dto.getId());
+        verify(productEventService, times(1))
+                .isChangeStockOriginalValue(productArgumentCaptor.capture(), eq(product.getStock()), eq(dto));
 
         Product result = productArgumentCaptor.getValue();
         assertEquals(result.getDescription(), dto.getDescription());
@@ -104,25 +101,19 @@ public class ProductServiceTest {
         int originalStock = product.getStock();
         when(productRepo.findById(dto.getId())).thenReturn(Optional.of(product));
         doNothing().when(validator).isDeleted(product);
-        when(validator.isChangeStockOriginalValue(product.getStock(), dto.getStock())).thenReturn(true);
 
         productService.updateProductInfo(dto);
 
         ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
         verify(productRepo, times(1)).save(productArgumentCaptor.capture());
         verify(productRepo, times(1)).findById(dto.getId());
+        verify(productEventService, times(1))
+                .isChangeStockOriginalValue(productArgumentCaptor.capture(), eq(originalStock), eq(dto));
 
         Product result = productArgumentCaptor.getValue();
         assertEquals(result.getDescription(), dto.getDescription());
         assertEquals(result.getStock(), dto.getStock());
         assertEquals(result.getSalePrice(), dto.getSalePrice());
-
-        String expectedComment = String.format("%s - stock original: %s, stock nuevo: %s", dto.getComment(),
-                originalStock, dto.getStock());
-        int expectedQuantity = Math.abs(originalStock - dto.getStock());
-        verify(kardexService, times(1)).addKardex(product, expectedQuantity, expectedComment,
-                MovementsType.AJUSTE);
-        verify(alertService, times(1)).createAlert(product, expectedComment);
     }
 
     //Prueba para actualizar un producto
@@ -160,6 +151,8 @@ public class ProductServiceTest {
         ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
         verify(productRepo, times(1)).findById(dto.getId());
         verify(productRepo, times(1)).save(productArgumentCaptor.capture());
+        verify(productEventService, times(1))
+                .handleCreateRegister(productArgumentCaptor.capture(), eq("Activado"));
 
         Product result = productArgumentCaptor.getValue();
         assertEquals(StatusProduct.NODISPONIBLE, result.getStatusProduct());
@@ -209,6 +202,8 @@ public class ProductServiceTest {
         ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
         verify(productRepo, times(1)).findById(dto.getId());
         verify(productRepo, times(1)).save(productArgumentCaptor.capture());
+        verify(productEventService, times(1))
+                .handleCreateRegister(productArgumentCaptor.capture(), eq("Eliminado / Descontinuado"));
 
         Product result = productArgumentCaptor.getValue();
         assertFalse(result.isStatus());
@@ -238,59 +233,10 @@ public class ProductServiceTest {
     //Prueba para obtener producto por ID
     @Test
     public void getProductById_valid(){
-        product.setId(1L);
+        Product product = Product.builder().id(1L).status(true).build();
+        when(productRepo.findById(product.getId())).thenReturn(Optional.of(product));
         productService.getProductById(product.getId());
         verify(productRepo).findById(product.getId());
-    }
-
-    //Prueba para verificar las alertas creadas o cuáles se deben crear para cada situación
-    @Test
-    public void checkAndCreateAlertsByProduct_validNoStock(){
-        product.setStock(0);
-        product.setThreshold(3);
-        product.setDescription("product 1");
-        List<Product> products = Collections.singletonList(product);
-        String noStockDescription = "Sin Stock (" + product.getDescription() + " )";
-        when(productRepo.findAll()).thenReturn(products);
-        when(alertService.isAlertActive(product, noStockDescription)).thenReturn(false);
-        productService.checkAndCreateAlertsByProduct();
-
-        verify(productRepo, times(1)).findAll();
-        verify(alertService, times(1)).isAlertActive(product, noStockDescription);
-        verify(alertService, times(1)).createAlert(product, noStockDescription);
-        verify(kardexService, times(1)).checkLowSales(product);
-    }
-    @Test
-    public void checkAndCreateAlertsByProduct_validCriticalStock(){
-        product.setStock(10);
-        product.setThreshold(15);
-        product.setDescription("product 1");
-        List<Product> products = Collections.singletonList(product);
-        String criticalStockDescription = "Stock Crítico (" + product.getDescription() + " - " + product.getStock() + " unidades)";
-        when(productRepo.findAll()).thenReturn(products);
-        when(alertService.isAlertActive(product, criticalStockDescription)).thenReturn(false);
-        productService.checkAndCreateAlertsByProduct();
-
-        verify(productRepo, times(1)).findAll();
-        verify(alertService, times(1)).isAlertActive(product, criticalStockDescription);
-        verify(alertService, times(1)).createAlert(product, criticalStockDescription);
-        verify(kardexService, times(1)).checkLowSales(product);
-    }
-    @Test
-    public void checkAndCreateAlertsByProduct_validWithAlertReactive(){
-        product.setStock(0);
-        product.setThreshold(15);
-        product.setDescription("product 1");
-        List<Product> products = Collections.singletonList(product);
-        String noStockDescription = "Sin Stock (" + product.getDescription() + " )";
-        when(productRepo.findAll()).thenReturn(products);
-        when(alertService.isAlertActive(product, noStockDescription)).thenReturn(true);
-        productService.checkAndCreateAlertsByProduct();
-
-        verify(productRepo, times(1)).findAll();
-        verify(alertService, times(1)).isAlertActive(product, noStockDescription);
-        verify(alertService, never()).createAlert(product, noStockDescription);
-        verify(kardexService, times(1)).checkLowSales(product);
     }
 
     //Prueba para actualizar el stock y reserva de un producto después de un despacho
