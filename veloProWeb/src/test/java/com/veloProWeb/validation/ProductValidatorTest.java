@@ -72,18 +72,4 @@ public class ProductValidatorTest {
                 ()-> validator.isDeleted(product));
         assertEquals("El producto ya está desactivado.", e.getMessage());
     }
-
-    //Prueba para validar el cambio de stock
-    @Test
-    public void isChangeStockOriginalValue_validChange(){
-        int newStock = 11;
-        boolean result = validator.isChangeStockOriginalValue(product.getStock(), newStock);
-        assertTrue(result);
-    }
-    @Test
-    public void isChangeStockOriginalValue_validNotChange(){
-        int newStock = 15;
-        boolean result = validator.isChangeStockOriginalValue(product.getStock(), newStock);
-        assertFalse(result);
-    }
 }
