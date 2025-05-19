@@ -48,6 +48,6 @@ public class Product {
     private CategoryProduct category;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Kardex> kardexList = new ArrayList<>();
 }
