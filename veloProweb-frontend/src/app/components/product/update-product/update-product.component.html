@@ -141,8 +141,7 @@
       </div>
       <div class="modal-footer d-flex justify-content-center">
         <button *ngIf="!stockChanged" type="submit" class="btn btn-warning" 
-          (click)="stockChangeValidation(true)"
-          [attr.data-bs-dismiss]="modalService.isModalVisible() ? 'modal':null">Actualizar</button>
+          (click)="stockChangeValidation(true)">Actualizar</button>
         <button *ngIf="stockChanged" type="submit" class="btn btn-warning" 
           (click)="updateProductInfo()"
           [attr.data-bs-dismiss]="modalService.isModalVisible() ? 'modal':null">Confirmar</button>
