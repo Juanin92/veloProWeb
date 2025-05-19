@@ -1,13 +1,19 @@
 package com.veloProWeb.model.entity.Purchase;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Supplier {
 
     @Id
@@ -18,7 +24,7 @@ public class Supplier {
     private String email;
     private String phone;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     List<Purchase> purchaseList = new ArrayList<>();
 
     @Override
