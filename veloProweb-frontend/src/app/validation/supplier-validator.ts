@@ -1,14 +1,14 @@
-import { Supplier } from "../models/Entity/Purchase/supplier";
+import { SupplierForm } from "../models/Entity/Purchase/supplier-form";
 
 export class SupplierValidator {
-    static validateForm(selectedSupplier: Supplier): boolean{
+    static validateForm(selectedSupplier: SupplierForm): boolean{
         return this.isFieldValid(selectedSupplier, 'name') &&
             this.isFieldValid(selectedSupplier, 'rut') &&
             this.isFieldValid(selectedSupplier, 'phone') &&
             this.isFieldValid(selectedSupplier, 'email');
     }
 
-    static isFieldValid(supplier: Supplier, fieldName: keyof Supplier): boolean{
+    static isFieldValid(supplier: SupplierForm, fieldName: keyof SupplierForm): boolean{
         const value = supplier[fieldName];
         if (fieldName === 'name') {
             return value !== null && typeof value === 'string' && value.trim().length > 2;
