@@ -1,6 +1,6 @@
 package com.veloProWeb.controller.Purchase;
 
-import com.veloProWeb.model.dto.DetailPurchaseRequestDTO;
+import com.veloProWeb.model.dto.purchase.DetailPurchaseRequestDTO;
 import com.veloProWeb.model.dto.PurchaseRequestDTO;
 import com.veloProWeb.model.entity.Purchase.Purchase;
 import com.veloProWeb.service.Purchase.Interfaces.IPurchaseDetailService;

@@ -1,7 +1,7 @@
 package com.veloProWeb.service.Purchase;
 
-import com.veloProWeb.model.dto.DetailPurchaseDTO;
-import com.veloProWeb.model.dto.DetailPurchaseRequestDTO;
+import com.veloProWeb.model.dto.purchase.DetailPurchaseDTO;
+import com.veloProWeb.model.dto.purchase.DetailPurchaseRequestDTO;
 import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.model.entity.Purchase.Purchase;
 import com.veloProWeb.model.entity.Purchase.PurchaseDetail;
@@ -11,7 +11,7 @@ import com.veloProWeb.service.product.interfaces.IProductService;
 import com.veloProWeb.service.Purchase.Interfaces.IPurchaseDetailService;
 import com.veloProWeb.service.Purchase.Interfaces.IPurchaseService;
 import com.veloProWeb.service.Report.IkardexService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,12 +19,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class PurchaseDetailService implements IPurchaseDetailService {
 
-    @Autowired private PurchaseDetailRepo purchaseDetailRepo;
-    @Autowired private IProductService productService;
-    @Autowired private IPurchaseService purchaseService;
-    @Autowired private IkardexService kardexService;
+    private final PurchaseDetailRepo purchaseDetailRepo;
+    private final IProductService productService;
+    private final IPurchaseService purchaseService;
+    private final IkardexService kardexService;
 
     /**
      * Crear detalle de compras proporcionadas
