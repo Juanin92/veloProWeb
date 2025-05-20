@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Supplier } from '../../models/Entity/Purchase/supplier';
 import { AuthService } from '../User/auth.service';
+import { SupplierForm } from '../../models/Entity/Purchase/supplier-form';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,7 @@ export class SupplierService {
    * @param supplier - Proveedor por agregar
    * @returns - Observable emite un mensaje de confirmación o error
    */
-  createSupplier(supplier: Supplier): Observable<{message: string}>{
+  createSupplier(supplier: SupplierForm): Observable<{message: string}>{
     return this.http.post<{message: string}>(`${this.apiUrl}`, supplier, {headers: this.auth.getAuthHeaders()});
   }
 
@@ -35,7 +36,7 @@ export class SupplierService {
    * @param supplier - Proveedor por actualizar
    * @returns - Observable emite un mensaje de confirmación o error
    */
-  updateSupplier(supplier: Supplier): Observable<{message: string}>{
+  updateSupplier(supplier: SupplierForm): Observable<{message: string}>{
     return this.http.put<{message: string}>(`${this.apiUrl}`, supplier, {headers: this.auth.getAuthHeaders()});
   }
 
@@ -44,7 +45,7 @@ export class SupplierService {
    * @param id - Identificador del proveedor
    * @returns - Observable emite un objeto supplier
    */
-  getSupplier(id: number): Observable<Supplier>{
-    return this.http.get<Supplier>(`${this.apiUrl}/buscar`, {params:{id: id.toString()}});
+  getSupplier(rut: string): Observable<Supplier>{
+    return this.http.get<Supplier>(`${this.apiUrl}/buscar`, {params:{rut: rut.toString()}});
   } 
 }
