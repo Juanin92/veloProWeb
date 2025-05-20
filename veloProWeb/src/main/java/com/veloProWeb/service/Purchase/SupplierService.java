@@ -24,7 +24,7 @@ public class SupplierService implements ISupplierService {
 
     /**
      * Crea un nuevo proveedor
-     * Se válida que el proveedor no exista un registro de él, si no lanzara excepción
+     * Se valida que el proveedor no exista un registro de él, si no lanzara excepción
      * @param dto - Objeto que contiene los valores necesarios
      */
     @Transactional
@@ -69,7 +69,8 @@ public class SupplierService implements ISupplierService {
      */
     @Override
     public SupplierResponseDTO getSupplierByRut(String rut) {
-        return supplierRepo.findByRut(rut).map(mapper::responseDTO)
+        return supplierRepo.findByRut(rut)
+                .map(mapper::responseDTO)
                 .orElseThrow(() -> new SupplierNotFoundException("No existe registro del proveedor"));
     }
 
