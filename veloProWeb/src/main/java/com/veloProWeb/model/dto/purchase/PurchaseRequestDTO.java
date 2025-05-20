@@ -1,12 +1,17 @@
-package com.veloProWeb.model.dto;
+package com.veloProWeb.model.dto.purchase;
 
-import com.veloProWeb.model.dto.purchase.DetailPurchaseDTO;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PurchaseRequestDTO {
     private Long id;
     private LocalDate date;
