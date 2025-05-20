@@ -1,96 +1,67 @@
 package com.veloProWeb.controller.Purchase;
 
-import com.veloProWeb.model.entity.Purchase.Supplier;
+import com.veloProWeb.model.dto.purchase.SupplierRequestDTO;
+import com.veloProWeb.model.dto.purchase.SupplierResponseDTO;
 import com.veloProWeb.service.Purchase.Interfaces.ISupplierService;
 import com.veloProWeb.service.Record.IRecordService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.veloProWeb.util.ResponseMessage;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
-/**
- * Controlador REST para gestionar operaciones relacionadas con proveedores.
- * Este controlador proporciona endpoints para listar, agregar, buscar, actualizar proveedores.
- */
 @RestController
 @RequestMapping("/proveedores")
-@CrossOrigin(origins = "http://localhost:4200")
+@AllArgsConstructor
+@Validated
 public class SupplierController {
 
-    @Autowired private ISupplierService supplierService;
-    @Autowired private IRecordService recordService;
+    private final ISupplierService supplierService;
+    private final IRecordService recordService;
 
-    /**
-     * Obtiene una lista de proveedores.
-     * @return - ResponseEntity con una lista de proveedores
-     */
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE')")
-    public ResponseEntity<List<Supplier>> getListSupplier(){
+    public ResponseEntity<List<SupplierResponseDTO>> getListSupplier(){
         return ResponseEntity.ok(supplierService.getAll());
     }
 
-    /**
-     * Agrega un nuevo proveedor
-     * @param supplier - Proveedor con los datos que se desea agregar
-     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
-     */
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE')")
-    public ResponseEntity<Map<String, String>> createSupplier(@RequestBody Supplier supplier,
+    public ResponseEntity<Map<String, String>> createSupplier(@RequestBody @Valid SupplierRequestDTO supplier,
                                                               @AuthenticationPrincipal UserDetails userDetails){
-        Map<String, String> response = new HashMap<>();
-        try{
-            supplierService.createSupplier(supplier);
-            response.put("message","Proveedor creado exitosamente!");
-            recordService.registerAction(userDetails, "CREATE", "Proveedor Creado: " + supplier.getName());
-            return ResponseEntity.ok(response);
-        }catch (IllegalArgumentException e){
-            response.put("message", e.getMessage());
-            recordService.registerAction(userDetails, "CREATE_FAILURE", "Error: crear proveedor: " + supplier.getName());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
+        supplierService.createSupplier(supplier);
+        recordService.registerAction(userDetails, "CREATE",
+                String.format("Proveedor %s Creado", supplier.getName()));
+        return new ResponseEntity<>(ResponseMessage.message("Proveedor creado exitosamente!"), HttpStatus.CREATED);
     }
 
-    /**
-     * Actualiza los datos de un proveedor
-     * @param supplier - Proveedor con los datos que se desea actualizar
-     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
-     */
     @PutMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE')")
-    public ResponseEntity<Map<String, String>> updateSupplier(@RequestBody Supplier supplier,
+    public ResponseEntity<Map<String, String>> updateSupplier(@RequestBody @Valid SupplierRequestDTO supplier,
                                                               @AuthenticationPrincipal UserDetails userDetails){
-        Map<String, String> response = new HashMap<>();
-        try{
-            supplierService.updateSupplier(supplier);
-            response.put("message","Datos actualizado exitosamente!");
-            recordService.registerAction(userDetails, "UPDATE", "Proveedor actualizado: " + supplier.getName());
-            return ResponseEntity.ok(response);
-        }catch (IllegalArgumentException e){
-            response.put("message", e.getMessage());
-            recordService.registerAction(userDetails, "UPDATE_FAILURE", "Error: actualizar proveedor: " + supplier.getName());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
+        supplierService.updateSupplier(supplier);
+        recordService.registerAction(userDetails, "UPDATE",
+                String.format("Proveedor %s actualizado", supplier.getName()));
+        return new ResponseEntity<>(ResponseMessage.message("Datos actualizado exitosamente!"), HttpStatus.OK);
     }
 
-    /**
-     * Obtener un proveedor por un ID
-     * @param id - Identificador de proveedor a buscar
-     * @return - ResponseEntity con el proveedor o Not_found al no obtener nada
-     */
     @GetMapping("/buscar")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE')")
-    public ResponseEntity<Supplier> getSupplierById(@RequestParam Long id){
-        Optional<Supplier> supplier = supplierService.getSupplierById(id);
-        return supplier.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    public ResponseEntity<SupplierResponseDTO> getSupplierByRut(@RequestParam
+                                                                @NotBlank(message = "El rut es obligatorio")
+                                                                @Pattern(regexp = "^\\d{7,8}-[\\dKk]$",
+                                                                        message = "El rut no tiene un formato válido")
+                                                                String rut) {
+        return new ResponseEntity<>(supplierService.getSupplierByRut(rut), HttpStatus.OK);
     }
 }
