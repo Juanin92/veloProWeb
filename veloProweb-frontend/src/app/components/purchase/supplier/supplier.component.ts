@@ -6,6 +6,8 @@ import { SupplierValidator } from '../../../validation/supplier-validator';
 import { SupplierService } from '../../../services/Purchase/supplier.service';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { PurchasePermissionsService } from '../../../services/Permissions/purchase-permissions.service';
+import { SupplierForm } from '../../../models/Entity/Purchase/supplier-form';
+import { ErrorMessageService } from '../../../utils/error-message.service';
 
 @Component({
   selector: 'app-supplier',
@@ -17,7 +19,7 @@ import { PurchasePermissionsService } from '../../../services/Permissions/purcha
 export class SupplierComponent implements OnInit {
 
   suppliers: Supplier[] = [];
-  newSupplier: Supplier;
+  supplierInfo: SupplierForm;
   selectedSupplier: Supplier | null = null;
   status: boolean = false; //Estado para mostrar el formulario de creación
   updateStatus: boolean = false; //Estado para mostrar el formulario de actualización
@@ -27,12 +29,23 @@ export class SupplierComponent implements OnInit {
   constructor(
     private supplierService: SupplierService,
     private notification: NotificationService,
+    private errorMessage: ErrorMessageService,
     protected permission: PurchasePermissionsService) {
-    this.newSupplier = this.initializeSupplier();
+    this.supplierInfo = this.initializeSupplierForm();
   }
 
   ngOnInit(): void {
     this.getSuppliers();
+  }
+
+  /**
+   * Obtiene una lista de proveedores
+   * Asigna una lista con proveedores a la lista suppliers
+   */
+  getSuppliers(): void {
+    this.supplierService.getSuppliers().subscribe(
+      (supplierList) => this.suppliers = supplierList,
+    );
   }
 
   /**
@@ -41,16 +54,17 @@ export class SupplierComponent implements OnInit {
    * Muestra notificaciones dependiendo el estado de la acción y refresca la lista de proveedores.
    */
   createSupplier(): void {
-    if (this.validator.validateForm(this.newSupplier)) {
-      this.supplierService.createSupplier(this.newSupplier).subscribe((response) => {
-        console.log('Proveedor agregado exitosamente:', response);
-        this.notification.showSuccessToast(`¡${this.newSupplier.name} fue agregado exitosamente!`, 'top', 3000);
-        this.initializeSupplier(); // Reinicia la variable del cliente vacío.
-        this.getSuppliers();
-      }, (error) => {
-        const message = error.error.error;
-        console.error('Error al agregar el proveedor:', error);
-        this.notification.showErrorToast(`Error al agregar proveedor \n${message}`, 'top', 5000);
+    if (this.validator.validateForm(this.supplierInfo)) {
+      this.supplierService.createSupplier(this.supplierInfo).subscribe({
+          next: (response) => {
+          this.notification.showSuccessToast(`${response.message} \n${this.supplierInfo.name}`, 'top', 3000);
+          this.initializeSupplierForm();
+          this.getSuppliers();
+          this.openCreateFormat(false);
+        },error: (error) => {
+          const message = this.errorMessage.errorMessageExtractor(error);
+          this.notification.showErrorToast(`Error: \n${message}`, 'top', 5000);
+        }
       });
     } else {
       this.notification.showWarning('Formulario incompleto', 'Por favor, complete correctamente todos los campos obligatorios.');
@@ -63,31 +77,20 @@ export class SupplierComponent implements OnInit {
    * Muestra notificaciones dependiendo el estado de la acción y refresca la lista de proveedores.
    */
   updateSupplier(): void {
-    if (this.validator.validateForm(this.newSupplier)) {
-      this.supplierService.updateSupplier(this.newSupplier).subscribe((response) => {
-        console.log('Datos actualizados exitosamente:', response);
-        this.notification.showSuccessToast(`¡${this.newSupplier.name} fue actualizado exitosamente!`, 'top', 3000);
-        this.initializeSupplier();
-        this.status = false;
-        this.getSuppliers();
-      }, (error) => {
-        const message = error.error.error;
-        console.error('Error al actualizar el proveedor:', error);
-        this.notification.showErrorToast(`Error al actualizar proveedor \n${message}`, 'top', 5000);
+    if (this.validator.validateForm(this.supplierInfo)) {
+      console.log('proveedor actualizado: ', this.supplierInfo);
+      this.supplierService.updateSupplier(this.supplierInfo).subscribe({
+        next:(response) => {
+          this.notification.showSuccessToast(`${this.supplierInfo.name}: \n${response.message}`, 'top', 3000);
+          this.initializeSupplierForm();
+          this.status = false;
+          this.getSuppliers();
+        },error: (error) => {
+          const message = this.errorMessage.errorMessageExtractor(error);
+          this.notification.showErrorToast(`Error: \n${message}`, 'top', 5000);
+        }
       });
     }
-  }
-
-  /**
-   * Obtiene una lista de proveedores
-   * Asigna una lista con proveedores a la lista suppliers
-   */
-  getSuppliers(): void {
-    this.supplierService.getSuppliers().subscribe((supplierList) => {
-      this.suppliers = supplierList;
-    }, (error) => {
-      console.log('Error no se encontró ningún proveedor', error);
-    });
   }
 
   /**
@@ -108,11 +111,11 @@ export class SupplierComponent implements OnInit {
    * Inicializa los valores del nuevo proveedor.
    * @param statusClick - Indica si se debe abrir (true) o cerrar (false) el formulario.
    */
-  openFormat(statusClick: boolean): void {
+  openCreateFormat(statusClick: boolean): void {
     this.status = statusClick;
     this.updateStatus = false;
     this.selectedSupplier = null;
-    this.newSupplier = this.initializeSupplier();
+    this.supplierInfo = this.initializeSupplierForm();
     this.touchedFields = {};
   }
 
@@ -125,7 +128,7 @@ export class SupplierComponent implements OnInit {
    */
   openUpdateForm(): void {
     if (this.selectedSupplier) {
-      this.newSupplier = { ...this.selectedSupplier };
+      this.supplierInfo = { ...this.selectedSupplier };
       this.status = true;
       this.updateStatus = true;
       this.selectedSupplier = null;
@@ -136,9 +139,8 @@ export class SupplierComponent implements OnInit {
    * Inicializa los valores del objeto proveedor.
    * @returns - Objeto vacío de proveedor con valores por defecto.
    */
-  initializeSupplier(): Supplier {
-    return this.newSupplier = {
-      id: 0,
+  initializeSupplierForm(): SupplierForm {
+    return {
       name: '',
       email: '',
       rut: '',
