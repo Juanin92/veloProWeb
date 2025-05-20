@@ -28,8 +28,8 @@ public class SupplierMapper {
 
     public void updateSupplierFromDto(Supplier supplier, SupplierRequestDTO dto){
         supplier.setId(supplier.getId());
-        supplier.setRut(dto.getRut());
-        supplier.setName(dto.getName());
+        supplier.setRut(supplier.getRut());
+        supplier.setName(supplier.getName());
         supplier.setEmail(dto.getEmail());
         supplier.setPhone(dto.getPhone());
     }
