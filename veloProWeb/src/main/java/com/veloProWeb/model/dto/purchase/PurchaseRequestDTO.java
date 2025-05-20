@@ -13,7 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PurchaseRequestDTO {
-    private Long id;
     private LocalDate date;
     private Long idSupplier;
     private String documentType;

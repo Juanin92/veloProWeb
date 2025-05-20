@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DetailPurchaseDTO {
-    private Long id;
     private Long idProduct;
     private Long idPurchase;
     private int price;
