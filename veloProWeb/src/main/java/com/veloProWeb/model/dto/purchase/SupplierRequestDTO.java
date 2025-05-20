@@ -3,6 +3,7 @@ package com.veloProWeb.model.dto.purchase;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,6 +16,7 @@ import lombok.NoArgsConstructor;
 public class SupplierRequestDTO {
 
     @NotBlank(message = "El nombre de la empresa es obligatorio")
+    @Size(min = 3, message = "El nombre debe tener al menos 3 caracteres")
     private String name;
 
     @NotBlank(message = "El rut es obligatorio")
