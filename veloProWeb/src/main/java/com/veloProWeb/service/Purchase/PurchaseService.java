@@ -7,7 +7,7 @@ import com.veloProWeb.repository.Purchase.PurchaseRepo;
 import com.veloProWeb.repository.Purchase.SupplierRepo;
 import com.veloProWeb.service.Purchase.Interfaces.IPurchaseService;
 import com.veloProWeb.validation.PurchaseValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,11 +15,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class PurchaseService implements IPurchaseService {
 
-    @Autowired private PurchaseRepo purchaseRepo;
-    @Autowired private SupplierRepo supplierRepo;
-    @Autowired private PurchaseValidator validator;
+    private final PurchaseRepo purchaseRepo;
+    private final SupplierRepo supplierRepo;
+    private final PurchaseValidator validator;
 
     /**
      * Crea una nueva compra.

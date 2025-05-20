@@ -6,7 +6,7 @@ import com.veloProWeb.model.entity.Purchase.Purchase;
 import com.veloProWeb.service.Purchase.Interfaces.IPurchaseDetailService;
 import com.veloProWeb.service.Purchase.Interfaces.IPurchaseService;
 import com.veloProWeb.service.Record.IRecordService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,12 +24,12 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/compras")
-@CrossOrigin(origins = "http://localhost:4200")
+@AllArgsConstructor
 public class PurchaseController {
 
-    @Autowired private IPurchaseService purchaseService;
-    @Autowired private IPurchaseDetailService purchaseDetailService;
-    @Autowired private IRecordService recordService;
+    private final IPurchaseService purchaseService;
+    private final IPurchaseDetailService purchaseDetailService;
+    private final IRecordService recordService;
 
     /**
      * Crear una compra y su detalle de compra correspondiente
