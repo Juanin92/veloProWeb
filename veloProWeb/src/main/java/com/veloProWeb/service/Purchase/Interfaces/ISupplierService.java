@@ -1,14 +1,14 @@
 package com.veloProWeb.service.Purchase.Interfaces;
 
-import com.veloProWeb.model.entity.Purchase.Supplier;
+import com.veloProWeb.model.dto.purchase.SupplierRequestDTO;
+import com.veloProWeb.model.dto.purchase.SupplierResponseDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ISupplierService {
 
-    void createSupplier(Supplier supplier);
-    void updateSupplier(Supplier supplier);
-    List<Supplier> getAll();
-    Optional<Supplier> getSupplierById(Long id);
+    void createSupplier(SupplierRequestDTO dto);
+    void updateSupplier(SupplierRequestDTO dto);
+    List<SupplierResponseDTO> getAll();
+    SupplierResponseDTO getSupplierByRut(String rut);
 }
