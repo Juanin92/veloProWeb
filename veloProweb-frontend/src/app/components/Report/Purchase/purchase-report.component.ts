@@ -95,7 +95,7 @@ export class PurchaseReportComponent implements OnInit, AfterViewInit {
    */
   async getSupplier(dto: PurchaseRequestDTO): Promise<Supplier | null> {
     try {
-      const supplier = await firstValueFrom(this.supplierService.getSupplier(dto.idSupplier));
+      const supplier = await firstValueFrom(this.supplierService.getSupplier("0"));
       return supplier || null;
     } catch (error) {
       console.error('Error al obtener proveedor:', error);

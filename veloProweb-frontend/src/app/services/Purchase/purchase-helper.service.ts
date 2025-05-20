@@ -35,7 +35,7 @@ export class PurchaseHelperService {
     return {
       id: 0,
       date: purchase.date,
-      idSupplier: purchase.supplier?.id ?? 0,
+      idSupplier: 0,
       documentType: purchase.documentType,
       document: purchase.document,
       tax: purchase.tax,
