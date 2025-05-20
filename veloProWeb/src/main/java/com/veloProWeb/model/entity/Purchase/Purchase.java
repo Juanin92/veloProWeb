@@ -1,7 +1,10 @@
 package com.veloProWeb.model.entity.Purchase;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -11,6 +14,9 @@ import java.util.List;
 
 @Entity
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Purchase{
 
     @Id
@@ -26,7 +32,7 @@ public class Purchase{
     @CreatedDate
     private LocalDate date;
 
-    @OneToMany(mappedBy = "purchase", cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "purchase", cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
     private List<PurchaseDetail> purchaseDetails = new ArrayList<>();
 
     @ManyToOne

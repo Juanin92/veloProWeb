@@ -1,5 +1,6 @@
 package com.veloProWeb.model.dto;
 
+import com.veloProWeb.model.dto.purchase.DetailPurchaseDTO;
 import lombok.Data;
 
 import java.time.LocalDate;
