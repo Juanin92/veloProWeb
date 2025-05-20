@@ -1,11 +1,11 @@
 package com.veloProWeb.model.dto.purchase;
 
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -13,11 +13,27 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PurchaseRequestDTO {
-    private LocalDate date;
-    private Long idSupplier;
+
+    @NotBlank(message = "El rut del proveedor es obligatorio")
+    @Pattern(regexp = "^\\d{7,8}-[\\dKk]$", message = "El rut no tiene un formato válido")
+    private String Supplier;
+
+    @NotBlank(message = "Tipo de documento es obligatorio")
     private String documentType;
+
+    @NotBlank(message = "Documento es obligatorio")
     private String document;
+
+    @NotNull(message = "El valor del impuesto es obligatorio")
+    @Positive(message = "El monto debe ser positivo")
+    @Min(value = 1, message = "El monto debe ser mayor a 0")
     private int tax;
+
+    @NotNull(message = "total de la compra es obligatorio")
+    @Positive(message = "El monto debe ser positivo")
+    @Min(value = 1, message = "El monto debe ser mayor a 0")
     private int total;
+
+    @NotNull(message = "Debe contener listado del detalle de la compra")
     private List<DetailPurchaseDTO> detailList;
 }
