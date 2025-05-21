@@ -1,6 +1,9 @@
 package com.veloProWeb.service.Purchase;
 
+import com.veloProWeb.exceptions.supplier.SupplierNotFoundException;
+import com.veloProWeb.mapper.PurchaseMapper;
 import com.veloProWeb.model.dto.purchase.PurchaseRequestDTO;
+import com.veloProWeb.model.dto.purchase.PurchaseResponseDTO;
 import com.veloProWeb.model.entity.Purchase.Purchase;
 import com.veloProWeb.model.entity.Purchase.Supplier;
 import com.veloProWeb.repository.Purchase.PurchaseRepo;
@@ -12,11 +15,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,53 +30,51 @@ public class PurchaseServiceTest {
     @InjectMocks private PurchaseService purchaseService;
     @Mock private PurchaseRepo purchaseRepo;
     @Mock private SupplierRepo supplierRepo;
-    @Mock private PurchaseValidator validator;
-    private PurchaseRequestDTO purchaseDTO;
-    private Supplier supplier;
-    private Purchase purchase;
+    @Spy private PurchaseValidator validator;
+    @Mock private PurchaseMapper mapper;
 
     @BeforeEach
     void setUp(){
-        purchaseDTO = new PurchaseRequestDTO();
-        purchaseDTO.setId(1L);
-        purchaseDTO.setDate(LocalDate.now());
-        purchaseDTO.setIdSupplier(2L);
-        purchaseDTO.setDocument("A001");
-        purchaseDTO.setDocumentType("Boleta");
-        purchaseDTO.setTax(1500);
-        purchaseDTO.setTotal(20000);
-        purchaseDTO.setDetailList(new ArrayList<>());
-
-        supplier =  new Supplier();
-        supplier.setId(3L);
-
-        purchase = new Purchase();
-        purchase.setId(2L);
-        purchase.setSupplier(supplier);
     }
 
     //Prueba para crear una nueva compra
     @Test
     public void createPurchase_valid() {
-        when(supplierRepo.findById(purchaseDTO.getIdSupplier())).thenReturn(Optional.of(supplier));
-        Purchase createdPurchase = purchaseService.createPurchase(purchaseDTO);
+        Supplier supplier = Supplier.builder().id(1L).rut("12345678-9").build();
+        PurchaseRequestDTO dto = PurchaseRequestDTO.builder().supplier("12345678-9").total(1000).tax(100)
+                .document("F-100").documentType("Factura").build();
+        when(supplierRepo.findByRut(dto.getSupplier())).thenReturn(Optional.of(supplier));
+        doNothing().when(validator).hasSupplier(supplier);
+        Purchase purchaseMapped = Purchase.builder().build();
+        when(mapper.toPurchaseEntity(dto, supplier)).thenReturn(purchaseMapped);
+
+        Purchase createdPurchase = purchaseService.createPurchase(dto);
         ArgumentCaptor<Purchase> purchaseCaptor = ArgumentCaptor.forClass(Purchase.class);
-        verify(purchaseRepo).save(purchaseCaptor.capture());
-        Purchase savedPurchase = purchaseCaptor.getValue();
-        assertEquals("A001", savedPurchase.getDocument());
-        assertEquals(3L, savedPurchase.getSupplier().getId());
-        verify(supplierRepo).findById(purchaseDTO.getIdSupplier());
-        verify(validator).validate(savedPurchase);
+
+        verify(purchaseRepo, times(1)).save(purchaseCaptor.capture());
+        verify(supplierRepo, times(1)).findByRut(dto.getSupplier());
+        verify(validator, times(1)).hasSupplier(supplier);
+        verify(mapper, times(1)).toPurchaseEntity(dto, supplier);
+
+        Purchase result = purchaseCaptor.getValue();
+        assertEquals(result.getSupplier(), createdPurchase.getSupplier());
+        assertEquals(result.getDocumentType(), createdPurchase.getDocumentType());
+        assertEquals(result.getDocument(), createdPurchase.getDocument());
+        assertEquals(result.getPurchaseTotal(), createdPurchase.getPurchaseTotal());
     }
     @Test
     public void createPurchase_supplierNotFound() {
-        when(supplierRepo.findById(purchaseDTO.getIdSupplier())).thenReturn(Optional.empty());
+        PurchaseRequestDTO dto = PurchaseRequestDTO.builder().supplier("12345678-9").total(1000).tax(100)
+                .document("F-100").documentType("Factura").build();
+        when(supplierRepo.findByRut(dto.getSupplier())).thenReturn(Optional.empty());
+        doThrow(new SupplierNotFoundException("Proveedor no encontrado")).when(validator).hasSupplier(null);
+        SupplierNotFoundException e = assertThrows(SupplierNotFoundException.class,
+                () -> purchaseService.createPurchase(dto));
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> purchaseService.createPurchase(purchaseDTO));
+        verify(supplierRepo, times(1)).findByRut(dto.getSupplier());
+        verifyNoInteractions(purchaseRepo, mapper);
 
-        assertEquals("No ha seleccionado un proveedor", exception.getMessage());
-        verify(supplierRepo).findById(purchaseDTO.getIdSupplier());
-        verifyNoInteractions(purchaseRepo);
+        assertEquals("Proveedor no encontrado", e.getMessage());
     }
 
     //Prueba para obtener el total de compras realizadas
@@ -90,21 +89,25 @@ public class PurchaseServiceTest {
     //Prueba para obtener todas las compras
     @Test
     public void getAllPurchases_valid(){
-        List<Purchase> purchases = Collections.singletonList(purchase);
-        when(purchaseRepo.findAll()).thenReturn(purchases);
+        Supplier supplier = Supplier.builder().id(1L).rut("12345678-9").name("Sony").build();
+        Purchase purchase = Purchase.builder().supplier(supplier).purchaseTotal(1000).iva(100)
+                .document("F-100").documentType("Factura").build();
+        Purchase purchase1 = Purchase.builder().supplier(supplier).purchaseTotal(10000).iva(1000)
+                .document("F-150").documentType("Factura").build();
+        Purchase purchase2 = Purchase.builder().supplier(supplier).purchaseTotal(2000).iva(200)
+                .document("B-10").documentType("Boleta").build();
+        when(purchaseRepo.findAll()).thenReturn(List.of(purchase, purchase1, purchase2));
+        PurchaseResponseDTO dtoMapped = PurchaseResponseDTO.builder().supplier(supplier.getName()).purchaseTotal(1000)
+                .iva(100).documentType("Factura").document("F-100").build();
+        when(mapper.toPurchaseResponseDTO(purchase)).thenReturn(dtoMapped);
 
-        List<PurchaseRequestDTO> result = purchaseService.getAllPurchases();
-        verify(purchaseRepo).findAll();
-        assertEquals(supplier.getId(), result.getFirst().getIdSupplier());
-    }
+        List<PurchaseResponseDTO> result = purchaseService.getAllPurchases();
 
-    //Prueba para obtener una compra especifíca
-    @Test
-    public void getPurchaseById_valid(){
-        when(purchaseRepo.findById(purchase.getId())).thenReturn(Optional.of(purchase));
+        verify(purchaseRepo, times(1)).findAll();
+        verify(mapper, times(1)).toPurchaseResponseDTO(purchase);
 
-        Optional<Purchase> result = purchaseService.getPurchaseById(purchase.getId());
-        assertTrue(result.isPresent());
-        assertEquals(purchase.getId(), result.get().getId());
+        assertEquals(result.getFirst().getSupplier(), purchase.getSupplier().getName());
+        assertEquals(1000, result.getFirst().getPurchaseTotal());
+        assertEquals("Factura", result.getFirst().getDocumentType());
     }
 }
