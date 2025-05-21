@@ -1,6 +1,6 @@
-package com.veloProWeb.repository.Purchase;
+package com.veloProWeb.repository.purchase;
 
-import com.veloProWeb.model.entity.Purchase.Purchase;
+import com.veloProWeb.model.entity.purchase.Purchase;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

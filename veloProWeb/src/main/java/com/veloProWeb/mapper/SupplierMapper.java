@@ -2,7 +2,7 @@ package com.veloProWeb.mapper;
 
 import com.veloProWeb.model.dto.purchase.SupplierRequestDTO;
 import com.veloProWeb.model.dto.purchase.SupplierResponseDTO;
-import com.veloProWeb.model.entity.Purchase.Supplier;
+import com.veloProWeb.model.entity.purchase.Supplier;
 import org.springframework.stereotype.Component;
 
 @Component

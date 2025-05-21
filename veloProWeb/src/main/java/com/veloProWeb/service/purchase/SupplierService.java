@@ -1,12 +1,12 @@
-package com.veloProWeb.service.Purchase;
+package com.veloProWeb.service.purchase;
 
 import com.veloProWeb.exceptions.supplier.SupplierNotFoundException;
 import com.veloProWeb.mapper.SupplierMapper;
 import com.veloProWeb.model.dto.purchase.SupplierRequestDTO;
 import com.veloProWeb.model.dto.purchase.SupplierResponseDTO;
-import com.veloProWeb.model.entity.Purchase.Supplier;
-import com.veloProWeb.repository.Purchase.SupplierRepo;
-import com.veloProWeb.service.Purchase.Interfaces.ISupplierService;
+import com.veloProWeb.model.entity.purchase.Supplier;
+import com.veloProWeb.repository.purchase.SupplierRepo;
+import com.veloProWeb.service.purchase.interfaces.ISupplierService;
 import com.veloProWeb.validation.SupplierValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

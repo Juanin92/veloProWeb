@@ -2,7 +2,7 @@ package com.veloProWeb.validation;
 
 import com.veloProWeb.exceptions.supplier.SupplierAlreadyExistsException;
 import com.veloProWeb.exceptions.supplier.SupplierNotFoundException;
-import com.veloProWeb.model.entity.Purchase.Supplier;
+import com.veloProWeb.model.entity.purchase.Supplier;
 import org.springframework.stereotype.Component;
 
 @Component

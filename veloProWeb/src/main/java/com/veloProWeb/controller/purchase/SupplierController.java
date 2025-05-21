@@ -1,8 +1,8 @@
-package com.veloProWeb.controller.Purchase;
+package com.veloProWeb.controller.purchase;
 
 import com.veloProWeb.model.dto.purchase.SupplierRequestDTO;
 import com.veloProWeb.model.dto.purchase.SupplierResponseDTO;
-import com.veloProWeb.service.Purchase.Interfaces.ISupplierService;
+import com.veloProWeb.service.purchase.interfaces.ISupplierService;
 import com.veloProWeb.service.Record.IRecordService;
 import com.veloProWeb.util.ResponseMessage;
 import jakarta.validation.Valid;

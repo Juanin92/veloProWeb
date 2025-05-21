@@ -1,10 +1,10 @@
-package com.veloProWeb.controller.Purchase;
+package com.veloProWeb.controller.purchase;
 
 import com.veloProWeb.model.dto.purchase.PurchaseRequestDTO;
 import com.veloProWeb.model.dto.purchase.PurchaseResponseDTO;
-import com.veloProWeb.model.entity.Purchase.Purchase;
-import com.veloProWeb.service.Purchase.Interfaces.IPurchaseDetailService;
-import com.veloProWeb.service.Purchase.Interfaces.IPurchaseService;
+import com.veloProWeb.model.entity.purchase.Purchase;
+import com.veloProWeb.service.purchase.interfaces.IPurchaseDetailService;
+import com.veloProWeb.service.purchase.interfaces.IPurchaseService;
 import com.veloProWeb.service.Record.IRecordService;
 import com.veloProWeb.util.ResponseMessage;
 import jakarta.validation.Valid;

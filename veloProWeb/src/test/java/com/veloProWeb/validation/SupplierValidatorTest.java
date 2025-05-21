@@ -2,7 +2,7 @@ package com.veloProWeb.validation;
 
 import com.veloProWeb.exceptions.supplier.SupplierAlreadyExistsException;
 import com.veloProWeb.exceptions.supplier.SupplierNotFoundException;
-import com.veloProWeb.model.entity.Purchase.Supplier;
+import com.veloProWeb.model.entity.purchase.Supplier;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

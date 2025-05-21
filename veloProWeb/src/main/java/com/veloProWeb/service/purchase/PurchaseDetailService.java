@@ -1,14 +1,14 @@
-package com.veloProWeb.service.Purchase;
+package com.veloProWeb.service.purchase;
 
 import com.veloProWeb.mapper.PurchaseMapper;
 import com.veloProWeb.model.dto.purchase.PurchaseDetailRequestDTO;
 import com.veloProWeb.model.entity.product.Product;
-import com.veloProWeb.model.entity.Purchase.Purchase;
-import com.veloProWeb.model.entity.Purchase.PurchaseDetail;
+import com.veloProWeb.model.entity.purchase.Purchase;
+import com.veloProWeb.model.entity.purchase.PurchaseDetail;
 import com.veloProWeb.model.Enum.MovementsType;
-import com.veloProWeb.repository.Purchase.PurchaseDetailRepo;
+import com.veloProWeb.repository.purchase.PurchaseDetailRepo;
 import com.veloProWeb.service.product.interfaces.IProductService;
-import com.veloProWeb.service.Purchase.Interfaces.IPurchaseDetailService;
+import com.veloProWeb.service.purchase.interfaces.IPurchaseDetailService;
 import com.veloProWeb.service.Report.IkardexService;
 import com.veloProWeb.validation.PurchaseValidator;
 import lombok.AllArgsConstructor;

@@ -1,8 +1,8 @@
-package com.veloProWeb.service.Purchase.Interfaces;
+package com.veloProWeb.service.purchase.interfaces;
 
 import com.veloProWeb.model.dto.purchase.PurchaseRequestDTO;
 import com.veloProWeb.model.dto.purchase.PurchaseResponseDTO;
-import com.veloProWeb.model.entity.Purchase.Purchase;
+import com.veloProWeb.model.entity.purchase.Purchase;
 
 import java.util.List;
 

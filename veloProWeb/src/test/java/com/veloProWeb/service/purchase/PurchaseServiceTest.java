@@ -1,13 +1,13 @@
-package com.veloProWeb.service.Purchase;
+package com.veloProWeb.service.purchase;
 
 import com.veloProWeb.exceptions.supplier.SupplierNotFoundException;
 import com.veloProWeb.mapper.PurchaseMapper;
 import com.veloProWeb.model.dto.purchase.PurchaseRequestDTO;
 import com.veloProWeb.model.dto.purchase.PurchaseResponseDTO;
-import com.veloProWeb.model.entity.Purchase.Purchase;
-import com.veloProWeb.model.entity.Purchase.Supplier;
-import com.veloProWeb.repository.Purchase.PurchaseRepo;
-import com.veloProWeb.service.Purchase.Interfaces.ISupplierService;
+import com.veloProWeb.model.entity.purchase.Purchase;
+import com.veloProWeb.model.entity.purchase.Supplier;
+import com.veloProWeb.repository.purchase.PurchaseRepo;
+import com.veloProWeb.service.purchase.interfaces.ISupplierService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

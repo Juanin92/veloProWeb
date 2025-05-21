@@ -4,9 +4,9 @@ import com.veloProWeb.model.dto.purchase.PurchaseDetailRequestDTO;
 import com.veloProWeb.model.dto.purchase.PurchaseDetailResponseDTO;
 import com.veloProWeb.model.dto.purchase.PurchaseRequestDTO;
 import com.veloProWeb.model.dto.purchase.PurchaseResponseDTO;
-import com.veloProWeb.model.entity.Purchase.Purchase;
-import com.veloProWeb.model.entity.Purchase.PurchaseDetail;
-import com.veloProWeb.model.entity.Purchase.Supplier;
+import com.veloProWeb.model.entity.purchase.Purchase;
+import com.veloProWeb.model.entity.purchase.PurchaseDetail;
+import com.veloProWeb.model.entity.purchase.Supplier;
 import com.veloProWeb.model.entity.product.Product;
 import org.springframework.stereotype.Component;
 

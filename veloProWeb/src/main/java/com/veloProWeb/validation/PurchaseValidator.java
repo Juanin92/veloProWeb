@@ -1,12 +1,8 @@
 package com.veloProWeb.validation;
 
 import com.veloProWeb.exceptions.purchase.PurchaseNotFoundException;
-import com.veloProWeb.exceptions.supplier.SupplierNotFoundException;
-import com.veloProWeb.model.entity.Purchase.Purchase;
-import com.veloProWeb.model.entity.Purchase.Supplier;
+import com.veloProWeb.model.entity.purchase.Purchase;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
 
 @Component
 public class PurchaseValidator {
