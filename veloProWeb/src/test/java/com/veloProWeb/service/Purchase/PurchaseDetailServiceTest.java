@@ -1,13 +1,15 @@
 package com.veloProWeb.service.Purchase;
 
-import com.veloProWeb.model.dto.purchase.DetailPurchaseDTO;
+import com.veloProWeb.mapper.PurchaseMapper;
+import com.veloProWeb.model.Enum.MovementsType;
 import com.veloProWeb.model.dto.purchase.DetailPurchaseRequestDTO;
 import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.model.entity.Purchase.Purchase;
 import com.veloProWeb.model.entity.Purchase.PurchaseDetail;
 import com.veloProWeb.repository.Purchase.PurchaseDetailRepo;
+import com.veloProWeb.service.Report.KardexService;
 import com.veloProWeb.service.product.ProductService;
-import org.junit.jupiter.api.BeforeEach;
+import com.veloProWeb.validation.PurchaseValidator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -18,8 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class PurchaseDetailServiceTest {
@@ -27,80 +28,43 @@ public class PurchaseDetailServiceTest {
     @InjectMocks private PurchaseDetailService purchaseDetailService;
     @Mock private PurchaseDetailRepo purchaseDetailRepo;
     @Mock private ProductService productService;
-    @Mock private PurchaseService purchaseService;
-    private Purchase purchase;
-    private Product product;
-    private DetailPurchaseDTO dto;
-    private DetailPurchaseRequestDTO detailDto;
-    private PurchaseDetail purchaseDetail;
-
-    @BeforeEach
-    void setUp(){
-        dto = new DetailPurchaseDTO();
-        dto.setId(1L);
-        dto.setIdProduct(5L);
-        dto.setIdPurchase(2L);
-        dto.setPrice(20000);
-        dto.setTax(2000);
-        dto.setQuantity(1);
-        dto.setTotal(22000);
-
-        purchase = new Purchase();
-        purchase.setId(2L);
-
-        product = new Product();
-        product.setId(5L);
-        product.setDescription("prueba");
-
-        purchaseDetail = new PurchaseDetail();
-        purchaseDetail.setPurchase(purchase);
-        purchaseDetail.setProduct(product);
-        purchaseDetail.setTax(100);
-        purchaseDetail.setPrice(10000);
-        purchaseDetail.setQuantity(2);
-        purchaseDetail.setTotal(20200);
-
-        detailDto =  new DetailPurchaseRequestDTO();
-        detailDto.setDescriptionProduct(product.getDescription());
-        detailDto.setPrice(purchaseDetail.getPrice());
-        detailDto.setQuantity(purchaseDetail.getQuantity());
-        detailDto.setTotal(purchaseDetail.getTotal());
-        detailDto.setTax(purchaseDetail.getTax());
-    }
+    @Mock private KardexService kardexService;
+    @Mock private PurchaseMapper mapper;
+    @Mock private PurchaseValidator validator;
 
     //Prueba para crear un detalle de compra
     @Test
     public void createDetailPurchase_valid(){
-        List<DetailPurchaseDTO> dtoList = Collections.singletonList(dto);
-        when(productService.getProductById(product.getId())).thenReturn(product);
-        purchaseDetailService.createDetailPurchase(dtoList, purchase);
+        Purchase purchase = Purchase.builder().id(1L).documentType("Factura").document("F-100").build();
+        doNothing().when(validator).hasPurchase(purchase);
+        DetailPurchaseRequestDTO detail = DetailPurchaseRequestDTO.builder().idPurchase(1L).idProduct(1L)
+                .tax(100).total(1000).quantity(1).build();
+        List<DetailPurchaseRequestDTO> dtoList = List.of(detail);
+        Product product = Product.builder().id(1L).build();
+        when(productService.getProductById(1L)).thenReturn(product);
+        PurchaseDetail purchaseDetail = PurchaseDetail.builder().price(1000).quantity(1).purchase(purchase)
+                .product(product).build();
+        when(mapper.toPurchaseDetailEntity(detail, product, purchase)).thenReturn(purchaseDetail);
+        doNothing().when(productService).updateStockPurchase(product, purchaseDetail.getPrice(),
+                purchaseDetail.getQuantity());
+        doNothing().when(kardexService).addKardex(product, 1, String.format("Compra / %s - %s",
+                purchase.getDocumentType(), purchase.getDocument()), MovementsType.ENTRADA);
+
         ArgumentCaptor<PurchaseDetail> purchaseDetailCaptor = ArgumentCaptor.forClass(PurchaseDetail.class);
-        verify(purchaseDetailRepo).save(purchaseDetailCaptor.capture());
-        PurchaseDetail savedPurchaseDetail = purchaseDetailCaptor.getValue();
-        assertEquals(20000, savedPurchaseDetail.getPrice());
-        assertEquals(1, savedPurchaseDetail.getQuantity());
-        assertEquals(2000, savedPurchaseDetail.getTax());
-        assertEquals(22000, savedPurchaseDetail.getTotal());
-        assertEquals(2L, savedPurchaseDetail.getPurchase().getId());
-        assertEquals(5L, savedPurchaseDetail.getProduct().getId());
-    }
+        purchaseDetailService.createDetailPurchase(dtoList, purchase);
 
-    //Prueba para obtener todos los detalles de compras
-    @Test
-    public void getPurchaseDetails_valid(){
-        List<PurchaseDetail> purchaseDetails = Collections.singletonList(purchaseDetail);
-        when(purchaseDetailRepo.findByPurchaseId(purchase.getId())).thenReturn(purchaseDetails);
-        when(purchaseService.getPurchaseById(purchase.getId())).thenReturn(Optional.of(purchase));
-        List<DetailPurchaseRequestDTO> result = purchaseDetailService.getPurchaseDetails(purchase.getId());
-        verify(purchaseDetailRepo).findByPurchaseId(purchase.getId());
-        verify(purchaseService).getPurchaseById(purchase.getId());
+        verify(purchaseDetailRepo, times(1)).save(purchaseDetailCaptor.capture());
+        verify(validator, times(1)).hasPurchase(purchase);
+        verify(mapper, times(1)).toPurchaseDetailEntity(detail, product, purchase);
+        verify(productService, times(1)).getProductById(1L);
+        verify(productService, times(1)).updateStockPurchase(product, 1000, 1);
+        verify(kardexService, times(1)).addKardex(product, 1,
+                String.format("Compra / %s - %s", "Factura", "F-100"), MovementsType.ENTRADA);
 
-        assertEquals(1, result.size());
-        DetailPurchaseRequestDTO resultDto = result.get(0);
-        assertEquals(product.getDescription(), resultDto.getDescriptionProduct());
-        assertEquals(purchaseDetail.getPrice(), resultDto.getPrice());
-        assertEquals(purchaseDetail.getQuantity(), resultDto.getQuantity());
-        assertEquals(purchaseDetail.getTax(), resultDto.getTax());
-        assertEquals(purchaseDetail.getTotal(), resultDto.getTotal());
+        PurchaseDetail result = purchaseDetailCaptor.getValue();
+        assertEquals( 1000, result.getPrice());
+        assertEquals( 1, result.getQuantity());
+        assertEquals(product, result.getProduct());
+        assertEquals(purchase, result.getPurchase());
     }
 }
