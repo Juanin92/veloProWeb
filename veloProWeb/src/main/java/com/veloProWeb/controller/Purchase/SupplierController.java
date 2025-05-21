@@ -62,6 +62,6 @@ public class SupplierController {
                                                                 @Pattern(regexp = "^\\d{7,8}-[\\dKk]$",
                                                                         message = "El rut no tiene un formato válido")
                                                                 String rut) {
-        return new ResponseEntity<>(supplierService.getSupplierByRut(rut), HttpStatus.OK);
+        return new ResponseEntity<>(supplierService.getDtoByRut(rut), HttpStatus.OK);
     }
 }
