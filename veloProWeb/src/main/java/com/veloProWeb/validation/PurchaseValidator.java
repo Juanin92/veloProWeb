@@ -1,5 +1,6 @@
 package com.veloProWeb.validation;
 
+import com.veloProWeb.exceptions.purchase.PurchaseNotFoundException;
 import com.veloProWeb.exceptions.supplier.SupplierNotFoundException;
 import com.veloProWeb.model.entity.Purchase.Purchase;
 import com.veloProWeb.model.entity.Purchase.Supplier;
@@ -21,14 +22,9 @@ public class PurchaseValidator {
         }
     }
 
-    /**
-     * Válida el valor del total de una compra, lanzará una excepción
-     * si el total es menor o igual a 0
-     * @param total - cantidad a validar
-     */
-    public void validateTotalPurchase(int total){
-        if (total <= 0) {
-            throw new IllegalArgumentException("Ingrese sólo números");
+    public void hasPurchase(Purchase purchase){
+        if (purchase == null) {
+            throw new PurchaseNotFoundException("Compra no encontrada");
         }
     }
 }
