@@ -65,12 +65,23 @@ public class SupplierService implements ISupplierService {
     /**
      * Busca un proveedor ya creado por su RUT
      * @param rut - rut del proveedor
-     * @return - proveedor encontrado o null si no encuentra similitud
+     * @return - DTO de proveedor o una excepción
      */
     @Override
-    public SupplierResponseDTO getSupplierByRut(String rut) {
+    public SupplierResponseDTO getDtoByRut(String rut) {
         return supplierRepo.findByRut(rut)
                 .map(mapper::responseDTO)
+                .orElseThrow(() -> new SupplierNotFoundException("No existe registro del proveedor"));
+    }
+
+    /**
+     * Busca un proveedor por su RUT
+     * @param rut - rut del proveedor a buscar
+     * @return - proveedor encontrado o una excepción
+     */
+    @Override
+    public Supplier getEntityByRut(String rut) {
+        return supplierRepo.findByRut(rut)
                 .orElseThrow(() -> new SupplierNotFoundException("No existe registro del proveedor"));
     }
 
