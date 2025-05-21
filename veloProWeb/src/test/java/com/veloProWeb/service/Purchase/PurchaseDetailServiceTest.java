@@ -2,7 +2,7 @@ package com.veloProWeb.service.Purchase;
 
 import com.veloProWeb.mapper.PurchaseMapper;
 import com.veloProWeb.model.Enum.MovementsType;
-import com.veloProWeb.model.dto.purchase.DetailPurchaseRequestDTO;
+import com.veloProWeb.model.dto.purchase.PurchaseDetailRequestDTO;
 import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.model.entity.Purchase.Purchase;
 import com.veloProWeb.model.entity.Purchase.PurchaseDetail;
@@ -34,12 +34,12 @@ public class PurchaseDetailServiceTest {
 
     //Prueba para crear un detalle de compra
     @Test
-    public void createDetailPurchase_valid(){
+    public void createPurchase_Detail_valid(){
         Purchase purchase = Purchase.builder().id(1L).documentType("Factura").document("F-100").build();
         doNothing().when(validator).hasPurchase(purchase);
-        DetailPurchaseRequestDTO detail = DetailPurchaseRequestDTO.builder().idPurchase(1L).idProduct(1L)
+        PurchaseDetailRequestDTO detail = PurchaseDetailRequestDTO.builder().idPurchase(1L).idProduct(1L)
                 .tax(100).total(1000).quantity(1).build();
-        List<DetailPurchaseRequestDTO> dtoList = List.of(detail);
+        List<PurchaseDetailRequestDTO> dtoList = List.of(detail);
         Product product = Product.builder().id(1L).build();
         when(productService.getProductById(1L)).thenReturn(product);
         PurchaseDetail purchaseDetail = PurchaseDetail.builder().price(1000).quantity(1).purchase(purchase)
@@ -51,7 +51,7 @@ public class PurchaseDetailServiceTest {
                 purchase.getDocumentType(), purchase.getDocument()), MovementsType.ENTRADA);
 
         ArgumentCaptor<PurchaseDetail> purchaseDetailCaptor = ArgumentCaptor.forClass(PurchaseDetail.class);
-        purchaseDetailService.createDetailPurchase(dtoList, purchase);
+        purchaseDetailService.createPurchaseDetail(dtoList, purchase);
 
         verify(purchaseDetailRepo, times(1)).save(purchaseDetailCaptor.capture());
         verify(validator, times(1)).hasPurchase(purchase);

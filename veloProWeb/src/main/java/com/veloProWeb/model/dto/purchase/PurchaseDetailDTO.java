@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DetailPurchaseRequestDTO {
+public class PurchaseDetailDTO {
     private Long idProduct;
     private Long idPurchase;
     private int price;

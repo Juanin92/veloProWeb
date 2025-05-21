@@ -35,5 +35,5 @@ public class PurchaseRequestDTO {
     private int total;
 
     @NotNull(message = "Debe contener listado del detalle de la compra")
-    private List<DetailPurchaseRequestDTO> detailList;
+    private List<PurchaseDetailRequestDTO> detailList;
 }

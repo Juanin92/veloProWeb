@@ -1,7 +1,7 @@
 package com.veloProWeb.mapper;
 
-import com.veloProWeb.model.dto.purchase.DetailPurchaseRequestDTO;
-import com.veloProWeb.model.dto.purchase.DetailPurchaseResponseDTO;
+import com.veloProWeb.model.dto.purchase.PurchaseDetailRequestDTO;
+import com.veloProWeb.model.dto.purchase.PurchaseDetailResponseDTO;
 import com.veloProWeb.model.dto.purchase.PurchaseRequestDTO;
 import com.veloProWeb.model.dto.purchase.PurchaseResponseDTO;
 import com.veloProWeb.model.entity.Purchase.Purchase;
@@ -27,7 +27,7 @@ public class PurchaseMapper {
                 .build();
     }
 
-    public PurchaseDetail toPurchaseDetailEntity(DetailPurchaseRequestDTO dto, Product product, Purchase purchase){
+    public PurchaseDetail toPurchaseDetailEntity(PurchaseDetailRequestDTO dto, Product product, Purchase purchase){
         return PurchaseDetail.builder()
                 .price(dto.getPrice())
                 .quantity(dto.getQuantity())
@@ -54,8 +54,8 @@ public class PurchaseMapper {
                 .build();
     }
 
-    public DetailPurchaseResponseDTO toDetailPurchaseResponseDTO(PurchaseDetail purchaseDetail){
-        return DetailPurchaseResponseDTO.builder()
+    public PurchaseDetailResponseDTO toDetailPurchaseResponseDTO(PurchaseDetail purchaseDetail){
+        return PurchaseDetailResponseDTO.builder()
                 .descriptionProduct(purchaseDetail.getProduct().getDescription())
                 .price(purchaseDetail.getPrice())
                 .tax(purchaseDetail.getTax())

@@ -33,7 +33,7 @@ public class PurchaseController {
     public ResponseEntity<Map<String, String>> createPurchase(@RequestBody @Valid PurchaseRequestDTO dto,
                                                               @AuthenticationPrincipal UserDetails userDetails){
         Purchase purchase = purchaseService.createPurchase(dto);
-        purchaseDetailService.createDetailPurchase(dto.getDetailList(),purchase);
+        purchaseDetailService.createPurchaseDetail(dto.getDetailList(),purchase);
         recordService.registerAction(userDetails, "CREATE", "Compra creada: " + dto.getDocument());
         return new ResponseEntity<>(ResponseMessage.message("Compra registrada correctamente!"),
                 HttpStatus.CREATED);

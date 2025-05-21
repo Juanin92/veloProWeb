@@ -20,5 +20,5 @@ public class PurchaseResponseDTO {
     private int iva;
     private int purchaseTotal;
     private String supplier;
-    private List<DetailPurchaseResponseDTO> detailsList;
+    private List<PurchaseDetailResponseDTO> detailsList;
 }

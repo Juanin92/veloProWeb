@@ -1,7 +1,7 @@
 package com.veloProWeb.service.Purchase;
 
 import com.veloProWeb.mapper.PurchaseMapper;
-import com.veloProWeb.model.dto.purchase.DetailPurchaseRequestDTO;
+import com.veloProWeb.model.dto.purchase.PurchaseDetailRequestDTO;
 import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.model.entity.Purchase.Purchase;
 import com.veloProWeb.model.entity.Purchase.PurchaseDetail;
@@ -31,14 +31,14 @@ public class PurchaseDetailService implements IPurchaseDetailService {
      * Crear detalle de compras proporcionadas
      * Busca el producto correspondiente en el sistema utilizando por ID.
      * Actualiza el stock del producto mediante el servicio de Producto
-     * @param dtoList - Lista de objetos dto que contienen los detalles de la compra.
+     * @param detailDtos - Lista de objetos dto que contienen los detalles de la compra.
      * @param purchase - Objeto que representa la compra asociada a los detalles.
      */
     @Transactional
     @Override
-    public void createDetailPurchase(List<DetailPurchaseRequestDTO> dtoList, Purchase purchase) {
+    public void createPurchaseDetail(List<PurchaseDetailRequestDTO> detailDtos, Purchase purchase) {
         validator.hasPurchase(purchase);
-        for (DetailPurchaseRequestDTO dto : dtoList){
+        for (PurchaseDetailRequestDTO dto : detailDtos){
             Product product = productService.getProductById(dto.getIdProduct());
             PurchaseDetail purchaseDetail = mapper.toPurchaseDetailEntity(dto, product, purchase);
             purchaseDetailRepo.save(purchaseDetail);

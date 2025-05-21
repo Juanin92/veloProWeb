@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DetailPurchaseDTO {
-    private Long idProduct;
-    private Long idPurchase;
+public class PurchaseDetailResponseDTO {
+    private String descriptionProduct;
     private int price;
     private int tax;
     private int quantity;
