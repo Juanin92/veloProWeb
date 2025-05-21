@@ -13,7 +13,6 @@ public class PurchaseValidator {
 
     /**
      * Válida que la compra tenga un proveedor seleccionado, lanzará una excepción
-     * Si el valor de proveedor es nulo
      * @param supplier - Objeto con los datos de un proveedor
      */
     public void hasSupplier(Supplier supplier){
@@ -22,6 +21,10 @@ public class PurchaseValidator {
         }
     }
 
+    /**
+     * Válida que exista una compra seleccionada, lanzará una excepción
+     * @param purchase - Objeto con los datos de un proveedor
+     */
     public void hasPurchase(Purchase purchase){
         if (purchase == null) {
             throw new PurchaseNotFoundException("Compra no encontrada");
