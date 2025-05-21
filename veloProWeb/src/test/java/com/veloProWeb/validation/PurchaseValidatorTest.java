@@ -1,7 +1,6 @@
 package com.veloProWeb.validation;
 
 import com.veloProWeb.exceptions.purchase.PurchaseNotFoundException;
-import com.veloProWeb.exceptions.supplier.SupplierNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,14 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(MockitoExtension.class)
 public class PurchaseValidatorTest {
     @InjectMocks private PurchaseValidator validator;
-
-    //Prueba para validar la existencia de proveedor en una compra
-    @Test
-    public void hasSupplier_valid(){
-        SupplierNotFoundException exception = assertThrows(SupplierNotFoundException.class,
-                () -> validator.hasSupplier(null));
-        assertEquals("Proveedor no encontrado", exception.getMessage());
-    }
 
     //Prueba para validar la existencia de una compra
     @Test

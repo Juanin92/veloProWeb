@@ -12,16 +12,6 @@ import java.time.LocalDate;
 public class PurchaseValidator {
 
     /**
-     * Válida que la compra tenga un proveedor seleccionado, lanzará una excepción
-     * @param supplier - Objeto con los datos de un proveedor
-     */
-    public void hasSupplier(Supplier supplier){
-        if (supplier == null) {
-            throw new SupplierNotFoundException("Proveedor no encontrado");
-        }
-    }
-
-    /**
      * Válida que exista una compra seleccionada, lanzará una excepción
      * @param purchase - Objeto con los datos de un proveedor
      */
