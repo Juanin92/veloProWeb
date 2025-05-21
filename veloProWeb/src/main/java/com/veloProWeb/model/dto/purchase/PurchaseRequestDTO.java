@@ -16,7 +16,7 @@ public class PurchaseRequestDTO {
 
     @NotBlank(message = "El rut del proveedor es obligatorio")
     @Pattern(regexp = "^\\d{7,8}-[\\dKk]$", message = "El rut no tiene un formato válido")
-    private String Supplier;
+    private String supplier;
 
     @NotBlank(message = "Tipo de documento es obligatorio")
     private String documentType;
