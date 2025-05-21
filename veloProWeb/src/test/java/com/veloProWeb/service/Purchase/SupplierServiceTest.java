@@ -129,13 +129,13 @@ public class SupplierServiceTest {
 
     //Prueba para obtener un proveedor por rut
     @Test
-    public void getSupplierByRut_valid(){
+    public void getDtoByRut_valid(){
         SupplierResponseDTO response = SupplierResponseDTO.builder().rut("12345678-9").name("Sony")
                 .email("sony@test.com").phone("+569 12345678").build();
         when(repo.findByRut(supplier.getRut())).thenReturn(Optional.of(supplier));
         when(mapper.responseDTO(supplier)).thenReturn(response);
 
-        SupplierResponseDTO result = service.getSupplierByRut(supplier.getRut());
+        SupplierResponseDTO result = service.getDtoByRut(supplier.getRut());
 
         verify(repo, times(1)).findByRut(supplier.getRut());
 
