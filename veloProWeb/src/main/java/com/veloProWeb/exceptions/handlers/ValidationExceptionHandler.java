@@ -63,7 +63,7 @@ public class ValidationExceptionHandler extends BaseExceptionHandler {
      * Extrae el nombre del campo desde el propertyPath completo de la excepción.
      */
     private String extractFieldName(String propertyPath) {
-        // Para casos como: "getSupplierByRut.rut" → devuelve "rut"
+        // Para casos como: "getDtoByRut.rut" → devuelve "rut"
         if (propertyPath == null || !propertyPath.contains(".")) return propertyPath;
         return propertyPath.substring(propertyPath.lastIndexOf('.') + 1);
     }
