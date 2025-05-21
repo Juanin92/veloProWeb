@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DetailPurchaseRequestDTO {
-    private String descriptionProduct;
+    private Long idProduct;
+    private Long idPurchase;
     private int price;
     private int tax;
     private int quantity;
