@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -38,13 +39,16 @@ public class PurchaseDetailService implements IPurchaseDetailService {
     @Override
     public void createPurchaseDetail(List<PurchaseDetailRequestDTO> detailDtos, Purchase purchase) {
         validator.hasPurchase(purchase);
+        List<PurchaseDetail> purchaseDetails = new ArrayList<>();
         for (PurchaseDetailRequestDTO dto : detailDtos){
             Product product = productService.getProductById(dto.getIdProduct());
             PurchaseDetail purchaseDetail = mapper.toPurchaseDetailEntity(dto, product, purchase);
-            purchaseDetailRepo.save(purchaseDetail);
+            purchaseDetails.add(purchaseDetail);
+
             productService.updateStockPurchase(product, purchaseDetail.getPrice(), purchaseDetail.getQuantity());
             kardexService.addKardex(product, dto.getQuantity(), String.format("Compra / %s - %s",
                     purchase.getDocumentType(), purchase.getDocument()), MovementsType.ENTRADA);
         }
+        purchaseDetailRepo.saveAll(purchaseDetails);
     }
 }
