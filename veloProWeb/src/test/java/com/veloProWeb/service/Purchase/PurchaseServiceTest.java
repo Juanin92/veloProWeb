@@ -7,19 +7,16 @@ import com.veloProWeb.model.dto.purchase.PurchaseResponseDTO;
 import com.veloProWeb.model.entity.Purchase.Purchase;
 import com.veloProWeb.model.entity.Purchase.Supplier;
 import com.veloProWeb.repository.Purchase.PurchaseRepo;
-import com.veloProWeb.repository.Purchase.SupplierRepo;
-import com.veloProWeb.validation.PurchaseValidator;
+import com.veloProWeb.service.Purchase.Interfaces.ISupplierService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -29,8 +26,7 @@ public class PurchaseServiceTest {
 
     @InjectMocks private PurchaseService purchaseService;
     @Mock private PurchaseRepo purchaseRepo;
-    @Mock private SupplierRepo supplierRepo;
-    @Spy private PurchaseValidator validator;
+    @Mock private ISupplierService supplierService;
     @Mock private PurchaseMapper mapper;
 
     @BeforeEach
@@ -43,8 +39,7 @@ public class PurchaseServiceTest {
         Supplier supplier = Supplier.builder().id(1L).rut("12345678-9").build();
         PurchaseRequestDTO dto = PurchaseRequestDTO.builder().supplier("12345678-9").total(1000).tax(100)
                 .document("F-100").documentType("Factura").build();
-        when(supplierRepo.findByRut(dto.getSupplier())).thenReturn(Optional.of(supplier));
-        doNothing().when(validator).hasSupplier(supplier);
+        when(supplierService.getEntityByRut(dto.getSupplier())).thenReturn(supplier);
         Purchase purchaseMapped = Purchase.builder().build();
         when(mapper.toPurchaseEntity(dto, supplier)).thenReturn(purchaseMapped);
 
@@ -52,8 +47,7 @@ public class PurchaseServiceTest {
         ArgumentCaptor<Purchase> purchaseCaptor = ArgumentCaptor.forClass(Purchase.class);
 
         verify(purchaseRepo, times(1)).save(purchaseCaptor.capture());
-        verify(supplierRepo, times(1)).findByRut(dto.getSupplier());
-        verify(validator, times(1)).hasSupplier(supplier);
+        verify(supplierService, times(1)).getEntityByRut(dto.getSupplier());
         verify(mapper, times(1)).toPurchaseEntity(dto, supplier);
 
         Purchase result = purchaseCaptor.getValue();
@@ -66,12 +60,12 @@ public class PurchaseServiceTest {
     public void createPurchase_supplierNotFound() {
         PurchaseRequestDTO dto = PurchaseRequestDTO.builder().supplier("12345678-9").total(1000).tax(100)
                 .document("F-100").documentType("Factura").build();
-        when(supplierRepo.findByRut(dto.getSupplier())).thenReturn(Optional.empty());
-        doThrow(new SupplierNotFoundException("Proveedor no encontrado")).when(validator).hasSupplier(null);
+        doThrow(new SupplierNotFoundException("Proveedor no encontrado")).when(supplierService)
+                .getEntityByRut(dto.getSupplier());
         SupplierNotFoundException e = assertThrows(SupplierNotFoundException.class,
                 () -> purchaseService.createPurchase(dto));
 
-        verify(supplierRepo, times(1)).findByRut(dto.getSupplier());
+        verify(supplierService, times(1)).getEntityByRut(dto.getSupplier());
         verifyNoInteractions(purchaseRepo, mapper);
 
         assertEquals("Proveedor no encontrado", e.getMessage());
