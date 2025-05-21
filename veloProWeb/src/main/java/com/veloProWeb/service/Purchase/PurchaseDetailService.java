@@ -1,6 +1,6 @@
 package com.veloProWeb.service.Purchase;
 
-import com.veloProWeb.model.dto.purchase.DetailPurchaseDTO;
+import com.veloProWeb.mapper.PurchaseMapper;
 import com.veloProWeb.model.dto.purchase.DetailPurchaseRequestDTO;
 import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.model.entity.Purchase.Purchase;
@@ -9,14 +9,13 @@ import com.veloProWeb.model.Enum.MovementsType;
 import com.veloProWeb.repository.Purchase.PurchaseDetailRepo;
 import com.veloProWeb.service.product.interfaces.IProductService;
 import com.veloProWeb.service.Purchase.Interfaces.IPurchaseDetailService;
-import com.veloProWeb.service.Purchase.Interfaces.IPurchaseService;
 import com.veloProWeb.service.Report.IkardexService;
+import com.veloProWeb.validation.PurchaseValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -24,8 +23,9 @@ public class PurchaseDetailService implements IPurchaseDetailService {
 
     private final PurchaseDetailRepo purchaseDetailRepo;
     private final IProductService productService;
-    private final IPurchaseService purchaseService;
     private final IkardexService kardexService;
+    private final PurchaseMapper mapper;
+    private final PurchaseValidator validator;
 
     /**
      * Crear detalle de compras proporcionadas
@@ -33,48 +33,18 @@ public class PurchaseDetailService implements IPurchaseDetailService {
      * Actualiza el stock del producto mediante el servicio de Producto
      * @param dtoList - Lista de objetos dto que contienen los detalles de la compra.
      * @param purchase - Objeto que representa la compra asociada a los detalles.
-     * @throws IllegalArgumentException Si no se encuentra un producto con el ID proporcionado en alguno de los detalles.
      */
+    @Transactional
     @Override
-    public void createDetailPurchase(List<DetailPurchaseDTO> dtoList, Purchase purchase) {
-        for (DetailPurchaseDTO dto : dtoList){
-            PurchaseDetail purchaseDetail =  new PurchaseDetail();
-            purchaseDetail.setId(null);
-            purchaseDetail.setPrice(dto.getPrice());
-            purchaseDetail.setQuantity(dto.getQuantity());
-            purchaseDetail.setTax(dto.getTax());
-            purchaseDetail.setTotal(dto.getTotal());
+    public void createDetailPurchase(List<DetailPurchaseRequestDTO> dtoList, Purchase purchase) {
+        validator.hasPurchase(purchase);
+        for (DetailPurchaseRequestDTO dto : dtoList){
             Product product = productService.getProductById(dto.getIdProduct());
-            purchaseDetail.setProduct(product);
-            purchaseDetail.setPurchase(purchase);
+            PurchaseDetail purchaseDetail = mapper.toPurchaseDetailEntity(dto, product, purchase);
             purchaseDetailRepo.save(purchaseDetail);
             productService.updateStockPurchase(product, purchaseDetail.getPrice(), purchaseDetail.getQuantity());
-            kardexService.addKardex(product, dto.getQuantity(), "Compra / " +
-                    purchase.getDocumentType() + " - " + purchase.getDocument(), MovementsType.ENTRADA);
+            kardexService.addKardex(product, dto.getQuantity(), String.format("Compra / %s - %s",
+                    purchase.getDocumentType(), purchase.getDocument()), MovementsType.ENTRADA);
         }
-    }
-
-    /**
-     * Obtiene una lista de detalles de una compra en específico
-     * @param idPurchase - Identificador de la compra
-     * @return - Lista de dto con los detalles de la compra encontrados
-     */
-    @Override
-    public List<DetailPurchaseRequestDTO> getPurchaseDetails(Long idPurchase) {
-        List<DetailPurchaseRequestDTO> purchaseRequestDTOS = new ArrayList<>();
-        List<PurchaseDetail> purchaseDetails = purchaseDetailRepo.findByPurchaseId(idPurchase);
-        Optional<Purchase> purchase = purchaseService.getPurchaseById(idPurchase);
-        if (purchase.isPresent()) {
-            for (PurchaseDetail purchaseDetail : purchaseDetails){
-                DetailPurchaseRequestDTO dto = new DetailPurchaseRequestDTO();
-                dto.setPrice(purchaseDetail.getPrice());
-                dto.setQuantity(purchaseDetail.getQuantity());
-                dto.setTax(purchaseDetail.getTax());
-                dto.setTotal(purchaseDetail.getTotal());
-                dto.setDescriptionProduct(purchaseDetail.getProduct().getDescription());
-                purchaseRequestDTOS.add(dto);
-            }
-        }
-        return purchaseRequestDTOS;
     }
 }
