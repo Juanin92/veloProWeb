@@ -82,17 +82,17 @@
                         <th scope="row">{{ sortPosition ? i + 1 : filteredPurchaseList.length - i}}</th>
                         <td>{{ purchase.date | date: 'dd-MM-yyyy'}}</td>
                         <td>{{ purchase.documentType + ' - ' + purchase.document }}</td>
-                        <td>{{ purchase.tax | currency: 'CLP':'$':'1.0-0'}}</td>
-                        <td>{{ purchase.total| currency: 'CLP':'$':'1.0-0' }}</td>
-                        <td>{{ purchase.supplier?.name }}</td>
+                        <td>{{ purchase.iva | currency: 'CLP':'$':'1.0-0'}}</td>
+                        <td>{{ purchase.purchaseTotal| currency: 'CLP':'$':'1.0-0' }}</td>
+                        <td>{{ purchase.supplier }}</td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Acciones de compras">
-                                <!-- <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal"
+                                <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal"
                                     data-bs-target="#purchaseDetailModal"
-                                    (click)="getPurchaseDetailsData(purchase)">
+                                    (click)="loadPurchaseDetailInfo(purchase.detailsList)">
                                     <img src="/assets/icons/iconAdd.png" alt="Más información" width="24" height="24"
                                         data-bs-toggle="tooltip" data-bs-placement="top" title="Más información">
-                                </button> -->
+                                </button>
                             </div>
                         </td>
                     </tr>
