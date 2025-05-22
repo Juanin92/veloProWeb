@@ -2,7 +2,7 @@
   <div
     class="d-flex flex-column align-items-center text-center w-25 border border-start-0 border-top-0 border-bottom-0 border-3 border-white vh-100 overflow-y-auto">
     <p class="fw-bold fs-1 mb-0">Compra</p>
-    <p class="fw-bolder">N°{{ TotalPurchaseDB }}</p>
+    <p class="fw-bolder">N°{{ databasePurchaseTotal }}</p>
     <form class="w-100">
       <div class="d-flex flex-column align-items-center w-100">
         <div class="form-floating mb-2 w-75">
@@ -58,12 +58,12 @@
             }" required />
           <label for="purchaseTotal" class="form-label">Valor total</label>
         </div>
-        <p *ngIf="validator.validateTotals(purchase, total)" class="text-danger fw-light mb-1">
+        <p *ngIf="!validator.validateTotals(purchase, currentPurchaseTotal)" class="text-danger fw-light mb-1">
           Verifique total de la {{ purchase.documentType }}
         </p>
         <p>IVA: {{ purchase.tax | currency : "CLP" : "$" : "1.0-0" }}</p>
         <div class="flex-row mb-1">
-          <button [disabled]="!validator.validateForm(purchase) && !validator.validateTotals(purchase, total)" class="btn btn-success m-1" (click)="initiatePurchaseTransaction()">
+          <button [disabled]="!validator.validateForm(purchase, currentPurchaseTotal)" class="btn btn-success m-1" (click)="initiatePurchaseTransaction()">
             Guardar
           </button>
           <button class="btn btn-info m-1" (click)="resetPurchaseState()">Limpiar</button>
@@ -106,7 +106,7 @@
         </div>
         <div class="col-6">
           <p class="fw-bold fs-4">
-            Total Compra: {{ total | currency : "CLP" : "$" : "1.0-0" }}
+            Total Compra: {{ currentPurchaseTotal | currency : "CLP" : "$" : "1.0-0" }}
           </p>
         </div>
       </div>
