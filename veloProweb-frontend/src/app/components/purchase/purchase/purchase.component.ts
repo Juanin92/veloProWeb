@@ -86,22 +86,19 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
    * Redirige a la ruta de stock 
    * */
   initiatePurchaseTransaction(): void{
-    console.log('purchase normal: ', this.purchase);
-    console.log('Lista detalle: ', this.purchaseDetailList);
     if (this.validator.validateForm(this.purchase) || this.purchaseDetailList) {
       this.purchaseDetailsRequest = this.mapper.mapToPurchaseDetailRequest(this.purchaseDetailList);
       this.purchaseRequest = this.mapper.mapToPurchaseRequest(this.purchase, this.purchaseDetailsRequest);
-      console.log('purchase request: ', this.purchaseRequest);
-      // this.requestDTO = this.helper.createDto(this.purchase, this.purchaseDetailList);
-      // this.purchaseService.createPurchase(this.purchaseRequest).subscribe({
-      //   next:(response) => {
-      //     this.notification.showSuccessToast(`N°${this.TotalPurchaseDB} ${response.message}`, 'top', 3000);
-      //     this.route.navigate(['/stock']);
-      //   },error: (error) =>{
-      //     const message = this.errorMessage.errorMessageExtractor(error);
-      //     this.notification.showErrorToast(`Error: \n${message}`, 'top', 5000);
-      //   }
-      // });
+      this.purchaseService.createPurchase(this.purchaseRequest).subscribe({
+        next:(response) => {
+          this.notification.showSuccessToast(`N°${this.TotalPurchaseDB} ${response.message}`, 'top', 3000);
+          this.resetPurchaseState();
+          this.route.navigate(['/main/stock']);
+        },error: (error) =>{
+          const message = this.errorMessage.errorMessageExtractor(error);
+          this.notification.showErrorToast(`Error: \n${message}`, 'top', 5000);
+        }
+      });
     } else {
       this.notification.showWarning('Formulario incompleto', 'Por favor, complete correctamente todos los campos obligatorios.');
     }
