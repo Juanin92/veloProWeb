@@ -1,17 +1,13 @@
 import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
 import { PurchaseService } from '../../../services/Purchase/purchase.service';
-import { PurchaseRequestDTO } from '../../../models/DTO/purchase-request-dto';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Purchase } from '../../../models/Entity/Purchase/purchase';
 import { TooltipService } from '../../../utils/tooltip.service';
-import { Supplier } from '../../../models/Entity/Purchase/supplier';
-import { SupplierService } from '../../../services/Purchase/supplier.service';
 import { NotificationService } from '../../../utils/notification-service.service';
-import { firstValueFrom } from 'rxjs';
-import { DetailPurchaseRequestDTO } from '../../../models/DTO/detail-purchase-request-dto';
 import { ExcelService } from '../../../utils/excel.service';
 import { ReportPermissionsService } from '../../../services/Permissions/report-permissions.service';
+import { PurchaseResponse } from '../../../models/Entity/Purchase/purchase-response';
+import { PurchaseDetailResponse } from '../../../models/Entity/Purchase/purchase-detail-response';
 
 @Component({
   selector: 'app-purchase-report',
@@ -22,10 +18,9 @@ import { ReportPermissionsService } from '../../../services/Permissions/report-p
 })
 export class PurchaseReportComponent implements OnInit, AfterViewInit {
 
-  purchaseList: Purchase[] = [];
-  filteredPurchaseList: Purchase[] = [];
-  purchaseSelected: Purchase | null = null;
-  purchaseDetailList: DetailPurchaseRequestDTO[] = [];
+  purchaseList: PurchaseResponse[] = [];
+  filteredPurchaseList: PurchaseResponse[] = [];
+  purchaseDetailList: PurchaseDetailResponse[] = [];
   textFilter: string = '';
   startDate: string = '';
   finalDate: string = '';
@@ -35,7 +30,6 @@ export class PurchaseReportComponent implements OnInit, AfterViewInit {
 
   constructor(
     private purchaseService: PurchaseService,
-    private supplierService: SupplierService,
     private notification: NotificationService,
     private tooltip: TooltipService,
     private renderer: Renderer2,
@@ -49,74 +43,23 @@ export class PurchaseReportComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.getPurchasesList();
+    this.loadPurchases();
   }
 
-  /**
-   * Obtiene una lista de compras
-   */
-  getPurchasesList(): void {
-    this.purchaseService.getAllPurchases().subscribe({
-      next: (list) => {
-        this.getSupplierPurchase(list);
-      },
-      error: (error) => {
-        console.log('No se encontró ninguna compra');
-      }
-    });
-  }
-
-  /**
-   * Asocia proveedores a la lista de compras recibida
-   * Crea una compra con los datos y la agrega a una lista de compras.
-   * @param list - Lista de compras
-   */
-  async getSupplierPurchase(list: PurchaseRequestDTO[]): Promise<void> {
-    for (const dto of list) {
-      const supplier = await this.getSupplier(dto);
-      const purchase: Purchase = {
-        date: dto.date,
-        document: dto.document,
-        documentType: dto.documentType,
-        tax: dto.tax,
-        total: dto.total,
-        supplier: supplier,
-      };
-      this.purchaseList.push(purchase);
-    }
-    this.filteredPurchaseList = this.purchaseList;
-  }
-
-  /**
-   * Obtiene un proveedor asociado de una compra seleccionada
-   * @param dto - Objeto contiene los datos de la compra
-   * @returns - Proveedor o null si no encuentra registro 
-   */
-  async getSupplier(dto: PurchaseRequestDTO): Promise<Supplier | null> {
-    try {
-      const supplier = await firstValueFrom(this.supplierService.getSupplier("0"));
-      return supplier || null;
-    } catch (error) {
-      console.error('Error al obtener proveedor:', error);
-      return null;
-    }
+  loadPurchases(): void{
+    this.purchaseService.getAllPurchases().subscribe((list) => {
+        this.purchaseList = list;
+        this.filteredPurchaseList = list;
+      });
   }
 
   /**
    * Obtiene información de los detalles de compra de una compra seleccionada
-   * @param purchase - Compra seleccionada
+   * @param details - Detalles de la compra seleccionada
    */
-  // getPurchaseDetailsData(purchase: Purchase): void {
-  //   this.purchaseSelected = purchase;
-  //   this.purchaseService.getDetailPurchase(this.purchaseSelected).subscribe({
-  //     next: (list) => {
-  //       this.purchaseDetailList = list;
-  //     },
-  //     error: (error) => {
-  //       console.log('Error al obtener detalles de la compra: ', error);
-  //     }
-  //   });
-  // }
+  loadPurchaseDetailInfo(details: PurchaseDetailResponse[]): void {
+    this.purchaseDetailList = details
+  }
 
   /**
    * Filtra las compras por rango de fechas ingresadas por el usuario.
@@ -155,9 +98,9 @@ export class PurchaseReportComponent implements OnInit, AfterViewInit {
     const transformedData = this.filteredPurchaseList.map(item => ({
       fecha: item.date,
       documento: item.documentType + '-' + item.document,
-      iva: item.tax,
-      total: item.total,
-      proveedor: item.supplier?.name,
+      iva: item.iva,
+      total: item.purchaseTotal,
+      proveedor: item.supplier,
     }));
     this.excelService.generateExcel(transformedData, 'Reporte-Compras');
   }
@@ -174,8 +117,8 @@ export class PurchaseReportComponent implements OnInit, AfterViewInit {
   toggleSortTotal(): void{
     this.sortTotal = !this.sortTotal;
     this.filteredPurchaseList.sort((a, b) => {
-      const dateA = a.total;
-      const dateB = b.total;
+      const dateA = a.purchaseTotal;
+      const dateB = b.purchaseTotal;
       return this.sortTotal ? dateA - dateB : dateB - dateA;
     });
   }
@@ -196,7 +139,7 @@ export class PurchaseReportComponent implements OnInit, AfterViewInit {
       this.filteredPurchaseList = this.purchaseList.filter(purchase =>
         purchase.document.toLowerCase().includes(this.textFilter.toLowerCase()) ||
         purchase.documentType.toLowerCase().includes(this.textFilter.toLowerCase()) ||
-        purchase.supplier?.name.toLowerCase().includes(this.textFilter.toLowerCase()));
+        purchase.supplier.toLowerCase().includes(this.textFilter.toLowerCase()));
     }
   }
 }
