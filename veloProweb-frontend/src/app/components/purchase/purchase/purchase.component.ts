@@ -33,14 +33,12 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
   
   purchase: Purchase;
   supplierList: Supplier[] = [];
-  productSelected: Product | null = null;
   purchaseDetailList: PurchaseDetails[] = [];
   purchaseDetailsRequest: PurchaseDetailRequest[] = [];
-  requestDTO: PurchaseRequestDTO | null = null;
   purchaseRequest: PurchaseRequest;
   validator = PurchaseValidator;
-  total: number = 0; //Total acumulado de la compra
-  TotalPurchaseDB: number = 0; //Total de compras registradas en la BD
+  currentPurchaseTotal: number = 0; //Total acumulado de la compra
+  databasePurchaseTotal: number = 0; //Total de compras registradas en la BD
   editingFields: { [key: string]: { quantity?: boolean; price?: boolean } } = {}; // (Map) Campos de edición activa para cantidades o precios en detalles de compra
 
   constructor(
@@ -77,7 +75,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
   /** Obtiene el numero total de compras realizadas */
   loadTotalPurchase(): void{
     this.purchaseService.getTotalPurchase().subscribe(
-      (totalPurchases) => this.TotalPurchaseDB = totalPurchases,
+      (totalPurchases) => this.databasePurchaseTotal = totalPurchases,
     );
   }
 
@@ -86,12 +84,12 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
    * Redirige a la ruta de stock 
    * */
   initiatePurchaseTransaction(): void{
-    if (this.validator.validateForm(this.purchase) || this.purchaseDetailList) {
+    if (this.validator.validateForm(this.purchase, this.currentPurchaseTotal) || this.purchaseDetailList) {
       this.purchaseDetailsRequest = this.mapper.mapToPurchaseDetailRequest(this.purchaseDetailList);
       this.purchaseRequest = this.mapper.mapToPurchaseRequest(this.purchase, this.purchaseDetailsRequest);
       this.purchaseService.createPurchase(this.purchaseRequest).subscribe({
         next:(response) => {
-          this.notification.showSuccessToast(`N°${this.TotalPurchaseDB} ${response.message}`, 'top', 3000);
+          this.notification.showSuccessToast(`N°${this.databasePurchaseTotal} ${response.message}`, 'top', 3000);
           this.resetPurchaseState();
           this.route.navigate(['/main/stock']);
         },error: (error) =>{
@@ -111,7 +109,6 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
    * @param product - Producto seleccionado para agregar a la lista
    */
   addProductToPurchaseDetails(product: Product): void{
-    this.productSelected = product;
     const isProductAdded = this.purchaseDetailList.some((detail) => detail.product.id === product.id);
     if (!isProductAdded) {
       const newPurchaseDetail: PurchaseDetails = {
@@ -158,10 +155,10 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
 
   /** Calcula el total y los impuestos acumulados de la lista de detalles */
   calculateTotalAndTax(): void{
-    this.total = 0;
+    this.currentPurchaseTotal = 0;
     this.purchase.tax = 0;
     this.purchaseDetailList.forEach((purchaseDetail) =>{
-      this.total += purchaseDetail.total;
+      this.currentPurchaseTotal += purchaseDetail.total;
       this.purchase.tax += purchaseDetail.tax;
     });
   }
@@ -170,7 +167,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
   resetPurchaseState(): void{
     this.purchase = this.helper.initializePurchase();
     this.purchaseDetailList = [];
-    this.total = 0;
+    this.currentPurchaseTotal = 0;
   }
 
   /** Habilita la edición de un campo en un detalle específico */
