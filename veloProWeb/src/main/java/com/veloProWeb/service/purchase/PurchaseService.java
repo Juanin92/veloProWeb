@@ -8,6 +8,7 @@ import com.veloProWeb.model.entity.purchase.Supplier;
 import com.veloProWeb.repository.purchase.PurchaseRepo;
 import com.veloProWeb.service.purchase.interfaces.IPurchaseService;
 import com.veloProWeb.service.purchase.interfaces.ISupplierService;
+import com.veloProWeb.validation.PurchaseValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ public class PurchaseService implements IPurchaseService {
     private final PurchaseRepo purchaseRepo;
     private final ISupplierService supplierService;
     private final PurchaseMapper mapper;
+    private final PurchaseValidator validator;
 
     /**
      * Crea una nueva compra.
@@ -30,6 +32,7 @@ public class PurchaseService implements IPurchaseService {
     @Transactional
     @Override
     public Purchase createPurchase(PurchaseRequestDTO dto) {
+        validator.validateTotal(dto.getTotal(), dto.getDetailList());
         Supplier supplier = supplierService.getEntityByRut(dto.getSupplier());
         Purchase purchase =  mapper.toPurchaseEntity(dto, supplier);
         purchaseRepo.save(purchase);
