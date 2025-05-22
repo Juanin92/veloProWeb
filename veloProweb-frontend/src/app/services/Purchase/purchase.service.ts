@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PurchaseRequestDTO } from '../../models/DTO/purchase-request-dto';
 import { AuthService } from '../User/auth.service';
 import { PurchaseRequest } from '../../models/Entity/Purchase/purchase-request';
+import { PurchaseResponse } from '../../models/Entity/Purchase/purchase-response';
 
 @Injectable({
   providedIn: 'root'
@@ -31,13 +31,7 @@ export class PurchaseService {
     return this.http.get<number>(`${this.apiUrl}/total_compras`);
   }
 
-  getAllPurchases(): Observable<PurchaseRequestDTO[]>{
-    return this.http.get<PurchaseRequestDTO[]>(`${this.apiUrl}/lista-compras`, {headers: this.auth.getAuthHeaders()});
+  getAllPurchases(): Observable<PurchaseResponse[]>{
+    return this.http.get<PurchaseResponse[]>(`${this.apiUrl}/lista-compras`, {headers: this.auth.getAuthHeaders()});
   }
-
-  // getDetailPurchase(idPurchase: Purchase): Observable<DetailPurchaseRequestDTO[]>{
-  //   return this.http.get<DetailPurchaseRequestDTO[]>(`${this.apiUrl}/detalles`, {
-  //     params: {idPurchase: idPurchase.id}
-  //   });
-  // }
 }
