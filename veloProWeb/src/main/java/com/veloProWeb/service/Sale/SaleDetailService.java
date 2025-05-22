@@ -20,6 +20,7 @@ import com.veloProWeb.service.Sale.Interface.IDispatchService;
 import com.veloProWeb.service.Sale.Interface.ISaleDetailService;
 import com.veloProWeb.service.Sale.Interface.ISaleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -50,7 +51,7 @@ public class SaleDetailService implements ISaleDetailService {
      * @throws IllegalArgumentException Si no se encuentra un producto con el ID proporcionado en alguno de los detalles.
      */
     @Override
-    public void createSaleDetailsToSale(List<DetailSaleDTO> dtoList, Sale sale) {
+    public void createSaleDetailsToSale(List<DetailSaleDTO> dtoList, Sale sale, UserDetails userDetails) {
         for (DetailSaleDTO dto : dtoList) {
             Product product = productService.getProductById(dto.getIdProduct());
             SaleDetail saleDetail = new SaleDetail();
@@ -64,7 +65,7 @@ public class SaleDetailService implements ISaleDetailService {
             saleDetail.setProduct(product);
             saleDetailRepo.save(saleDetail);
             productService.updateStockSale(product, saleDetail.getQuantity());
-            kardexService.addKardex(product, dto.getQuantity(),
+            kardexService.addKardex(userDetails, product, dto.getQuantity(),
                     "Venta / " + sale.getDocument(), MovementsType.SALIDA);
         }
     }

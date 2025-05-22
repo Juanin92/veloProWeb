@@ -43,7 +43,7 @@ public class SaleController {
         Map<String, String> response = new HashMap<>();
         try {
             Sale sale = saleService.createSale(dto);
-            saleDetailService.createSaleDetailsToSale(dto.getDetailList(), sale);
+            saleDetailService.createSaleDetailsToSale(dto.getDetailList(), sale, userDetails);
             response.put("message", "Venta registrada correctamente!");
             recordService.registerAction(userDetails, "CREATE", "Venta realizada " + dto.getNumberDocument());
             emailService.sendSalesReceiptEmail(sale);

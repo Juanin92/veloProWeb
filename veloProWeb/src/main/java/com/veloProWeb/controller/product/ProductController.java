@@ -36,7 +36,7 @@ public class ProductController {
     @PreAuthorize("hasAnyAuthority('ADMIN','MASTER', 'WAREHOUSE')")
     public ResponseEntity<Map<String, String>> createProduct(@RequestBody @Valid ProductRequestDTO product,
                                                              @AuthenticationPrincipal UserDetails userDetails){
-        productService.create(product);
+        productService.create(product, userDetails);
         recordService.registerAction(userDetails, "CREATE",
                 String.format("Producto creado: %s", product.getDescription()));
         return new ResponseEntity<>(ResponseMessage.message("Producto creado exitosamente!"), HttpStatus.CREATED);
@@ -46,7 +46,7 @@ public class ProductController {
     @PreAuthorize("hasAnyAuthority('ADMIN','MASTER', 'WAREHOUSE')")
     public ResponseEntity<Map<String, String>> updateProduct(@RequestBody @Valid ProductUpdatedRequestDTO product,
                                                              @AuthenticationPrincipal UserDetails userDetails){
-        productService.updateProductInfo(product);
+        productService.updateProductInfo(product, userDetails);
         recordService.registerAction(userDetails, "UPDATE",
                 String.format("Producto actualizado: %s", product.getDescription()));
         return new ResponseEntity<>(ResponseMessage.message("Producto actualizado exitosamente!"), HttpStatus.OK);
@@ -56,7 +56,7 @@ public class ProductController {
     @PreAuthorize("hasAnyAuthority('ADMIN','MASTER', 'WAREHOUSE')")
     public ResponseEntity<Map<String, String>> deleteProduct(@RequestBody @Valid ProductUpdatedRequestDTO product,
                                                              @AuthenticationPrincipal UserDetails userDetails){
-        productService.discontinueProduct(product);
+        productService.discontinueProduct(product, userDetails);
         recordService.registerAction(userDetails, "DELETE",
                 String.format("Producto eliminado: %s", product.getDescription()));
         return new ResponseEntity<>(ResponseMessage.message("Producto eliminado exitosamente!"), HttpStatus.OK);
@@ -66,7 +66,7 @@ public class ProductController {
     @PreAuthorize("hasAnyAuthority('ADMIN','MASTER', 'WAREHOUSE')")
     public ResponseEntity<Map<String, String>> activeProduct(@RequestBody @Valid ProductUpdatedRequestDTO product,
                                                              @AuthenticationPrincipal UserDetails userDetails){
-        productService.reactive(product);
+        productService.reactive(product, userDetails);
         recordService.registerAction(userDetails, "ACTIVATE",
                 String.format("Producto activado: %S", product.getDescription()));
         return new ResponseEntity<>(ResponseMessage.message("Producto activado exitosamente!"), HttpStatus.OK);

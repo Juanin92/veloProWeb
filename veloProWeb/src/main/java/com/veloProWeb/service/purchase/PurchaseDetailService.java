@@ -12,6 +12,7 @@ import com.veloProWeb.service.purchase.interfaces.IPurchaseDetailService;
 import com.veloProWeb.service.Report.IKardexService;
 import com.veloProWeb.validation.PurchaseValidator;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +38,8 @@ public class PurchaseDetailService implements IPurchaseDetailService {
      */
     @Transactional
     @Override
-    public void createPurchaseDetail(List<PurchaseDetailRequestDTO> detailDtos, Purchase purchase) {
+    public void createPurchaseDetail(UserDetails user, List<PurchaseDetailRequestDTO> detailDtos,
+                                     Purchase purchase) {
         validator.hasPurchase(purchase);
         List<PurchaseDetail> purchaseDetails = new ArrayList<>();
         for (PurchaseDetailRequestDTO dto : detailDtos){
@@ -46,7 +48,7 @@ public class PurchaseDetailService implements IPurchaseDetailService {
             purchaseDetails.add(purchaseDetail);
 
             productService.updateStockPurchase(product, purchaseDetail.getPrice(), purchaseDetail.getQuantity());
-            kardexService.addKardex(product, dto.getQuantity(), String.format("Compra / %s - %s",
+            kardexService.addKardex(user, product, dto.getQuantity(), String.format("Compra / %s - %s",
                     purchase.getDocumentType(), purchase.getDocument()), MovementsType.ENTRADA);
         }
         purchaseDetailRepo.saveAll(purchaseDetails);

@@ -5,11 +5,12 @@ import com.veloProWeb.model.dto.DetailSaleRequestDTO;
 import com.veloProWeb.model.entity.Sale.Dispatch;
 import com.veloProWeb.model.entity.Sale.Sale;
 import com.veloProWeb.model.entity.Sale.SaleDetail;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
 public interface ISaleDetailService {
-    void createSaleDetailsToSale(List<DetailSaleDTO> dto, Sale sale);
+    void createSaleDetailsToSale(List<DetailSaleDTO> dto, Sale sale, UserDetails userDetails);
     List<SaleDetail> getAll();
     List<DetailSaleRequestDTO> getSaleDetailsToSale(Long idSale);
     void createSaleDetailsToDispatch(List<DetailSaleDTO> dto, Dispatch dispatch);

@@ -11,6 +11,7 @@ import com.veloProWeb.repository.product.ProductRepo;
 import com.veloProWeb.service.product.interfaces.IProductService;
 import com.veloProWeb.validation.ProductValidator;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +32,7 @@ public class ProductService implements IProductService {
      */
     @Transactional
     @Override
-    public void create(ProductRequestDTO dto) {
+    public void create(ProductRequestDTO dto, UserDetails userDetails) {
         Product product = mapper.toEntity(dto);
         product.setStatus(false);
         product.setStatusProduct(StatusProduct.NODISPONIBLE);
@@ -40,7 +41,7 @@ public class ProductService implements IProductService {
         product.setStock(0);
         product.setThreshold(0);
         productRepo.save(product);
-        productEventService.handleCreateRegister(product, "Creación Producto");
+        productEventService.handleCreateRegister(product, "Creación Producto", userDetails);
     }
 
     /**
@@ -50,7 +51,7 @@ public class ProductService implements IProductService {
      */
     @Transactional
     @Override
-    public void updateProductInfo(ProductUpdatedRequestDTO dto) {
+    public void updateProductInfo(ProductUpdatedRequestDTO dto, UserDetails userDetails) {
         Product product = getProductById(dto.getId());
         int originalStock = product.getStock();
         validator.isDeleted(product);
@@ -58,7 +59,7 @@ public class ProductService implements IProductService {
         product.setSalePrice(dto.getSalePrice());
         product.setStock(dto.getStock());
         productRepo.save(product);
-        productEventService.isChangeStockOriginalValue(product, originalStock, dto);
+        productEventService.isChangeStockOriginalValue(product, originalStock, dto, userDetails);
     }
 
     /**
@@ -88,13 +89,13 @@ public class ProductService implements IProductService {
      */
     @Transactional
     @Override
-    public void reactive(ProductUpdatedRequestDTO dto) {
+    public void reactive(ProductUpdatedRequestDTO dto, UserDetails userDetails) {
         Product product = getProductById(dto.getId());
         validator.isActivated(product);
         product.setStatusProduct(StatusProduct.NODISPONIBLE);
         product.setStatus(true);
         productRepo.save(product);
-        productEventService.handleCreateRegister(product, "Activado");
+        productEventService.handleCreateRegister(product, "Activado", userDetails);
     }
 
     /**
@@ -104,13 +105,13 @@ public class ProductService implements IProductService {
      */
     @Transactional
     @Override
-    public void discontinueProduct(ProductUpdatedRequestDTO dto) {
+    public void discontinueProduct(ProductUpdatedRequestDTO dto, UserDetails userDetails) {
         Product product = getProductById(dto.getId());
         validator.isDeleted(product);
         product.setStatus(false);
         product.setStatusProduct(StatusProduct.DESCONTINUADO);
         productRepo.save(product);
-        productEventService.handleCreateRegister(product, "Eliminado / Descontinuado");
+        productEventService.handleCreateRegister(product, "Eliminado / Descontinuado", userDetails);
     }
 
     /**
