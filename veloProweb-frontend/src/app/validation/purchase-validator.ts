@@ -5,7 +5,7 @@ export class PurchaseValidator {
         return this.isFieldValid(purchase, 'document') &&
             this.isFieldValid(purchase, 'date') && 
             this.isFieldValid(purchase, 'supplier') && 
-            this.isFieldValid(purchase, 'purchaseTotal');
+            this.isFieldValid(purchase, 'total');
     }
 
     static isFieldValid(purchase: Purchase, fieldName: keyof Purchase): boolean{
@@ -19,13 +19,13 @@ export class PurchaseValidator {
         if (fieldName === 'supplier') {
             return value !== null;
         }
-        if (fieldName === 'purchaseTotal') {
+        if (fieldName === 'total') {
             return value !== null && typeof value === 'number' && value !== 0;
         }
         return true;
     }
 
     static validateTotals(purchase: Purchase, total: number): boolean{
-        return purchase.purchaseTotal !== total;
+        return purchase.total !== total;
     }
 }
