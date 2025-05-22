@@ -15,7 +15,7 @@ import com.veloProWeb.repository.Sale.SaleDetailRepo;
 import com.veloProWeb.repository.Sale.SaleRepo;
 import com.veloProWeb.service.customer.interfaces.ICustomerService;
 import com.veloProWeb.service.product.interfaces.IProductService;
-import com.veloProWeb.service.Report.IkardexService;
+import com.veloProWeb.service.Report.IKardexService;
 import com.veloProWeb.service.Sale.Interface.IDispatchService;
 import com.veloProWeb.service.Sale.Interface.ISaleDetailService;
 import com.veloProWeb.service.Sale.Interface.ISaleService;
@@ -37,7 +37,7 @@ public class SaleDetailService implements ISaleDetailService {
     @Autowired private IProductService productService;
     @Autowired private ICustomerService customerService;
     @Autowired private ISaleService saleService;
-    @Autowired private IkardexService kardexService;
+    @Autowired private IKardexService kardexService;
     @Autowired private IDispatchService dispatchService;
 
     /**

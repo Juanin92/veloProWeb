@@ -9,7 +9,7 @@ import com.veloProWeb.model.Enum.MovementsType;
 import com.veloProWeb.repository.purchase.PurchaseDetailRepo;
 import com.veloProWeb.service.product.interfaces.IProductService;
 import com.veloProWeb.service.purchase.interfaces.IPurchaseDetailService;
-import com.veloProWeb.service.Report.IkardexService;
+import com.veloProWeb.service.Report.IKardexService;
 import com.veloProWeb.validation.PurchaseValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class PurchaseDetailService implements IPurchaseDetailService {
 
     private final PurchaseDetailRepo purchaseDetailRepo;
     private final IProductService productService;
-    private final IkardexService kardexService;
+    private final IKardexService kardexService;
     private final PurchaseMapper mapper;
     private final PurchaseValidator validator;
 

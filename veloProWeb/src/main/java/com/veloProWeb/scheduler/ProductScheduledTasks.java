@@ -2,7 +2,7 @@ package com.veloProWeb.scheduler;
 
 import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.repository.product.ProductRepo;
-import com.veloProWeb.service.Report.IkardexService;
+import com.veloProWeb.service.Report.IKardexService;
 import com.veloProWeb.service.User.Interface.IAlertService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,7 +18,7 @@ public class ProductScheduledTasks {
 
     private final ProductRepo productRepo;
     private final IAlertService alertService;
-    private final IkardexService kardexService;
+    private final IKardexService kardexService;
 
     /**
      * Verifica y crea alertas para cada producto en intervalos regulares.

@@ -2,7 +2,7 @@ package com.veloProWeb.scheduler;
 
 import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.repository.product.ProductRepo;
-import com.veloProWeb.service.Report.IkardexService;
+import com.veloProWeb.service.Report.IKardexService;
 import com.veloProWeb.service.User.Interface.IAlertService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ public class ProductScheduledTasksTest {
     @InjectMocks private ProductScheduledTasks productScheduledTasks;
     @Mock private ProductRepo productRepo;
     @Mock private IAlertService alertService;
-    @Mock private IkardexService kardexService;
+    @Mock private IKardexService kardexService;
     private Product product, product2, product3, product4, product5;
 
     @BeforeEach

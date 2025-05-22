@@ -1,6 +1,6 @@
 package com.veloProWeb.service.Report;
 
-import com.veloProWeb.model.dto.KardexRequestDTO;
+import com.veloProWeb.model.dto.KardexResponseDTO;
 import com.veloProWeb.model.entity.Kardex;
 import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.model.Enum.MovementsType;
@@ -29,7 +29,7 @@ public class KardexServiceTest {
     @Mock private ProductService productService;
     @Mock private AlertService alertService;
     private Kardex kardex, kardexExit;
-    private KardexRequestDTO dto;
+    private KardexResponseDTO dto;
     private Product product;
 
     @BeforeEach

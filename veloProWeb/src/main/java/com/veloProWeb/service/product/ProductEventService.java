@@ -3,7 +3,7 @@ package com.veloProWeb.service.product;
 import com.veloProWeb.model.Enum.MovementsType;
 import com.veloProWeb.model.dto.product.ProductUpdatedRequestDTO;
 import com.veloProWeb.model.entity.product.Product;
-import com.veloProWeb.service.Report.IkardexService;
+import com.veloProWeb.service.Report.IKardexService;
 import com.veloProWeb.service.User.Interface.IAlertService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class ProductEventService {
 
     private final IAlertService alertService;
-    private final IkardexService kardexService;
+    private final IKardexService kardexService;
 
     public void handleCreateRegister(Product product, String comment){
         kardexService.addKardex(product, 0, comment, MovementsType.AJUSTE);
