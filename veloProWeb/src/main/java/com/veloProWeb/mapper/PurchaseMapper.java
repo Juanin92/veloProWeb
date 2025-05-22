@@ -20,6 +20,7 @@ public class PurchaseMapper {
         return Purchase.builder()
                 .document(dto.getDocument())
                 .documentType(dto.getDocumentType())
+                .date(dto.getDate())
                 .iva(dto.getTax())
                 .purchaseTotal(dto.getTotal())
                 .date(LocalDate.now())

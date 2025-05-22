@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -23,6 +24,9 @@ public class PurchaseRequestDTO {
 
     @NotBlank(message = "Documento es obligatorio")
     private String document;
+
+    @NotNull(message = "La fecha no puede ser nula.")
+    private LocalDate date;
 
     @NotNull(message = "El valor del impuesto es obligatorio")
     @Positive(message = "El monto debe ser positivo")
