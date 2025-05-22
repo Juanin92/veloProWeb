@@ -119,7 +119,6 @@
         <thead class="table-warning">
           <tr>
             <th scope="col" class="position-sticky top-0">#</th>
-            <th scope="col" class="position-sticky top-0">Marca</th>
             <th scope="col" class="position-sticky top-0">Descripción</th>
             <th scope="col" class="position-sticky top-0">Unitario</th>
             <th scope="col" class="position-sticky top-0">IVA</th>
@@ -131,7 +130,6 @@
         <tbody class="table-group-divider text-center align-middle">
           <tr *ngFor="let purchaseDetail of purchaseDetailList; let i = index">
             <th scope="row">{{ i + 1 }}</th>
-            <td>{{ purchaseDetail.product.brand }}</td>
             <td>{{ purchaseDetail.product.description }}</td>
             <td>
               <div
