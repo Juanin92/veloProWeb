@@ -17,6 +17,9 @@ import { AddCategoriesComponent } from '../../product/add-categories/add-categor
 import { AddProductComponent } from "../../product/add-product/add-product.component";
 import { ProductListComponent } from "../../product/productList/product-list.component";
 import { PurchasePermissionsService } from '../../../services/Permissions/purchase-permissions.service';
+import { PurchaseRequest } from '../../../models/Entity/Purchase/purchase-request';
+import { PurchaseMapperService } from '../../../mapper/purchase-mapper.service';
+import { ErrorMessageService } from '../../../utils/error-message.service';
 
 @Component({
   selector: 'app-purchase',
@@ -32,6 +35,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
   productSelected: Product | null = null;
   purchaseDetailList: PurchaseDetails[] = []; 
   requestDTO: PurchaseRequestDTO | null = null;
+  purchaseRequest: PurchaseRequest;
   validator = PurchaseValidator;
   total: number = 0; //Total acumulado de la compra
   TotalPurchaseDB: number = 0; //Total de compras registradas en la BD
@@ -41,15 +45,17 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     private purchaseService: PurchaseService,
     private supplierService: SupplierService,
     private helper: PurchaseHelperService,
+    private mapper: PurchaseMapperService,
     private tooltipService: TooltipService,
     private notification: NotificationService,
+    private errorMessage: ErrorMessageService,
     private route: Router,
     protected permission: PurchasePermissionsService
   ){
     this.purchase = helper.createEmptyPurchase();
+    this.purchaseRequest = helper.purchaseRequestInitialize();
   }
 
-  /** Inicializa tooltips al renderizar el componente */
   ngAfterViewInit(): void {
     this.tooltipService.initializeTooltips();
   }
@@ -59,39 +65,40 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     this.getTotalPurchase();
   }
 
+  /** Obtiene una lista de proveedores */
+  getSuppliers(): void{
+    this.supplierService.getSuppliers().subscribe(
+      (list) => this.supplierList = list,
+    );
+  }
+
+  /** Obtiene el numero total de compras realizadas */
+  getTotalPurchase(): void{
+    this.purchaseService.getTotalPurchase().subscribe(
+      (totalPurchases) => this.TotalPurchaseDB = totalPurchases,
+    );
+  }
+
   /** 
    * Crear un nuevo proceso de compra
    * Redirige a la ruta de stock 
    * */
   createNewPurchaseProcess(): void{
     if (this.validator.validateForm(this.purchase)|| this.purchaseDetailList) {
-      this.requestDTO = this.helper.createDto(this.purchase, this.purchaseDetailList);
-      this.purchaseService.createPurchase(this.requestDTO).subscribe((response) => {
-        console.log('Compra agregada exitosamente: ', response);
-        this.notification.showSuccessToast(`¡Compra N°${this.TotalPurchaseDB} fue agregada exitosamente!`, 'top', 3000);
-        this.route.navigate(['/stock']);
-      }, (error) =>{
-        const message = error.error?.message || error.error?.error;
-        console.error('Error al agregar la compra: ', error);
-        this.notification.showErrorToast(`Error al agregar la compra \n${message}`, 'top', 5000);
-      });
+      this.purchaseRequest = this.mapper.mapToPurchaseRequest(this.purchase);
+      // this.requestDTO = this.helper.createDto(this.purchase, this.purchaseDetailList);
+      // this.purchaseService.createPurchase(this.purchaseRequest).subscribe({
+      //   next:(response) => {
+      //     this.notification.showSuccessToast(`N°${this.TotalPurchaseDB} ${response.message}`, 'top', 3000);
+      //     this.route.navigate(['/stock']);
+      //   },error: (error) =>{
+      //     const message = this.errorMessage.errorMessageExtractor(error);
+      //     this.notification.showErrorToast(`Error: \n${message}`, 'top', 5000);
+      //   }
+      // });
     } else {
       this.notification.showWarning('Formulario incompleto', 'Por favor, complete correctamente todos los campos obligatorios.');
     }
-  }
-
-  /** Obtiene una lista de proveedores */
-  getSuppliers(): void{
-    this.supplierService.getSuppliers().subscribe((list) => {
-      this.supplierList = list;
-    })
-  }
-
-  /** Obtiene el numero total de compras realizadas */
-  getTotalPurchase(): void{
-    this.purchaseService.getTotalPurchase().subscribe((totalPurchases)=>{
-      this.TotalPurchaseDB = totalPurchases;
-    });
   }
 
   /**
@@ -101,26 +108,27 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
    * @param product - Producto seleccionado para agregar a la lista
    */
   addSelectedProductToPurchaseDetailList(product: Product): void{
-    this.productSelected = product;
-    const isProductAdded = this.purchaseDetailList.some((detail) => detail.product.id === product.id);
-    if (!isProductAdded) {
-      const newPurchaseDetail: PurchaseDetails = {
-        id: 0,
-        quantity: 0,
-        price: 0,
-        tax: 0,
-        total: 0,
-        purchase: this.purchase,
-        product: product
-      }
+    console.log('Producto: ', product);
+    // this.productSelected = product;
+    // const isProductAdded = this.purchaseDetailList.some((detail) => detail.product.id === product.id);
+    // if (!isProductAdded) {
+    //   const newPurchaseDetail: PurchaseDetails = {
+    //     id: 0,
+    //     quantity: 0,
+    //     price: 0,
+    //     tax: 0,
+    //     total: 0,
+    //     purchase: this.purchase,
+    //     product: product
+    //   }
   
-      newPurchaseDetail.tax = newPurchaseDetail.price * 0.19;
-      newPurchaseDetail.total = newPurchaseDetail.price + newPurchaseDetail.tax;
-      this.purchaseDetailList.push(newPurchaseDetail);
-      this.sumTotalAndTaxList();
-    } else {
-      this.notification.showErrorToast('Producto ya agregado!','center',1500);
-    }
+    //   newPurchaseDetail.tax = newPurchaseDetail.price * 0.19;
+    //   newPurchaseDetail.total = newPurchaseDetail.price + newPurchaseDetail.tax;
+    //   this.purchaseDetailList.push(newPurchaseDetail);
+    //   this.sumTotalAndTaxList();
+    // } else {
+    //   this.notification.showErrorToast('Producto ya agregado!','center',1500);
+    // }
   }
 
   /**
