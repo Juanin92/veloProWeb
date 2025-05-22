@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { PurchaseRequestDTO } from '../../models/DTO/purchase-request-dto';
 import { DetailPurchaseRequestDTO } from '../../models/DTO/detail-purchase-request-dto';
 import { AuthService } from '../User/auth.service';
+import { PurchaseRequest } from '../../models/Entity/Purchase/purchase-request';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class PurchaseService {
    * @param purchaseRequest - DTO con los valores de Compra a agregar
    * @returns - Observable emite un mensaje de confirmación o error
    */
-  createPurchase(purchaseRequest: PurchaseRequestDTO): Observable<{message: string}>{
+  createPurchase(purchaseRequest: PurchaseRequest): Observable<{message: string}>{
     return this.http.post<{message: string}>(`${this.apiUrl}/crear`, purchaseRequest, {headers: this.auth.getAuthHeaders()});
   }
 
