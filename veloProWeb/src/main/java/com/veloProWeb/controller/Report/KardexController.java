@@ -1,9 +1,9 @@
 package com.veloProWeb.controller.Report;
 
-import com.veloProWeb.model.entity.Kardex;
+import com.veloProWeb.model.dto.KardexResponseDTO;
 import com.veloProWeb.service.Record.IRecordService;
-import com.veloProWeb.service.Report.IkardexService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.veloProWeb.service.Report.IKardexService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,10 +19,10 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/kardex")
-@CrossOrigin(origins = "http://localhost:4200")
+@AllArgsConstructor
 public class KardexController {
-    @Autowired private IkardexService kardexService;
-    @Autowired private IRecordService recordService;
+    private final IKardexService kardexService;
+    private final IRecordService recordService;
 
     /**
      * Obtener todos los registros
@@ -30,7 +30,7 @@ public class KardexController {
      */
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE')")
-    public ResponseEntity<List<Kardex>> getAllKardex(@AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<List<KardexResponseDTO>> getAllKardex(@AuthenticationPrincipal UserDetails userDetails){
         try{
             recordService.registerAction(userDetails, "VIEW_KARDEX", "Observo Reporte producto");
             return ResponseEntity.ok(kardexService.getAll());
