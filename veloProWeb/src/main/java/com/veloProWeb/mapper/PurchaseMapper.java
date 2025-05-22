@@ -23,7 +23,7 @@ public class PurchaseMapper {
                 .date(dto.getDate())
                 .iva(dto.getTax())
                 .purchaseTotal(dto.getTotal())
-                .date(LocalDate.now())
+                .date(dto.getDate())
                 .supplier(supplier)
                 .build();
     }
