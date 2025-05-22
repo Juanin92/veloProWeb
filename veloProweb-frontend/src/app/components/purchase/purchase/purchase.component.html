@@ -63,7 +63,7 @@
         </p>
         <p>IVA: {{ purchase.tax | currency : "CLP" : "$" : "1.0-0" }}</p>
         <div class="flex-row mb-1">
-          <button [disabled]="!validator.validateForm(purchase)" class="btn btn-success m-1" (click)="initiatePurchaseTransaction()">
+          <button [disabled]="!validator.validateForm(purchase) && !validator.validateTotals(purchase, total)" class="btn btn-success m-1" (click)="initiatePurchaseTransaction()">
             Guardar
           </button>
           <button class="btn btn-info m-1" (click)="resetPurchaseState()">Limpiar</button>
