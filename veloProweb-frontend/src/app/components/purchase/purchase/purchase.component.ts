@@ -20,6 +20,7 @@ import { PurchasePermissionsService } from '../../../services/Permissions/purcha
 import { PurchaseRequest } from '../../../models/Entity/Purchase/purchase-request';
 import { PurchaseMapperService } from '../../../mapper/purchase-mapper.service';
 import { ErrorMessageService } from '../../../utils/error-message.service';
+import { PurchaseDetailRequest } from '../../../models/Entity/Purchase/purchase-detail-request';
 
 @Component({
   selector: 'app-purchase',
@@ -33,7 +34,8 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
   purchase: Purchase;
   supplierList: Supplier[] = [];
   productSelected: Product | null = null;
-  purchaseDetailList: PurchaseDetails[] = []; 
+  purchaseDetailList: PurchaseDetails[] = [];
+  purchaseDetailsRequest: PurchaseDetailRequest[] = [];
   requestDTO: PurchaseRequestDTO | null = null;
   purchaseRequest: PurchaseRequest;
   validator = PurchaseValidator;
@@ -52,8 +54,8 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     private route: Router,
     protected permission: PurchasePermissionsService
   ){
-    this.purchase = helper.createEmptyPurchase();
-    this.purchaseRequest = helper.purchaseRequestInitialize();
+    this.purchase = helper.initializePurchase();
+    this.purchaseRequest = helper.initializePurchaseRequest();
   }
 
   ngAfterViewInit(): void {
@@ -61,19 +63,19 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
   }
 
   ngOnInit(): void {
-    this.getSuppliers();
-    this.getTotalPurchase();
+    this.loadSuppliers();
+    this.loadTotalPurchase();
   }
 
   /** Obtiene una lista de proveedores */
-  getSuppliers(): void{
+  loadSuppliers(): void{
     this.supplierService.getSuppliers().subscribe(
       (list) => this.supplierList = list,
     );
   }
 
   /** Obtiene el numero total de compras realizadas */
-  getTotalPurchase(): void{
+  loadTotalPurchase(): void{
     this.purchaseService.getTotalPurchase().subscribe(
       (totalPurchases) => this.TotalPurchaseDB = totalPurchases,
     );
@@ -83,9 +85,13 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
    * Crear un nuevo proceso de compra
    * Redirige a la ruta de stock 
    * */
-  createNewPurchaseProcess(): void{
-    if (this.validator.validateForm(this.purchase)|| this.purchaseDetailList) {
-      this.purchaseRequest = this.mapper.mapToPurchaseRequest(this.purchase);
+  initiatePurchaseTransaction(): void{
+    console.log('purchase normal: ', this.purchase);
+    console.log('Lista detalle: ', this.purchaseDetailList);
+    if (this.validator.validateForm(this.purchase) || this.purchaseDetailList) {
+      this.purchaseDetailsRequest = this.mapper.mapToPurchaseDetailRequest(this.purchaseDetailList);
+      this.purchaseRequest = this.mapper.mapToPurchaseRequest(this.purchase, this.purchaseDetailsRequest);
+      console.log('purchase request: ', this.purchaseRequest);
       // this.requestDTO = this.helper.createDto(this.purchase, this.purchaseDetailList);
       // this.purchaseService.createPurchase(this.purchaseRequest).subscribe({
       //   next:(response) => {
@@ -107,44 +113,41 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
    * calcula los valores de impuesto y precio total del detalle
    * @param product - Producto seleccionado para agregar a la lista
    */
-  addSelectedProductToPurchaseDetailList(product: Product): void{
-    console.log('Producto: ', product);
-    // this.productSelected = product;
-    // const isProductAdded = this.purchaseDetailList.some((detail) => detail.product.id === product.id);
-    // if (!isProductAdded) {
-    //   const newPurchaseDetail: PurchaseDetails = {
-    //     id: 0,
-    //     quantity: 0,
-    //     price: 0,
-    //     tax: 0,
-    //     total: 0,
-    //     purchase: this.purchase,
-    //     product: product
-    //   }
+  addProductToPurchaseDetails(product: Product): void{
+    this.productSelected = product;
+    const isProductAdded = this.purchaseDetailList.some((detail) => detail.product.id === product.id);
+    if (!isProductAdded) {
+      const newPurchaseDetail: PurchaseDetails = {
+        product: product,
+        quantity: 0,
+        price: 0,
+        tax: 0,
+        total: 0,
+      }
   
-    //   newPurchaseDetail.tax = newPurchaseDetail.price * 0.19;
-    //   newPurchaseDetail.total = newPurchaseDetail.price + newPurchaseDetail.tax;
-    //   this.purchaseDetailList.push(newPurchaseDetail);
-    //   this.sumTotalAndTaxList();
-    // } else {
-    //   this.notification.showErrorToast('Producto ya agregado!','center',1500);
-    // }
+      newPurchaseDetail.tax = newPurchaseDetail.price * 0.19;
+      newPurchaseDetail.total = newPurchaseDetail.price + newPurchaseDetail.tax;
+      this.purchaseDetailList.push(newPurchaseDetail);
+      this.calculateTotalAndTax();
+    } else {
+      this.notification.showErrorToast('Producto ya agregado!','center',1500);
+    }
   }
 
   /**
    * Elimina un producto de la lista de detalle
    * @param index - Identificador del detalle en la lista
    */
-  removeDetail(index: number): void {
+  removeItemFromPurchase(index: number): void {
     this.purchaseDetailList.splice(index, 1);
-    this.sumTotalAndTaxList();
+    this.calculateTotalAndTax();
   }
 
   /**
    * Actualiza los totales de un detalle de compra
    * @param purchaseDetail - Detalle al cual debe actualizar
    */
-  updateTotal(purchaseDetail: PurchaseDetails): void {
+  calculateTotalWithTax(purchaseDetail: PurchaseDetails): void {
     purchaseDetail.tax = purchaseDetail.price * 0.19;
     if(purchaseDetail.quantity < 0 || purchaseDetail.price < 0){
       purchaseDetail.quantity = 0;
@@ -153,11 +156,11 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
     }else{
       purchaseDetail.total = purchaseDetail.price * purchaseDetail.quantity + purchaseDetail.tax;
     }
-    this.sumTotalAndTaxList();
+    this.calculateTotalAndTax();
   }
 
   /** Calcula el total y los impuestos acumulados de la lista de detalles */
-  sumTotalAndTaxList(): void{
+  calculateTotalAndTax(): void{
     this.total = 0;
     this.purchase.tax = 0;
     this.purchaseDetailList.forEach((purchaseDetail) =>{
@@ -167,15 +170,15 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
   }
 
   /** Reinicia los datos de la compra */
-  resetData(): void{
-    this.purchase = this.helper.createEmptyPurchase();
+  resetPurchaseState(): void{
+    this.purchase = this.helper.initializePurchase();
     this.purchaseDetailList = [];
     this.total = 0;
   }
 
   /** Habilita la edición de un campo en un detalle específico */
   enableEdit(detail: PurchaseDetails, field: 'quantity' | 'price'): void {
-    const key = detail.id.toString(); // Usa el ID del detalle como clave
+    const key = detail.product.id.toString(); // Usa el ID del detalle como clave
     if (!this.editingFields[key]) {
       this.editingFields[key] = {};
     }
@@ -184,16 +187,16 @@ export class PurchaseComponent implements OnInit, AfterViewInit{
   
   /** Deshabilita la edición de un campo en un detalle específico */
   disableEdit(detail: PurchaseDetails, field: 'quantity' | 'price'): void {
-    const key = detail.id.toString();
+    const key = detail.product.id.toString();
     if (this.editingFields[key]) {
       this.editingFields[key][field] = false;
     }
-    this.updateTotal(detail); // Actualiza el total cuando se desactiva la edición
+    this.calculateTotalWithTax(detail); // Actualiza el total cuando se desactiva la edición
   }
   
   /** Verifica si un campo específico está en edición */
   isEditing(detail: PurchaseDetails, field: 'quantity' | 'price'): boolean {
-    const key = detail.id.toString();
+    const key = detail.product.id.toString();
     return !!this.editingFields[key]?.[field];
   }
 }
