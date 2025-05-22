@@ -75,12 +75,11 @@ export class PurchaseReportComponent implements OnInit, AfterViewInit {
     for (const dto of list) {
       const supplier = await this.getSupplier(dto);
       const purchase: Purchase = {
-        id: dto.id,
         date: dto.date,
         document: dto.document,
         documentType: dto.documentType,
         tax: dto.tax,
-        purchaseTotal: dto.total,
+        total: dto.total,
         supplier: supplier,
       };
       this.purchaseList.push(purchase);
@@ -107,17 +106,17 @@ export class PurchaseReportComponent implements OnInit, AfterViewInit {
    * Obtiene información de los detalles de compra de una compra seleccionada
    * @param purchase - Compra seleccionada
    */
-  getPurchaseDetailsData(purchase: Purchase): void {
-    this.purchaseSelected = purchase;
-    this.purchaseService.getDetailPurchase(this.purchaseSelected.id).subscribe({
-      next: (list) => {
-        this.purchaseDetailList = list;
-      },
-      error: (error) => {
-        console.log('Error al obtener detalles de la compra: ', error);
-      }
-    });
-  }
+  // getPurchaseDetailsData(purchase: Purchase): void {
+  //   this.purchaseSelected = purchase;
+  //   this.purchaseService.getDetailPurchase(this.purchaseSelected).subscribe({
+  //     next: (list) => {
+  //       this.purchaseDetailList = list;
+  //     },
+  //     error: (error) => {
+  //       console.log('Error al obtener detalles de la compra: ', error);
+  //     }
+  //   });
+  // }
 
   /**
    * Filtra las compras por rango de fechas ingresadas por el usuario.
@@ -157,7 +156,7 @@ export class PurchaseReportComponent implements OnInit, AfterViewInit {
       fecha: item.date,
       documento: item.documentType + '-' + item.document,
       iva: item.tax,
-      total: item.purchaseTotal,
+      total: item.total,
       proveedor: item.supplier?.name,
     }));
     this.excelService.generateExcel(transformedData, 'Reporte-Compras');
@@ -175,8 +174,8 @@ export class PurchaseReportComponent implements OnInit, AfterViewInit {
   toggleSortTotal(): void{
     this.sortTotal = !this.sortTotal;
     this.filteredPurchaseList.sort((a, b) => {
-      const dateA = a.purchaseTotal;
-      const dateB = b.purchaseTotal;
+      const dateA = a.total;
+      const dateB = b.total;
       return this.sortTotal ? dateA - dateB : dateB - dateA;
     });
   }
