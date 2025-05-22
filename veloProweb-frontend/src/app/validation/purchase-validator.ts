@@ -1,11 +1,12 @@
 import { Purchase } from "../models/Entity/Purchase/purchase";
 
 export class PurchaseValidator {
-    static validateForm(purchase: Purchase): boolean{
+    static validateForm(purchase: Purchase, total: number): boolean{
         return this.isFieldValid(purchase, 'document') &&
             this.isFieldValid(purchase, 'date') && 
             this.isFieldValid(purchase, 'supplier') && 
-            this.isFieldValid(purchase, 'total');
+            this.isFieldValid(purchase, 'total') && 
+            this.validateTotals(purchase, total);
     }
 
     static isFieldValid(purchase: Purchase, fieldName: keyof Purchase): boolean{
@@ -26,6 +27,6 @@ export class PurchaseValidator {
     }
 
     static validateTotals(purchase: Purchase, total: number): boolean{
-        return purchase.total !== total;
+        return purchase.total === total;
     }
 }
