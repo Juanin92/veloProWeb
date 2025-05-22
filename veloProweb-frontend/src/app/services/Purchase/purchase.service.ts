@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PurchaseRequestDTO } from '../../models/DTO/purchase-request-dto';
-import { DetailPurchaseRequestDTO } from '../../models/DTO/detail-purchase-request-dto';
 import { AuthService } from '../User/auth.service';
 import { PurchaseRequest } from '../../models/Entity/Purchase/purchase-request';
 
@@ -36,9 +35,9 @@ export class PurchaseService {
     return this.http.get<PurchaseRequestDTO[]>(`${this.apiUrl}/lista-compras`, {headers: this.auth.getAuthHeaders()});
   }
 
-  getDetailPurchase(idPurchase: number): Observable<DetailPurchaseRequestDTO[]>{
-    return this.http.get<DetailPurchaseRequestDTO[]>(`${this.apiUrl}/detalles`, {
-      params: {idPurchase: idPurchase.toString()}
-    });
-  }
+  // getDetailPurchase(idPurchase: Purchase): Observable<DetailPurchaseRequestDTO[]>{
+  //   return this.http.get<DetailPurchaseRequestDTO[]>(`${this.apiUrl}/detalles`, {
+  //     params: {idPurchase: idPurchase.id}
+  //   });
+  // }
 }
