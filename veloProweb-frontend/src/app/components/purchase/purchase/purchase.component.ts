@@ -11,7 +11,6 @@ import { PurchaseDetails } from '../../../models/Entity/Purchase/purchase-detail
 import { NotificationService } from '../../../utils/notification-service.service';
 import { PurchaseService } from '../../../services/Purchase/purchase.service';
 import { PurchaseHelperService } from '../../../services/Purchase/purchase-helper.service';
-import { PurchaseRequestDTO } from '../../../models/DTO/purchase-request-dto';
 import { Router } from '@angular/router';
 import { AddCategoriesComponent } from '../../product/add-categories/add-categories.component';
 import { AddProductComponent } from "../../product/add-product/add-product.component";
