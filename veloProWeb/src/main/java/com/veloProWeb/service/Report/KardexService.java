@@ -1,20 +1,30 @@
 package com.veloProWeb.service.Report;
 
+import com.veloProWeb.mapper.KardexMapper;
+import com.veloProWeb.model.dto.KardexResponseDTO;
 import com.veloProWeb.model.entity.Kardex;
+import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.model.Enum.MovementsType;
 import com.veloProWeb.repository.KardexRepo;
 import com.veloProWeb.service.User.Interface.IAlertService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.veloProWeb.service.User.Interface.IUserService;
+import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class KardexService implements IkardexService{
-    @Autowired private KardexRepo kardexRepo;
-    @Autowired private IAlertService alertService;
+@AllArgsConstructor
+public class KardexService implements IKardexService {
+
+    private final KardexRepo kardexRepo;
+    private final IAlertService alertService;
+    private final IUserService userService;
+    private final KardexMapper mapper;
 
     /**
      * Crea un registro/movimiento de productos (Kardex)
@@ -23,27 +33,33 @@ public class KardexService implements IkardexService{
      * @param comment - comentario del registro
      * @param moves - tipo de movimiento realizado
      */
+    @Transactional
     @Override
-    public void addKardex(Product product, int quantity, String comment, MovementsType moves) {
-        Kardex kardex = new Kardex();
-        kardex.setDate(LocalDate.now());
-        kardex.setQuantity(quantity);
-        kardex.setMovementsType(moves);
-        kardex.setComment(comment);
-        kardex.setProduct(product);
-        kardex.setStock(product.getStock());
-        kardex.setPrice(product.getBuyPrice());
-        kardex.setUser(null);
+    public void addKardex(UserDetails userDetails, Product product, int quantity, String comment, MovementsType moves) {
+        User user = userService.getUserWithUsername(userDetails.getUsername());
+        Kardex kardex = Kardex.builder()
+                .date(LocalDate.now())
+                .quantity(quantity)
+                .movementsType(moves)
+                .comment(comment)
+                .product(product)
+                .price(product.getBuyPrice())
+                .stock(product.getStock())
+                .user(user)
+                .build();
         kardexRepo.save(kardex);
     }
 
     /**
      * Obtiene una lista de registro de movimientos de productos (Kardex)
+     *
      * @return - Lista con los registros
      */
     @Override
-    public List<Kardex> getAll() {
-        return kardexRepo.findAll();
+    public List<KardexResponseDTO> getAll() {
+        return kardexRepo.findAll().stream()
+                .map(mapper::toResponseDTO)
+                .toList();
     }
 
     /**
@@ -68,7 +84,7 @@ public class KardexService implements IkardexService{
             }
         }
         int difference = totalEntries - totalExits;
-        String description = "Producto sin Ventas (+ 90 días), " + product.getDescription();
+        String description = String.format("Producto sin Ventas (+ 90 días) -> %s", product.getDescription());
         if (difference > (totalEntries / 2) && !alertService.isAlertActive(product, description)){
             alertService.createAlert(product, description);
         }
