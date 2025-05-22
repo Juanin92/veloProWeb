@@ -63,10 +63,10 @@
         </p>
         <p>IVA: {{ purchase.tax | currency : "CLP" : "$" : "1.0-0" }}</p>
         <div class="flex-row mb-1">
-          <button [disabled]="!validator.validateForm(purchase)" class="btn btn-success m-1" (click)="createNewPurchaseProcess()">
+          <button [disabled]="!validator.validateForm(purchase)" class="btn btn-success m-1" (click)="initiatePurchaseTransaction()">
             Guardar
           </button>
-          <button class="btn btn-info m-1" (click)="resetData()">Limpiar</button>
+          <button class="btn btn-info m-1" (click)="resetPurchaseState()">Limpiar</button>
         </div>
       </div>
     </form>
@@ -174,7 +174,7 @@
               {{ purchaseDetail.total | currency : "CLP" : "$" : "1.0-0" }}
             </td>
             <td>
-              <button (click)="removeDetail(i)" class="btn btn-sm m-1">
+              <button (click)="removeItemFromPurchase(i)" class="btn btn-sm m-1">
                 <img
                   src="/assets/icons/iconCancel.png"
                   alt="activar"
@@ -194,7 +194,7 @@
   </div>
 </div>
 <!-- MODAL SELECTING PRODUCTS -->
-<app-product-list (productSelected)="addSelectedProductToPurchaseDetailList($event)"></app-product-list>
+<app-product-list (productSelected)="addProductToPurchaseDetails($event)"></app-product-list>
 <!-- MODAL ADD CATEGORIES -->
 <app-add-categories></app-add-categories>
 <!-- MODAL ADD PRODUCTS -->
