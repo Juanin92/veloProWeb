@@ -2,6 +2,7 @@ package com.veloProWeb.exceptions.handlers;
 
 import com.veloProWeb.exceptions.BaseExceptionHandler;
 import com.veloProWeb.exceptions.purchase.PurchaseNotFoundException;
+import com.veloProWeb.exceptions.purchase.PurchaseTotalMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,5 +16,10 @@ public class PurchaseExceptionHandler extends BaseExceptionHandler {
     @ExceptionHandler(PurchaseNotFoundException.class)
     public ResponseEntity<Map<String, String>> handlePurchaseNotFound(Exception e){
         return buildResponse(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(PurchaseTotalMismatchException.class)
+    public ResponseEntity<Map<String, String>> handlePurchaseException(Exception e){
+        return buildResponse(e.getMessage(), HttpStatus.CONFLICT);
     }
 }
