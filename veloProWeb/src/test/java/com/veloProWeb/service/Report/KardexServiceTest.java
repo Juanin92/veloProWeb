@@ -1,22 +1,23 @@
 package com.veloProWeb.service.Report;
 
+import com.veloProWeb.mapper.KardexMapper;
 import com.veloProWeb.model.dto.KardexResponseDTO;
 import com.veloProWeb.model.entity.Kardex;
+import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.model.Enum.MovementsType;
 import com.veloProWeb.repository.KardexRepo;
-import com.veloProWeb.service.product.ProductService;
+import com.veloProWeb.service.User.Interface.IUserService;
 import com.veloProWeb.service.User.AlertService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,110 +27,103 @@ import static org.mockito.Mockito.*;
 public class KardexServiceTest {
     @InjectMocks private KardexService kardexService;
     @Mock private KardexRepo kardexRepo;
-    @Mock private ProductService productService;
+    @Mock private IUserService userService;
     @Mock private AlertService alertService;
-    private Kardex kardex, kardexExit;
-    private KardexResponseDTO dto;
-    private Product product;
-
-    @BeforeEach
-    void setUp(){
-        kardex = new Kardex();
-        kardex.setId(1L);
-        kardex.setComment("Prueba");
-        kardex.setDate(LocalDate.now());
-        kardex.setMovementsType(MovementsType.ENTRADA);
-        kardex.setStock(10);
-        kardex.setPrice(2000);
-        kardex.setQuantity(2);
-
-        kardexExit = new Kardex();
-        kardexExit.setId(1L);
-        kardexExit.setComment("Prueba");
-        kardexExit.setDate(LocalDate.now());
-        kardexExit.setMovementsType(MovementsType.SALIDA);
-        kardexExit.setStock(10);
-        kardexExit.setPrice(2000);
-        kardexExit.setQuantity(2);
-
-        product = new Product();
-        product.setId(1L);
-        product.setStock(10);
-        product.setBuyPrice(2000);
-    }
+    @Mock private KardexMapper mapper;
 
     //Prueba para crear un registro
     @Test
     public void addKardex_valid(){
-        kardex.setProduct(product);
-        kardex.setId(null);
-        when(productService.getProductById(1L)).thenReturn(product);
-        kardexService.addKardex(product, 2, "Prueba", MovementsType.ENTRADA);
+        UserDetails userDetails = mock(UserDetails.class);
+        when(userDetails.getUsername()).thenReturn("usernameTest");
+        Product product = Product.builder().id(1L).description("Product Test").build();
+        User user = User.builder().id(1L).username("usernameTest").build();
+        when(userService.getUserWithUsername("usernameTest")).thenReturn(user);
 
-        verify(productService).getProductById(1L);
-        verify(kardexRepo).save(kardex);
+        kardexService.addKardex( userDetails, product, 2, "Test kardex", MovementsType.ENTRADA);
+
+        ArgumentCaptor<Kardex> kardexArgumentCaptor = ArgumentCaptor.forClass(Kardex.class);
+        verify(kardexRepo, times(1)).save(kardexArgumentCaptor.capture());
+        verify(userService, times(1)).getUserWithUsername("usernameTest");
+
+        Kardex result = kardexArgumentCaptor.getValue();
+        assertEquals(LocalDate.now(), result.getDate());
+        assertEquals("Test kardex", result.getComment());
+        assertEquals(product, result.getProduct());
+        assertEquals(user, result.getUser());
     }
 
     //Prueba para obtener todos los registros
     @Test
     public void getAll_valid(){
-        when(kardexRepo.findAll()).thenReturn(Collections.singletonList(kardex));
-        List<Kardex> result = kardexService.getAll();
-        verify(kardexRepo).findAll();
-        assertEquals(kardex.getComment(), result.getFirst().getComment());
+        Kardex kardex = Kardex.builder().id(1L).movementsType(MovementsType.AJUSTE)
+                .user(User.builder().name("John").surname("Doe").build()).build();
+        Kardex kardex2 = Kardex.builder().id(2L).movementsType(MovementsType.ENTRADA).build();
+        when(kardexRepo.findAll()).thenReturn(List.of(kardex, kardex2));
+        KardexResponseDTO dto = KardexResponseDTO.builder().user("John Doe").movementsType(MovementsType.AJUSTE).build();
+        KardexResponseDTO dto2 = KardexResponseDTO.builder().movementsType(MovementsType.ENTRADA).build();
+        when(mapper.toResponseDTO(kardex)).thenReturn(dto);
+        when(mapper.toResponseDTO(kardex2)).thenReturn(dto2);
+
+        List<KardexResponseDTO> result = kardexService.getAll();
+        verify(kardexRepo, times(1)).findAll();
+
+        assertEquals(result.size(), List.of(kardex, kardex2).size());
+        assertEquals(MovementsType.AJUSTE, result.getFirst().getMovementsType());
+        assertEquals("John Doe", result.getFirst().getUser());
+        assertEquals(MovementsType.ENTRADA, result.getLast().getMovementsType());
     }
 
     //Prueba para validar las ventas bajas de un producto
     @Test
     public void checkLowSales_valid(){
-        kardex.setProduct(product);
-        kardex.setDate(LocalDate.now().minusDays(95));
-        kardex.setQuantity(20);
-        kardexExit.setDate(LocalDate.now().minusDays(85));
-        kardexExit.setProduct(product);
         LocalDate days = LocalDate.now().minusDays(90);
-        List<Kardex> kardexList = Arrays.asList(kardex, kardexExit);
-        when(kardexRepo.findByProductAndDateAfter(product, days)).thenReturn(kardexList);
-        when(alertService.isAlertActive(product, "Producto sin Ventas (+ 90 días), null")).thenReturn(false);
+        Product product = Product.builder().id(1L).description("Product test").stock(10).buyPrice(2000).build();
+        Kardex kardexEntry = Kardex.builder().id(1L).product(product).quantity(20).movementsType(MovementsType.ENTRADA)
+                .date(LocalDate.now().minusDays(95)).stock(10).price(2000).build();
+        Kardex kardexExit = Kardex.builder().id(1L).product(product).quantity(2).movementsType(MovementsType.SALIDA)
+                .date(LocalDate.now().minusDays(85)).stock(19).price(2000).build();
+        when(kardexRepo.findByProductAndDateAfter(product, days)).thenReturn(List.of(kardexEntry, kardexExit));
+        String description = String.format("Producto sin Ventas (+ 90 días) -> %s", product.getDescription());
+        when(alertService.isAlertActive(product, description)).thenReturn(false);
+
         kardexService.checkLowSales(product);
 
         verify(kardexRepo, times(1)).findByProductAndDateAfter(product, days);
-        verify(alertService, times(1)).isAlertActive(product, "Producto sin Ventas (+ 90 días), null");
-        verify(alertService, times(1)).createAlert(product, "Producto sin Ventas (+ 90 días), null");
+        verify(alertService, times(1)).isAlertActive(product, description);
+        verify(alertService, times(1)).createAlert(product, description);
     }
     @Test
     public void checkLowSales_noLowSalesCondition() {
-        kardex.setProduct(product);
-        kardex.setDate(LocalDate.now().minusDays(95));
-        kardex.setQuantity(20);
-        kardexExit.setDate(LocalDate.now().minusDays(85));
-        kardexExit.setProduct(product);
-        kardexExit.setQuantity(19);
         LocalDate days = LocalDate.now().minusDays(90);
-        List<Kardex> kardexList = Arrays.asList(kardex, kardexExit);
-        when(kardexRepo.findByProductAndDateAfter(product, days)).thenReturn(kardexList);
+        Product product = Product.builder().build();
+        Kardex kardexEntry = Kardex.builder().id(1L).product(product).quantity(20).movementsType(MovementsType.ENTRADA)
+                .date(LocalDate.now().minusDays(95)).stock(10).price(2000).build();
+        Kardex kardexExit = Kardex.builder().id(1L).product(product).quantity(19).movementsType(MovementsType.SALIDA)
+                .date(LocalDate.now().minusDays(85)).stock(19).price(2000).build();
+        when(kardexRepo.findByProductAndDateAfter(product, days)).thenReturn(List.of(kardexEntry, kardexExit));
+
         kardexService.checkLowSales(product);
 
         verify(kardexRepo, times(1)).findByProductAndDateAfter(product, days);
-        verify(alertService, never()).isAlertActive(any(), any());
-        verify(alertService, never()).createAlert(any(), any());
+        verifyNoInteractions(alertService);
     }
     @Test
     public void checkLowSales_alertAlreadyExists() {
-        kardex.setProduct(product);
-        kardex.setDate(LocalDate.now().minusDays(95));
-        kardex.setQuantity(20);
-        kardexExit.setDate(LocalDate.now().minusDays(85));
-        kardexExit.setProduct(product);
-        List<Kardex> kardexList = Arrays.asList(kardex, kardexExit);
         LocalDate days = LocalDate.now().minusDays(90);
-        when(kardexRepo.findByProductAndDateAfter(product, days)).thenReturn(kardexList);
-        when(alertService.isAlertActive(product, "Producto sin Ventas (+ 90 días), null")).thenReturn(true);
+        Product product = Product.builder().build();
+        Kardex kardexEntry = Kardex.builder().id(1L).product(product).quantity(20).movementsType(MovementsType.ENTRADA)
+                .date(LocalDate.now().minusDays(95)).stock(10).price(2000).build();
+        Kardex kardexExit = Kardex.builder().id(1L).product(product).quantity(2).movementsType(MovementsType.SALIDA)
+                .date(LocalDate.now().minusDays(85)).stock(10).price(2000).build();
+        String description = String.format("Producto sin Ventas (+ 90 días) -> %s", product.getDescription());
+        when(kardexRepo.findByProductAndDateAfter(product, days)).thenReturn(List.of(kardexEntry, kardexExit));
+        when(alertService.isAlertActive(product, description)).thenReturn(true);
 
         kardexService.checkLowSales(product);
 
         verify(kardexRepo, times(1)).findByProductAndDateAfter(product, days);
-        verify(alertService, times(1)).isAlertActive(product, "Producto sin Ventas (+ 90 días), null");
+        verify(alertService, times(1)).isAlertActive(product, description);
         verify(alertService, never()).createAlert(any(), any());
     }
 }
