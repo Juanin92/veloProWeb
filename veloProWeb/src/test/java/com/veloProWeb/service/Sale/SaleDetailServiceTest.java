@@ -22,6 +22,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class SaleDetailServiceTest {
     @Mock private CustomerService customerService;
     @Mock private KardexService kardexService;
     @Mock private DispatchService dispatchService;
+    @Mock private UserDetails userDetails;
     private DetailSaleDTO detailSaleDTO;
     private DetailSaleRequestDTO detailSaleRequestDTO;
     private SaleDetail saleDetail;
@@ -95,21 +97,22 @@ public class SaleDetailServiceTest {
     public void createSaleDetailsToSale_valid(){
         List<DetailSaleDTO> dtoList = Collections.singletonList(detailSaleDTO);
         when(productService.getProductById(detailSaleDTO.getIdProduct())).thenReturn(product);
-        saleDetailService.createSaleDetailsToSale(dtoList, sale);
+        saleDetailService.createSaleDetailsToSale(dtoList, sale, userDetails);
         ArgumentCaptor<SaleDetail> saleDetailCaptor = ArgumentCaptor.forClass(SaleDetail.class);
         verify(saleDetailRepo).save(saleDetailCaptor.capture());
         SaleDetail savedSaleDetail = saleDetailCaptor.getValue();
         assertEquals(1, savedSaleDetail.getQuantity());
         assertEquals(product, savedSaleDetail.getProduct());
         verify(productService).updateStockSale(product, detailSaleDTO.getQuantity());
-        verify(kardexService).addKardex(savedSaleDetail.getProduct(), savedSaleDetail.getQuantity(),
+        verify(kardexService).addKardex(userDetails, savedSaleDetail.getProduct(), savedSaleDetail.getQuantity(),
                 "Venta / " + sale.getDocument(), MovementsType.SALIDA);
     }
     @Test
     public void createSaleDetailsToSale_productNotFound(){
         List<DetailSaleDTO> dtoList = Collections.singletonList(detailSaleDTO);
         when(productService.getProductById(detailSaleDTO.getIdProduct())).thenThrow(new IllegalArgumentException("No ha seleccionado un producto registrado"));
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> saleDetailService.createSaleDetailsToSale(dtoList, sale));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> saleDetailService.createSaleDetailsToSale(dtoList, sale, userDetails));
 
         assertEquals( "No ha seleccionado un producto registrado", exception.getMessage());
         verify(saleDetailRepo, never()).save(any(SaleDetail.class));

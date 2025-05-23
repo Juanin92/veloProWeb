@@ -16,6 +16,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 
@@ -31,6 +32,7 @@ public class PurchaseDetailServiceTest {
     @Mock private KardexService kardexService;
     @Mock private PurchaseMapper mapper;
     @Mock private PurchaseValidator validator;
+    @Mock private UserDetails userDetails;
 
     //Prueba para crear un detalle de compra
     @Test
@@ -47,18 +49,18 @@ public class PurchaseDetailServiceTest {
         when(mapper.toPurchaseDetailEntity(detail, product, purchase)).thenReturn(purchaseDetail);
         doNothing().when(productService).updateStockPurchase(product, purchaseDetail.getPrice(),
                 purchaseDetail.getQuantity());
-        doNothing().when(kardexService).addKardex(product, 1, String.format("Compra / %s - %s",
+        doNothing().when(kardexService).addKardex(userDetails, product, 1, String.format("Compra / %s - %s",
                 purchase.getDocumentType(), purchase.getDocument()), MovementsType.ENTRADA);
 
         ArgumentCaptor<PurchaseDetail> purchaseDetailCaptor = ArgumentCaptor.forClass(PurchaseDetail.class);
-        purchaseDetailService.createPurchaseDetail(dtoList, purchase);
+        purchaseDetailService.createPurchaseDetail(userDetails, dtoList, purchase);
 
         verify(purchaseDetailRepo, times(1)).save(purchaseDetailCaptor.capture());
         verify(validator, times(1)).hasPurchase(purchase);
         verify(mapper, times(1)).toPurchaseDetailEntity(detail, product, purchase);
         verify(productService, times(1)).getProductById(1L);
         verify(productService, times(1)).updateStockPurchase(product, 1000, 1);
-        verify(kardexService, times(1)).addKardex(product, 1,
+        verify(kardexService, times(1)).addKardex(userDetails, product, 1,
                 String.format("Compra / %s - %s", "Factura", "F-100"), MovementsType.ENTRADA);
 
         PurchaseDetail result = purchaseDetailCaptor.getValue();

@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Optional;
 
@@ -31,6 +32,7 @@ public class ProductServiceTest {
     @Mock private ProductValidator validator;
     @Mock private ProductEventService productEventService;
     @Spy private ProductMapper mapper = new ProductMapper();
+    @Mock private UserDetails userDetails;
     private Product product;
     private BrandProduct brand;
     private UnitProduct unit;
@@ -52,12 +54,12 @@ public class ProductServiceTest {
                 .description("product 1").brand(brand).unit(unit)
                 .subcategoryProduct(subcategory).category(category).build();
 
-        productService.create(dto);
+        productService.create(dto, userDetails);
 
         ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
         verify(productRepo, times(1)).save(productArgumentCaptor.capture());
         verify(productEventService, times(1))
-                .handleCreateRegister(productArgumentCaptor.capture(), eq("Creación Producto"));
+                .handleCreateRegister(productArgumentCaptor.capture(), eq("Creación Producto"), userDetails);
 
         Product result = productArgumentCaptor.getValue();
         assertEquals(result.getDescription(), dto.getDescription());
@@ -80,13 +82,14 @@ public class ProductServiceTest {
         when(productRepo.findById(dto.getId())).thenReturn(Optional.of(product));
         doNothing().when(validator).isDeleted(product);
 
-        productService.updateProductInfo(dto);
+        productService.updateProductInfo(dto, userDetails);
 
         ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
         verify(productRepo, times(1)).save(productArgumentCaptor.capture());
         verify(productRepo, times(1)).findById(dto.getId());
         verify(productEventService, times(1))
-                .isChangeStockOriginalValue(productArgumentCaptor.capture(), eq(product.getStock()), eq(dto));
+                .isChangeStockOriginalValue(productArgumentCaptor.capture(), eq(product.getStock()), eq(dto),
+                        userDetails);
 
         Product result = productArgumentCaptor.getValue();
         assertEquals(result.getDescription(), dto.getDescription());
@@ -102,13 +105,13 @@ public class ProductServiceTest {
         when(productRepo.findById(dto.getId())).thenReturn(Optional.of(product));
         doNothing().when(validator).isDeleted(product);
 
-        productService.updateProductInfo(dto);
+        productService.updateProductInfo(dto, userDetails);
 
         ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
         verify(productRepo, times(1)).save(productArgumentCaptor.capture());
         verify(productRepo, times(1)).findById(dto.getId());
         verify(productEventService, times(1))
-                .isChangeStockOriginalValue(productArgumentCaptor.capture(), eq(originalStock), eq(dto));
+                .isChangeStockOriginalValue(productArgumentCaptor.capture(), eq(originalStock), eq(dto), userDetails);
 
         Product result = productArgumentCaptor.getValue();
         assertEquals(result.getDescription(), dto.getDescription());
@@ -146,13 +149,13 @@ public class ProductServiceTest {
         when(productRepo.findById(dto.getId())).thenReturn(Optional.of(product));
         doNothing().when(validator).isActivated(product);
 
-        productService.reactive(dto);
+        productService.reactive(dto, userDetails);
 
         ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
         verify(productRepo, times(1)).findById(dto.getId());
         verify(productRepo, times(1)).save(productArgumentCaptor.capture());
         verify(productEventService, times(1))
-                .handleCreateRegister(productArgumentCaptor.capture(), eq("Activado"));
+                .handleCreateRegister(productArgumentCaptor.capture(), eq("Activado"), userDetails);
 
         Product result = productArgumentCaptor.getValue();
         assertEquals(StatusProduct.NODISPONIBLE, result.getStatusProduct());
@@ -165,7 +168,8 @@ public class ProductServiceTest {
         doThrow(new ProductAlreadyActivatedException("El producto ya está activado."))
                 .when(validator).isActivated(product);
 
-        assertThrows(ProductAlreadyActivatedException.class, () -> productService.reactive(dto));
+        assertThrows(ProductAlreadyActivatedException.class,
+                () -> productService.reactive(dto, userDetails));
 
         verify(productRepo, times(1)).findById(dto.getId());
         verify(productRepo, never()).save(product);
@@ -197,13 +201,14 @@ public class ProductServiceTest {
         when(productRepo.findById(dto.getId())).thenReturn(Optional.of(product));
         doNothing().when(validator).isDeleted(product);
 
-        productService.discontinueProduct(dto);
+        productService.discontinueProduct(dto, userDetails);
 
         ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
         verify(productRepo, times(1)).findById(dto.getId());
         verify(productRepo, times(1)).save(productArgumentCaptor.capture());
         verify(productEventService, times(1))
-                .handleCreateRegister(productArgumentCaptor.capture(), eq("Eliminado / Descontinuado"));
+                .handleCreateRegister(productArgumentCaptor.capture(), eq("Eliminado / Descontinuado"),
+                        userDetails);
 
         Product result = productArgumentCaptor.getValue();
         assertFalse(result.isStatus());
@@ -217,7 +222,7 @@ public class ProductServiceTest {
         doThrow(new ProductAlreadyDeletedException("El producto ya está desactivado."))
                 .when(validator).isDeleted(product);
 
-        assertThrows(ProductAlreadyDeletedException.class, () -> productService.discontinueProduct(dto));
+        assertThrows(ProductAlreadyDeletedException.class, () -> productService.discontinueProduct(dto, userDetails));
 
         verify(productRepo, times(1)).findById(dto.getId());
         verify(productRepo, never()).save(product);
