@@ -4,7 +4,10 @@ import com.veloProWeb.model.entity.Kardex;
 import com.veloProWeb.model.entity.Sale.CashRegister;
 import com.veloProWeb.model.Enum.Rol;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -14,6 +17,9 @@ import java.util.List;
 
 @Entity
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "users")
 public class User {
     @Id
