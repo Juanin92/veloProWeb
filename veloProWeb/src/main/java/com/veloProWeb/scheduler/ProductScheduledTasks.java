@@ -2,8 +2,7 @@ package com.veloProWeb.scheduler;
 
 import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.repository.product.ProductRepo;
-import com.veloProWeb.service.Report.IKardexService;
-import com.veloProWeb.service.User.Interface.IAlertService;
+import com.veloProWeb.service.product.interfaces.IProductEventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -17,8 +16,7 @@ import java.util.Set;
 public class ProductScheduledTasks {
 
     private final ProductRepo productRepo;
-    private final IAlertService alertService;
-    private final IKardexService kardexService;
+    private final IProductEventService productEventService;
 
     /**
      * Verifica y crea alertas para cada producto en intervalos regulares.
@@ -29,23 +27,14 @@ public class ProductScheduledTasks {
     @Scheduled(fixedRate = 21600000)
     public void checkAndHandleProductAlerts() {
         List<Product> noStockProducts = productRepo.findOutOfStock();
-        noStockProducts.forEach(product -> {
-            String noStockDescription = "Sin Stock (" + product.getDescription() + " )";
-            if (!alertService.isAlertActive(product, noStockDescription)){
-                alertService.createAlert(product, noStockDescription);
-            }
-        });
+        noStockProducts.forEach(productEventService::handleNoStockAlert);
+
         List<Product> criticalStockProducts = productRepo.findCriticalStock();
-        criticalStockProducts.forEach(product -> {
-            String criticalStockDescription = String.format("Stock Crítico (%s - %s unidades)",
-                    product.getDescription(), product.getStock());
-            if (!alertService.isAlertActive(product, criticalStockDescription) ) {
-                alertService.createAlert(product, criticalStockDescription);
-            }
-        });
+        criticalStockProducts.forEach(productEventService::handleCriticalStockAlert);
+
         Set<Product> allChecked = new HashSet<>();
         allChecked.addAll(noStockProducts);
         allChecked.addAll(criticalStockProducts);
-        allChecked.forEach(kardexService::checkLowSales);
+        allChecked.forEach(productEventService::checkLowSales);
     }
 }
