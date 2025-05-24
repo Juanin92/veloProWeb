@@ -7,7 +7,6 @@ import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.model.Enum.MovementsType;
 import com.veloProWeb.repository.KardexRepo;
-import com.veloProWeb.service.User.Interface.IAlertService;
 import com.veloProWeb.service.User.Interface.IUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +21,6 @@ import java.util.List;
 public class KardexService implements IKardexService {
 
     private final KardexRepo kardexRepo;
-    private final IAlertService alertService;
     private final IUserService userService;
     private final KardexMapper mapper;
 
@@ -63,30 +61,13 @@ public class KardexService implements IKardexService {
     }
 
     /**
-     * Verifica las ventas bajas de un producto en un período de 90 días y crea una alerta.
-     * Recupera la lista de movimientos de Kardex para el producto desde la fecha calculada.
-     * Compara las entradas y salidas para determinar si hay una diferencia que indique bajas ventas.
-     * Crea una alerta si la diferencia es mayor a la mitad de las entradas y no existe una alerta activa para el producto.
-     * @param product - Producto a verificar sus ventas
+     * Obtiene los registros de movimiento de un producto dependiendo de una fecha
+     * @param product - Producto a buscar movimientos
+     * @param startDate - Fecha desde que se debe buscar el registro
+     * @return - una lista con los registros encontrados
      */
     @Override
-    public void checkLowSales(Product product) {
-        LocalDate days = LocalDate.now().minusDays(90);
-        List<Kardex> kardexList = kardexRepo.findByProductAndDateAfter(product, days);
-
-        int totalEntries = 0;
-        int totalExits = 0;
-        for (Kardex kardex : kardexList){
-            if (kardex.getMovementsType().equals(MovementsType.ENTRADA)){
-                totalEntries = kardex.getQuantity();
-            } else if (kardex.getMovementsType().equals(MovementsType.SALIDA)) {
-                totalExits = kardex.getQuantity();
-            }
-        }
-        int difference = totalEntries - totalExits;
-        String description = String.format("Producto sin Ventas (+ 90 días) -> %s", product.getDescription());
-        if (difference > (totalEntries / 2) && !alertService.isAlertActive(product, description)){
-            alertService.createAlert(product, description);
-        }
+    public List<Kardex> getProductMovementsSinceDate(Product product, LocalDate startDate) {
+        return kardexRepo.findByProductAndDateAfter(product, startDate);
     }
 }
