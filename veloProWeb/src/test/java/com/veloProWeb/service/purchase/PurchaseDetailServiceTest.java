@@ -7,7 +7,7 @@ import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.model.entity.purchase.Purchase;
 import com.veloProWeb.model.entity.purchase.PurchaseDetail;
 import com.veloProWeb.repository.purchase.PurchaseDetailRepo;
-import com.veloProWeb.service.Report.KardexService;
+import com.veloProWeb.service.report.KardexService;
 import com.veloProWeb.service.product.ProductService;
 import com.veloProWeb.validation.PurchaseValidator;
 import org.junit.jupiter.api.Test;

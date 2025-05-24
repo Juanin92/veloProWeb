@@ -4,7 +4,7 @@ import com.veloProWeb.model.Enum.MovementsType;
 import com.veloProWeb.model.dto.product.ProductUpdatedRequestDTO;
 import com.veloProWeb.model.entity.Kardex;
 import com.veloProWeb.model.entity.product.Product;
-import com.veloProWeb.service.Report.IKardexService;
+import com.veloProWeb.service.report.IKardexService;
 import com.veloProWeb.service.User.Interface.IAlertService;
 import com.veloProWeb.service.product.interfaces.IProductEventService;
 import lombok.AllArgsConstructor;

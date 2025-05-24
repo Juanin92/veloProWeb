@@ -1,8 +1,8 @@
-package com.veloProWeb.controller.Report;
+package com.veloProWeb.controller.report;
 
 import com.veloProWeb.model.dto.KardexResponseDTO;
 import com.veloProWeb.service.Record.IRecordService;
-import com.veloProWeb.service.Report.IKardexService;
+import com.veloProWeb.service.report.IKardexService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
