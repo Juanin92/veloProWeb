@@ -2,7 +2,7 @@ package com.veloProWeb.service.report;
 
 import com.veloProWeb.model.dto.Report.*;
 import com.veloProWeb.repository.ReportRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -12,9 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class ReportService implements IReportService{
 
-    @Autowired private ReportRepo reportRepo;
+    private final ReportRepo reportRepo;
 
     /**
      * Obtiene el conteo diario de ventas en un rango de fechas.
