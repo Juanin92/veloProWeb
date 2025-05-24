@@ -2,8 +2,8 @@ package com.veloProWeb.scheduler;
 
 import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.repository.product.ProductRepo;
-import com.veloProWeb.service.Report.IKardexService;
 import com.veloProWeb.service.User.Interface.IAlertService;
+import com.veloProWeb.service.product.interfaces.IProductEventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,12 +22,11 @@ public class ProductScheduledTasksTest {
     @InjectMocks private ProductScheduledTasks productScheduledTasks;
     @Mock private ProductRepo productRepo;
     @Mock private IAlertService alertService;
-    @Mock private IKardexService kardexService;
-    private Product product, product2, product3, product4, product5;
+    @Mock private IProductEventService productEventService;
+    private Product product2, product3, product4, product5;
 
     @BeforeEach
     void setUp(){
-        product = Product.builder().id(1L).description("Product").threshold(5).stock(6).build();
         product2 = Product.builder().id(2L).description("Product 2").threshold(5).stock(2).build();
         product3 = Product.builder().id(3L).description("Product 3").threshold(5).stock(0).build();
         product4 = Product.builder().id(4L).description("Product 4").threshold(5).stock(1).build();
@@ -46,7 +45,7 @@ public class ProductScheduledTasksTest {
         verify(productRepo, times(1)).findCriticalStock();
         verify(alertService).createAlert(eq(product3), contains("Sin Stock"));
         verify(alertService).createAlert(eq(product4), contains("Stock Crítico"));
-        verify(kardexService, times(1)).checkLowSales(product3);
-        verify(kardexService, times(1)).checkLowSales(product4);
+        verify(productEventService, times(1)).checkLowSales(product3);
+        verify(productEventService, times(1)).checkLowSales(product4);
     }
 }
