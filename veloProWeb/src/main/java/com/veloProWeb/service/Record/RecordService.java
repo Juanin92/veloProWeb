@@ -4,7 +4,7 @@ import com.veloProWeb.model.entity.Record;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.repository.RecordRepo;
 import com.veloProWeb.service.User.Interface.IUserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +12,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class RecordService implements IRecordService{
 
-    @Autowired private RecordRepo recordRepo;
-    @Autowired private IUserService userService;
+    private final RecordRepo recordRepo;
+    private final IUserService userService;
 
     /**
      * Registrar una entrada al sistema de un usuario.

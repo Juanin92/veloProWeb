@@ -2,7 +2,10 @@ package com.veloProWeb.model.entity;
 
 import com.veloProWeb.model.entity.User.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -10,6 +13,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Record {
 
     @Id
@@ -20,10 +26,12 @@ public class Record {
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private LocalDateTime entryDate;
+
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private LocalDateTime endaDate;
+
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
