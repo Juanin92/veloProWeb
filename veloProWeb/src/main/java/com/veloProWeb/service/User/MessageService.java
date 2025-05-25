@@ -1,7 +1,7 @@
 package com.veloProWeb.service.User;
 
 import com.veloProWeb.model.dto.General.MessageDTO;
-import com.veloProWeb.model.dto.UserDTO;
+import com.veloProWeb.model.dto.user.UserRequestDTO;
 import com.veloProWeb.model.entity.User.Message;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.repository.MessageRepo;
@@ -135,8 +135,8 @@ public class MessageService implements IMessageService {
      * @param user - Usuario a convertir en dto
      * @return - Objeto dto con los datos del usuario
      */
-    private UserDTO createUserDTO(User user){
-        return new UserDTO(
+    private UserRequestDTO createUserDTO(User user){
+        return new UserRequestDTO(
                 user.getName(), user.getSurname(), user.getUsername(),
                 user.getRut(), user.getEmail(), user.getRole(), user.isStatus(), user.getDate());
     }

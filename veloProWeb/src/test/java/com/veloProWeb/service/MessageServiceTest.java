@@ -1,7 +1,7 @@
 package com.veloProWeb.service;
 
 import com.veloProWeb.model.dto.General.MessageDTO;
-import com.veloProWeb.model.dto.UserDTO;
+import com.veloProWeb.model.dto.user.UserRequestDTO;
 import com.veloProWeb.model.entity.User.Message;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.repository.MessageRepo;
@@ -26,7 +26,7 @@ public class MessageServiceTest {
     @InjectMocks private MessageService messageService;
     @Mock private MessageRepo messageRepo;
     @Mock private UserService userService;
-    @Mock private UserDTO userDTO;
+    @Mock private UserRequestDTO userRequestDTO;
     private Message message;
     private Message message2;
     private User userSender;
@@ -149,13 +149,13 @@ public class MessageServiceTest {
     @Test
     public void sendMessage_valid(){
 
-        MessageDTO dto = new MessageDTO(null, "Prueba 1", null,false, false, null, userDTO, null);
-        when(userService.getUserWithUsername(userDTO.getUsername())).thenReturn(userReceiver);
+        MessageDTO dto = new MessageDTO(null, "Prueba 1", null,false, false, null, userRequestDTO, null);
+        when(userService.getUserWithUsername(userRequestDTO.getUsername())).thenReturn(userReceiver);
         when(userService.getUserWithUsername("juan")).thenReturn(userSender);
         messageService.sendMessage(dto, "juan");
 
         verify(userService, times(1)).getUserWithUsername("juan");
-        verify(userService, times(1)).getUserWithUsername(userDTO.getUsername());
+        verify(userService, times(1)).getUserWithUsername(userRequestDTO.getUsername());
         verify(messageRepo, times(1)).save(any(Message.class));
         assertEquals("Prueba 1", message.getContext());
         assertEquals(1L, message.getSenderUser().getId());
