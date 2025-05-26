@@ -17,7 +17,10 @@ public class UserExceptionHandler extends BaseExceptionHandler {
             UserAlreadyDeletedException.class,
             UserAlreadyExistsException.class,
             UserMasterRoleSelectedException.class,
-            UsernameAlreadyExistsException.class
+            UsernameAlreadyExistsException.class,
+            EmailAlreadyRegisterException.class,
+            PasswordMismatchException.class,
+            InvalidCredentialsException.class
     })
     public ResponseEntity<Map<String, String>> handleUserException(Exception e){
         return buildResponse(e.getMessage(), HttpStatus.CONFLICT);
