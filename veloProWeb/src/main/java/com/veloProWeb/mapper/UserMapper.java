@@ -1,6 +1,7 @@
 package com.veloProWeb.mapper;
 
 import com.veloProWeb.model.dto.user.UserRequestDTO;
+import com.veloProWeb.model.dto.user.UserResponseDTO;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.util.TextFormatter;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,19 @@ public class UserMapper {
                 .date(LocalDate.now())
                 .status(true)
                 .token(null)
+                .build();
+    }
+
+    public UserResponseDTO toResponseDTO(User user){
+        return UserResponseDTO.builder()
+                .date(user.getDate())
+                .name(user.getName())
+                .surname(user.getSurname())
+                .username(user.getUsername())
+                .rut(user.getRut())
+                .email(user.getEmail())
+                .status(user.isStatus())
+                .role(user.getRole())
                 .build();
     }
 }
