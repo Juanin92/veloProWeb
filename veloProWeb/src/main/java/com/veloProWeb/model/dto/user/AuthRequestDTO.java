@@ -1,4 +1,4 @@
-package com.veloProWeb.model.dto;
+package com.veloProWeb.model.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
