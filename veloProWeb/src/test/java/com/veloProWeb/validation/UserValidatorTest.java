@@ -1,16 +1,13 @@
 package com.veloProWeb.validation;
 
+import com.veloProWeb.exceptions.user.*;
+import com.veloProWeb.model.dto.user.UpdateUserDTO;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.model.Enum.Rol;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,206 +15,82 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UserValidatorTest {
 
     @InjectMocks private UserValidator validator = new UserValidator();
-    private User user;
 
-    @BeforeEach
-    void setUp(){
-        user = new User();
-        user.setId(1L);
-        user.setName("Juan");
-        user.setSurname("Perez");
-        user.setDate(LocalDate.now());
-        user.setStatus(true);
-        user.setEmail("example@gmail.com");
-        user.setRole(Rol.ADMIN);
-        user.setRut("12345678-9");
-        user.setPassword("pass1234");
-        user.setUsername("JP2");
+    //Prueba para validar que el usuario no exista
+    @Test
+    void validateUserDoesNotExist() {
+        User user = User.builder().build();
+        UserAlreadyExistsException ex = assertThrows(UserAlreadyExistsException.class,
+                () ->  validator.validateUserDoesNotExist(user));
+        assertEquals("Usuario ya registrado", ex.getMessage());
     }
 
-    //Prueba para validar los datos de los usuarios
+    //Prueba para validar que el usuario existe
     @Test
-    public void validate_valid(){
-        validator.validate(user);
+    void validateUserExists() {
+        UserNotFoundException ex = assertThrows(UserNotFoundException.class,
+                () ->  validator.validateUserExists(null));
+        assertEquals("No existe registro del usuario", ex.getMessage());
     }
 
-    //Prueba para validar el estado del usuario
+    //Prueba para validar que el usuario no esté eliminado
     @Test
-    public void validateStatus_valid(){
-        validator.validateStatus(user.isStatus());
-        assertTrue(user.isStatus());
-    }
-    @Test
-    public void validateStatus_validException(){
-        user.setStatus(false);
-        IllegalArgumentException exception =  assertThrows(IllegalArgumentException.class, () -> validator.validateStatus(user.isStatus()));
-        assertEquals("Usuario ha sido desactivado", exception.getMessage());
+    void validateIsNotDeleted() {
+        UserAlreadyDeletedException ex = assertThrows(UserAlreadyDeletedException.class,
+                () -> validator.validateIsNotDeleted(false));
+        assertEquals("Usuario ya está inactivo", ex.getMessage());
     }
 
-    //Prueba para validar el Rol del usuario
+    //Prueba para validar que el usuario no esté activado
     @Test
-    public void validateRole_valid(){
-        user.setRole(Rol.MASTER);
-        validator.validate(user);
-    }
-    @Test
-    public void validateRole_validException(){
-        user.setRole(null);
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> validator.validate(user));
-        assertEquals("Seleccione un rol para el usuario", e.getMessage());
+    void validateIsActivated() {
+        UserAlreadyActivatedException ex = assertThrows(UserAlreadyActivatedException.class,
+                () -> validator.validateIsActivated(true));
+        assertEquals("Usuario ya activado", ex.getMessage());
     }
 
-    //Prueba validar el rut del usuario
-    @ParameterizedTest
-    @ValueSource(strings = {"12345678-9", "9876543-2", "12345678-K", "9876543-K", "12345678-k"})
-    public void validateRut_valid(String rut){
-        user.setRut(rut);
-        validator.validate(user);
-    }
+    //Prueba para validar que el rol no sea maestro
     @Test
-    public void validateRut_validBlank(){
-        user.setRut(" ");
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> validator.validate(user));
-        assertEquals("El rut no es correcto.", e.getMessage());
-    }
-    @ParameterizedTest
-    @ValueSource(strings = {"123443-9", "2132322", "prueba"})
-    public void validateRut_validNotMatch(String rut){
-        user.setRut(rut);
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> validator.validate(user));
-        assertEquals("El rut no es correcto.", e.getMessage());
+    void validateRoleIsNotMaster() {
+        UserMasterRoleSelectedException ex = assertThrows(UserMasterRoleSelectedException.class,
+                () -> validator.validateRoleIsNotMaster(Rol.MASTER));
+        assertEquals("El rol maestro ya ha sido asignado", ex.getMessage());
     }
 
-    //Prueba validar el nombre del usuario
+    //Prueba para validar que el nombre de usuario no esté registrado
     @Test
-    public void validateName_valid(){
-        validator.validate(user);
-    }
-    @Test
-    public void validateName_validBlank(){
-        user.setName(" ");
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> validator.validate(user));
-        assertEquals("Ingrese nombre válido.", e.getMessage());
-    }
-    @Test
-    public void validateName_validNull(){
-        user.setName(null);
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> validator.validate(user));
-        assertEquals("Ingrese nombre válido.", e.getMessage());
-    }
-    @ParameterizedTest
-    @ValueSource(strings = {"ju", "pe", "a"})
-    public void validateName_validShortLength(String name){
-        user.setName(name);
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> validator.validate(user));
-        assertEquals("Ingrese nombre válido.", e.getMessage());
-    }
-    @ParameterizedTest
-    @ValueSource(strings = {"juan123", "123pedro"})
-    public void validateName_validNoMatch(String name){
-        user.setName(name);
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> validator.validate(user));
-        assertEquals("Ingrese nombre válido.", e.getMessage());
+    void validateUpdateUser_usernameExists() {
+        User user = User.builder().username("johnny").build();
+        UpdateUserDTO dto = UpdateUserDTO.builder().username("johnnie").build();
+        UsernameAlreadyExistsException ex = assertThrows(UsernameAlreadyExistsException.class,
+                () -> validator.validateUpdateUser(user, dto, true, false));
+        assertEquals("El nombre de usuario ya está en uso", ex.getMessage());
     }
 
-    //Prueba validar el apellido del usuario
+    //Prueba para validar que el email no esté registrado
     @Test
-    public void validateSurname_valid(){
-        validator.validate(user);
-    }
-    @Test
-    public void validateSurname_validBlank(){
-        user.setSurname(" ");
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> validator.validate(user));
-        assertEquals("Ingrese apellido válido.", e.getMessage());
-    }
-    @Test
-    public void validateSurname_validNull(){
-        user.setSurname(null);
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> validator.validate(user));
-        assertEquals("Ingrese apellido válido.", e.getMessage());
-    }
-    @ParameterizedTest
-    @ValueSource(strings = {"p", "pe", "a"})
-    public void validateSurname_validShortLength(String name){
-        user.setSurname(name);
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> validator.validate(user));
-        assertEquals("Ingrese apellido válido.", e.getMessage());
-    }
-    @ParameterizedTest
-    @ValueSource(strings = {"perez123", "123perez"})
-    public void validateSurname_validNoMatch(String name){
-        user.setSurname(name);
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> validator.validate(user));
-        assertEquals("Ingrese apellido válido.", e.getMessage());
+    void validateUpdateUser_emailExists() {
+        User user = User.builder().username("johnny").email("test@test.com").build();
+        UpdateUserDTO dto = UpdateUserDTO.builder().username("johnny").email("test@test.cl").build();
+        EmailAlreadyRegisterException ex = assertThrows(EmailAlreadyRegisterException.class,
+                () -> validator.validateUpdateUser(user, dto, false, true));
+        assertEquals("El email ya está registrado", ex.getMessage());
     }
 
-    //Prueba validar email del usuario
+    //Prueba para validar que la contraseña actual o el código de recuperación son correctos
     @Test
-    public void validateEmail_valid(){
-        validator.validate(user);
-    }
-    @Test
-    public void validateEmail_validBlank(){
-        user.setEmail(" ");
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> validator.validate(user));
-        assertEquals("Ingrese Email válido.", e.getMessage());
-    }
-    @ParameterizedTest
-    @ValueSource(strings = {"prueba", "prueba@correo", "pruebacorreo.cl"})
-    public void validateEmail_validNoMatch(String email){
-        user.setEmail(email);
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> validator.validate(user));
-        assertEquals("Ingrese Email válido.", e.getMessage());
+    void validateCurrentCredentials() {
+        InvalidCredentialsException ex = assertThrows(InvalidCredentialsException.class,
+                () -> validator.validateCurrentCredentials(false, false));
+        assertEquals("La contraseña actual o el código de recuperación son incorrectos", ex.getMessage());
     }
 
-    //Prueba validar el nombre de usuario del usuario
+    //Prueba para validar que las contraseñas nuevas coinciden
     @Test
-    public void validateUsername_valid(){
-        validator.validate(user);
-    }
-    @Test
-    public void validateUsername_validBlank(){
-        user.setUsername(" ");
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> validator.validate(user));
-        assertEquals("Ingrese nombre de usuario.", e.getMessage());
-    }
-    @Test
-    public void validateUsername_validNull(){
-        user.setUsername(null);
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> validator.validate(user));
-        assertEquals("Ingrese nombre de usuario.", e.getMessage());
-    }
-    @ParameterizedTest
-    @ValueSource(strings = {"p", "pe", "a"})
-    public void validateUsername_validShortLength(String name){
-        user.setUsername(name);
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> validator.validate(user));
-        assertEquals("Ingrese nombre de usuario.", e.getMessage());
-    }
-
-    //Prueba validar contraseña del usuario
-    @Test
-    public void validatePassword_valid(){
-        validator.validate(user);
-    }
-    @Test
-    public void validatePassword_validBlank(){
-        user.setPassword(" ");
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> validator.validate(user));
-        assertEquals("Ingrese contraseña válido. (Debe tener 8 o más caracteres o números)", e.getMessage());
-    }
-    @Test
-    public void validatePassword_validNull(){
-        user.setPassword(null);
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> validator.validate(user));
-        assertEquals("Ingrese contraseña válido. (Debe tener 8 o más caracteres o números)", e.getMessage());
-    }
-    @ParameterizedTest
-    @ValueSource(strings = {"pass123", "1234", "a"})
-    public void validatePassword_validShortLength(String password){
-        user.setPassword(password);
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> validator.validate(user));
-        assertEquals("Ingrese contraseña válido. (Debe tener 8 o más caracteres o números)", e.getMessage());
+    void validateNewPasswordMatch() {
+        UpdateUserDTO dto = UpdateUserDTO.builder().newPassword("1234").currentPassword("3212").build();
+        PasswordMismatchException ex = assertThrows(PasswordMismatchException.class,
+                () -> validator.validateNewPasswordMatch(dto));
+        assertEquals("Las contraseñas nuevas no coinciden", ex.getMessage());
     }
 }
