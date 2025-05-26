@@ -1,6 +1,7 @@
 package com.veloProWeb.validation;
 
 import com.veloProWeb.exceptions.user.*;
+import com.veloProWeb.model.dto.user.UpdateUserDTO;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.model.Enum.Rol;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,7 @@ public class UserValidator {
 
     public void validateUserDoesNotExist(User user){
         if (user != null){
-            throw new UserAlreadyExistsException("Usuario Existente: Ya hay existe el usuario");
+            throw new UserAlreadyExistsException("Usuario ya registrado");
         }
     }
 
@@ -20,40 +21,42 @@ public class UserValidator {
         }
     }
 
-    public void isDeleted(boolean status){
-        if (!status){
-            throw new UserAlreadyDeletedException("Usuario ya ha sido desactivado");
+    public void validateIsNotDeleted(boolean isDeleted){
+        if (!isDeleted){
+            throw new UserAlreadyDeletedException("Usuario ya está inactivo");
         }
     }
 
-    public void isActivated(boolean status){
-        if (status){
-            throw new UserAlreadyActivatedException("Usuario ya ha sido activado");
+    public void validateIsActivated(boolean isActivated){
+        if (isActivated){
+            throw new UserAlreadyActivatedException("Usuario ya activado");
         }
     }
 
-    public void validateRole(Rol role){
+    public void validateRoleIsNotMaster(Rol role){
         if (role.equals(Rol.MASTER)){
-            throw new UserMasterRoleSelectedException("rol maestro ya fue seleccionado");
+            throw new UserMasterRoleSelectedException("El rol maestro ya ha sido asignado");
         }
     }
 
-    /**
-     * Válida los datos del usuario
-     * @param user - Usurario seleccionado
-     */
-    public void validate(User user){
-        validatePassword(user.getPassword());
+    public void validateUpdateUser(User user, UpdateUserDTO dto, boolean existByUsername, boolean existByEmail){
+        if (!user.getUsername().equals(dto.getUsername()) && existByUsername) {
+            throw new UsernameAlreadyExistsException("El nombre de usuario ya está en uso");
+        }
+        if (!user.getEmail().equals(dto.getEmail()) && existByEmail) {
+            throw new EmailAlreadyRegisterException("El email ya está registrado");
+        }
     }
 
-    /**
-     * Válida la contraseña del usuario.
-     * No debe ser nulo, estar vació y ser el largo menor o igual a 7 caracteres
-     * @param password - cadena contiene contraseña
-     */
-    private void validatePassword(String password){
-        if (password == null || password.trim().isBlank() || password.trim().length() <= 7){
-            throw new IllegalArgumentException("Ingrese contraseña válido. (Debe tener 8 o más caracteres o números)");
+    public void validateCurrentCredentials(boolean isCurrentPasswordValid, boolean isTokenValid){
+        if (!isCurrentPasswordValid && !isTokenValid) {
+            throw new InvalidCredentialsException("La contraseña actual o el código de recuperación son incorrectos");
+        }
+    }
+
+    public void validateNewPasswordMatch(UpdateUserDTO dto){
+        if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
+            throw new PasswordMismatchException("Las contraseñas nuevas no coinciden");
         }
     }
 }
