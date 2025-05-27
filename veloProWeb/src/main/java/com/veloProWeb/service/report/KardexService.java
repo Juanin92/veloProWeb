@@ -34,7 +34,7 @@ public class KardexService implements IKardexService {
     @Transactional
     @Override
     public void addKardex(UserDetails userDetails, Product product, int quantity, String comment, MovementsType moves) {
-        User user = userService.getUserWithUsername(userDetails.getUsername());
+        User user = userService.getUserByUsername(userDetails.getUsername());
         Kardex kardex = Kardex.builder()
                 .date(LocalDate.now())
                 .quantity(quantity)

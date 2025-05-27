@@ -28,7 +28,7 @@ public class CashRegisterService implements ICashRegisterService {
      */
     @Override
     public void addRegisterOpening(String username, int amount) {
-        User user = userService.getUserWithUsername(username);
+        User user = userService.getUserByUsername(username);
         if (user.getRole() != Rol.MASTER){
             validateAmount(amount);
         }
@@ -56,7 +56,7 @@ public class CashRegisterService implements ICashRegisterService {
      */
     @Override
     public void addRegisterClosing(String username, CashRegisterDTO dto) {
-        User user = userService.getUserWithUsername(username);
+        User user = userService.getUserByUsername(username);
         if (user.getRole() != Rol.MASTER){
             validateAmount(dto.getAmountClosingCash());
             validateAmount(dto.getAmountClosingPos());
@@ -114,7 +114,7 @@ public class CashRegisterService implements ICashRegisterService {
      */
     @Override
     public boolean hasOpenRegisterOnDate(String username) {
-        User user = userService.getUserWithUsername(username);
+        User user = userService.getUserByUsername(username);
         if (user != null) {
             LocalDate date = LocalDate.now();
             return cashRegisterRepo.existsOpenRegisterByUserAndDate(user.getId(), date);

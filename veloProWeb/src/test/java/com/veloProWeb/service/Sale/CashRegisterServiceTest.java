@@ -56,11 +56,11 @@ public class CashRegisterServiceTest {
     //Prueba para registrar una apertura de la caja
     @Test
     public void addRegisterOpening_valid(){
-        when(userService.getUserWithUsername("jpp")).thenReturn(user);
+        when(userService.getUserByUsername("jpp")).thenReturn(user);
         cashRegisterService.addRegisterOpening("jpp", 1000);
 
         ArgumentCaptor<CashRegister> captor = ArgumentCaptor.forClass(CashRegister.class);
-        verify(userService, times(1)).getUserWithUsername("jpp");
+        verify(userService, times(1)).getUserByUsername("jpp");
         verify(cashRegisterRepo, times(1)).save(captor.capture());
 
         CashRegister savedRegister = captor.getValue();
@@ -69,10 +69,10 @@ public class CashRegisterServiceTest {
     }
     @Test
     public void addRegisterOpening_invalidAmount(){
-        when(userService.getUserWithUsername("jpp")).thenReturn(user);
+        when(userService.getUserByUsername("jpp")).thenReturn(user);
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() -> cashRegisterService.addRegisterOpening("jpp", 0));
 
-        verify(userService, times(1)).getUserWithUsername("jpp");
+        verify(userService, times(1)).getUserByUsername("jpp");
         verify(cashRegisterRepo, never()).save(any(CashRegister.class));
 
         assertEquals("El monto debe ser mayor a 0", e.getMessage());
@@ -87,11 +87,11 @@ public class CashRegisterServiceTest {
         cashRegister.setStatus("OPEN");
         cashRegister.setComment(null);
 
-        when(userService.getUserWithUsername("jpp")).thenReturn(user);
+        when(userService.getUserByUsername("jpp")).thenReturn(user);
         when(cashRegisterRepo.findLatestOpenRegisterByUser(user.getId())).thenReturn(cashRegister);
         cashRegisterService.addRegisterClosing("jpp", dto);
 
-        verify(userService, times(1)).getUserWithUsername("jpp");
+        verify(userService, times(1)).getUserByUsername("jpp");
         verify(cashRegisterRepo, times(1)).findLatestOpenRegisterByUser(user.getId());
         verify(cashRegisterRepo, times(1)).save(cashRegister);
 
@@ -108,12 +108,12 @@ public class CashRegisterServiceTest {
         cashRegister.setStatus("OPEN");
         cashRegister.setComment(null);
 
-        when(userService.getUserWithUsername("jpp")).thenReturn(user);
+        when(userService.getUserByUsername("jpp")).thenReturn(user);
         when(cashRegisterRepo.findLatestOpenRegisterByUser(user.getId())).thenReturn(cashRegister);
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
                 () -> cashRegisterService.addRegisterClosing("jpp", dto));
 
-        verify(userService, times(1)).getUserWithUsername("jpp");
+        verify(userService, times(1)).getUserByUsername("jpp");
         verify(cashRegisterRepo, times(1)).findLatestOpenRegisterByUser(user.getId());
         verify(cashRegisterRepo, never()).save(cashRegister);
 
@@ -148,19 +148,19 @@ public class CashRegisterServiceTest {
     //Prueba para verificar si un usuario tiene un registro abierto en la fecha actual
     @Test
     public void hasOpenRegisterOnDate_valid(){
-        when(userService.getUserWithUsername("jpp")).thenReturn(user);
+        when(userService.getUserByUsername("jpp")).thenReturn(user);
         when(cashRegisterRepo.existsOpenRegisterByUserAndDate(user.getId(), LocalDate.now())).thenReturn(true);
 
-        verify(userService, times(1)).getUserWithUsername("jpp");
+        verify(userService, times(1)).getUserByUsername("jpp");
         verify(cashRegisterRepo, times(1)).existsOpenRegisterByUserAndDate(user.getId(), LocalDate.now());
         assertTrue(cashRegisterService.hasOpenRegisterOnDate("jpp"));
     }
     @Test
     public void hasOpenRegisterOnDate_invalid(){
-        when(userService.getUserWithUsername("jpp")).thenReturn(user);
+        when(userService.getUserByUsername("jpp")).thenReturn(user);
         when(cashRegisterRepo.existsOpenRegisterByUserAndDate(user.getId(), LocalDate.now())).thenReturn(false);
 
-        verify(userService, times(1)).getUserWithUsername("jpp");
+        verify(userService, times(1)).getUserByUsername("jpp");
         verify(cashRegisterRepo, times(1)).existsOpenRegisterByUserAndDate(user.getId(), LocalDate.now());
         assertFalse(cashRegisterService.hasOpenRegisterOnDate("jpp"));
     }

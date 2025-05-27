@@ -29,7 +29,7 @@ public class TaskService implements ITaskService {
      */
     @Override
     public List<TaskDTO> getTaskByUser(String username) {
-        User user = userService.getUserWithUsername(username);
+        User user = userService.getUserByUsername(username);
         List<Task> tasks = taskRepo.findAll();
         return tasks.stream()
                 .filter(task -> task.isStatus() && Objects.equals(task.getUser().getId(), user.getId()))
@@ -49,7 +49,7 @@ public class TaskService implements ITaskService {
             task.setCreated(LocalDate.now());
             task.setDescription(dto.getDescription());
             task.setStatus(true);
-            User user = userService.getUserWithUsername(dto.getUser());
+            User user = userService.getUserByUsername(dto.getUser());
             task.setUser(user);
             taskRepo.save(task);
         }else {

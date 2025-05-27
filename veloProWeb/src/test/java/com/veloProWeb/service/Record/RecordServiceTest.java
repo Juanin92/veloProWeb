@@ -56,10 +56,10 @@ public class RecordServiceTest {
     @Test
     public void registerEntry_valid(){
         userDetails = createUserDetailsWithRole(Rol.ADMIN);
-        when(userService.getUserWithUsername("testUser")).thenReturn(user);
+        when(userService.getUserByUsername("testUser")).thenReturn(user);
         recordService.registerEntry(userDetails);
         ArgumentCaptor<Record> recordCaptor = ArgumentCaptor.forClass(Record.class);
-        verify(userService, times(1)).getUserWithUsername("testUser");
+        verify(userService, times(1)).getUserByUsername("testUser");
         verify(recordRepo, times(1)).save(recordCaptor.capture());
 
         Record savedRecord = recordCaptor.getValue();
@@ -76,10 +76,10 @@ public class RecordServiceTest {
     @Test
     public void registerEnd_valid() {
         userDetails = createUserDetailsWithRole(Rol.ADMIN);
-        when(userService.getUserWithUsername("testUser")).thenReturn(user);
+        when(userService.getUserByUsername("testUser")).thenReturn(user);
         recordService.registerEnd(userDetails);
         ArgumentCaptor<Record> recordCaptor = ArgumentCaptor.forClass(Record.class);
-        verify(userService, times(1)).getUserWithUsername("testUser");
+        verify(userService, times(1)).getUserByUsername("testUser");
         verify(recordRepo).save(recordCaptor.capture());
 
         Record savedRecord = recordCaptor.getValue();
@@ -96,12 +96,12 @@ public class RecordServiceTest {
     @Test
     public void registerAction_valid() {
         userDetails = createUserDetailsWithRole(Rol.ADMIN);
-        when(userService.getUserWithUsername("testUser")).thenReturn(user);
+        when(userService.getUserByUsername("testUser")).thenReturn(user);
         String action = "MODIFY";
         String comment = "Actualización de datos";
         recordService.registerAction(userDetails, action, comment);
         ArgumentCaptor<Record> recordCaptor = ArgumentCaptor.forClass(Record.class);
-        verify(userService, times(1)).getUserWithUsername("testUser");
+        verify(userService, times(1)).getUserByUsername("testUser");
         verify(recordRepo).save(recordCaptor.capture());
 
         Record savedRecord = recordCaptor.getValue();

@@ -49,21 +49,21 @@ public class TaskServiceTest {
     public void getTaskByUser_valid(){
         List<Task> tasks = Arrays.asList(task,task2,task3,task4);
         List<Task> taskListFiltered = Arrays.asList(task, task3);
-        when(userService.getUserWithUsername(dto.getUser())).thenReturn(user);
+        when(userService.getUserByUsername(dto.getUser())).thenReturn(user);
         when(taskRepo.findAll()).thenReturn(tasks);
         List<TaskDTO> result = taskService.getTaskByUser(dto.getUser());
 
-        verify(userService, times(1)).getUserWithUsername(dto.getUser());
+        verify(userService, times(1)).getUserByUsername(dto.getUser());
         verify(taskRepo, times(1)).findAll();
         assertEquals(taskListFiltered.size(), result.size());
     }
 
     @Test
     public void createTask_valid(){
-        when(userService.getUserWithUsername(dto.getUser())).thenReturn(user);
+        when(userService.getUserByUsername(dto.getUser())).thenReturn(user);
         taskService.createTask(dto);
         ArgumentCaptor<Task> taskArgumentCaptor = ArgumentCaptor.forClass(Task.class);
-        verify(userService, times(1)).getUserWithUsername(dto.getUser());
+        verify(userService, times(1)).getUserByUsername(dto.getUser());
         verify(taskRepo, times(1)).save(taskArgumentCaptor.capture());
         Task result = taskArgumentCaptor.getValue();
         assertEquals(result.getCreated(), LocalDate.now());

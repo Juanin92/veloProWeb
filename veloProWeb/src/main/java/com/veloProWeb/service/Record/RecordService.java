@@ -25,7 +25,7 @@ public class RecordService implements IRecordService{
      */
     @Override
     public void registerEntry(UserDetails userDetails) {
-        User user = userService.getUserWithUsername(userDetails.getUsername());
+        User user = userService.getUserByUsername(userDetails.getUsername());
         if (user != null){
             if (userDetails.getAuthorities().stream().anyMatch(grantedAuthority ->
                     grantedAuthority.getAuthority().equals(user.getRole().name()))){
@@ -52,7 +52,7 @@ public class RecordService implements IRecordService{
      */
     @Override
     public void registerEnd(UserDetails userDetails) {
-        User user = userService.getUserWithUsername(userDetails.getUsername());
+        User user = userService.getUserByUsername(userDetails.getUsername());
         if (user != null){
             if (userDetails.getAuthorities().stream().anyMatch(grantedAuthority ->
                     grantedAuthority.getAuthority().equals(user.getRole().name()))){
@@ -81,7 +81,7 @@ public class RecordService implements IRecordService{
      */
     @Override
     public void registerAction(UserDetails userDetails, String action, String comment) {
-        User user = userService.getUserWithUsername(userDetails.getUsername());
+        User user = userService.getUserByUsername(userDetails.getUsername());
         if (user != null){
             if (userDetails.getAuthorities().stream().anyMatch(grantedAuthority ->
                     grantedAuthority.getAuthority().equals(user.getRole().name()))){
@@ -103,7 +103,7 @@ public class RecordService implements IRecordService{
 
     @Override
     public void registerActionManual(String username, String action, String comment) {
-        User user = userService.getUserWithUsername(username);
+        User user = userService.getUserByUsername(username);
         if (user != null){
             Record record = new Record();
             record.setEntryDate(null);
