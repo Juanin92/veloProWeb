@@ -1,8 +1,7 @@
-package com.veloProWeb.service.User;
+package com.veloProWeb.service.data;
 
 import com.veloProWeb.model.entity.data.LocalData;
 import com.veloProWeb.repository.LocalDataRepo;
-import com.veloProWeb.service.data.LocalDataService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

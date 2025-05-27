@@ -1,11 +1,10 @@
-package com.veloProWeb.service;
+package com.veloProWeb.service.communication;
 
 import com.veloProWeb.model.dto.TaskDTO;
 import com.veloProWeb.model.entity.communication.Task;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.repository.communication.TaskRepo;
-import com.veloProWeb.service.communication.TaskService;
-import com.veloProWeb.service.User.UserService;
+import com.veloProWeb.service.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

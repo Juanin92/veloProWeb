@@ -1,4 +1,4 @@
-package com.veloProWeb.service.Sale;
+package com.veloProWeb.service.sale;
 
 import com.veloProWeb.model.dto.DetailSaleDTO;
 import com.veloProWeb.model.dto.DetailSaleRequestDTO;

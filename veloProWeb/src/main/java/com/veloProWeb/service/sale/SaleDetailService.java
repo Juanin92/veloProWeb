@@ -1,4 +1,4 @@
-package com.veloProWeb.service.Sale;
+package com.veloProWeb.service.sale;
 
 import com.veloProWeb.model.dto.DetailSaleDTO;
 import com.veloProWeb.model.dto.DetailSaleRequestDTO;
@@ -16,9 +16,9 @@ import com.veloProWeb.repository.Sale.SaleRepo;
 import com.veloProWeb.service.customer.interfaces.ICustomerService;
 import com.veloProWeb.service.product.interfaces.IProductService;
 import com.veloProWeb.service.inventory.IKardexService;
-import com.veloProWeb.service.Sale.Interface.IDispatchService;
-import com.veloProWeb.service.Sale.Interface.ISaleDetailService;
-import com.veloProWeb.service.Sale.Interface.ISaleService;
+import com.veloProWeb.service.sale.Interface.IDispatchService;
+import com.veloProWeb.service.sale.Interface.ISaleDetailService;
+import com.veloProWeb.service.sale.Interface.ISaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;

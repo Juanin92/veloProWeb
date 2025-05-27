@@ -1,12 +1,12 @@
-package com.veloProWeb.service.Sale;
+package com.veloProWeb.service.sale;
 
 import com.veloProWeb.model.dto.CashRegisterDTO;
 import com.veloProWeb.model.entity.Sale.CashRegister;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.model.Enum.Rol;
 import com.veloProWeb.repository.Sale.CashRegisterRepo;
-import com.veloProWeb.service.Sale.Interface.ICashRegisterService;
-import com.veloProWeb.service.User.UserService;
+import com.veloProWeb.service.sale.Interface.ICashRegisterService;
+import com.veloProWeb.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

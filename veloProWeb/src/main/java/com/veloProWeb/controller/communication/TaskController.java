@@ -3,7 +3,7 @@ package com.veloProWeb.controller.communication;
 import com.veloProWeb.model.dto.TaskDTO;
 import com.veloProWeb.service.reporting.interfaces.IRecordService;
 import com.veloProWeb.service.communication.interfaces.ITaskService;
-import com.veloProWeb.service.User.Interface.IUserService;
+import com.veloProWeb.service.user.Interface.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.veloProWeb.service.User.Interface;
+package com.veloProWeb.service.user.Interface;
 
 import org.springframework.security.core.userdetails.UserDetails;
 

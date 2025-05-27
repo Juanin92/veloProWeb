@@ -5,7 +5,7 @@ import com.veloProWeb.model.dto.user.LoginRequestDTO;
 import com.veloProWeb.security.Service.EncryptionService;
 import com.veloProWeb.security.Jwt.JwtUtil;
 import com.veloProWeb.service.reporting.interfaces.IRecordService;
-import com.veloProWeb.service.User.Interface.ILoginService;
+import com.veloProWeb.service.user.Interface.ILoginService;
 import com.veloProWeb.util.ResponseMessage;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

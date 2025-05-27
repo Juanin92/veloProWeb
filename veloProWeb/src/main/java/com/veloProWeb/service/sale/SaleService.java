@@ -1,4 +1,4 @@
-package com.veloProWeb.service.Sale;
+package com.veloProWeb.service.sale;
 
 import com.veloProWeb.model.dto.DetailSaleDTO;
 import com.veloProWeb.model.dto.SaleRequestDTO;
@@ -9,7 +9,7 @@ import com.veloProWeb.model.Enum.PaymentMethod;
 import com.veloProWeb.repository.Sale.SaleRepo;
 import com.veloProWeb.service.customer.CustomerService;
 import com.veloProWeb.service.customer.TicketHistoryService;
-import com.veloProWeb.service.Sale.Interface.ISaleService;
+import com.veloProWeb.service.sale.Interface.ISaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -81,7 +81,7 @@ public class SaleService implements ISaleService {
     }
 
     /**
-     * Configura una Sale dependiendo el método de pago realizo en la venta.
+     * Configura una sale dependiendo el método de pago realizo en la venta.
      * Si el pago es mixto o préstamo se actualiza la deuda del cliente
      * y se agrega un ticket asociado al cliente con la venta
      * @param sale - Venta con los datos necesarios
@@ -139,7 +139,7 @@ public class SaleService implements ISaleService {
     }
 
     /**
-     *  Convierte un objeto Sale a un dto
+     *  Convierte un objeto sale a un dto
      * @param sale - la venta que se va convertir
      * @return - objeto dto que contiene los detalle de la venta
      */

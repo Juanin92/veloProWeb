@@ -2,7 +2,7 @@ package com.veloProWeb.controller.Sale;
 
 import com.veloProWeb.model.dto.CashRegisterDTO;
 import com.veloProWeb.service.reporting.interfaces.IRecordService;
-import com.veloProWeb.service.Sale.Interface.ICashRegisterService;
+import com.veloProWeb.service.sale.Interface.ICashRegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

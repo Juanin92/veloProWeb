@@ -1,4 +1,4 @@
-package com.veloProWeb.service.Sale;
+package com.veloProWeb.service.sale;
 
 import com.veloProWeb.model.dto.DetailSaleDTO;
 import com.veloProWeb.model.dto.DispatchDTO;
@@ -6,7 +6,7 @@ import com.veloProWeb.model.entity.Sale.Dispatch;
 import com.veloProWeb.model.entity.Sale.SaleDetail;
 import com.veloProWeb.repository.Sale.DispatchRepo;
 import com.veloProWeb.service.product.interfaces.IProductService;
-import com.veloProWeb.service.Sale.Interface.IDispatchService;
+import com.veloProWeb.service.sale.Interface.IDispatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

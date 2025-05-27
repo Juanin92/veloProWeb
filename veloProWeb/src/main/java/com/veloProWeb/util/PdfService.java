@@ -8,7 +8,7 @@ import com.veloProWeb.model.dto.DetailSaleRequestDTO;
 import com.veloProWeb.model.entity.Sale.Sale;
 import com.veloProWeb.model.entity.data.LocalData;
 import com.veloProWeb.model.Enum.PaymentMethod;
-import com.veloProWeb.service.Sale.Interface.ISaleDetailService;
+import com.veloProWeb.service.sale.Interface.ISaleDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

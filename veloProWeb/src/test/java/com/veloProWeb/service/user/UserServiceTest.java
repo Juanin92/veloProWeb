@@ -1,4 +1,4 @@
-package com.veloProWeb.service.User;
+package com.veloProWeb.service.user;
 
 import com.veloProWeb.exceptions.user.*;
 import com.veloProWeb.mapper.UserMapper;

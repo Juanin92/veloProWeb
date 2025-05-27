@@ -1,11 +1,11 @@
-package com.veloProWeb.service.User;
+package com.veloProWeb.service.user;
 
 import com.veloProWeb.exceptions.user.InvalidTokenException;
 import com.veloProWeb.exceptions.user.UserAlreadyDeletedException;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.repository.UserRepo;
 import com.veloProWeb.security.Service.CodeGenerator;
-import com.veloProWeb.service.User.Interface.IUserService;
+import com.veloProWeb.service.user.Interface.IUserService;
 import com.veloProWeb.util.EmailService;
 import com.veloProWeb.validation.UserValidator;
 import org.junit.jupiter.api.Test;
