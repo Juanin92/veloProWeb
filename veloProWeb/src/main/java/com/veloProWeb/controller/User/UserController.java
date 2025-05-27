@@ -1,10 +1,13 @@
 package com.veloProWeb.controller.User;
 
-import com.veloProWeb.model.dto.UpdateUserDTO;
-import com.veloProWeb.model.dto.UserDTO;
+import com.veloProWeb.model.dto.user.UpdateUserDTO;
+import com.veloProWeb.model.dto.user.UserRequestDTO;
+import com.veloProWeb.model.dto.user.UserResponseDTO;
 import com.veloProWeb.service.Record.IRecordService;
 import com.veloProWeb.service.User.Interface.IUserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.veloProWeb.util.ResponseMessage;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,73 +15,45 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/usuario")
-@CrossOrigin(origins = "http://localhost:4200")
+@AllArgsConstructor
 public class UserController {
 
-    @Autowired private IUserService userService;
-    @Autowired private IRecordService recordService;
+    private final IUserService userService;
+    private final IRecordService recordService;
 
-    /**
-     * Obtiene una lista de usuarios.
-     * Verifica que solo los roles admin y master puede obtener la lista.
-     * @return - Lista con los datos de usuarios registrados
-     */
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER' , 'SELLER', 'GUEST', 'WAREHOUSE')")
-    public ResponseEntity<List<UserDTO>> getListUser(){
+    public ResponseEntity<List<UserResponseDTO>> getListUser(){
         return ResponseEntity.ok(userService.getAllUser());
     }
 
-    /**
-     * Agrega un nuevo usuario
-     * @param user - Usuario con los datos que se desea agregar
-     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
-     */
     @PostMapping("/nuevo-usuario")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
-    public ResponseEntity<Map<String, String>> addUser(@RequestBody UserDTO user,
+    public ResponseEntity<Map<String, String>> addUser(@RequestBody @Valid UserRequestDTO user,
                                                        @AuthenticationPrincipal UserDetails userDetails){
-        Map<String, String> response =  new HashMap<>();
-        try{
-            userService.addUser(user);
-            response.put("message", "Nuevo usuario "+ user.getName() + " " + user.getUsername() + " creado exitosamente");
-            recordService.registerAction(userDetails, "CREATE", "Creó un usuario nuevo: " + user.getUsername());
-            return ResponseEntity.ok(response);
-        }catch (Exception e){
-            response.put("error", e.getMessage());
-            recordService.registerAction(userDetails, "CREATE_FAILURE",
-                    String.format("ERROR: crear usuario %s (%s)",user.getUsername(), e.getMessage()));
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
+        userService.addUser(user);
+        recordService.registerAction(userDetails, "CREATE",
+                String.format("Creó un usuario nuevo: %s", user.getUsername()));
+        return new ResponseEntity<>(ResponseMessage.message(
+                String.format("Nuevo usuario %s %s creado exitosamente",user.getName() ,user.getUsername())),
+                HttpStatus.CREATED);
     }
 
-    /**
-     * Actualiza los datos un usuario existente
-     * @param user - Usuario con los datos actualizados
-     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
-     */
     @PutMapping("/administrar/editar-usuario")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
-    public ResponseEntity<Map<String, String>> updateUserByAdmin(@RequestBody UserDTO user,
+    public ResponseEntity<Map<String, String>> updateUserByAdmin(@RequestBody @Valid UserRequestDTO user,
                                                                  @AuthenticationPrincipal UserDetails userDetails){
-        Map<String, String> response =  new HashMap<>();
-        try{
-            userService.updateUser(user);
-            response.put("message", "Usuario "+ user.getName() + " " + user.getUsername() + " actualizado exitosamente");
-            recordService.registerAction(userDetails, "UPDATE", "Actualizo los datos: " + user.getUsername());
-            return ResponseEntity.ok(response);
-        }catch (Exception e){
-            response.put("error", e.getMessage());
-            recordService.registerAction(userDetails, "UPDATE_FAILURE",
-                    String.format("ERROR: actualizar usuario %s (%s)",user.getUsername(), e.getMessage()));
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
+        userService.updateUser(user);
+        recordService.registerAction(userDetails, "UPDATE",
+                String.format("Actualizo los datos: %s", user.getUsername()));
+        return new ResponseEntity<>(ResponseMessage.message(
+                String.format("Usuario %s %s actualizado exitosamente", user.getName(), user.getUsername())),
+                HttpStatus.OK);
     }
 
     /**
@@ -91,83 +66,34 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER' , 'SELLER', 'GUEST', 'WAREHOUSE')")
     public ResponseEntity<Map<String, String>> updateUserProfile(@RequestBody UpdateUserDTO user,
                                                                  @AuthenticationPrincipal UserDetails userDetails){
-        Map<String, String> response =  new HashMap<>();
-        try{
-            userService.updateUserData(user, userDetails.getUsername());
-            response.put("message", "Usuario actualizado exitosamente");
-            recordService.registerAction(userDetails, "UPDATE", "Se actualizo sus datos personales");
-            return ResponseEntity.ok(response);
-        }catch (Exception e){
-            response.put("error", e.getMessage());
-            recordService.registerAction(userDetails, "UPDATE_FAILURE",
-                    "Error al actualizar datos personales: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
+        userService.updateUserData(user, userDetails.getUsername());
+        recordService.registerAction(userDetails, "UPDATE", "Se actualizo sus datos personales");
+        return new ResponseEntity<>(ResponseMessage.message("Usuario actualizado exitosamente"), HttpStatus.OK);
     }
 
-    /**
-     * Obtiene datos de un usuario existente
-     * @param userDetails - Detalle del usuario ya autenticado
-     * @return - Los datos necesario del usuario a compartir
-     */
     @GetMapping("datos")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER' , 'SELLER', 'GUEST', 'WAREHOUSE')")
-    public ResponseEntity<UserDTO> getUserProfile(@AuthenticationPrincipal UserDetails userDetails){
-        try{
-            UserDTO dto = userService.getData(userDetails.getUsername());
-            return ResponseEntity.ok(dto);
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+    public ResponseEntity<UserResponseDTO> getUserProfile(@AuthenticationPrincipal UserDetails userDetails){
+        return ResponseEntity.ok(userService.getData(userDetails.getUsername()));
     }
 
-    /**
-     *Elimina un usuario
-     * @param  user - datos necesarios para eliminar un usuario
-     * @param  userDetails - Detalle del usuario autenticado
-     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
-     */
     @PutMapping("/eliminar-usuario")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
-    public ResponseEntity<Map<String, String>> deleteUser(@RequestBody UserDTO user,
+    public ResponseEntity<Map<String, String>> deleteUser(@RequestBody @Valid UserRequestDTO user,
                                                           @AuthenticationPrincipal UserDetails userDetails){
-        Map<String, String> response =  new HashMap<>();
-        try{
-            userService.deleteUser(user.getUsername());
-            response.put("message", "Usuario eliminado exitosamente");
-            recordService.registerAction(userDetails, "DELETE",
-                    "Desactivo usuario del sistema: " + user.getUsername());
-            return ResponseEntity.ok(response);
-        }catch (Exception e){
-            response.put("error", e.getMessage());
-            recordService.registerAction(userDetails, "DELETE_FAILURE",
-                    String.format("ERROR: desactivar usuario %s (%s)", user.getUsername(), e.getMessage()));
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
+        userService.deleteUser(user);
+        recordService.registerAction(userDetails, "DELETE",
+                String.format("Desactivo usuario del sistema: %s", user.getUsername()));
+        return new ResponseEntity<>(ResponseMessage.message("Usuario eliminado exitosamente"), HttpStatus.OK);
     }
 
-    /**
-     *Activa un usuario
-     * @param  user - datos necesarios para activar un usuario
-     * @param  userDetails - Detalle del usuario autenticado
-     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
-     */
     @PutMapping("/activar-usuario")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
-    public ResponseEntity<Map<String, String>> activeUser(@RequestBody UserDTO user,
+    public ResponseEntity<Map<String, String>> activeUser(@RequestBody @Valid UserRequestDTO user,
                                                           @AuthenticationPrincipal UserDetails userDetails){
-        Map<String, String> response =  new HashMap<>();
-        try{
-            userService.activateUser(user.getUsername());
-            response.put("message", "Usuario activado exitosamente");
-            recordService.registerAction(userDetails, "ACTIVATE ",
-                    "activo usuario del sistema: " + user.getUsername());
-            return ResponseEntity.ok(response);
-        }catch (Exception e){
-            response.put("error", e.getMessage());
-            recordService.registerAction(userDetails, "ACTIVATE_FAILURE",
-                    String.format("ERROR: activar usuario %s (%s)", user.getUsername(), e.getMessage()));
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
+        userService.activateUser(user);
+        recordService.registerAction(userDetails, "ACTIVATE ",
+                String.format("activo usuario del sistema: %s", user.getUsername()));
+        return new ResponseEntity<>(ResponseMessage.message("Usuario activado exitosamente"), HttpStatus.OK);
     }
 }
