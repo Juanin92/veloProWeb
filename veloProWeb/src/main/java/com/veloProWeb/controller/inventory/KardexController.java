@@ -1,4 +1,4 @@
-package com.veloProWeb.controller.report;
+package com.veloProWeb.controller.inventory;
 
 import com.veloProWeb.model.dto.KardexResponseDTO;
 import com.veloProWeb.service.reporting.interfaces.IRecordService;

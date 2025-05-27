@@ -2,7 +2,7 @@ package com.veloProWeb.service.reporting;
 
 import com.veloProWeb.mapper.KardexMapper;
 import com.veloProWeb.model.dto.KardexResponseDTO;
-import com.veloProWeb.model.entity.Kardex;
+import com.veloProWeb.model.entity.inventory.Kardex;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.model.Enum.MovementsType;

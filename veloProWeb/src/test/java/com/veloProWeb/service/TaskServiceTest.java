@@ -1,9 +1,9 @@
 package com.veloProWeb.service;
 
 import com.veloProWeb.model.dto.TaskDTO;
-import com.veloProWeb.model.entity.User.Task;
+import com.veloProWeb.model.entity.communication.Task;
 import com.veloProWeb.model.entity.User.User;
-import com.veloProWeb.repository.TaskRepo;
+import com.veloProWeb.repository.communication.TaskRepo;
 import com.veloProWeb.service.communication.TaskService;
 import com.veloProWeb.service.User.UserService;
 import org.junit.jupiter.api.BeforeEach;

@@ -10,7 +10,7 @@ import com.veloProWeb.model.entity.Sale.Sale;
 import com.veloProWeb.model.entity.Sale.SaleDetail;
 import com.veloProWeb.model.Enum.MovementsType;
 import com.veloProWeb.repository.customer.TicketHistoryRepo;
-import com.veloProWeb.repository.DispatchRepo;
+import com.veloProWeb.repository.Sale.DispatchRepo;
 import com.veloProWeb.repository.Sale.SaleDetailRepo;
 import com.veloProWeb.service.customer.CustomerService;
 import com.veloProWeb.service.product.ProductService;

@@ -2,7 +2,7 @@ package com.veloProWeb.service.product;
 
 import com.veloProWeb.model.Enum.MovementsType;
 import com.veloProWeb.model.dto.product.ProductUpdatedRequestDTO;
-import com.veloProWeb.model.entity.Kardex;
+import com.veloProWeb.model.entity.inventory.Kardex;
 import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.service.inventory.IKardexService;
 import com.veloProWeb.service.communication.interfaces.IAlertService;

@@ -2,7 +2,7 @@ package com.veloProWeb.service;
 
 import com.veloProWeb.model.dto.DispatchDTO;
 import com.veloProWeb.model.entity.Sale.Dispatch;
-import com.veloProWeb.repository.DispatchRepo;
+import com.veloProWeb.repository.Sale.DispatchRepo;
 import com.veloProWeb.service.Sale.DispatchService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

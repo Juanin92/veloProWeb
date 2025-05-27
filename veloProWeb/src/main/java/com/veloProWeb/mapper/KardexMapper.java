@@ -1,7 +1,7 @@
 package com.veloProWeb.mapper;
 
 import com.veloProWeb.model.dto.KardexResponseDTO;
-import com.veloProWeb.model.entity.Kardex;
+import com.veloProWeb.model.entity.inventory.Kardex;
 import org.springframework.stereotype.Component;
 
 @Component

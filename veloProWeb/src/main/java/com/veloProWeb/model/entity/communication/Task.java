@@ -1,43 +1,34 @@
-package com.veloProWeb.model.entity;
+package com.veloProWeb.model.entity.communication;
 
-import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.model.entity.User.User;
-import com.veloProWeb.model.Enum.MovementsType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDate;
 
 @Entity
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Kardex {
+@Table(name = "tasks")
+public class Task {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String description;
+    private boolean status;
 
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     @Temporal(TemporalType.DATE)
     @CreatedDate
-    private LocalDate date;
-    private int quantity;
-    private int stock;
-    private String comment;
-    private int price;
-    @Enumerated(EnumType.STRING)
-    private MovementsType movementsType;
+    private LocalDate created;
 
     @ManyToOne
-    @JoinColumn(name = "id_product", nullable = true)
-    private Product product;
-
-    @ManyToOne
-    @JoinColumn(name = "id_user", nullable = true)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }

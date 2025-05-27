@@ -1,4 +1,4 @@
-package com.veloProWeb.controller.report;
+package com.veloProWeb.controller.reporting;
 
 import com.veloProWeb.model.dto.Report.*;
 import com.veloProWeb.service.reporting.interfaces.IRecordService;

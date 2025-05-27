@@ -1,4 +1,4 @@
-package com.veloProWeb.controller.User;
+package com.veloProWeb.controller.communication;
 
 import com.veloProWeb.model.dto.TaskDTO;
 import com.veloProWeb.service.reporting.interfaces.IRecordService;

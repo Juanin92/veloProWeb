@@ -1,9 +1,9 @@
 package com.veloProWeb.service.Record;
 
-import com.veloProWeb.model.entity.Record;
+import com.veloProWeb.model.entity.reporting.Record;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.model.Enum.Rol;
-import com.veloProWeb.repository.RecordRepo;
+import com.veloProWeb.repository.reporting.RecordRepo;
 import com.veloProWeb.service.User.Interface.IUserService;
 import com.veloProWeb.service.reporting.RecordService;
 import org.junit.jupiter.api.BeforeEach;

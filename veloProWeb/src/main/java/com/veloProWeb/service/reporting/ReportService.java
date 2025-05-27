@@ -1,7 +1,7 @@
 package com.veloProWeb.service.reporting;
 
 import com.veloProWeb.model.dto.Report.*;
-import com.veloProWeb.repository.ReportRepo;
+import com.veloProWeb.repository.reporting.ReportRepo;
 import com.veloProWeb.service.reporting.interfaces.IReportService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

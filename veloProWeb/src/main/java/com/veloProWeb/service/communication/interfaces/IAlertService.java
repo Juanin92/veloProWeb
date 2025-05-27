@@ -1,6 +1,6 @@
 package com.veloProWeb.service.communication.interfaces;
 
-import com.veloProWeb.model.entity.User.Alert;
+import com.veloProWeb.model.entity.communication.Alert;
 import com.veloProWeb.model.entity.product.Product;
 
 import java.util.List;

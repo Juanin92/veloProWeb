@@ -1,4 +1,4 @@
-package com.veloProWeb.repository;
+package com.veloProWeb.repository.reporting;
 
 import com.veloProWeb.model.entity.Sale.Sale;
 import org.springframework.data.jpa.repository.JpaRepository;

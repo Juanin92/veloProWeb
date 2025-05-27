@@ -1,4 +1,4 @@
-package com.veloProWeb.model.entity.User;
+package com.veloProWeb.model.entity.data;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -1,6 +1,6 @@
-package com.veloProWeb.controller.User;
+package com.veloProWeb.controller.reporting;
 
-import com.veloProWeb.model.entity.Record;
+import com.veloProWeb.model.entity.reporting.Record;
 import com.veloProWeb.service.reporting.interfaces.IRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -1,7 +1,7 @@
 package com.veloProWeb.model.entity.product;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.veloProWeb.model.entity.Kardex;
+import com.veloProWeb.model.entity.inventory.Kardex;
 import com.veloProWeb.model.Enum.StatusProduct;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

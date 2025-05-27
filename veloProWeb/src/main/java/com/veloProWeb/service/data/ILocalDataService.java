@@ -1,6 +1,6 @@
 package com.veloProWeb.service.data;
 
-import com.veloProWeb.model.entity.User.LocalData;
+import com.veloProWeb.model.entity.data.LocalData;
 
 import java.util.List;
 

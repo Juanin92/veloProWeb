@@ -1,6 +1,6 @@
 package com.veloProWeb.service.reporting.interfaces;
 
-import com.veloProWeb.model.entity.Record;
+import com.veloProWeb.model.entity.reporting.Record;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;

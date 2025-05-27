@@ -1,8 +1,8 @@
 package com.veloProWeb.service.reporting;
 
-import com.veloProWeb.model.entity.Record;
+import com.veloProWeb.model.entity.reporting.Record;
 import com.veloProWeb.model.entity.User.User;
-import com.veloProWeb.repository.RecordRepo;
+import com.veloProWeb.repository.reporting.RecordRepo;
 import com.veloProWeb.service.User.Interface.IUserService;
 import com.veloProWeb.service.reporting.interfaces.IRecordService;
 import lombok.AllArgsConstructor;

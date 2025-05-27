@@ -1,8 +1,8 @@
 package com.veloProWeb.service.communication;
 
-import com.veloProWeb.model.entity.User.Alert;
+import com.veloProWeb.model.entity.communication.Alert;
 import com.veloProWeb.model.entity.product.Product;
-import com.veloProWeb.repository.AlertRepo;
+import com.veloProWeb.repository.communication.AlertRepo;
 import com.veloProWeb.service.communication.interfaces.IAlertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

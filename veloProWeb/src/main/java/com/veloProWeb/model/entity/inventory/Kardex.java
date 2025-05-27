@@ -1,6 +1,8 @@
-package com.veloProWeb.model.entity;
+package com.veloProWeb.model.entity.inventory;
 
+import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.model.entity.User.User;
+import com.veloProWeb.model.Enum.MovementsType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,36 +10,32 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Record {
-
+public class Kardex {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
-    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @Temporal(TemporalType.DATE)
     @CreatedDate
-    private LocalDateTime entryDate;
-
-    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreatedDate
-    private LocalDateTime endaDate;
-
-    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreatedDate
-    private LocalDateTime actionDate;
-    private String action;
+    private LocalDate date;
+    private int quantity;
+    private int stock;
     private String comment;
+    private int price;
+    @Enumerated(EnumType.STRING)
+    private MovementsType movementsType;
+
+    @ManyToOne
+    @JoinColumn(name = "id_product", nullable = true)
+    private Product product;
 
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = true)

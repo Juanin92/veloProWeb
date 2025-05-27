@@ -1,6 +1,6 @@
-package com.veloProWeb.controller.User;
+package com.veloProWeb.controller.data;
 
-import com.veloProWeb.model.entity.User.LocalData;
+import com.veloProWeb.model.entity.data.LocalData;
 import com.veloProWeb.service.reporting.interfaces.IRecordService;
 import com.veloProWeb.service.data.ILocalDataService;
 import org.springframework.beans.factory.annotation.Autowired;

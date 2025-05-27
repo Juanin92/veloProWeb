@@ -1,6 +1,6 @@
-package com.veloProWeb.controller.User;
+package com.veloProWeb.controller.communication;
 
-import com.veloProWeb.model.entity.User.Alert;
+import com.veloProWeb.model.entity.communication.Alert;
 import com.veloProWeb.service.reporting.interfaces.IRecordService;
 import com.veloProWeb.service.communication.interfaces.IAlertService;
 import org.springframework.beans.factory.annotation.Autowired;
