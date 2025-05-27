@@ -33,6 +33,24 @@ public class UserValidatorTest {
         assertEquals("No existe registro del usuario", ex.getMessage());
     }
 
+    //prueba para validar que el nombre de usuario esté disponible
+    @Test
+    void validateUsernameIsAvailable() {
+        User user = User.builder().username("Johnny").build();
+        UsernameAlreadyExistsException ex = assertThrows(UsernameAlreadyExistsException.class,
+                () -> validator.validateUsernameIsAvailable(user, "johnny"));
+        assertEquals("El nombre de usuario ya está en uso", ex.getMessage());
+    }
+
+    //Prueba para validar que el nombre de usuario esté disponible para actualizar
+    @Test
+    void validateUsernameIsAvailableForUpdate() {
+        User user = User.builder().username("Johnny").rut("12345678-9").build();
+        UsernameAlreadyExistsException ex = assertThrows(UsernameAlreadyExistsException.class,
+                () -> validator.validateUsernameIsAvailableForUpdate(user, "12345432-0"));
+        assertEquals("El nombre de usuario ya está en uso por otro usuario", ex.getMessage());
+    }
+
     //Prueba para validar que el usuario no esté eliminado
     @Test
     void validateIsNotDeleted() {
