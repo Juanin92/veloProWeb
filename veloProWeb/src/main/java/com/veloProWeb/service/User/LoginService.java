@@ -46,7 +46,7 @@ public class LoginService implements ILoginService {
         User user = userService.getUserByUsername(username);
         if (user != null && user.getToken() != null) {
             if (!passwordEncoder.matches(token, user.getToken())){
-                throw new InvalidTokenException("Los códigos de seguridad no tiene similitud");
+                throw new InvalidTokenException("El código de seguridad ingresado es incorrecto");
             }
         }
     }
