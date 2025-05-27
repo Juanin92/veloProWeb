@@ -66,4 +66,14 @@ public class LoginService implements ILoginService {
         user.setToken(passwordEncoder.encode(code));
         userRepo.save(user);
     }
+
+    /**
+     * Verifica que el usuario autenticado no se encuentre eliminado.
+     * @param username - Nombre de usuario autenticado
+     */
+    @Override
+    public void validateLoginAccess(String username) {
+        User user = userService.getUserByUsername(username);
+        validator.validateUserIsNotDeleted(user.isStatus());
+    }
 }

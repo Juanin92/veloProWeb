@@ -112,4 +112,20 @@ class LoginServiceTest {
 
         assertEquals("El usuario ha sido eliminado. No se puede realizar la operación.", e.getMessage());
     }
+
+    @Test
+    void validateLoginAccess() {
+        User user = User.builder().username("johnny").name("John").surname("Doe").status(false).token(null).build();
+        when(userService.getUserByUsername("johnny")).thenReturn(user);
+        doThrow(new UserAlreadyDeletedException("El usuario ha sido eliminado. No se puede realizar la operación."))
+                .when(validator).validateUserIsNotDeleted(user.isStatus());
+
+        UserAlreadyDeletedException e = assertThrows(UserAlreadyDeletedException.class,
+                () -> loginService.validateLoginAccess("johnny"));
+
+        verify(userService, times(1)).getUserByUsername("johnny");
+        verify(validator, times(1)).validateUserIsNotDeleted(false);
+
+        assertEquals("El usuario ha sido eliminado. No se puede realizar la operación.", e.getMessage());
+    }
 }
