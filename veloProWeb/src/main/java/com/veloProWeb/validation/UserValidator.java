@@ -1,6 +1,7 @@
 package com.veloProWeb.validation;
 
 import com.veloProWeb.exceptions.user.*;
+import com.veloProWeb.exceptions.validation.ValidationException;
 import com.veloProWeb.model.dto.user.UpdateUserDTO;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.model.Enum.Rol;
@@ -115,6 +116,26 @@ public class UserValidator {
     public void validateNewPasswordMatch(UpdateUserDTO dto){
         if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
             throw new PasswordMismatchException("Las contraseñas nuevas no coinciden");
+        }
+    }
+
+    /**
+     * Valida que las contraseñas cumplan los requisitos.
+     * @param dto - objeto con los datos de actualización del usuario
+     */
+    public void validatePassword(UpdateUserDTO dto){
+        if (dto.getCurrentPassword() == null || dto.getCurrentPassword().trim().isBlank()
+                || dto.getCurrentPassword().length() <= 7){
+            throw new ValidationException("Contraseña actual debe tener al menos 7 caracteres o no debe estar vacía");
+        }
+        if (dto.getNewPassword() == null || dto.getNewPassword().trim().isBlank() || dto.getNewPassword().length() <= 7)
+        {
+            throw new ValidationException("Nueva contraseña debe tener al menos 7 caracteres o no debe estar vacía");
+        }
+        if (dto.getConfirmPassword() == null || dto.getConfirmPassword().trim().isBlank()
+                || dto.getConfirmPassword().length() <= 7){
+            throw new ValidationException("Contraseña de confirmación debe tener al menos 7 caracteres " +
+                    "o no debe estar vacía");
         }
     }
 }
