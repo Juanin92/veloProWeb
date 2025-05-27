@@ -29,14 +29,14 @@ public class UserController {
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER' , 'SELLER', 'GUEST', 'WAREHOUSE')")
     public ResponseEntity<List<UserResponseDTO>> getListUser(){
-        return ResponseEntity.ok(userService.getAllUser());
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @PostMapping("/nuevo-usuario")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
     public ResponseEntity<Map<String, String>> addUser(@RequestBody @Valid UserRequestDTO user,
                                                        @AuthenticationPrincipal UserDetails userDetails){
-        userService.addUser(user);
+        userService.createUser(user);
         recordService.registerAction(userDetails, "CREATE",
                 String.format("Creó un usuario nuevo: %s", user.getUsername()));
         return new ResponseEntity<>(ResponseMessage.message(
@@ -66,7 +66,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER' , 'SELLER', 'GUEST', 'WAREHOUSE')")
     public ResponseEntity<Map<String, String>> updateUserProfile(@RequestBody UpdateUserDTO user,
                                                                  @AuthenticationPrincipal UserDetails userDetails){
-        userService.updateUserData(user, userDetails.getUsername());
+        userService.updateOwnData(user, userDetails.getUsername());
         recordService.registerAction(userDetails, "UPDATE", "Se actualizo sus datos personales");
         return new ResponseEntity<>(ResponseMessage.message("Usuario actualizado exitosamente"), HttpStatus.OK);
     }
@@ -74,7 +74,7 @@ public class UserController {
     @GetMapping("datos")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER' , 'SELLER', 'GUEST', 'WAREHOUSE')")
     public ResponseEntity<UserResponseDTO> getUserProfile(@AuthenticationPrincipal UserDetails userDetails){
-        return ResponseEntity.ok(userService.getData(userDetails.getUsername()));
+        return ResponseEntity.ok(userService.getUserProfile(userDetails.getUsername()));
     }
 
     @PutMapping("/eliminar-usuario")
