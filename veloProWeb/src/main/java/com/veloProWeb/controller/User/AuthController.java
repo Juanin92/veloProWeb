@@ -38,6 +38,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequestDTO user) throws Exception {
+        loginService.validateLoginAccess(user.getUsername());
         String decryptedPassword = encryptionService.decrypt(user.getPassword());
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.getUsername(), decryptedPassword)
@@ -56,6 +57,7 @@ public class AuthController {
     @PostMapping("/login/code")
     public ResponseEntity<Map<String, String>> loginWithCode(@RequestBody @Valid LoginRequestDTO user) throws Exception
     {
+        loginService.validateLoginAccess(user.getUsername());
         String decryptedPassword = encryptionService.decrypt(user.getPassword());
         loginService.validateSecurityToken(user.getUsername(), decryptedPassword);
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
