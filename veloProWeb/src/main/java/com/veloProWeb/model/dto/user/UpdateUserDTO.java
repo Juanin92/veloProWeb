@@ -22,15 +22,7 @@ public class UpdateUserDTO {
     @Email(message = "Debe ingresar un email válido")
     private String email;
 
-    @NotBlank(message = "La contraseña actual es obligatoria")
-    @Size(min = 7, message = "La contraseña actual debe tener al menos 7 caracteres")
     private String currentPassword;
-
-    @NotBlank(message = "La nueva contraseña es obligatoria")
-    @Size(min = 7, message = "La nueva contraseña debe tener al menos 7 caracteres")
     private String newPassword;
-
-    @NotBlank(message = "La contraseña de confirmación es obligatoria")
-    @Size(min = 7, message = "La contraseña de confirmación debe tener al menos 7 caracteres")
     private String confirmPassword;
 }
