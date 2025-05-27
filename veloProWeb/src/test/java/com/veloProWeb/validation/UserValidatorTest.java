@@ -1,11 +1,14 @@
 package com.veloProWeb.validation;
 
 import com.veloProWeb.exceptions.user.*;
+import com.veloProWeb.exceptions.validation.ValidationException;
 import com.veloProWeb.model.dto.user.UpdateUserDTO;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.model.Enum.Rol;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -110,5 +113,37 @@ public class UserValidatorTest {
         PasswordMismatchException ex = assertThrows(PasswordMismatchException.class,
                 () -> validator.validateNewPasswordMatch(dto));
         assertEquals("Las contraseñas nuevas no coinciden", ex.getMessage());
+    }
+
+    //Prueba para validar contraseñas
+    @ParameterizedTest
+    @ValueSource(strings = {"1234567", ""})
+    void validatePassword_currentPassword(String currentPassword) {
+        UpdateUserDTO dto = UpdateUserDTO.builder().currentPassword(currentPassword)
+                .newPassword("password").confirmPassword("password").build();
+
+        ValidationException e = assertThrows(ValidationException.class, () -> validator.validatePassword(dto));
+        assertEquals("Contraseña actual debe tener al menos 7 caracteres o no debe estar vacía",
+                e.getMessage());
+    }
+    @ParameterizedTest
+    @ValueSource(strings = {"1234567", ""})
+    void validatePassword_newPassword(String newPassword) {
+        UpdateUserDTO dto = UpdateUserDTO.builder().newPassword(newPassword)
+                .currentPassword("password").confirmPassword("password").build();
+
+        ValidationException e = assertThrows(ValidationException.class, () -> validator.validatePassword(dto));
+        assertEquals("Nueva contraseña debe tener al menos 7 caracteres o no debe estar vacía",
+                e.getMessage());
+    }
+    @ParameterizedTest
+    @ValueSource(strings = {"1234567", ""})
+    void validatePassword_confirmPassword(String confirmPassword) {
+        UpdateUserDTO dto = UpdateUserDTO.builder().confirmPassword(confirmPassword)
+                .newPassword("password").currentPassword("password").build();
+
+        ValidationException e = assertThrows(ValidationException.class, () -> validator.validatePassword(dto));
+        assertEquals("Contraseña de confirmación debe tener al menos 7 caracteres o no debe estar vacía",
+                e.getMessage());
     }
 }
