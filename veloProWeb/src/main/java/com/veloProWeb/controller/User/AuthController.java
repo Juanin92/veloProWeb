@@ -1,12 +1,14 @@
 package com.veloProWeb.controller.User;
 
-import com.veloProWeb.model.dto.AuthRequestDTO;
-import com.veloProWeb.model.dto.LoginRequest;
+import com.veloProWeb.model.dto.user.AuthRequestDTO;
+import com.veloProWeb.model.dto.user.LoginRequestDTO;
 import com.veloProWeb.security.Service.EncryptionService;
 import com.veloProWeb.security.Jwt.JwtUtil;
 import com.veloProWeb.service.Record.IRecordService;
-import com.veloProWeb.service.User.Interface.IUserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.veloProWeb.service.User.Interface.ILoginService;
+import com.veloProWeb.util.ResponseMessage;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,118 +22,79 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
+@AllArgsConstructor
 public class AuthController {
 
-    @Autowired private IRecordService recordService;
-    @Autowired private IUserService userService;
-    @Autowired private EncryptionService encryptionService;
-    @Autowired private AuthenticationManager authenticationManager;
-    @Autowired private UserDetailsService userDetailsService;
-    @Autowired private JwtUtil jwtUtil;
+    private final IRecordService recordService;
+    private final ILoginService loginService;
+    private final EncryptionService encryptionService;
+    private final AuthenticationManager authenticationManager;
+    private final UserDetailsService userDetailsService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest user) {
-        Map<String, String> response = new HashMap<>();
-        try{
-            String decryptedPassword = encryptionService.decrypt(user.getPassword());
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getUsername(), decryptedPassword)
-            );
-            UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
-            String jwtToken = jwtUtil.generateToken(userDetails);
-            response.put("token", jwtToken);
-            String role = userDetails.getAuthorities().stream()
-                    .findFirst()
-                    .map(GrantedAuthority::getAuthority)
-                    .orElse(null);
-            response.put("role", role);
-            recordService.registerEntry(userDetails);
-            return ResponseEntity.ok(response);
-        }catch (Exception e){
-            response.put("error", "Error de autenticación: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
-
+    public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequestDTO user) throws Exception {
+        String decryptedPassword = encryptionService.decrypt(user.getPassword());
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getUsername(), decryptedPassword)
+        );
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+        String jwtToken = jwtUtil.generateToken(userDetails);
+        String role = userDetails.getAuthorities().stream()
+                .findFirst()
+                .map(GrantedAuthority::getAuthority)
+                .orElse(null);
+        recordService.registerEntry(userDetails);
+        return new ResponseEntity<>(ResponseMessage.multiMessage("token", jwtToken, "role", role),
+                HttpStatus.OK);
     }
 
     @PostMapping("/login/code")
-    public ResponseEntity<Map<String, String>> loginWithCode(@RequestBody LoginRequest user) {
-        Map<String, String> response = new HashMap<>();
-        try{
-            String decryptedPassword = encryptionService.decrypt(user.getPassword());
-            userService.getAuthUserToken(user.getUsername(), decryptedPassword);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
-            String jwtToken = jwtUtil.generateToken(userDetails);
-            response.put("token", jwtToken);
-            String role = userDetails.getAuthorities().stream()
-                    .findFirst()
-                    .map(GrantedAuthority::getAuthority)
-                    .orElse(null);
-            response.put("role", role);
-            recordService.registerEntry(userDetails);
-            return ResponseEntity.ok(response);
-        }catch (Exception e){
-            response.put("error", "Error de autenticación: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
-
+    public ResponseEntity<Map<String, String>> loginWithCode(@RequestBody @Valid LoginRequestDTO user) throws Exception
+    {
+        String decryptedPassword = encryptionService.decrypt(user.getPassword());
+        loginService.validateSecurityToken(user.getUsername(), decryptedPassword);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+        String jwtToken = jwtUtil.generateToken(userDetails);
+        String role = userDetails.getAuthorities().stream()
+                .findFirst()
+                .map(GrantedAuthority::getAuthority)
+                .orElse(null);
+        recordService.registerEntry(userDetails);
+        return new ResponseEntity<>(ResponseMessage.multiMessage("token", jwtToken, "role", role),
+                HttpStatus.OK);
     }
 
     @PostMapping("/logout")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER' , 'SELLER', 'GUEST', 'WAREHOUSE')")
     public ResponseEntity<Map<String, String>> logout(@AuthenticationPrincipal UserDetails userDetails){
-        Map<String, String> response =  new HashMap<>();
-        try{
-            response.put("message", "Usuario Desconectado Correctamente");
-            recordService.registerEnd(userDetails);
-            return ResponseEntity.ok(response);
-        }catch (IllegalArgumentException e){
-            response.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
+        recordService.registerEnd(userDetails);
+        return new ResponseEntity<>(ResponseMessage.message("Usuario Desconectado Correctamente"), HttpStatus.OK);
     }
 
     @PostMapping("/verificar")
     @PreAuthorize("hasAnyAuthority('MASTER')")
     public ResponseEntity<Boolean> getAuthAccess(@RequestBody AuthRequestDTO dto,
-                                                 @AuthenticationPrincipal UserDetails userDetails){
-        try{
-            String decryptedPassword = encryptionService.decrypt(dto.getToken());
-            if (userService.getAuthUser(decryptedPassword, userDetails)){
-                return ResponseEntity.ok(true);
-            }else{
-                return ResponseEntity.ok(false);
-            }
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+                                                 @AuthenticationPrincipal UserDetails userDetails) throws Exception {
+        String decryptedPassword = encryptionService.decrypt(dto.getToken());
+        return ResponseEntity.ok(loginService.isPasswordValid(decryptedPassword, userDetails));
     }
 
     @PostMapping("/olvide-codigo")
-    public ResponseEntity<Map<String, Object>> sendEmailCode(@RequestBody LoginRequest loginRequest){
-        Map<String, Object> response = new HashMap<>();
+    public ResponseEntity<Map<String, Object>> sendEmailCode(@RequestBody @Valid LoginRequestDTO loginRequestDTO){
         try{
-            if (loginRequest != null && loginRequest.getUsername() != null) {
-                userService.sendEmailCode(loginRequest.getUsername());
-                response.put("message", "Código de seguridad enviado");
-                response.put("action", true);
-                recordService.registerActionManual(loginRequest.getUsername(), "CHANGE",
-                        String.format("Envio de código de seguridad, realizado por el usuario %s", loginRequest.getUsername()));
-                return ResponseEntity.ok(response);
-            }else {
-                response.put("message", "Debe agregar un nombre de usuario para enviar su código al correo");
-                response.put("action", false);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-            }
+            loginService.sendSecurityTokenByEmail(loginRequestDTO.getUsername());
+            recordService.registerActionManual(loginRequestDTO.getUsername(), "CHANGE",
+                    String.format("Envio de código de seguridad, realizado por el usuario %s", loginRequestDTO.getUsername()));
+            return new ResponseEntity<>(ResponseMessage.messageWithBooleanKey("message",
+                    "Código de seguridad enviado", "action", true), HttpStatus.OK);
         }catch (Exception e){
-            response.put("message", e.getMessage());
-            response.put("action", false);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            return new ResponseEntity<>(ResponseMessage.messageWithBooleanKey("message", e.getMessage(),
+                    "action", false), HttpStatus.CONFLICT);
         }
     }
 
