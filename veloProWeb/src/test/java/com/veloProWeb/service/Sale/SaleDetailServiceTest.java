@@ -14,7 +14,7 @@ import com.veloProWeb.repository.DispatchRepo;
 import com.veloProWeb.repository.Sale.SaleDetailRepo;
 import com.veloProWeb.service.customer.CustomerService;
 import com.veloProWeb.service.product.ProductService;
-import com.veloProWeb.service.report.KardexService;
+import com.veloProWeb.service.inventory.KardexService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

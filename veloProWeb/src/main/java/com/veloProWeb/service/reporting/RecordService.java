@@ -1,9 +1,10 @@
-package com.veloProWeb.service.Record;
+package com.veloProWeb.service.reporting;
 
 import com.veloProWeb.model.entity.Record;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.repository.RecordRepo;
 import com.veloProWeb.service.User.Interface.IUserService;
+import com.veloProWeb.service.reporting.interfaces.IRecordService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class RecordService implements IRecordService{
+public class RecordService implements IRecordService {
 
     private final RecordRepo recordRepo;
     private final IUserService userService;

@@ -1,4 +1,4 @@
-package com.veloProWeb.service.report;
+package com.veloProWeb.service.reporting;
 
 import com.veloProWeb.mapper.KardexMapper;
 import com.veloProWeb.model.dto.KardexResponseDTO;
@@ -8,6 +8,7 @@ import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.model.Enum.MovementsType;
 import com.veloProWeb.repository.KardexRepo;
 import com.veloProWeb.service.User.Interface.IUserService;
+import com.veloProWeb.service.inventory.KardexService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

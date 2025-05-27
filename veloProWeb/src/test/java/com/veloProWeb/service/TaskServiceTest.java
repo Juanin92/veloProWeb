@@ -4,7 +4,7 @@ import com.veloProWeb.model.dto.TaskDTO;
 import com.veloProWeb.model.entity.User.Task;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.repository.TaskRepo;
-import com.veloProWeb.service.User.TaskService;
+import com.veloProWeb.service.communication.TaskService;
 import com.veloProWeb.service.User.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

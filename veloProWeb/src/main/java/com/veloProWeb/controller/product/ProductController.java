@@ -4,7 +4,7 @@ import com.veloProWeb.model.dto.product.ProductRequestDTO;
 import com.veloProWeb.model.dto.product.ProductResponseDTO;
 import com.veloProWeb.model.dto.product.ProductUpdatedRequestDTO;
 import com.veloProWeb.service.product.interfaces.IProductService;
-import com.veloProWeb.service.Record.IRecordService;
+import com.veloProWeb.service.reporting.interfaces.IRecordService;
 import com.veloProWeb.util.ResponseMessage;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

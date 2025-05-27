@@ -1,7 +1,8 @@
-package com.veloProWeb.service.report;
+package com.veloProWeb.service.reporting;
 
 import com.veloProWeb.model.dto.Report.*;
 import com.veloProWeb.repository.ReportRepo;
+import com.veloProWeb.service.reporting.interfaces.IReportService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class ReportService implements IReportService{
+public class ReportService implements IReportService {
 
     private final ReportRepo reportRepo;
 

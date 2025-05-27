@@ -3,7 +3,7 @@ package com.veloProWeb.controller.customer;
 import com.veloProWeb.model.dto.customer.CustomerRequestDTO;
 import com.veloProWeb.model.dto.customer.CustomerResponseDTO;
 import com.veloProWeb.service.customer.interfaces.ICustomerService;
-import com.veloProWeb.service.Record.IRecordService;
+import com.veloProWeb.service.reporting.interfaces.IRecordService;
 import com.veloProWeb.util.ResponseMessage;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

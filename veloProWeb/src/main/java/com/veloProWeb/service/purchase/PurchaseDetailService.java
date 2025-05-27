@@ -9,7 +9,7 @@ import com.veloProWeb.model.Enum.MovementsType;
 import com.veloProWeb.repository.purchase.PurchaseDetailRepo;
 import com.veloProWeb.service.product.interfaces.IProductService;
 import com.veloProWeb.service.purchase.interfaces.IPurchaseDetailService;
-import com.veloProWeb.service.report.IKardexService;
+import com.veloProWeb.service.inventory.IKardexService;
 import com.veloProWeb.validation.PurchaseValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

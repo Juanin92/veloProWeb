@@ -1,4 +1,4 @@
-package com.veloProWeb.service.report;
+package com.veloProWeb.service.inventory;
 
 import com.veloProWeb.model.dto.KardexResponseDTO;
 import com.veloProWeb.model.entity.Kardex;

@@ -2,7 +2,7 @@ package com.veloProWeb.controller.product;
 
 import com.veloProWeb.model.entity.product.SubcategoryProduct;
 import com.veloProWeb.service.product.interfaces.ISubcategoryService;
-import com.veloProWeb.service.Record.IRecordService;
+import com.veloProWeb.service.reporting.interfaces.IRecordService;
 import com.veloProWeb.util.ResponseMessage;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

@@ -3,7 +3,7 @@ package com.veloProWeb.controller.User;
 import com.veloProWeb.model.dto.user.UpdateUserDTO;
 import com.veloProWeb.model.dto.user.UserRequestDTO;
 import com.veloProWeb.model.dto.user.UserResponseDTO;
-import com.veloProWeb.service.Record.IRecordService;
+import com.veloProWeb.service.reporting.interfaces.IRecordService;
 import com.veloProWeb.service.User.Interface.IUserService;
 import com.veloProWeb.util.ResponseMessage;
 import jakarta.validation.Valid;

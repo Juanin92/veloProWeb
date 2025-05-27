@@ -5,7 +5,7 @@ import com.veloProWeb.model.dto.purchase.PurchaseResponseDTO;
 import com.veloProWeb.model.entity.purchase.Purchase;
 import com.veloProWeb.service.purchase.interfaces.IPurchaseDetailService;
 import com.veloProWeb.service.purchase.interfaces.IPurchaseService;
-import com.veloProWeb.service.Record.IRecordService;
+import com.veloProWeb.service.reporting.interfaces.IRecordService;
 import com.veloProWeb.util.ResponseMessage;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

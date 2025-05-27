@@ -6,7 +6,7 @@ import com.veloProWeb.model.entity.Sale.Sale;
 import com.veloProWeb.model.entity.User.LocalData;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.model.Enum.PaymentMethod;
-import com.veloProWeb.service.User.Interface.ILocalDataService;
+import com.veloProWeb.service.data.ILocalDataService;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;

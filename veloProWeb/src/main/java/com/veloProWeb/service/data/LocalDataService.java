@@ -1,8 +1,7 @@
-package com.veloProWeb.service.User;
+package com.veloProWeb.service.data;
 
 import com.veloProWeb.model.entity.User.LocalData;
 import com.veloProWeb.repository.LocalDataRepo;
-import com.veloProWeb.service.User.Interface.ILocalDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

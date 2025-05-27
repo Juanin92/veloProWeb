@@ -3,7 +3,7 @@ package com.veloProWeb.controller.Sale;
 import com.veloProWeb.model.dto.DetailSaleRequestDTO;
 import com.veloProWeb.model.dto.SaleRequestDTO;
 import com.veloProWeb.model.entity.Sale.Sale;
-import com.veloProWeb.service.Record.IRecordService;
+import com.veloProWeb.service.reporting.interfaces.IRecordService;
 import com.veloProWeb.service.Sale.Interface.IDispatchService;
 import com.veloProWeb.service.Sale.Interface.ISaleDetailService;
 import com.veloProWeb.service.Sale.Interface.ISaleService;

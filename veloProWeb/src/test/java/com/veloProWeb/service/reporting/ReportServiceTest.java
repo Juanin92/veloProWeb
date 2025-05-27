@@ -1,4 +1,4 @@
-package com.veloProWeb.service.report;
+package com.veloProWeb.service.reporting;
 
 import com.veloProWeb.model.dto.Report.*;
 import com.veloProWeb.repository.ReportRepo;

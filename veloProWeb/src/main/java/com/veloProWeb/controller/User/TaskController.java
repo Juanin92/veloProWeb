@@ -1,8 +1,8 @@
 package com.veloProWeb.controller.User;
 
 import com.veloProWeb.model.dto.TaskDTO;
-import com.veloProWeb.service.Record.IRecordService;
-import com.veloProWeb.service.User.Interface.ITaskService;
+import com.veloProWeb.service.reporting.interfaces.IRecordService;
+import com.veloProWeb.service.communication.interfaces.ITaskService;
 import com.veloProWeb.service.User.Interface.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

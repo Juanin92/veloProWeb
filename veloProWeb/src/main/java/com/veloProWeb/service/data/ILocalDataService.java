@@ -1,4 +1,4 @@
-package com.veloProWeb.service.User.Interface;
+package com.veloProWeb.service.data;
 
 import com.veloProWeb.model.entity.User.LocalData;
 

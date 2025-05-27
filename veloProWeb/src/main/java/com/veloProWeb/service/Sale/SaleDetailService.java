@@ -15,7 +15,7 @@ import com.veloProWeb.repository.Sale.SaleDetailRepo;
 import com.veloProWeb.repository.Sale.SaleRepo;
 import com.veloProWeb.service.customer.interfaces.ICustomerService;
 import com.veloProWeb.service.product.interfaces.IProductService;
-import com.veloProWeb.service.report.IKardexService;
+import com.veloProWeb.service.inventory.IKardexService;
 import com.veloProWeb.service.Sale.Interface.IDispatchService;
 import com.veloProWeb.service.Sale.Interface.ISaleDetailService;
 import com.veloProWeb.service.Sale.Interface.ISaleService;

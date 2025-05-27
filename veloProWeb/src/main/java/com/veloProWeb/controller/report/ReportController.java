@@ -1,8 +1,8 @@
 package com.veloProWeb.controller.report;
 
 import com.veloProWeb.model.dto.Report.*;
-import com.veloProWeb.service.Record.IRecordService;
-import com.veloProWeb.service.report.IReportService;
+import com.veloProWeb.service.reporting.interfaces.IRecordService;
+import com.veloProWeb.service.reporting.interfaces.IReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

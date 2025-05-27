@@ -1,10 +1,10 @@
-package com.veloProWeb.service.User;
+package com.veloProWeb.service.communication;
 
 import com.veloProWeb.model.dto.TaskDTO;
 import com.veloProWeb.model.entity.User.Task;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.repository.TaskRepo;
-import com.veloProWeb.service.User.Interface.ITaskService;
+import com.veloProWeb.service.communication.interfaces.ITaskService;
 import com.veloProWeb.service.User.Interface.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

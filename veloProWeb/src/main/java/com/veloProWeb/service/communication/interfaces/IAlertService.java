@@ -1,4 +1,4 @@
-package com.veloProWeb.service.User.Interface;
+package com.veloProWeb.service.communication.interfaces;
 
 import com.veloProWeb.model.entity.User.Alert;
 import com.veloProWeb.model.entity.product.Product;

@@ -3,7 +3,7 @@ package com.veloProWeb.controller.purchase;
 import com.veloProWeb.model.dto.purchase.SupplierRequestDTO;
 import com.veloProWeb.model.dto.purchase.SupplierResponseDTO;
 import com.veloProWeb.service.purchase.interfaces.ISupplierService;
-import com.veloProWeb.service.Record.IRecordService;
+import com.veloProWeb.service.reporting.interfaces.IRecordService;
 import com.veloProWeb.util.ResponseMessage;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;

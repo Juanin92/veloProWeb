@@ -3,7 +3,7 @@ package com.veloProWeb.controller.customer;
 import com.veloProWeb.model.dto.customer.PaymentRequestDTO;
 import com.veloProWeb.model.dto.customer.PaymentResponseDTO;
 import com.veloProWeb.service.customer.interfaces.IPaymentCustomerService;
-import com.veloProWeb.service.Record.IRecordService;
+import com.veloProWeb.service.reporting.interfaces.IRecordService;
 import com.veloProWeb.util.ResponseMessage;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

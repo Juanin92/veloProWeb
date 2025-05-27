@@ -2,7 +2,7 @@ package com.veloProWeb.scheduler;
 
 import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.repository.product.ProductRepo;
-import com.veloProWeb.service.User.Interface.IAlertService;
+import com.veloProWeb.service.communication.interfaces.IAlertService;
 import com.veloProWeb.service.product.interfaces.IProductEventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
