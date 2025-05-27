@@ -7,6 +7,7 @@ import com.veloProWeb.security.Service.CodeGenerator;
 import com.veloProWeb.service.User.Interface.ILoginService;
 import com.veloProWeb.service.User.Interface.IUserService;
 import com.veloProWeb.util.EmailService;
+import com.veloProWeb.validation.UserValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,6 +23,7 @@ public class LoginService implements ILoginService {
     private final EmailService emailService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final CodeGenerator codeGenerator;
+    private final UserValidator validator;
 
     /**
      * Verifica si la contraseña seleccionada coincide con la contraseña del usuario autenticado
@@ -58,6 +60,7 @@ public class LoginService implements ILoginService {
     @Override
     public void sendSecurityTokenByEmail(String username) {
         User user = userService.getUserByUsername(username);
+        validator.validateUserIsNotDeleted(user.isStatus());
         String code = codeGenerator.generate();
         emailService.sendPasswordResetCode(user, code);
         user.setToken(passwordEncoder.encode(code));

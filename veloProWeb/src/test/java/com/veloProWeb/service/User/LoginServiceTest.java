@@ -1,11 +1,13 @@
 package com.veloProWeb.service.User;
 
 import com.veloProWeb.exceptions.user.InvalidTokenException;
+import com.veloProWeb.exceptions.user.UserAlreadyDeletedException;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.repository.UserRepo;
 import com.veloProWeb.security.Service.CodeGenerator;
 import com.veloProWeb.service.User.Interface.IUserService;
 import com.veloProWeb.util.EmailService;
+import com.veloProWeb.validation.UserValidator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -29,6 +31,7 @@ class LoginServiceTest {
     @Spy private BCryptPasswordEncoder passwordEncoder;
     @Mock private CodeGenerator codeGenerator;
     @Mock private UserDetails userDetails;
+    @Mock private UserValidator validator;
 
     //Prueba para verificar que la contraseña almacenada y la contraseña ingresada coinciden
     @Test
@@ -71,8 +74,9 @@ class LoginServiceTest {
     @Test
     void sendSecurityTokenByEmail() {
         String code = "testCode";
-        User user = User.builder().username("johnny").name("John").surname("Doe").token(null).build();
+        User user = User.builder().username("johnny").name("John").surname("Doe").status(true).token(null).build();
         when(userService.getUserByUsername("johnny")).thenReturn(user);
+        doNothing().when(validator).validateUserIsNotDeleted(user.isStatus());
         when(codeGenerator.generate()).thenReturn(code);
         doNothing().when(emailService).sendPasswordResetCode(user, code);
         when(passwordEncoder.encode("testCode")).thenReturn("encodedTestCode");
@@ -81,11 +85,31 @@ class LoginServiceTest {
         loginService.sendSecurityTokenByEmail("johnny");
 
         verify(userService, times(1)).getUserByUsername("johnny");
+        verify(validator, times(1)).validateUserIsNotDeleted(true);
         verify(codeGenerator, times(1)).generate();
         verify(emailService, times(1)).sendPasswordResetCode(user, code);
         verify(userRepo, times(1)).save(userCaptor.capture());
 
         User savedUser = userCaptor.getValue();
         assertEquals("encodedTestCode", savedUser.getToken());
+    }
+
+    @Test
+    void testSendSecurityTokenByEmail_userDeleted() {
+        User user = User.builder().username("johnny").name("John").surname("Doe").status(false).token(null).build();
+        when(userService.getUserByUsername("johnny")).thenReturn(user);
+        doThrow(new UserAlreadyDeletedException("El usuario ha sido eliminado. No se puede realizar la operación."))
+                .when(validator).validateUserIsNotDeleted(user.isStatus());
+
+        UserAlreadyDeletedException e = assertThrows(UserAlreadyDeletedException.class,
+                () -> loginService.sendSecurityTokenByEmail("johnny"));
+
+        verify(userService, times(1)).getUserByUsername("johnny");
+        verify(validator, times(1)).validateUserIsNotDeleted(false);
+        verify(codeGenerator, never()).generate();
+        verify(emailService, never()).sendPasswordResetCode(any(User.class), eq(""));
+        verify(userRepo, never()).save(any(User.class));
+
+        assertEquals("El usuario ha sido eliminado. No se puede realizar la operación.", e.getMessage());
     }
 }
