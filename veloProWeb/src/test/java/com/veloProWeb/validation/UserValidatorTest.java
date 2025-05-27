@@ -146,4 +146,14 @@ public class UserValidatorTest {
         assertEquals("Contraseña de confirmación debe tener al menos 7 caracteres o no debe estar vacía",
                 e.getMessage());
     }
+
+    //Prueba para validar que el usuario no esté eliminado
+    @Test
+    void validateUserIsNotDeleted() {
+        User user = User.builder().status(false).build();
+        UserAlreadyDeletedException e = assertThrows(UserAlreadyDeletedException.class,
+                () -> validator.validateUserIsNotDeleted(user.isStatus()));
+
+        assertEquals("El usuario ha sido eliminado. No se puede realizar la operación.", e.getMessage());
+    }
 }

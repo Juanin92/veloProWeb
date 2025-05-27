@@ -138,4 +138,14 @@ public class UserValidator {
                     "o no debe estar vacía");
         }
     }
+
+    /**
+     * Verifica que el usuario no esté eliminado.
+     * @param status - estado del usuario
+     */
+    public void validateUserIsNotDeleted(boolean status){
+        if (!status){
+            throw new UserAlreadyDeletedException("El usuario ha sido eliminado. No se puede realizar la operación.");
+        }
+    }
 }
