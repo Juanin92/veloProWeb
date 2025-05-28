@@ -9,6 +9,10 @@ import { NotificationService } from '../../utils/notification-service.service';
 import { UserDTO } from '../../models/DTO/user-dto';
 import * as bootstrap from 'bootstrap';
 import { UserPermissionsService } from '../../services/Permissions/user-permissions.service';
+import { UserResponse } from '../../models/Entity/user/user-response';
+import { UserMapperService } from '../../mapper/user-mapper.service';
+import { ErrorMessageService } from '../../utils/error-message.service';
+import { UserHelperService } from '../../services/User/user-helper.service';
 
 @Component({
   selector: 'app-user',
@@ -20,14 +24,14 @@ import { UserPermissionsService } from '../../services/Permissions/user-permissi
 export class UserComponent implements OnInit, AfterViewInit {
 
   @ViewChild('userTableFilter') dropdownButton!: ElementRef;
-  userList: UserDTO[] = [];
-  filteredList: UserDTO[] = [];
+  userList: UserResponse[] = [];
+  filteredList: UserResponse[] = [];
   addUserButton: boolean = true;
   showForm: boolean = false;
   existingMasterUser: boolean = true;
   validator = UserValidator;
   roles: string[] = Object.values(Role);
-  user: UserDTO;
+  user: UserResponse;
   selectedUser: UserDTO | null = null;
   touchedFields: Record<string, boolean> = {};
   dropdownInstance!: bootstrap.Dropdown;
@@ -46,11 +50,14 @@ export class UserComponent implements OnInit, AfterViewInit {
 
   constructor(
     private userService: UserService,
+    private mapper: UserMapperService,
+    private helper: UserHelperService,
+    private errorMessage: ErrorMessageService,
     protected permission: UserPermissionsService,
     private notification: NotificationService,
     private tooltipService: TooltipService,
     private renderer: Renderer2) {
-    this.user = this.initializeUser();
+    this.user = this.helper.initializeUser();
   }
 
   ngAfterViewInit(): void {
@@ -63,14 +70,14 @@ export class UserComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.getUsers();
+    this.loadUsers();
   }
 
   /**
    * Obtiene la lista de usuarios 
    * verifica si existe un usuario con el rol de MASTER.
    */
-  getUsers(): void {
+  loadUsers(): void {
     this.userService.getListUsers().subscribe({
       next: (list) => {
         this.userList = list;
@@ -80,9 +87,6 @@ export class UserComponent implements OnInit, AfterViewInit {
           this.filteredList = list;
         }
         this.existingMasterUser = !this.userList.some(user => user.role === Role.MASTER);
-      },
-      error: (error) => {
-        console.log("Error, no se encontró una registro de usuarios");
       }
     });
   }
@@ -92,7 +96,7 @@ export class UserComponent implements OnInit, AfterViewInit {
    * Oculta botón de agregar usuario.
    * @param selectedUser 
    */
-  getSelectedUser(selectedUser: UserDTO): void {
+  getSelectedUser(selectedUser: UserResponse): void {
     this.user = selectedUser;
     this.showForm = true;
     this.addUserButton = false;
@@ -103,17 +107,15 @@ export class UserComponent implements OnInit, AfterViewInit {
    */
   createUser(): void{
     if (this.validator.validateForm(this.user)) {
-      const newUser = this.user;
+      const newUser = this.mapper.mapToUserForm(this.user);
       this.userService.addUser(newUser).subscribe({
         next: (response) =>{
-          console.log('Usuario agregado exitosamente:', response);
           this.notification.showSuccessToast(response.message, 'top', 3000);
-          this.getUsers();
+          this.loadUsers();
           this.resetForms();
         }, error:(error) => {
-          const message = error.error?.message || error.error?.error || error?.error;
-          console.error('Error al agregar el usuario:', error);
-          this.notification.showErrorToast(`Error al agregar usuario \n${message}`, 'top', 5000);
+          const message = this.errorMessage.errorMessageExtractor(error);
+          this.notification.showErrorToast(`Error: \n${message}`, 'top', 5000);
         }
       });
     }else {
@@ -126,24 +128,22 @@ export class UserComponent implements OnInit, AfterViewInit {
    */
   updateUserByAdmin(): void {
     if (this.user && this.validator.validateForm(this.user)) {
-      const updateUser = { ...this.user };
+      const updateUser = this.mapper.mapToUserForm(this.user);
       this.userService.updateUserByAdmin(updateUser).subscribe({
         next: (response) =>{
-          console.log('Se actualizo el cliente: ', updateUser);
           this.notification.showSuccessToast(response.message, 'top', 3000);
-          this.getUsers();
+          this.loadUsers();
           this.resetForms();
         }, error: (error) => {
-          const message = error.error?.message || error.error?.error || error?.error;
-          this.notification.showErrorToast(`Error al actualizar usuario \n${message}`, 'top', 5000);
-          console.log('Error al actualizar usuario: ', message);
+          const message = this.errorMessage.errorMessageExtractor(error);;
+          this.notification.showErrorToast(`Error: \n${message}`, 'top', 5000);
         }
       });
     }
   }
 
-  confirmDelete(user: UserDTO): void {
-    this.selectedUser = user;
+  confirmDelete(user: UserResponse): void {
+    const selectedUser = this.mapper.mapToUserForm(user);
     this.notification.showConfirmation(
       "¿Estás seguro?",
       "No podrás revertir la acción!",
@@ -151,44 +151,34 @@ export class UserComponent implements OnInit, AfterViewInit {
       "Cancelar"
     ).then((result) => {
       if (result.isConfirmed) {
-        if (this.selectedUser) {
-          this.userService.deleteUser(this.selectedUser).subscribe({
+        this.userService.deleteUser(user).subscribe({
             next: (response) => {
-              console.log('Usuario eliminado exitosamente:', response);
               this.notification.showSuccessToast(response.message, 'top', 3000);
-              this.getUsers();
+              this.loadUsers();
             },
             error: (error) => {
-              const message = error.error?.message || error.error?.error || error?.error;
-              console.log('Error al eliminar usuario: ', message);
-              this.notification.showErrorToast(`Error al eliminar usuario \n${message}`, 'top', 5000);
+              const message = this.errorMessage.errorMessageExtractor(error);
+              this.notification.showErrorToast(`Error: \n${message}`, 'top', 5000);
             }
-          });
-        }
+        });
       }
-      this.selectedUser = null;
     });
   }
 
   /**
    * Activa un usuario seleccionado
    */
-  activateUser(user: UserDTO): void {
-    this.selectedUser = user;
-    if(this.selectedUser){
-      this.userService.activeUser(this.selectedUser).subscribe({
+  activateUserAccount(user: UserResponse): void {
+    const selectedUser = this.mapper.mapToUserForm(user);
+    this.userService.activeUser(selectedUser).subscribe({
         next: (response) => {
-          console.log("Usuario Activado");
           this.notification.showSuccessToast(response.message, 'top', 3000);
-          this.getUsers();
+          this.loadUsers();
         }, error: (error) => {
-          const message = error.error?.message || error.error?.error || error?.error;
-          console.log('Error al activar usuario: ', message);
-          this.notification.showErrorToast(`Error al activar al usuario \n${message}`, 'top', 5000);
+          const message = this.errorMessage.errorMessageExtractor(error);
+          this.notification.showErrorToast(`Error: \n${message}`, 'top', 5000);
         }
-      });
-      this.selectedUser = null;
-    }
+    });
   }
 
   /**
@@ -197,26 +187,8 @@ export class UserComponent implements OnInit, AfterViewInit {
   resetForms(): void {
     this.addUserButton = true;
     this.showForm = false;
-    this.initializeUser();
+    this.helper.initializeUser();
     this.touchedFields = {};
-  }
-
-  /**
-   * Inicializa un nuevo objeto de usuario con valores predeterminados.
-   * @returns - Usuario inicializado.
-   */
-  initializeUser(): UserDTO {
-    return this.user = {
-      name: '',
-      surname: '',
-      username: '',
-      rut: '',
-      email: '',
-      token: '',
-      status: true,
-      role: null,
-      date: ''
-    };
   }
 
   toggleDropdown() {
