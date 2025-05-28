@@ -1,7 +1,8 @@
-import { UserDTO } from "../models/DTO/user-dto";
+import { UserResponse } from "../models/Entity/user/user-response";
+import { Role } from "../models/enum/role";
 
 export class UserValidator {
-    static validateForm(selectedUser: UserDTO): boolean {
+    static validateForm(selectedUser: UserResponse): boolean {
         return this.isFieldValid(selectedUser, 'name') &&
             this.isFieldValid(selectedUser, 'surname') &&
             this.isFieldValid(selectedUser, 'username') &&
@@ -10,7 +11,7 @@ export class UserValidator {
             this.isFieldValid(selectedUser, 'role');
     }
 
-    static isFieldValid(user: UserDTO, fieldName: keyof UserDTO): boolean {
+    static isFieldValid(user: UserResponse, fieldName: keyof UserResponse): boolean {
         const value = user[fieldName];
         if (fieldName === 'name') {
             return value !== null && typeof value === 'string' && value.trim().length > 3 && /^[a-zA-Z ]+$/.test(value.trim());
@@ -28,7 +29,7 @@ export class UserValidator {
             return value !== null && typeof value === 'string' && /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value);
         }
         if (fieldName === 'role') {
-            return value !== null;
+            return value !== Role.VOID;
         }
         return true;
     }
