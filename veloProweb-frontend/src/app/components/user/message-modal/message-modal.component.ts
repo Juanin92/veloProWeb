@@ -7,6 +7,7 @@ import { User } from '../../../models/Entity/user';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserDTO } from '../../../models/DTO/user-dto';
+import { UserResponse } from '../../../models/Entity/user/user-response';
 
 @Component({
   selector: 'app-message-modal',
@@ -17,7 +18,7 @@ import { UserDTO } from '../../../models/DTO/user-dto';
 })
 export class MessageModalComponent implements OnInit{
 
-  userList: UserDTO[] = [];
+  userList: UserResponse[] = [];
   message: Message = {
     id: 0,
     context: '',
