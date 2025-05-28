@@ -37,7 +37,7 @@ public class AuthController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequestDTO user) throws Exception {
+    public ResponseEntity<Map<String, String>> login(@RequestBody @Valid LoginRequestDTO user) throws Exception {
         loginService.validateLoginAccess(user.getUsername());
         String decryptedPassword = encryptionService.decrypt(user.getPassword());
         Authentication authentication = authenticationManager.authenticate(
