@@ -42,7 +42,7 @@ public class MessageServiceTest {
                 .senderUser(User.builder().name("Peter").surname("Jackson").build()).build();
         Message message2 = Message.builder().id(3L).context("test 1").isRead(false).isDelete(false).receiverUser(user)
                 .senderUser(User.builder().name("Bill").surname("Gates").build()).build();
-        when(messageRepo.findByReceiverUserAndDeleteFalse(user)).thenReturn(List.of(message, message2));
+        when(messageRepo.findByReceiverUserAndIsDeleteFalse(user)).thenReturn(List.of(message, message2));
 
         MessageResponseDTO mappedMessage = MessageResponseDTO.builder().id(1L).context("test").read(false).delete(false)
                 .senderName("Peter Jackson").build();
@@ -55,7 +55,7 @@ public class MessageServiceTest {
         List<MessageResponseDTO> result = messageService.getMessageByUser("johnny");
 
         verify(userService, times(1)).getUserByUsername("johnny");
-        verify(messageRepo, times(1)).findByReceiverUserAndDeleteFalse(user);
+        verify(messageRepo, times(1)).findByReceiverUserAndIsDeleteFalse(user);
         verify(mapper, times(2)).toResponse(any(Message.class));
 
         assertEquals(messageResponseDTOS.size(), result.size());

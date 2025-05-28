@@ -35,7 +35,7 @@ public class MessageService implements IMessageService {
     @Override
     public List<MessageResponseDTO> getMessageByUser(String username) {
         User user = userService.getUserByUsername(username);
-        return messageRepo.findByReceiverUserAndDeleteFalse(user).stream()
+        return messageRepo.findByReceiverUserAndIsDeleteFalse(user).stream()
                 .map(mapper::toResponse)
                 .toList();
     }
