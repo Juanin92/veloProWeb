@@ -10,27 +10,27 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input type="text" class="form-control-plaintext" id="roleModal" [value]="changeNameRole(userDTO.role)"
+                                <input type="text" class="form-control-plaintext" id="roleModal" [value]="changeNameRole(user.role)"
                                     readonly>
                                 <label for="roleModal" class="text-muted">Rol</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input type="text" class="form-control-plaintext" id="rutModal" [value]="userDTO.rut" readonly>
+                                <input type="text" class="form-control-plaintext" id="rutModal" [value]="user.rut" readonly>
                                 <label for="rutModal" class="text-muted">RUT</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input type="text" class="form-control-plaintext" id="nameModal" [value]="userDTO.name"
+                                <input type="text" class="form-control-plaintext" id="nameModal" [value]="user.name"
                                     readonly>
                                 <label for="nameModal" class="text-muted">Nombre</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input type="text" class="form-control-plaintext" id="surnameModal" [value]="userDTO.surname"
+                                <input type="text" class="form-control-plaintext" id="surnameModal" [value]="user.surname"
                                     readonly>
                                 <label for="surnameModal" class="text-muted">Apellido</label>
                             </div>
@@ -38,10 +38,10 @@
                         <div class="col-12">
                             <div class="form-floating">
                                 <input type="email" class="form-control" id="emailModal" placeholder="Email" name="email"
-                                    [(ngModel)]="userDTO.email" 
-                                    [ngClass]="{'is-invalid':!validator.validateUsername(userDTO.email), 'is-valid':validator.validateUsername(userDTO.email)}" required>
+                                    [(ngModel)]="user.email" 
+                                    [ngClass]="{'is-invalid':!validator.validateUsername(user.email), 'is-valid':validator.validateUsername(user.email)}" required>
                                 <label for="emailModal">Email</label>
-                                <div *ngIf="!validator.validateUsername(userDTO.email)" class="invalid-feedback">
+                                <div *ngIf="!validator.validateUsername(user.email)" class="invalid-feedback">
                                     Email no válido (example&commat;test.com)
                                 </div>
                             </div>
@@ -49,10 +49,10 @@
                         <div class="col-12">
                             <div class="form-floating">
                                 <input type="text" class="form-control" id="usernameModal" placeholder="Nombre usuario"
-                                    name="username" [(ngModel)]="userDTO.username" 
-                                    [ngClass]="{'is-invalid':!validator.validateUsername(userDTO.username), 'is-valid':validator.validateUsername(userDTO.username)}" required>
+                                    name="username" [(ngModel)]="user.username" 
+                                    [ngClass]="{'is-invalid':!validator.validateUsername(user.username), 'is-valid':validator.validateUsername(user.username)}" required>
                                 <label for="usernameModal">Nombre de usuario</label>
-                                <div *ngIf="!validator.validateUsername(userDTO.username)" class="invalid-feedback">
+                                <div *ngIf="!validator.validateUsername(user.username)" class="invalid-feedback">
                                     Nombre de Usuario no válido debe tener al menos 3 letras.
                                 </div>
                             </div>
@@ -103,7 +103,7 @@
             </div>
             <div class="modal-footer border-0 justify-content-center">
                 <button type="submit" class="btn btn-warning px-4 py-2"
-                    (click)="updateUser(userDTO)"
+                    (click)="updateUserData(user)"
                     [attr.data-bs-dismiss]="modal.isModalVisible() ? 'modal' : null">Actualizar</button>
                 <button type="button" class="btn btn-outline-secondary px-4 py-2"
                     data-bs-dismiss="modal" (click)="resetModalUser()">Cancelar</button>
