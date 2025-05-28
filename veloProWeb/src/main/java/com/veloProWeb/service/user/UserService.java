@@ -55,6 +55,10 @@ public class UserService implements IUserService {
         User user = findUserByRut(dto.getRut());
         validator.validateUserExists(user);
         validateUsernameIsAvailableForUpdate(dto.getUsername(), dto.getRut());
+        user.setName(dto.getName());
+        user.setSurname(dto.getSurname());
+        user.setRut(dto.getRut());
+        user.setRole(dto.getRole());
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
         userRepository.save(user);
