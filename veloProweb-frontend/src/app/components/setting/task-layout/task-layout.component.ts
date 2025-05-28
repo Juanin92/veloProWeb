@@ -8,6 +8,7 @@ import { UserDTO } from '../../../models/DTO/user-dto';
 import { UserService } from '../../../services/User/user.service';
 import * as bootstrap from 'bootstrap';
 import { SettingPermissionsService } from '../../../services/Permissions/setting-permissions.service';
+import { UserResponse } from '../../../models/Entity/user/user-response';
 
 @Component({
   selector: 'app-task-layout',
@@ -21,7 +22,7 @@ export class TaskLayoutComponent implements OnInit, AfterViewInit {
   @ViewChild('taskTableFilter') dropdownButton!: ElementRef;
   taskList: TaskRequestDTO[] = [];
   filteredTaskList: TaskRequestDTO[] = [];
-  userList: UserDTO[] = [];
+  userList: UserResponse[] = [];
   task: TaskRequestDTO;
   textFilter: string = '';
   dropdownInstance!: bootstrap.Dropdown;
