@@ -2,12 +2,14 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../services/User/user.service';
-import { UserDTO } from '../../../models/DTO/user-dto';
 import { NotificationService } from '../../../utils/notification-service.service';
-import { UpdateUserDTO } from '../../../models/DTO/update-user-dto';
 import { ModalService } from '../../../utils/modal.service';
 import { UserValidator } from '../../../validation/user-validator';
 import { UserPermissionsService } from '../../../services/Permissions/user-permissions.service';
+import { UserResponse } from '../../../models/Entity/user/user-response';
+import { UserMapperService } from '../../../mapper/user-mapper.service';
+import { ErrorMessageService } from '../../../utils/error-message.service';
+import { UserHelperService } from '../../../services/User/user-helper.service';
 
 @Component({
   selector: 'app-update-user-modal',
@@ -23,43 +25,43 @@ export class UpdateUserModalComponent implements OnInit{
   newPassword: string = '';
   newPasswordConfirmed: string = '';
   currentPassword: string = '';
-  userDTO: UserDTO = this.initializeUser();
-  updateUserDto: UpdateUserDTO | null = null;
+  user: UserResponse;
   validator = UserValidator;
 
   constructor(
     private userService: UserService,
+    private mapper: UserMapperService,
+    private helper: UserHelperService,
+    private errorMessage: ErrorMessageService,
     protected permission: UserPermissionsService,
     private notification: NotificationService,
-    public modal: ModalService) {}
+    public modal: ModalService) {
+      this.user = this.helper.initializeUser();
+    }
 
   ngOnInit(): void {
-    this.getData();
+    this.loadUserInformation();
     this.modal.openModal();
   }
 
-  getData(){
+  loadUserInformation(){
     this.userService.getUserData().subscribe({
       next:(user)=>{
-        this.userDTO = user;
-      }, error: (error) =>{
-        console.log('Error: ', error?.error);
+        this.user = user;
       }
     });
   }
 
-  updateUser(userDTO: UserDTO): void{
-    this.updateUserDto = this.initializeUpdateUser(userDTO);
-    this.userService.updateDataUser(this.updateUserDto).subscribe({
+  updateUserData(user: UserResponse): void{
+    const updateUser = this.mapper.mapToUserProfile(user, this.currentPassword, this.newPassword, this.newPasswordConfirmed);
+    this.userService.updateDataUser(updateUser).subscribe({
       next:(response)=>{
-        console.log('Usuario agregado exitosamente:', response);
         this.notification.showSuccessToast(response.message, 'top', 3000);
         this.resetModalUser();
         this.modal.closeModal();
       },error:(error)=>{
-        const message = error.error?.message || error.error?.error || error?.error;
-        console.error('Error al agregar el usuario:', message);
-        this.notification.showErrorToast(`Error al agregar usuario \n${message}`, 'top', 5000);
+        const message = this.errorMessage.errorMessageExtractor(error);
+        this.notification.showErrorToast(`Error: \n${message}`, 'top', 5000);
       }
     });
   }
@@ -79,7 +81,7 @@ export class UpdateUserModalComponent implements OnInit{
     if (this.changePasswordCheckbox) {
       this.changePasswordCheckbox.nativeElement.checked = false;
     }
-    this.initializeUser();
+    this.loadUserInformation();
   }
 
   changeNameRole(role: string | null): string{
@@ -90,30 +92,6 @@ export class UpdateUserModalComponent implements OnInit{
       case 'WAREHOUSE': return 'Logística';
       case 'SELLER': return 'Vendedor';
       default: return 'Sin Rol';
-    }
-  }
-
-  private initializeUpdateUser(user: UserDTO): UpdateUserDTO {
-    return {
-      username: user.username,
-      email: user.email,
-      currentPassword: this.currentPassword,
-      newPassword: this.newPassword,
-      confirmPassword: this.newPasswordConfirmed
-    }
-  }
-
-  private initializeUser(): UserDTO{
-    return {
-      name: '',
-      surname: '',
-      username: '',
-      rut: '',
-      email: '',
-      token: '',
-      status: true,
-      role: null,
-      date: ''
     }
   }
 }
