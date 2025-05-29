@@ -1,5 +1,9 @@
 package com.veloProWeb.service.communication;
 
+import com.veloProWeb.exceptions.communication.AlertNotFoundException;
+import com.veloProWeb.exceptions.communication.InvalidAlertActionException;
+import com.veloProWeb.model.Enum.AlertStatus;
+import com.veloProWeb.model.dto.communication.AlertResponseDTO;
 import com.veloProWeb.model.entity.communication.Alert;
 import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.repository.communication.AlertRepo;
@@ -10,10 +14,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,110 +28,139 @@ public class AlertServiceTest {
 
     @InjectMocks private AlertService alertService;
     @Mock private AlertRepo alertRepo;
-    private Alert alert, alert2, alert3, alert4, alert5;
+    @Mock private UserDetails userDetails;
+    private Product product;
 
     @BeforeEach
     void setUp(){
-        alert = new Alert(1L, "Test 1", "Alerta", LocalDate.now(), new Product());
-        alert2 = new Alert(2L, "Test 2", "Revisado", LocalDate.now(), new Product());
-        alert3 = new Alert(3L, "Test 3", "Revisado", LocalDate.now(), new Product());
-        alert4 = new Alert(4L, "Test 4", "Alerta", LocalDate.now(), new Product());
-        alert5 = new Alert(5L, "Test 5", "Pendiente", LocalDate.now(), new Product());
+        product = Product.builder().id(1L).description("Product test").build();
     }
 
     //Prueba para obtener todos los registros de alertas
     @Test
-    public void getAlerts_valid(){
-        List<Alert> alerts = Arrays.asList(alert,alert2,alert3,alert4);
-        List<Alert> alertListFiltered = Arrays.asList(alert, alert4);
-        when(alertRepo.findAll()).thenReturn(alerts);
-        List<Alert> result = alertService.getAlerts();
+    public void getAlerts(){
+        Alert alert = Alert.builder().id(1L).created(LocalDate.now()).description("Alert 1")
+                .status(AlertStatus.ALERT).product(product).build();
+        Alert alert2 = Alert.builder().id(2L).created(LocalDate.now()).description("Alert 2")
+                .status(AlertStatus.PENDING).product(product).build();
+        when(alertRepo.findByStatusNot(AlertStatus.CHECKED)).thenReturn(List.of(alert, alert2));
 
-        verify(alertRepo, times(1)).findAll();
-        assertEquals(alertListFiltered, result);
+        List<AlertResponseDTO> result = alertService.getAlerts();
+
+        verify(alertRepo, times(1)).findByStatusNot(AlertStatus.CHECKED);
+        assertEquals(2, result.size());
     }
 
     //Prueba para crear una alerta
     @Test
-    public void createAlert_valid(){
-        Product product = new Product();
-        String description = "Test Description";
-        alertService.createAlert(product, description);
-
+    public void createAlert(){
         ArgumentCaptor<Alert> alertCaptor = ArgumentCaptor.forClass(Alert.class);
+        alertService.createAlert(product, "Description test");
+
         verify(alertRepo, times(1)).save(alertCaptor.capture());
+
         Alert savedAlert = alertCaptor.getValue();
         assertEquals(LocalDate.now(), savedAlert.getCreated());
-        assertEquals("Alerta", savedAlert.getStatus());
-        assertEquals(description, savedAlert.getDescription());
+        assertEquals(AlertStatus.ALERT, savedAlert.getStatus());
+        assertEquals("Description test", savedAlert.getDescription());
         assertEquals(product, savedAlert.getProduct());
     }
 
     //Prueba para manejar el estado de la alerta
     @Test
-    public void handleAlertStatus_validAlertToCheck(){
+    public void updateAlertStatus_validAlertToCheck(){
+        Alert alert = Alert.builder().id(1L).created(LocalDate.now()).description("Alert 1")
+                .status(AlertStatus.ALERT).product(product).build();
         when(alertRepo.findById(1L)).thenReturn(Optional.of(alert));
-        alertService.handleAlertStatus(alert, 2);
+
+        ArgumentCaptor<Alert> alertCaptor = ArgumentCaptor.forClass(Alert.class);
+        alertService.updateAlertStatus(1L, AlertStatus.CHECKED, userDetails);
 
         verify(alertRepo, times(1)).findById(1L);
-        verify(alertRepo, times(1)).save(alert);
-        assertEquals("Revisado", alert.getStatus());
-    }
-    @Test
-    public void handleAlertStatus_validPendingToCheck(){
-        when(alertRepo.findById(5L)).thenReturn(Optional.of(alert5));
-        alertService.handleAlertStatus(alert5, 2);
+        verify(alertRepo, times(1)).save(alertCaptor.capture());
 
-        verify(alertRepo, times(1)).findById(5L);
-        verify(alertRepo, times(1)).save(alert5);
-        assertEquals("Revisado", alert5.getStatus());
+        Alert resultAlert = alertCaptor.getValue();
+        assertEquals(AlertStatus.CHECKED, resultAlert.getStatus());
     }
     @Test
-    public void handleAlertStatus_validAlertToPending(){
-        when(alertRepo.findById(4L)).thenReturn(Optional.of(alert4));
-        alertService.handleAlertStatus(alert4, 3);
+    public void updateAlertStatus_validPendingToCheck(){
+        Alert alert = Alert.builder().id(1L).created(LocalDate.now()).description("Alert 1")
+                .status(AlertStatus.PENDING).product(product).build();
+        when(alertRepo.findById(1L)).thenReturn(Optional.of(alert));
 
-        verify(alertRepo, times(1)).findById(4L);
-        verify(alertRepo, times(1)).save(alert4);
-        assertEquals("Pendiente", alert4.getStatus());
+        ArgumentCaptor<Alert> alertCaptor = ArgumentCaptor.forClass(Alert.class);
+        alertService.updateAlertStatus(1L, AlertStatus.CHECKED, userDetails);
+
+        verify(alertRepo, times(1)).findById(1L);
+        verify(alertRepo, times(1)).save(alertCaptor.capture());
+
+        Alert resultAlert = alertCaptor.getValue();
+        assertEquals(AlertStatus.CHECKED, resultAlert.getStatus());
     }
     @Test
-    public void handleAlertStatus_validNotFoundAlert(){
-        Alert nullAlert = new Alert(5L, null, null, LocalDate.now(), null);
+    public void updateAlertStatus_validAlertToPending(){
+        Alert alert = Alert.builder().id(1L).created(LocalDate.now()).description("Alert 1")
+                .status(AlertStatus.ALERT).product(product).build();
+        when(alertRepo.findById(1L)).thenReturn(Optional.of(alert));
+
+        ArgumentCaptor<Alert> alertCaptor = ArgumentCaptor.forClass(Alert.class);
+        alertService.updateAlertStatus(1L, AlertStatus.PENDING, userDetails);
+
+        verify(alertRepo, times(1)).findById(1L);
+        verify(alertRepo, times(1)).save(alertCaptor.capture());
+
+        Alert resultAlert = alertCaptor.getValue();
+        assertEquals(AlertStatus.PENDING, resultAlert.getStatus());
+    }
+    @Test
+    public void updateAlertStatus_alertNotFound(){
         when(alertRepo.findById(5L)).thenReturn(Optional.empty());
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() -> alertService.handleAlertStatus(nullAlert, 1));
+        AlertNotFoundException e = assertThrows(AlertNotFoundException.class,
+                () -> alertService.updateAlertStatus(5L, AlertStatus.CHECKED, userDetails));
 
         verify(alertRepo, times(1)).findById(5L);
-        verify(alertRepo, never()).save(alert);
+        verify(alertRepo, never()).save(any(Alert.class));
         assertEquals("Alerta no encontrada", e.getMessage());
     }
     @Test
-    public void handleAlertStatus_validAlertCheck(){
-        when(alertRepo.findById(2L)).thenReturn(Optional.of(alert2));
-        alertService.handleAlertStatus(alert2, 1);
+    public void updateAlertStatus_invalidAlertAction(){
+        Alert alert = Alert.builder().id(1L).created(LocalDate.now()).description("Alert 1")
+                .status(AlertStatus.CHECKED).product(product).build();
+        when(alertRepo.findById(1L)).thenReturn(Optional.of(alert));
+        InvalidAlertActionException e = assertThrows(InvalidAlertActionException.class,
+                () -> alertService.updateAlertStatus(1L, AlertStatus.CHECKED, userDetails));
 
-        verify(alertRepo, never()).save(alert);
+        verify(alertRepo, times(1)).findById(1L);
+        verify(alertRepo, never()).save(any(Alert.class));
+        assertEquals("No se puede cambiar de CHECKED a CHECKED", e.getMessage());
     }
 
     //Prueba para verificar si una alerta activa
     @Test
     public void isAlertActive_validTrue(){
-        List<Alert> alerts = Collections.singletonList(alert);
-        List<String> status = Arrays.asList("Alerta", "Pendiente");
-        when(alertRepo.findByProductAndDescriptionAndStatusIn(new Product(), "Test 1", status)).thenReturn(alerts);
+        Alert alert = Alert.builder().id(1L).created(LocalDate.now()).description("Alert 1")
+                .status(AlertStatus.ALERT).product(product).build();
+        Alert alert2 = Alert.builder().id(2L).created(LocalDate.now()).description("Alert 1")
+                .status(AlertStatus.PENDING).product(product).build();
+        List<AlertStatus> statusList = List.of(AlertStatus.ALERT, AlertStatus.PENDING);
+        when(alertRepo.findByProductAndDescriptionAndStatusIn(product, "Test 1", statusList))
+                .thenReturn(List.of(alert, alert2));
 
-        boolean result = alertService.isAlertActive(new Product(), "Test 1");
-        verify(alertRepo, times(1)).findByProductAndDescriptionAndStatusIn(new Product(), "Test 1", status);
+        boolean result = alertService.isAlertActive(product, "Test 1");
+
+        verify(alertRepo, times(1)).findByProductAndDescriptionAndStatusIn(product,
+                "Test 1", statusList);
         assertTrue(result);
     }
     @Test
     public void isAlertActive_validFalse(){
-        List<Alert> alerts = Collections.emptyList();
-        List<String> status = Arrays.asList("Alerta", "Pendiente");
-        when(alertRepo.findByProductAndDescriptionAndStatusIn(new Product(), "Test 6", status)).thenReturn(alerts);
+        List<AlertStatus> statusList = List.of(AlertStatus.ALERT, AlertStatus.PENDING);
+        when(alertRepo.findByProductAndDescriptionAndStatusIn(product, "Test 1", statusList))
+                .thenReturn(List.of());
 
-        boolean result = alertService.isAlertActive(new Product(), "Test 6");
-        verify(alertRepo, times(1)).findByProductAndDescriptionAndStatusIn(new Product(), "Test 6", status);
+        boolean result = alertService.isAlertActive(product, "Test 1");
+        verify(alertRepo, times(1)).findByProductAndDescriptionAndStatusIn(product,
+                "Test 1", statusList);
         assertFalse(result);
     }
 }
