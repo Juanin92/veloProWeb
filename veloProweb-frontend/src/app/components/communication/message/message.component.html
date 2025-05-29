@@ -18,11 +18,11 @@
             </div>
             <!-- <span [ngClass]="{'text-decoration-line-through': message.delete}">{{message.context}}</span> -->
             <button *ngIf="!message.read" class="btn btn-sm btn-outline-success border-0 rounded-pill"
-                (click)="isReadMessage(message)">
+                (click)="markMessageAsRead(message)">
                 <i class="bi bi-check-all"></i>
             </button>
             <button *ngIf="message.read" class="btn btn-sm btn-outline-danger rounded-pill"
-                (click)="isDeleteMessage(message)">
+                (click)="markMessageAsDeleted(message)">
                 <i class="bi bi-trash"></i>
             </button>
         </li>

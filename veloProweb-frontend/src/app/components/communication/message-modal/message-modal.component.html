@@ -11,7 +11,7 @@
                                 [(ngModel)]="message.receiverUser"
                                 [ngClass]="{'is-invalid':!message.receiverUser, 'is-valid':message.receiverUser}" required>
                     <option [ngValue]="null" selected disabled>Seleccionar destinatario</option>
-                    <option *ngFor="let user of userList" [ngValue]="user">{{user.name + ' ' + user.surname}}</option>
+                    <option *ngFor="let user of userList" [ngValue]="user.username">{{user.name + ' ' + user.surname}}</option>
                     <div *ngIf="!message.receiverUser" class="invalid-feedback">
                         Debe seleccionar destinatario
                     </div>

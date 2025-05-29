@@ -1,8 +1,10 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Message } from '../../../models/Entity/message';
+import { Message } from '../../../models/Entity/communication/message';
 import { CommonModule } from '@angular/common';
 import { MessageModalComponent } from "../message-modal/message-modal.component";
 import { MessageService } from '../../../services/communication/message.service';
+import { ErrorMessageService } from '../../../utils/error-message.service';
+import { NotificationService } from '../../../utils/notification-service.service';
 
 @Component({
   selector: 'app-message',
@@ -15,14 +17,17 @@ export class MessageComponent implements OnInit{
   @Output() messagesUpdated = new EventEmitter<Message[]>();
   messageList: Message[] = [];
 
-  constructor(private messageService: MessageService){}
+  constructor(
+    private messageService: MessageService,
+    private errorMessage: ErrorMessageService,
+    private notification: NotificationService){}
 
   ngOnInit(): void {
-    this.getMessages();
+    this.loadUserMessages();
   }
   
-  getMessages(): void{
-    this.messageService.getMessages(1).subscribe({
+  loadUserMessages(): void{
+    this.messageService.getMessagesByUser().subscribe({
       next:(list)=>{
         this.messageList = list;
         const filteredList = list.filter(message => !message.read)
@@ -31,40 +36,36 @@ export class MessageComponent implements OnInit{
     });
   }
 
-  isReadMessage(message: Message): void{
+  markMessageAsRead(message: Message): void{
     if(!message.read && !message.delete){
-      this.messageService.readMessage(message).subscribe({
+      this.messageService.markMessageAsRead(message.id).subscribe({
         next:(response)=>{
-          const message = response.message;
-          console.log('Ok: ', message);
-          this.getMessages();
+          this.loadUserMessages();
         },error: (error)=>{
-          const message = error.error?.error || error.error.message;
-          console.log('Error: ', message);
+          const message = this.errorMessage.errorMessageExtractor(error);
+          this.notification.showErrorToast(message, 'top', 3000);
         }
       });
     }else{
-      console.log('Mensaje se encuentra eliminado o leído.');
+      this.notification.showWarningToast('Mensaje se encuentra eliminado o leído.', 'top', 3000);
     }
   }
 
-  isDeleteMessage(message: Message): void{
+  markMessageAsDeleted(message: Message): void{
     if(message.read){
-      this.messageService.deleteMessage(message).subscribe({
+      this.messageService.markMessageAsDeleted(message.id).subscribe({
         next:(response)=>{
-          const messageResponse = response.message;
-          console.log('Ok: ', messageResponse);
           message.delete = true;
           setTimeout(() => {
-            this.getMessages();
+            this.loadUserMessages();
           }, 3000);
         },error: (error)=>{
-          const message = error.error?.error || error.error.message;
-          console.log('Error: ', message);
+          const message = this.errorMessage.errorMessageExtractor(error);
+          this.notification.showErrorToast(message, 'top', 3000);
         }
       });
     }else{
-      console.log('Mensaje no se encuentra leído.');
+      this.notification.showWarningToast('Mensaje no se encuentra leído.', 'top', 3000);
     }
   }
 }

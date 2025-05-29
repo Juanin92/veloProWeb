@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { MessageService } from '../../../services/User/message.service';
+import { Message } from '../../../models/Entity/communication/message';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { UserService } from '../../../services/User/user.service';
+import { User } from '../../../models/Entity/user';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { UserDTO } from '../../../models/DTO/user-dto';
 import { UserResponse } from '../../../models/Entity/user/user-response';
-import { MessageService } from '../../../services/communication/message.service';
-import { ErrorMessageService } from '../../../utils/error-message.service';
-import { MessageForm } from '../../../models/Entity/communication/message-form';
 
 @Component({
   selector: 'app-message-modal',
@@ -18,22 +19,27 @@ import { MessageForm } from '../../../models/Entity/communication/message-form';
 export class MessageModalComponent implements OnInit{
 
   userList: UserResponse[] = [];
-  message: MessageForm = {
+  message: Message = {
+    id: 0,
     context: '',
-    receiverUser: ''
+    created: '',
+    read: false,
+    delete: false,
+    senderUser: null,
+    receiverUser: null,
+    senderName: ''
   };
 
   constructor(
     private messageService: MessageService,
     private userService: UserService,
-    private notification: NotificationService,
-    private errorMessage: ErrorMessageService){}
+    private notification: NotificationService){}
 
   ngOnInit(): void {
-    this.loadUsers();
+    this.getUsers();
   }
 
-  loadUsers(): void{
+  getUsers(): void{
     this.userService.getListUsers().subscribe({
       next:(list) =>{
         this.userList = list;
@@ -41,17 +47,19 @@ export class MessageModalComponent implements OnInit{
     })
   }
 
-  sendMessage(message: MessageForm): void{
+  sendMessage(message: Message): void{
     if(!message.receiverUser || !message.context){
       this.notification.showWarningToast('Debe seleccionar un destinatario', 'top', 3000);
       return;
     }
     this.messageService.sendMessage(message).subscribe({
       next: (response)=>{
-        this.notification.showSuccessToast(response.message, 'top', 3000);
+        const message = response.message;
+        this.notification.showSuccessToast(message, 'top', 3000);
         this.resetModal();
       },error: (error)=>{
-        const message = this.errorMessage.errorMessageExtractor(error);
+        const message = error.error?.error || error.error?.message;
+        console.log('Error: ',message);
         this.notification.showErrorToast('Error: ' + message, 'top', 3000);
       }
     });
@@ -59,6 +67,6 @@ export class MessageModalComponent implements OnInit{
 
   resetModal(): void{
     this.message.context = '';
-    this.message.receiverUser = '';
+    this.message.receiverUser = null;
   }
 }
