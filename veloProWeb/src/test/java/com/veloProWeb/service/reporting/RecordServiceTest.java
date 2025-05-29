@@ -4,7 +4,7 @@ import com.veloProWeb.model.entity.reporting.Record;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.model.Enum.Rol;
 import com.veloProWeb.repository.reporting.RecordRepo;
-import com.veloProWeb.service.user.Interface.IUserService;
+import com.veloProWeb.service.user.interfaces.IUserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

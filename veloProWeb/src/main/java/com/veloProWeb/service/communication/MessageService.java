@@ -8,7 +8,7 @@ import com.veloProWeb.model.entity.communication.Message;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.repository.communication.MessageRepo;
 import com.veloProWeb.service.communication.interfaces.IMessageService;
-import com.veloProWeb.service.user.Interface.IUserService;
+import com.veloProWeb.service.user.interfaces.IUserService;
 import com.veloProWeb.validation.CommunicationValidation;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

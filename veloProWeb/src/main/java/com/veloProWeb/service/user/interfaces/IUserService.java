@@ -1,4 +1,4 @@
-package com.veloProWeb.service.user.Interface;
+package com.veloProWeb.service.user.interfaces;
 
 import com.veloProWeb.model.dto.user.UpdateUserDTO;
 import com.veloProWeb.model.dto.user.UserRequestDTO;

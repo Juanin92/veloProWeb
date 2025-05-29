@@ -8,7 +8,7 @@ import com.veloProWeb.model.entity.communication.Task;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.repository.communication.TaskRepo;
 import com.veloProWeb.service.communication.interfaces.ITaskService;
-import com.veloProWeb.service.user.Interface.IUserService;
+import com.veloProWeb.service.user.interfaces.IUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

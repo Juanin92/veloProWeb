@@ -4,7 +4,7 @@ import com.veloProWeb.model.dto.communication.TaskRequestDTO;
 import com.veloProWeb.model.dto.communication.TaskResponseDTO;
 import com.veloProWeb.service.reporting.interfaces.IRecordService;
 import com.veloProWeb.service.communication.interfaces.ITaskService;
-import com.veloProWeb.service.user.Interface.IUserService;
+import com.veloProWeb.service.user.interfaces.IUserService;
 import com.veloProWeb.util.ResponseMessage;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

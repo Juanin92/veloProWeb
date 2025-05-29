@@ -4,7 +4,7 @@ import com.veloProWeb.model.dto.user.UpdateUserDTO;
 import com.veloProWeb.model.dto.user.UserRequestDTO;
 import com.veloProWeb.model.dto.user.UserResponseDTO;
 import com.veloProWeb.service.reporting.interfaces.IRecordService;
-import com.veloProWeb.service.user.Interface.IUserService;
+import com.veloProWeb.service.user.interfaces.IUserService;
 import com.veloProWeb.util.ResponseMessage;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

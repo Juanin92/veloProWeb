@@ -7,7 +7,7 @@ import com.veloProWeb.model.dto.user.UserRequestDTO;
 import com.veloProWeb.model.dto.user.UserResponseDTO;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.repository.UserRepo;
-import com.veloProWeb.service.user.Interface.IUserService;
+import com.veloProWeb.service.user.interfaces.IUserService;
 import com.veloProWeb.validation.UserValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
