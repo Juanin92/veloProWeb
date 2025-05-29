@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Message } from '../../models/Entity/message';
+import { Message } from '../../models/Entity/communication/message';
 import { TaskComponent } from "../setting/task/task.component";
 import { AlertComponent } from "../communication/alert/alert.component";
 import { AlertModel } from '../../models/Entity/alert-model';
