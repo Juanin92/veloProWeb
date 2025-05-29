@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TaskRequestDTO } from '../../../models/DTO/task-request-dto';
-import { TaskService } from '../../../services/User/task.service';
+import { TaskService } from '../../../services/communication/task.service';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { UserDTO } from '../../../models/DTO/user-dto';
 import { UserService } from '../../../services/User/user.service';

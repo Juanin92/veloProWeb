@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Message } from '../../models/Entity/message';
 import { TaskComponent } from "../setting/task/task.component";
-import { AlertComponent } from "../user/alert/alert.component";
+import { AlertComponent } from "../communication/alert/alert.component";
 import { AlertModel } from '../../models/Entity/alert-model';
 import { DispatchComponent } from "../sale/dispatch/dispatch.component";
 import { Dispatch } from '../../models/Entity/Sale/dispatch';

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TaskService } from '../../../services/User/task.service';
+import { TaskService } from '../../../services/communication/task.service';
 import { TaskRequestDTO } from '../../../models/DTO/task-request-dto';
 
 @Component({
