@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { UpdateUserModalComponent } from "../user/update-user-modal/update-user-modal.component";
-import { MessageModalComponent } from "../user/message-modal/message-modal.component";
+import { MessageModalComponent } from "../communication/message-modal/message-modal.component";
 import { MenuComponent } from "../menu/menu.component";
 import { LocalData } from '../../models/Entity/local-data';
 import { CommonModule, DatePipe } from '@angular/common';

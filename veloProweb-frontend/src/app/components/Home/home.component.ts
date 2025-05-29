@@ -6,7 +6,7 @@ import { AlertComponent } from "../user/alert/alert.component";
 import { AlertModel } from '../../models/Entity/alert-model';
 import { DispatchComponent } from "../sale/dispatch/dispatch.component";
 import { Dispatch } from '../../models/Entity/Sale/dispatch';
-import { MessageComponent } from "../user/message/message.component";
+import { MessageComponent } from "../communication/message/message.component";
 import { TaskRequestDTO } from '../../models/DTO/task-request-dto';
 import { DispatchPermissionsService } from '../../services/Permissions/dispatch-permissions.service';
 import { UserPermissionsService } from '../../services/Permissions/user-permissions.service';
