@@ -24,6 +24,8 @@ public class Alert {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String description;
+
+    @Enumerated(EnumType.STRING)
     private AlertStatus status;
 
     @DateTimeFormat(pattern = "dd-MM-yyyy")
