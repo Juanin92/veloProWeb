@@ -1,4 +1,4 @@
-package com.veloProWeb.Config;
+package com.veloProWeb.config;
 
 import com.veloProWeb.model.Enum.Rol;
 import com.veloProWeb.security.jwt.JwtAuthenticationFilter;
