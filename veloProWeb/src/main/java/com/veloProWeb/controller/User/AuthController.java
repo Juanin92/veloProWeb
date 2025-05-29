@@ -2,7 +2,7 @@ package com.veloProWeb.controller.User;
 
 import com.veloProWeb.model.dto.user.AuthRequestDTO;
 import com.veloProWeb.model.dto.user.LoginRequestDTO;
-import com.veloProWeb.security.Service.EncryptionService;
+import com.veloProWeb.security.service.EncryptionService;
 import com.veloProWeb.security.jwt.JwtUtil;
 import com.veloProWeb.service.reporting.interfaces.IRecordService;
 import com.veloProWeb.service.user.interfaces.ILoginService;

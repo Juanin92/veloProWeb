@@ -1,6 +1,6 @@
 package com.veloProWeb.security.jwt;
 
-import com.veloProWeb.security.Service.UserDetailsServiceImpl;
+import com.veloProWeb.security.service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

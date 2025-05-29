@@ -3,7 +3,7 @@ package com.veloProWeb.service.user;
 import com.veloProWeb.exceptions.user.InvalidTokenException;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.repository.UserRepo;
-import com.veloProWeb.security.Service.CodeGenerator;
+import com.veloProWeb.security.service.CodeGenerator;
 import com.veloProWeb.service.user.interfaces.ILoginService;
 import com.veloProWeb.service.user.interfaces.IUserService;
 import com.veloProWeb.util.EmailService;

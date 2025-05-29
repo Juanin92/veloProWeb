@@ -1,4 +1,4 @@
-package com.veloProWeb.security.Service;
+package com.veloProWeb.security.service;
 
 import org.apache.commons.text.CharacterPredicates;
 import org.apache.commons.text.RandomStringGenerator;
