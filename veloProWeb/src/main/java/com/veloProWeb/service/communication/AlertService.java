@@ -1,40 +1,41 @@
 package com.veloProWeb.service.communication;
 
+import com.veloProWeb.exceptions.communication.AlertNotFoundException;
+import com.veloProWeb.exceptions.communication.InvalidAlertActionException;
+import com.veloProWeb.model.Enum.AlertStatus;
+import com.veloProWeb.model.dto.communication.AlertResponseDTO;
 import com.veloProWeb.model.entity.communication.Alert;
 import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.repository.communication.AlertRepo;
 import com.veloProWeb.service.communication.interfaces.IAlertService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.veloProWeb.service.reporting.interfaces.IRecordService;
+import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
+@AllArgsConstructor
 public class AlertService implements IAlertService {
 
-    @Autowired private AlertRepo alertRepo;
-    private final Map<Integer, String> statusMap = new HashMap<>();
-
-    public AlertService(){
-        statusMap.put(1, "Alerta");
-        statusMap.put(2, "Revisado");
-        statusMap.put(3, "Pendiente");
-    }
+    private final AlertRepo alertRepo;
+    private final IRecordService recordService;
 
     /**
      * Obtiene todos los registros de alertas
      * Filtra las alertas que ya se revisaron
+     *
      * @return - Lista filtrada con alertas
      */
     @Override
-    public List<Alert> getAlerts() {
-        List<Alert> alerts = alertRepo.findAll();
+    public List<AlertResponseDTO> getAlerts() {
+        List<Alert> alerts = alertRepo.findByStatusNot(AlertStatus.CHECKED);
         return alerts.stream()
-                .filter(alert -> !alert.getStatus().equals(statusMap.get(2)))
+                .map(this::mapToAlertResponse)
                 .toList();
     }
 
@@ -44,48 +45,50 @@ public class AlertService implements IAlertService {
      * @param product - Producto asociado a la alerta
      * @param description - descripción para la alerta
      */
+    @Transactional
     @Override
     public void createAlert(Product product, String description) {
         if (product != null) {
-            Alert alert =  new Alert();
-            alert.setId(null);
-            alert.setCreated(LocalDate.now());
-            alert.setStatus(statusMap.get(1));
-            alert.setDescription(description);
-            alert.setProduct(product);
+            Alert alert =  Alert.builder()
+                    .created(LocalDate.now())
+                    .status(AlertStatus.ALERT)
+                    .description(description)
+                    .product(product)
+                    .build();
             alertRepo.save(alert);
         }
     }
 
     /**
      * Manejo del estado de la alerta
-     * @param alert - Alerta seleccionada
+     * @param alertId - ID de la alerta seleccionada
      * @param action - Número de la acción a realizar (alerta, revisado, pendiente)
+     * @param userDetail - Detalle del usuario autenticado
      */
+    @Transactional
     @Override
-    public void handleAlertStatus(Alert alert, int action) {
-        Alert alertExisting = alertRepo.findById(alert.getId()).orElse(null);
-        if (alertExisting != null) {
-            switch (action){
-                case 2:
-                    //Verifica la alerta este "Alerta" o "pendiente" para quedar "revisado"
-                    if (alertExisting.getStatus().equals(statusMap.get(1)) || alertExisting.getStatus().equals(statusMap.get(3))){
-                        alertExisting.setStatus(statusMap.get(2));
-                    }
-                    break;
-                case 3:
-                    //Verifica la alerta este "Alerta" y no este "revisado" para quedar "Pendiente"
-                    if (alertExisting.getStatus().equals(statusMap.get(1)) && !alertExisting.getStatus().equals(statusMap.get(2))){
-                        alertExisting.setStatus(statusMap.get(3));
-                    }
-                    break;
-                default:
-                    throw new IllegalArgumentException("Acción no valida!");
-            }
-            alertRepo.save(alertExisting);
-        }else{
-            throw new IllegalArgumentException("Alerta no encontrada");
+    public void updateAlertStatus(Long alertId, AlertStatus action, UserDetails userDetail) {
+        Alert existingAlert = alertRepo.findById(alertId)
+                .orElseThrow(() -> new AlertNotFoundException("Alerta no encontrada"));
+
+        AlertStatus currentStatus = existingAlert.getStatus();
+        boolean canChange = switch (action) {
+            case CHECKED -> currentStatus == AlertStatus.ALERT || currentStatus == AlertStatus.PENDING;
+            case PENDING -> currentStatus == AlertStatus.ALERT;
+            default -> false;
+        };
+
+        if (!canChange) {
+            throw new InvalidAlertActionException(
+                    String.format("No se puede cambiar de %s a %s", currentStatus.name(), action.name())
+            );
         }
+
+        existingAlert.setStatus(action);
+        alertRepo.save(existingAlert);
+        recordService.registerAction(userDetail, "UPDATE",
+                String.format("Actualizar estado de la alerta %s (%s) ", existingAlert.getDescription(),
+                        existingAlert.getStatus().name()));
     }
 
     /**
@@ -97,8 +100,23 @@ public class AlertService implements IAlertService {
      */
     @Override
     public boolean isAlertActive(Product product, String description) {
-        List<String> status = Arrays.asList(statusMap.get(1),statusMap.get(3));
+        List<AlertStatus> status = Arrays.asList(AlertStatus.ALERT, AlertStatus.PENDING);
         List<Alert> alerts = alertRepo.findByProductAndDescriptionAndStatusIn(product, description, status);
         return !alerts.isEmpty();
+    }
+
+    /**
+     * Mapea desde la entidad Alert a AlertResponseDTO
+     * @param alert - Alerta a mapear
+     * @return - DTO de respuesta de alerta
+     */
+    private AlertResponseDTO mapToAlertResponse(Alert alert){
+        return AlertResponseDTO.builder()
+                .id(alert.getId())
+                .created(alert.getCreated())
+                .description(alert.getDescription())
+                .status(alert.getStatus())
+                .product(alert.getProduct().getDescription())
+                .build();
     }
 }
