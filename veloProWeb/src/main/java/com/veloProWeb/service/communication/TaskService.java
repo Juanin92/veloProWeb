@@ -1,24 +1,27 @@
 package com.veloProWeb.service.communication;
 
-import com.veloProWeb.model.dto.TaskDTO;
+import com.veloProWeb.exceptions.communication.TaskNotFoundException;
+import com.veloProWeb.mapper.TaskMapper;
+import com.veloProWeb.model.dto.communication.TaskRequestDTO;
+import com.veloProWeb.model.dto.communication.TaskResponseDTO;
 import com.veloProWeb.model.entity.communication.Task;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.repository.communication.TaskRepo;
 import com.veloProWeb.service.communication.interfaces.ITaskService;
 import com.veloProWeb.service.user.Interface.IUserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class TaskService implements ITaskService {
 
-    @Autowired private TaskRepo taskRepo;
-    @Autowired private IUserService userService;
+    private final TaskRepo taskRepo;
+    private final IUserService userService;
+    private final TaskMapper mapper;
 
     /**
      * Obtener una lista de tareas de un usuario.
@@ -28,49 +31,37 @@ public class TaskService implements ITaskService {
      * @return - Lista filtrada
      */
     @Override
-    public List<TaskDTO> getTaskByUser(String username) {
+    public List<TaskResponseDTO> getTaskByUser(String username) {
         User user = userService.getUserByUsername(username);
-        List<Task> tasks = taskRepo.findAll();
+        List<Task> tasks = taskRepo.findByStatusTrueAndUser(user);
         return tasks.stream()
-                .filter(task -> task.isStatus() && Objects.equals(task.getUser().getId(), user.getId()))
-                .map(this::mapTaskToTaskDTO)
-                .collect(Collectors.toList());
+                .map(mapper::toTaskResponse)
+                .toList();
     }
 
     /**
      *Crear Tarea para un usuario
      * @param dto - Objeto que contiene datos necesarios
      */
+    @Transactional
     @Override
-    public void createTask(TaskDTO dto) {
-        if (dto != null && !dto.getUser().trim().isEmpty()) {
-            Task task = new Task();
-            task.setId(null);
-            task.setCreated(LocalDate.now());
-            task.setDescription(dto.getDescription());
-            task.setStatus(true);
-            User user = userService.getUserByUsername(dto.getUser());
-            task.setUser(user);
-            taskRepo.save(task);
-        }else {
-            throw new IllegalArgumentException("Tarea debe contener un usuario seleccionado!");
-        }
+    public void createTask(TaskRequestDTO dto) {
+        User user = userService.getUserByUsername(dto.getUser());
+        Task task = mapper.toEntity(dto, user);
+        taskRepo.save(task);
     }
 
     /**
      * Completar una tarea seleccionada
      * @param taskID - Identificador de la tarea
      */
+    @Transactional
     @Override
     public void completeTask(Long taskID) {
-        Task task = taskRepo.findById(taskID).orElse(null);
-        if (task != null) {
-            if (task.isStatus()){
-                task.setStatus(false);
-                taskRepo.save(task);
-            }
-        }else {
-            throw new IllegalArgumentException("Tarea no encontrada");
+        Task task = taskRepo.findById(taskID).orElseThrow(() -> new TaskNotFoundException("Tarea no encontrada"));
+        if (task.isStatus()){
+            task.setStatus(false);
+            taskRepo.save(task);
         }
     }
 
@@ -79,25 +70,10 @@ public class TaskService implements ITaskService {
      * @return - Lista de las tareas registradas con cierta información
      */
     @Override
-    public List<TaskDTO> getAllTasks() {
+    public List<TaskResponseDTO> getAllTasks() {
         List<Task> taskList = taskRepo.findAll();
         return taskList.stream()
-                .map(this::mapTaskToTaskDTO)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Convierte un task a un taskDTO
-     * @param task - Objeto a convertir
-     * @return - Objeto dto
-     */
-    private TaskDTO mapTaskToTaskDTO(Task task) {
-        TaskDTO dto = new TaskDTO();
-        dto.setId(task.getId());
-        dto.setCreated(task.getCreated());
-        dto.setDescription(task.getDescription());
-        dto.setStatus(task.isStatus());
-        dto.setUser(String.format("%s %s", task.getUser().getName(), task.getUser().getSurname()));
-        return dto;
+                .map(mapper::toTaskResponse)
+                .toList();
     }
 }
