@@ -82,7 +82,7 @@ public class MessageService implements IMessageService {
         User senderUser = userService.getUserByUsername(senderUsername);
 
         Message message = mapper.toEntity(dto.getContext(), senderUser, receiverUser);
-        validation.validateSenderAndReceiverAreDifferent(message, receiverUser);
+        validation.validateSenderAndReceiverAreDifferent(message, senderUser);
         messageRepo.save(message);
     }
 
