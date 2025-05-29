@@ -14,7 +14,8 @@ public class CommunicationExceptionHandler extends BaseExceptionHandler {
 
     @ExceptionHandler({
             MessageNotFoundException.class,
-            TaskNotFoundException.class
+            TaskNotFoundException.class,
+            AlertNotFoundException.class
     })
     public ResponseEntity<Map<String, String>> handleNotFound(Exception e) {
         return buildResponse(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -23,7 +24,8 @@ public class CommunicationExceptionHandler extends BaseExceptionHandler {
     @ExceptionHandler({
             MessageAlreadyDeletedException.class,
             MessageAlreadyReadException.class,
-            MessageReceiverUserException.class
+            MessageReceiverUserException.class,
+            InvalidAlertActionException.class
     })
     public ResponseEntity<Map<String, String>> handleCommunicationExceptions(Exception e) {
         return buildResponse(e.getMessage(), HttpStatus.CONFLICT);
