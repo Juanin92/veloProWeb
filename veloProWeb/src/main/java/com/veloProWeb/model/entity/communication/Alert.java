@@ -1,5 +1,6 @@
 package com.veloProWeb.model.entity.communication;
 
+import com.veloProWeb.model.Enum.AlertStatus;
 import com.veloProWeb.model.entity.product.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ public class Alert {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String description;
-    private String status;
+    private AlertStatus status;
 
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     @Temporal(TemporalType.DATE)
