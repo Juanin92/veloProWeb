@@ -4,7 +4,7 @@ import com.veloProWeb.model.dto.TaskDTO;
 import com.veloProWeb.service.reporting.interfaces.IRecordService;
 import com.veloProWeb.service.communication.interfaces.ITaskService;
 import com.veloProWeb.service.user.Interface.IUserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,12 +18,12 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/tareas")
-@CrossOrigin(origins = "http://localhost:4200")
+@AllArgsConstructor
 public class TaskController {
 
-    @Autowired private ITaskService taskService;
-    @Autowired private IUserService userService;
-    @Autowired private IRecordService recordService;
+    private final ITaskService taskService;
+    private final IUserService userService;
+    private final IRecordService recordService;
 
     /**
      * Obtiene tareas asignadas de un usuario
