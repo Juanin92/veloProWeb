@@ -12,7 +12,10 @@ import java.util.Map;
 @RestControllerAdvice
 public class CommunicationExceptionHandler extends BaseExceptionHandler {
 
-    @ExceptionHandler(MessageNotFoundException.class)
+    @ExceptionHandler({
+            MessageNotFoundException.class,
+            TaskNotFoundException.class
+    })
     public ResponseEntity<Map<String, String>> handleNotFound(Exception e) {
         return buildResponse(e.getMessage(), HttpStatus.NOT_FOUND);
     }
