@@ -1,7 +1,7 @@
 package com.veloProWeb.Config;
 
 import com.veloProWeb.model.Enum.Rol;
-import com.veloProWeb.security.Jwt.JwtAuthenticationFilter;
+import com.veloProWeb.security.jwt.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;

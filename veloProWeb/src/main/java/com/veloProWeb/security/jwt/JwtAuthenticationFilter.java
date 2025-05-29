@@ -1,4 +1,4 @@
-package com.veloProWeb.security.Jwt;
+package com.veloProWeb.security.jwt;
 
 import com.veloProWeb.security.Service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;

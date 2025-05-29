@@ -1,4 +1,4 @@
-package com.veloProWeb.security.Jwt;
+package com.veloProWeb.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
