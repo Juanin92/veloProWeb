@@ -1,4 +1,4 @@
-package com.veloProWeb.controller.User;
+package com.veloProWeb.controller.user;
 
 import com.veloProWeb.model.dto.user.AuthRequestDTO;
 import com.veloProWeb.model.dto.user.LoginRequestDTO;
