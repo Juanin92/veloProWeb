@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TaskRequestDTO } from '../../models/DTO/task-request-dto';
+import { TaskForm } from '../../models/Entity/communication/task-form';
 import { AuthService } from '../User/auth.service';
+import { Task } from '../../models/Entity/communication/task';
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +14,11 @@ export class TaskService {
 
   constructor(private httpClient: HttpClient, private auth: AuthService) { }
 
-  getTasks(): Observable<TaskRequestDTO[]>{
-    return this.httpClient.get<TaskRequestDTO[]>(this.apiUrl, {headers: this.auth.getAuthHeaders()});
+  getTasks(): Observable<Task[]>{
+    return this.httpClient.get<Task[]>(this.apiUrl, {headers: this.auth.getAuthHeaders()});
   }
 
-  createTask(task: TaskRequestDTO): Observable<{message: string}>{
+  createTask(task: TaskForm): Observable<{message: string}>{
     return this.httpClient.post<{message: string}>(this.apiUrl, task, {headers: this.auth.getAuthHeaders()});
   }
 
@@ -28,7 +29,7 @@ export class TaskService {
     });  
   }
 
-  getAllTasks(): Observable<TaskRequestDTO[]>{
-    return this.httpClient.get<TaskRequestDTO[]>(`${this.apiUrl}/lista-tarea`);
+  getAllTasks(): Observable<Task[]>{
+    return this.httpClient.get<Task[]>(`${this.apiUrl}/lista-tarea`);
   }
 }

@@ -1,8 +1,11 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TaskForm } from '../../../models/Entity/communication/task-form';
 import { TaskService } from '../../../services/communication/task.service';
-import { TaskRequestDTO } from '../../../models/DTO/task-request-dto';
+import { Task } from '../../../models/Entity/communication/task';
+import { ErrorMessageService } from '../../../utils/error-message.service';
+import { NotificationService } from '../../../utils/notification-service.service';
 
 @Component({
   selector: 'app-task',
@@ -13,35 +16,32 @@ import { TaskRequestDTO } from '../../../models/DTO/task-request-dto';
 })
 export class TaskComponent implements OnInit{
 
-  @Output() taskUpdated = new EventEmitter<TaskRequestDTO[]>();
-  taskList: TaskRequestDTO[] = [];
+  @Output() taskUpdated = new EventEmitter<TaskForm[]>();
+  taskList: Task[] = [];
 
-  constructor(private taskService: TaskService){}
+  constructor(private taskService: TaskService, 
+    private errorMessage: ErrorMessageService,
+    private notification: NotificationService){}
 
   ngOnInit(): void {
-    this.getTasks();
+    this.loadTasks();
   }
 
-  getTasks(): void {
+  loadTasks(): void {
     this.taskService.getTasks().subscribe({
       next: (list) => {
         this.taskList = list;
         this.taskUpdated.emit(this.taskList);
-      }, error: (error) => {
-        console.log('Error obtener tareas, ', error);
       }
     });
   }
 
-  completeTask(task: TaskRequestDTO) {
+  completeTask(task: Task) {
     task.status = false;
     this.taskService.completeTask(task.id).subscribe({
-      next:(response)=>{
-        const message = response.message;
-        console.log('Ok: ',message);
-      }, error: (error)=>{
-        const message = error.error?.message || error.error?.error;
-        console.log('Error: ',message);
+       error: (error)=>{
+        const message = this.errorMessage.errorMessageExtractor(error);
+        this.notification.showErrorToast(message, 'top', 3000);
       }
     });
     setTimeout(() => {

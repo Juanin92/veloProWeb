@@ -1,14 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TaskRequestDTO } from '../../../models/DTO/task-request-dto';
-import { TaskService } from '../../../services/communication/task.service';
+import { TaskForm } from '../../../models/Entity/communication/task-form';
 import { NotificationService } from '../../../utils/notification-service.service';
-import { UserDTO } from '../../../models/DTO/user-dto';
 import { UserService } from '../../../services/User/user.service';
 import * as bootstrap from 'bootstrap';
 import { SettingPermissionsService } from '../../../services/Permissions/setting-permissions.service';
 import { UserResponse } from '../../../models/Entity/user/user-response';
+import { TaskService } from '../../../services/communication/task.service';
+import { ErrorMessageService } from '../../../utils/error-message.service';
+import { Task } from '../../../models/Entity/communication/task';
 
 @Component({
   selector: 'app-task-layout',
@@ -20,10 +21,10 @@ import { UserResponse } from '../../../models/Entity/user/user-response';
 export class TaskLayoutComponent implements OnInit, AfterViewInit {
 
   @ViewChild('taskTableFilter') dropdownButton!: ElementRef;
-  taskList: TaskRequestDTO[] = [];
-  filteredTaskList: TaskRequestDTO[] = [];
+  taskList: Task[] = [];
+  filteredTaskList: Task[] = [];
   userList: UserResponse[] = [];
-  task: TaskRequestDTO;
+  taskForm: TaskForm;
   textFilter: string = '';
   dropdownInstance!: bootstrap.Dropdown;
   sortDate: boolean = true;
@@ -35,8 +36,9 @@ export class TaskLayoutComponent implements OnInit, AfterViewInit {
     private taskService: TaskService,
     private userService: UserService,
     private notification: NotificationService,
+    private errorMessage: ErrorMessageService,
     protected permission: SettingPermissionsService) {
-    this.task = this.initializeTask();
+    this.taskForm = this.initializeTask();
   }
 
   ngAfterViewInit(): void {
@@ -46,46 +48,40 @@ export class TaskLayoutComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.getUsers();
-    this.getTasks();
+    this.loadUserData();
+    this.loadTasks();
     this.resetTask();
   }
 
-  getUsers(): void {
+  loadUserData(): void {
     this.userService.getListUsers().subscribe({
       next: (list) => {
         this.userList = list;
-      }, error: (error) => {
-        console.log('Error al obtener la lista ', error);
       }
     });
   }
 
-  getTasks(): void {
+  loadTasks(): void {
     this.taskService.getAllTasks().subscribe({
       next: (list) => {
         this.taskList = list;
         this.filteredTaskList = list;
-      }, error: (error) => {
-        console.log('No se encontró información sobre los tareas asignadas');
       }
     });
   }
 
-  createNewTask(task: TaskRequestDTO): void {
+  createNewTask(task: TaskForm): void {
     if (!task.description || !task.user) {
       this.notification.showWarningToast('Faltan datos', 'top', 3000);
       return;
     }
     this.taskService.createTask(task).subscribe({
       next: (response) => {
-        const message = response.message;
-        this.notification.showSuccessToast(message, 'top', 3000);
+        this.notification.showSuccessToast(response.message, 'top', 3000);
         this.resetTask();
-        this.getTasks();
+        this.loadTasks();
       }, error: (error) => {
-        const message = error.error?.message || error.error?.error;
-        console.error('Error: ', message);
+        const message = this.errorMessage.errorMessageExtractor(error);
         this.notification.showErrorToast(message, 'top', 3000);
       }
     });
@@ -104,8 +100,8 @@ export class TaskLayoutComponent implements OnInit, AfterViewInit {
   }
 
   resetTask(): void {
-    this.task.description = '';
-    this.task.user = '';
+    this.taskForm.description = '';
+    this.taskForm.user = '';
   }
 
   toggleDropdown() {
@@ -146,12 +142,9 @@ export class TaskLayoutComponent implements OnInit, AfterViewInit {
     this.sortPosition = !this.sortPosition;
   }
 
-  private initializeTask(): TaskRequestDTO {
+  private initializeTask(): TaskForm {
     return {
-      id: 0,
       description: '',
-      status: true,
-      created: '',
       user: '',
     }
   }
