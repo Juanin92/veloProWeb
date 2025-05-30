@@ -2,17 +2,17 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LocalDataService } from '../../services/local-data.service';
-import { LocalData } from '../../models/Entity/local-data';
+import { LocalData } from '../../models/Entity/data/local-data';
 import { CashierMovementsComponent } from "./cashier-movements/cashier-movements.component";
 import { DispatchLayoutComponent } from "../sale/dispatch-layout/dispatch-layout.component";
 import { RegisterComponent } from "./register/register.component";
-import { TaskLayoutComponent } from "./task-layout/task-layout.component";
+import { TaskLayoutComponent } from "../communication/task-layout/task-layout.component";
 import { SettingPermissionsService } from '../../services/Permissions/setting-permissions.service';
 import { NotificationService } from '../../utils/notification-service.service';
 import { AuthService } from '../../services/User/auth.service';
-import { LoginRequest } from '../../models/DTO/login-request';
 import { EncryptionService } from '../../security/encryption.service';
 import { AuthRequestDTO } from '../../models/DTO/auth-request-dto';
+import { ErrorMessageService } from '../../utils/error-message.service';
 
 @Component({
   selector: 'app-setting',
@@ -23,14 +23,7 @@ import { AuthRequestDTO } from '../../models/DTO/auth-request-dto';
 })
 export class SettingComponent{
 
-  data: LocalData = {
-    id: 0,
-    name: '',
-    phone: '',
-    email: '',
-    emailSecurityApp: '',
-    address: ''
-  };
+  data: LocalData;
   access: boolean = false;
   pass: string = '';
   encryptedCode: string = '';
@@ -40,21 +33,16 @@ export class SettingComponent{
     private authService: AuthService,
     private encryptionService: EncryptionService,
     protected permission: SettingPermissionsService,
-    private notification: NotificationService){}
+    private errorMessage: ErrorMessageService,
+    private notification: NotificationService){
+      this.data = this.initializeLocalData();
+    }
 
-  getData(): void{
+  loadData(): void{
     this.localDataService.getData().subscribe({
-      next:(list)=>{
-        if(list.length === 1){
-          this.data = list[0];
-          const simplifiedData = {
-            name: list[0].name,
-            phone: list[0].phone,
-            email: list[0].email,
-            address: list[0].address
-          };
-          this.modifyLocalDataStorage(simplifiedData);
-        }
+      next:(data)=>{
+        data = data;
+        this.modifyLocalDataStorage(data);
       }
     });
   }
@@ -64,9 +52,9 @@ export class SettingComponent{
       this.localDataService.updateData(this.data).subscribe({
         next: (response)=>{
           this.notification.showSuccessToast(response.message, 'top', 3000);
-          this.getData();
+          this.loadData();
         }, error: (error)=>{
-          const message = error.error?.message || error.error?.error || error?.error;
+          const message = this.errorMessage.errorMessageExtractor(error);
           this.notification.showErrorToast(message, 'top', 3000);
         }
       });
@@ -77,8 +65,8 @@ export class SettingComponent{
     this.authService.getEncryptionKey().subscribe({
       next: (key) => { this.encryptedCode = key;},
       error: (error) => {
-        const message = error.error?.error || error?.error;
-        console.log('Error: ', message);
+        const message = this.errorMessage.errorMessageExtractor(error);
+          this.notification.showErrorToast(message, 'top', 3000);
       }
     });
   }
@@ -88,10 +76,10 @@ export class SettingComponent{
       const authRequest: AuthRequestDTO = {identifier: '',
         token: this.encryptionService.encryptPassword(this.pass, this.encryptedCode)};
       this.authService.getAuthAccess(authRequest).subscribe({
-        next:(response)=>{ this.access = response; console.log('response: ', response);},
+        next:(response)=>{ this.access = response;},
         error:(error)=>{
-          const message = error.error?.error || error?.error;
-          console.log('Error: ', message);
+          const message = this.errorMessage.errorMessageExtractor(error);
+          this.notification.showErrorToast(message, 'top', 3000);
         }
       });
     }
@@ -99,5 +87,15 @@ export class SettingComponent{
 
   private modifyLocalDataStorage(data: { name: string, phone: string, email: string, address: string }): void{
     sessionStorage.setItem('companyData', JSON.stringify(data));
+  }
+
+  private initializeLocalData(): LocalData{
+    return {
+      name: '',
+      phone: '',
+      email: '',
+      emailSecurityApp: '',
+      address: ''
+    }
   }
 }

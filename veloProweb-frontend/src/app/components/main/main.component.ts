@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angula
 import { UpdateUserModalComponent } from "../user/update-user-modal/update-user-modal.component";
 import { MessageModalComponent } from "../communication/message-modal/message-modal.component";
 import { MenuComponent } from "../menu/menu.component";
-import { LocalData } from '../../models/Entity/local-data';
+import { LocalData } from '../../models/Entity/data/local-data';
 import { CommonModule, DatePipe } from '@angular/common';
 import { LocalDataService } from '../../services/local-data.service';
 import { Router, RouterOutlet } from '@angular/router';
@@ -13,6 +13,7 @@ import { MenuPermissionsService } from '../../services/Permissions/menu-permissi
 import { NotificationService } from '../../utils/notification-service.service';
 import { CashRegisterService } from '../../services/Sale/cash-register.service';
 import { firstValueFrom } from 'rxjs';
+import { ErrorMessageService } from '../../utils/error-message.service';
 
 @Component({
   selector: 'app-main',
@@ -36,6 +37,7 @@ export class MainComponent implements AfterViewInit, OnInit {
     private cashRegisterService: CashRegisterService,
     private datePipe: DatePipe,
     private localDataService: LocalDataService,
+    private errorMessage: ErrorMessageService,
     private router: Router,
     protected permission: MenuPermissionsService,
     private notification: NotificationService) {
@@ -66,14 +68,13 @@ export class MainComponent implements AfterViewInit, OnInit {
     }
     this.auth.logout().subscribe({
       next:(response) =>{
-        console.log(response.message);
         this.auth.removeToken();
         sessionStorage.clear();
         localStorage.clear();
         this.router.navigate(['/login']);
       }, error: (error) =>{
-        const message = error.error?.error || error.error?.message || error?.error;
-        console.log('Error: ', message);
+        const message = this.errorMessage.errorMessageExtractor(error);
+        this.notification.showErrorToast(message, 'top', 3000);
       }
     });
   }
@@ -109,16 +110,9 @@ export class MainComponent implements AfterViewInit, OnInit {
       this.localData = JSON.parse(savedData);
     } else {
       this.localDataService.getData().subscribe({
-        next: (list) => {
-          if (list.length === 1) {
-            const simplifiedData = {
-              name: list[0].name,
-              phone: list[0].phone,
-              email: list[0].email,
-              address: list[0].address
-            };
-            this.saveDataToLocalStorage(simplifiedData);
-          }
+        next: (data) => {
+          this.localData = data;
+          this.saveDataToLocalStorage(this.localData);
         }
       });
     }

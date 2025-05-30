@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { LocalData } from '../models/Entity/local-data';
+import { LocalData } from '../models/Entity/data/local-data';
 import { Observable } from 'rxjs';
 import { AuthService } from './User/auth.service';
 
@@ -13,8 +13,8 @@ export class LocalDataService {
       
     constructor(private httpClient: HttpClient, private auth: AuthService) { }
   
-    getData(): Observable<LocalData[]>{
-      return this.httpClient.get<LocalData[]>(this.apiUrl);
+    getData(): Observable<LocalData>{
+      return this.httpClient.get<LocalData>(this.apiUrl);
     }
     
     updateData(data: LocalData): Observable<{message: string}>{

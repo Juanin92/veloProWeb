@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Message } from '../../models/Entity/communication/message';
-import { TaskComponent } from "../setting/task/task.component";
+import { TaskComponent } from "../communication/task/task.component";
 import { AlertComponent } from "../communication/alert/alert.component";
-import { AlertModel } from '../../models/Entity/alert-model';
+import { Alert } from '../../models/Entity/communication/alert';
 import { DispatchComponent } from "../sale/dispatch/dispatch.component";
 import { Dispatch } from '../../models/Entity/Sale/dispatch';
 import { MessageComponent } from "../communication/message/message.component";
-import { TaskRequestDTO } from '../../models/DTO/task-request-dto';
+import { TaskForm } from '../../models/Entity/communication/task-form';
 import { DispatchPermissionsService } from '../../services/Permissions/dispatch-permissions.service';
 import { UserPermissionsService } from '../../services/Permissions/user-permissions.service';
 
@@ -20,9 +20,9 @@ import { UserPermissionsService } from '../../services/Permissions/user-permissi
 })
 export class HomeComponent{
 
-  taskList: TaskRequestDTO[] = [];
+  taskList: TaskForm[] = [];
   messageList: Message[] = [];
-  alertList: AlertModel[] = [];
+  alertList: Alert[] = [];
   dispatchList: Dispatch[] = [];
   expanded = {
     notification: false,
@@ -38,11 +38,11 @@ export class HomeComponent{
     this.messageList = messages;
   }
 
-  getTasksUpdated(tasks: TaskRequestDTO[]): void{
+  getTasksUpdated(tasks: TaskForm[]): void{
     this.taskList = tasks;
   }
 
-  getAlertUpdated(alerts: AlertModel[]): void{
+  getAlertUpdated(alerts: Alert[]): void{
     this.alertList = alerts;
   }
 
