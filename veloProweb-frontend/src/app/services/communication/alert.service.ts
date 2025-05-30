@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AlertModel } from '../../models/Entity/alert-model';
+import { Alert } from '../../models/Entity/communication/alert';
 import { AuthService } from '../User/auth.service';
+import { AlertStatus } from '../../models/enum/alert-status';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +14,14 @@ export class AlertService {
 
   constructor(private httpClient: HttpClient, private auth: AuthService) { }
 
-  getAlerts(): Observable<AlertModel[]>{
-    return this.httpClient.get<AlertModel[]>(this.apiUrl);
+  getAlerts(): Observable<Alert[]>{
+    return this.httpClient.get<Alert[]>(this.apiUrl);
   }
 
-  handleStatusAlert(alert: AlertModel, action: number): Observable<{message: string}>{
-    return this.httpClient.put<{message: string}>(this.apiUrl, alert,
-      {params:{action: action.toString()}, headers: this.auth.getAuthHeaders()});
+  handleStatusAlert(alertId: number, action: AlertStatus): Observable<{message: string}>{
+    return this.httpClient.put<{message: string}>(this.apiUrl, null,
+      {params:{alertId: alertId.toString(), action: action}, 
+      headers: this.auth.getAuthHeaders()}
+    );
   }
 }

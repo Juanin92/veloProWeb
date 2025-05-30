@@ -2,9 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AlertService } from '../../../services/communication/alert.service';
-import { AlertModel } from '../../../models/Entity/alert-model';
+import { Alert } from '../../../models/Entity/communication/alert';
 import { TooltipService } from '../../../utils/tooltip.service';
 import { UserPermissionsService } from '../../../services/Permissions/user-permissions.service';
+import { ErrorMessageService } from '../../../utils/error-message.service';
+import { NotificationService } from '../../../utils/notification-service.service';
+import { AlertStatus } from '../../../models/enum/alert-status';
 
 @Component({
   selector: 'app-alert',
@@ -15,9 +18,9 @@ import { UserPermissionsService } from '../../../services/Permissions/user-permi
 })
 export class AlertComponent implements OnInit{
 
-  @Output() alertsUpdated = new EventEmitter<AlertModel[]>();
-  alertList: AlertModel[] = [];
-  alert: AlertModel = {
+  @Output() alertsUpdated = new EventEmitter<Alert[]>();
+  alertList: Alert[] = [];
+  alert: Alert = {
     id: 0,
     description: '',
     status: '',
@@ -26,39 +29,43 @@ export class AlertComponent implements OnInit{
   
   constructor(
     private alertService: AlertService,
+    private errorMessage: ErrorMessageService,
+    private notification: NotificationService,
     protected permission: UserPermissionsService,
     private tooltip: TooltipService){}
 
   ngOnInit(): void {
-    this.getAlerts();
+    this.loadAlerts();
     this.tooltip.initializeTooltips();
   }
  
-  getAlerts(): void{
+  loadAlerts(): void{
     this.alertService.getAlerts().subscribe({
       next:(list)=>{
         this.alertList = list;
         const filteredList = this.alertList.filter(a => a.status.includes('Alerta'));
         this.alertsUpdated.emit(filteredList);
-      },error: (error)=>{
-        console.log('Error al obtener alertas: ', error.error?.error);
       }
     });
   }
 
-  changeStatusAlert(alert: AlertModel, action: number): void{
-    this.alertService.handleStatusAlert(alert, action).subscribe({
+  changeStatusAlert(alert: Alert, action: number): void{
+    const status = this.getStatusAction(action);
+    this.alertService.handleStatusAlert(alert.id, status).subscribe({
       next:(response)=>{
-        const message = response.message;
-        console.log('Ok: ', message);
-        alert.status = action === 2 ? 'Revisado' : 'Pendiente';
         setTimeout(() => {
-          this.getAlerts();
+          this.loadAlerts();
         }, 3000);
       }, error: (error)=>{
-        const message = error.error?.message || error.error?.error;
-        console.log('Error: ', message);
+        const message = this.errorMessage.errorMessageExtractor(error);
+        this.notification.showErrorToast(message, 'top', 3000);
       }
     });
+  }
+
+  private getStatusAction(action: number): AlertStatus{
+    if(action === 2) return AlertStatus.CHECKED;
+    if(action === 3) return AlertStatus.PENDING;
+    return AlertStatus.ALERT;
   }
 }
