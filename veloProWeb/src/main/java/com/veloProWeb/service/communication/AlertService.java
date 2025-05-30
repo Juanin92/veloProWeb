@@ -116,7 +116,6 @@ public class AlertService implements IAlertService {
                 .created(alert.getCreated())
                 .description(alert.getDescription())
                 .status(alert.getStatus())
-                .product(alert.getProduct().getDescription())
                 .build();
     }
 }

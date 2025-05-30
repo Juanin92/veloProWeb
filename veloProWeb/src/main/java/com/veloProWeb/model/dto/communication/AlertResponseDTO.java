@@ -18,5 +18,4 @@ public class AlertResponseDTO {
     private String description;
     private AlertStatus status;
     private LocalDate created;
-    private String product;
 }
