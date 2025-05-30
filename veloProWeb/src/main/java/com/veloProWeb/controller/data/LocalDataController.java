@@ -1,50 +1,40 @@
 package com.veloProWeb.controller.data;
 
-import com.veloProWeb.model.entity.data.LocalData;
+import com.veloProWeb.model.dto.data.LocalDataDTO;
 import com.veloProWeb.service.reporting.interfaces.IRecordService;
 import com.veloProWeb.service.data.ILocalDataService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import com.veloProWeb.util.ResponseMessage;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/data")
-@CrossOrigin(origins = "http://localhost:4200")
+@AllArgsConstructor
 public class LocalDataController {
 
-    @Autowired private ILocalDataService localDataService;
-    @Autowired private IRecordService recordService;
+    private final ILocalDataService localDataService;
+    private final IRecordService recordService;
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'SELLER', 'WAREHOUSE', 'GUEST')")
-    public List<LocalData> getData(){
-        return localDataService.getData();
+    public ResponseEntity<LocalDataDTO> getData(){
+        return ResponseEntity.ok(localDataService.getData());
     }
 
     @PutMapping()
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
-    public ResponseEntity<Map<String, String>> updateData(@RequestBody LocalData data,
+    public ResponseEntity<Map<String, String>> updateData(@RequestBody @Valid LocalDataDTO data,
                                                           @AuthenticationPrincipal UserDetails userDetails){
-        Map<String, String> response = new HashMap<>();
-        try{
-            localDataService.updateData(data);
-            response.put("message", "Información actualizada");
-            recordService.registerAction(userDetails, "UPDATE", String.format("Actualiza datos de la empresa %s",
-                    data.getName()));
-            return ResponseEntity.ok(response);
-        }catch (IllegalArgumentException e){
-            response.put("error", e.getMessage());
-            recordService.registerAction(userDetails, "UPDATE_FAILURE",
-                    String.format("Error: actualizar datos empresa %s (%s)", data.getName(), e.getMessage()));
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
+        localDataService.updateData(data);
+        recordService.registerAction(userDetails, "UPDATE", String.format("Actualiza datos de la empresa %s",
+                data.getName()));
+        return ResponseEntity.ok(ResponseMessage.message("Información actualizada"));
     }
 }
