@@ -1,10 +1,13 @@
 package com.veloProWeb.service.reporting;
 
+import com.veloProWeb.exceptions.user.UserRoleNotFoundException;
+import com.veloProWeb.model.dto.reporting.RecordResponseDTO;
 import com.veloProWeb.model.entity.reporting.Record;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.repository.reporting.RecordRepo;
 import com.veloProWeb.service.user.interfaces.IUserService;
 import com.veloProWeb.service.reporting.interfaces.IRecordService;
+import com.veloProWeb.validation.UserValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ public class RecordService implements IRecordService {
 
     private final RecordRepo recordRepo;
     private final IUserService userService;
+    private final UserValidator validator;
 
     /**
      * Registrar una entrada al sistema de un usuario.
@@ -26,24 +30,11 @@ public class RecordService implements IRecordService {
      */
     @Override
     public void registerEntry(UserDetails userDetails) {
-        User user = userService.getUserByUsername(userDetails.getUsername());
-        if (user != null){
-            if (userDetails.getAuthorities().stream().anyMatch(grantedAuthority ->
-                    grantedAuthority.getAuthority().equals(user.getRole().name()))){
-                Record record = new Record();
-                record.setEntryDate(LocalDateTime.now());
-                record.setEndaDate(null);
-                record.setActionDate(null);
-                record.setAction("LOGIN");
-                record.setComment(null);
-                record.setUser(user);
-                recordRepo.save(record);
-            }else {
-                throw new IllegalArgumentException("Usuario no tiene el rol");
-            }
-        }else {
-            throw new IllegalArgumentException("Usuario no es encontrado");
-        }
+        User user = validateAndGetUser(userDetails);
+
+        Record record = saveRecord(user, "LOGIN", null, LocalDateTime.now(), null,
+                null);
+        recordRepo.save(record);
     }
 
     /**
@@ -53,24 +44,11 @@ public class RecordService implements IRecordService {
      */
     @Override
     public void registerEnd(UserDetails userDetails) {
-        User user = userService.getUserByUsername(userDetails.getUsername());
-        if (user != null){
-            if (userDetails.getAuthorities().stream().anyMatch(grantedAuthority ->
-                    grantedAuthority.getAuthority().equals(user.getRole().name()))){
-                Record record = new Record();
-                record.setEntryDate(null);
-                record.setEndaDate(LocalDateTime.now());
-                record.setActionDate(null);
-                record.setAction("LOGOUT");
-                record.setComment(null);
-                record.setUser(user);
-                recordRepo.save(record);
-            }else {
-                throw new IllegalArgumentException("Usuario no tiene el rol");
-            }
-        }else {
-            throw new IllegalArgumentException("Usuario no es encontrado");
-        }
+        User user = validateAndGetUser(userDetails);
+
+        Record record = saveRecord(user, "LOGOUT", null, null, null,
+                LocalDateTime.now());
+        recordRepo.save(record);
     }
 
     /**
@@ -82,56 +60,103 @@ public class RecordService implements IRecordService {
      */
     @Override
     public void registerAction(UserDetails userDetails, String action, String comment) {
-        User user = userService.getUserByUsername(userDetails.getUsername());
-        if (user != null){
-            if (userDetails.getAuthorities().stream().anyMatch(grantedAuthority ->
-                    grantedAuthority.getAuthority().equals(user.getRole().name()))){
-                Record record = new Record();
-                record.setEntryDate(null);
-                record.setEndaDate(null);
-                record.setActionDate(LocalDateTime.now());
-                record.setAction(action);
-                record.setComment(comment);
-                record.setUser(user);
-                recordRepo.save(record);
-            }else {
-                throw new IllegalArgumentException("Usuario no tiene el rol");
-            }
-        }else {
-            throw new IllegalArgumentException("Usuario no es encontrado");
-        }
+        User user = validateAndGetUser(userDetails);
+
+        Record record = saveRecord(user, action, comment, null, LocalDateTime.now(), null);
+        recordRepo.save(record);
     }
 
+    /**
+     * Registrar una acción manual de un usuario.
+     * @param username - Nombre de usuario que realiza la acción
+     * @param action - Acción realizada
+     * @param comment - Comentario adicional
+     */
     @Override
     public void registerActionManual(String username, String action, String comment) {
         User user = userService.getUserByUsername(username);
-        if (user != null){
-            Record record = new Record();
-            record.setEntryDate(null);
-            record.setEndaDate(null);
-            record.setActionDate(LocalDateTime.now());
-            record.setAction(action);
-            record.setComment(comment);
-            record.setUser(user);
-            recordRepo.save(record);
-        }else {
-            Record record = new Record();
-            record.setEntryDate(null);
-            record.setEndaDate(null);
-            record.setActionDate(LocalDateTime.now());
-            record.setAction(action);
-            record.setComment("PELIGRO" + comment);
-            record.setUser(null);
-            recordRepo.save(record);
-        }
+        Record record = Record.builder()
+                .entryDate(null)
+                .endDate(null)
+                .actionDate(LocalDateTime.now())
+                .action(action)
+                .comment(comment)
+                .user(user)
+                .build();
+        recordRepo.save(record);
     }
 
     /**
      * Obtener un registro de todos los movimientos o registro del sistema
+     *
      * @return - Lista con los registros
      */
     @Override
-    public List<Record> getAllRecord() {
-        return recordRepo.findAll();
+    public List<RecordResponseDTO> getAllRecord() {
+        return recordRepo.findAll().stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+
+    /**
+     * Obtiene un usuario verificando que exista y que tenga el rol correspondiente.
+     * @param userDetails - Detalles del usuario autenticado
+     * @return - usuario validado
+     */
+    private User validateAndGetUser(UserDetails userDetails) {
+        User user = userService.getUserByUsername(userDetails.getUsername());
+        validator.validateUserExists(user);
+        validator.validateUserHasRole(user);
+        isUserHasRole(user, userDetails);
+        return user;
+    }
+
+    /**
+     * Verifica que el usuario tenga el rol correspondiente a sus permisos.
+     * @param user - usuario a verificar
+     * @param userDetails - Detalles del usuario autenticado
+     */
+    private void isUserHasRole(User user, UserDetails userDetails){
+        if (userDetails.getAuthorities().stream().noneMatch(grantedAuthority ->
+                grantedAuthority.getAuthority().equals(user.getRole().name()))) {
+            throw new UserRoleNotFoundException("El rol del usuario no coincide con sus permisos");
+        }
+    }
+
+    /**
+     * Crea un registro de una acción realizada por un usuario.
+     * @param user - Usuario que realiza la acción
+     * @param action - Acción realizada
+     * @param comment - Comentario adicional
+     * @param entryDate - Fecha de entrada del registro
+     * @param actionDate - Fecha de la acción del registro
+     * @param endDate - Fecha de finalización del registro
+     */
+    private Record saveRecord(User user, String action, String comment,
+                            LocalDateTime entryDate, LocalDateTime actionDate, LocalDateTime endDate) {
+        return Record.builder()
+                .entryDate(entryDate)
+                .actionDate(actionDate)
+                .endDate(endDate)
+                .action(action)
+                .comment(comment)
+                .user(user)
+                .build();
+    }
+
+    /**
+     * Mapear un registro a un DTO de respuesta
+     * @param record - registro a mapear
+     * @return - DTO del registro
+     */
+    private RecordResponseDTO mapToDTO(Record record){
+        return RecordResponseDTO.builder()
+                .entryDate(record.getEntryDate())
+                .actionDate(record.getActionDate())
+                .endDate(record.getEndDate())
+                .action(record.getAction())
+                .comment(record.getComment())
+                .user(String.format("%s %s", record.getUser().getName(), record.getUser().getSurname()))
+                .build();
     }
 }
