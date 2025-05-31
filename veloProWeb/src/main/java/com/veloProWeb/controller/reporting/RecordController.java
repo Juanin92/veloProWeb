@@ -1,8 +1,9 @@
 package com.veloProWeb.controller.reporting;
 
-import com.veloProWeb.model.entity.reporting.Record;
+import com.veloProWeb.model.dto.reporting.RecordResponseDTO;
 import com.veloProWeb.service.reporting.interfaces.IRecordService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,14 +11,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/registro")
-@CrossOrigin(origins = "http://localhost:4200")
+@AllArgsConstructor
 public class RecordController {
 
-    @Autowired private IRecordService recordService;
+    private final IRecordService recordService;
 
     @GetMapping()
     @PreAuthorize("hasAnyAuthority('MASTER')")
-    public List<Record> getAllRecord(){
-        return recordService.getAllRecord();
+    public ResponseEntity<List<RecordResponseDTO>> getAllRecord(){
+        return ResponseEntity.ok(recordService.getAllRecord());
     }
 }
