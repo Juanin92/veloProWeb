@@ -4,7 +4,7 @@ import { MessageModalComponent } from "../communication/message-modal/message-mo
 import { MenuComponent } from "../menu/menu.component";
 import { LocalData } from '../../models/Entity/data/local-data';
 import { CommonModule, DatePipe } from '@angular/common';
-import { LocalDataService } from '../../services/local-data.service';
+import { LocalDataService } from '../../services/data/local-data.service';
 import { Router, RouterOutlet } from '@angular/router';
 import * as bootstrap from 'bootstrap';
 import { AuthService } from '../../services/User/auth.service';

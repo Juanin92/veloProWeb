@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LocalDataService } from '../../services/local-data.service';
+import { LocalDataService } from '../../services/data/local-data.service';
 import { LocalData } from '../../models/Entity/data/local-data';
 import { CashierMovementsComponent } from "./cashier-movements/cashier-movements.component";
 import { DispatchLayoutComponent } from "../sale/dispatch-layout/dispatch-layout.component";
