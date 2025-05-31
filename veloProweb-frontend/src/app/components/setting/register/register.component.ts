@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Record } from '../../../models/Entity/record';
-import { RecordService } from '../../../services/Report/record.service';
+import { RecordService } from '../../../services/reproting/record.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SettingPermissionsService } from '../../../services/Permissions/setting-permissions.service';

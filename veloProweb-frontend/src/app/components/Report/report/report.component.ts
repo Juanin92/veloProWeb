@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ReportServiceService } from '../../../services/Report/report-service.service';
+import { ReportServiceService } from '../../../services/reproting/report-service.service';
 import { subDays, subMonths, subYears, format } from 'date-fns';
 import { RouterModule } from '@angular/router';
 import { NotificationService } from '../../../utils/notification-service.service';
