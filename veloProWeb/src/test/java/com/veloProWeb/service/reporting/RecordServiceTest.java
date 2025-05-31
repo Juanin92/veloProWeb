@@ -1,10 +1,12 @@
 package com.veloProWeb.service.reporting;
 
+import com.veloProWeb.model.dto.reporting.RecordResponseDTO;
 import com.veloProWeb.model.entity.reporting.Record;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.model.Enum.Rol;
 import com.veloProWeb.repository.reporting.RecordRepo;
 import com.veloProWeb.service.user.interfaces.IUserService;
+import com.veloProWeb.validation.UserValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,14 +14,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collections;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -30,43 +29,36 @@ public class RecordServiceTest {
     @InjectMocks private RecordService recordService;
     @Mock private RecordRepo recordRepo;
     @Mock private IUserService userService;
-    private Record record;
+    @Mock private UserValidator validator;
+    @Mock private UserDetails userDetails;
     private User user;
-    private UserDetails userDetails;
 
     @BeforeEach
     void setUp(){
-        user = new User();
-        user.setId(1L);
-        user.setUsername("testUser");
-        user.setRole(Rol.ADMIN);
-
-        record = new Record();
-        record.setId(1L);
-    }
-
-    private UserDetails createUserDetailsWithRole(Rol role) {
-        List<GrantedAuthority> authorities = Stream.of(role.name())
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-        return new org.springframework.security.core.userdetails.User("testUser", "password", authorities);
+        user = User.builder().id(1L).name("John").surname("Doe").username("johnny").role(Rol.ADMIN).build();
     }
 
     //Prueba para registrar una entrada del sistema
     @Test
-    public void registerEntry_valid(){
-        userDetails = createUserDetailsWithRole(Rol.ADMIN);
-        when(userService.getUserByUsername("testUser")).thenReturn(user);
-        recordService.registerEntry(userDetails);
+    public void registerEntry(){
+        when(userDetails.getUsername()).thenReturn("johnny");
+        doReturn(List.of(new SimpleGrantedAuthority("ADMIN"))).when(userDetails).getAuthorities();
+        when(userService.getUserByUsername("johnny")).thenReturn(user);
+        doNothing().when(validator).validateUserExists(user);
+        doNothing().when(validator).validateUserHasRole(user);
+
         ArgumentCaptor<Record> recordCaptor = ArgumentCaptor.forClass(Record.class);
-        verify(userService, times(1)).getUserByUsername("testUser");
+        recordService.registerEntry(userDetails);
+
+        verify(userService, times(1)).getUserByUsername("johnny");
+        verify(validator, times(1)).validateUserExists(user);
+        verify(validator, times(1)).validateUserHasRole(user);
         verify(recordRepo, times(1)).save(recordCaptor.capture());
 
         Record savedRecord = recordCaptor.getValue();
-        assertNotNull(savedRecord);
         assertEquals(user, savedRecord.getUser());
         assertNotNull(savedRecord.getEntryDate());
-        assertNull(savedRecord.getEndaDate());
+        assertNull(savedRecord.getEndDate());
         assertNull(savedRecord.getActionDate());
         assertEquals("LOGIN", savedRecord.getAction());
         assertNull(savedRecord.getComment());
@@ -74,19 +66,25 @@ public class RecordServiceTest {
 
     //Prueba para registrar una salida del sistema
     @Test
-    public void registerEnd_valid() {
-        userDetails = createUserDetailsWithRole(Rol.ADMIN);
-        when(userService.getUserByUsername("testUser")).thenReturn(user);
-        recordService.registerEnd(userDetails);
+    public void registerEnd() {
+        when(userDetails.getUsername()).thenReturn("johnny");
+        doReturn(List.of(new SimpleGrantedAuthority("ADMIN"))).when(userDetails).getAuthorities();
+        when(userService.getUserByUsername("johnny")).thenReturn(user);
+        doNothing().when(validator).validateUserExists(user);
+        doNothing().when(validator).validateUserHasRole(user);
+
         ArgumentCaptor<Record> recordCaptor = ArgumentCaptor.forClass(Record.class);
-        verify(userService, times(1)).getUserByUsername("testUser");
-        verify(recordRepo).save(recordCaptor.capture());
+        recordService.registerEnd(userDetails);
+
+        verify(userService, times(1)).getUserByUsername("johnny");
+        verify(validator, times(1)).validateUserExists(user);
+        verify(validator, times(1)).validateUserHasRole(user);
+        verify(recordRepo, times(1)).save(recordCaptor.capture());
 
         Record savedRecord = recordCaptor.getValue();
-        assertNotNull(savedRecord);
         assertEquals(user, savedRecord.getUser());
         assertNull(savedRecord.getEntryDate());
-        assertNotNull(savedRecord.getEndaDate());
+        assertNotNull(savedRecord.getEndDate());
         assertNull(savedRecord.getActionDate());
         assertEquals("LOGOUT", savedRecord.getAction());
         assertNull(savedRecord.getComment());
@@ -94,36 +92,63 @@ public class RecordServiceTest {
 
     //Prueba para registrar una acción en el sistema
     @Test
-    public void registerAction_valid() {
-        userDetails = createUserDetailsWithRole(Rol.ADMIN);
-        when(userService.getUserByUsername("testUser")).thenReturn(user);
-        String action = "MODIFY";
-        String comment = "Actualización de datos";
-        recordService.registerAction(userDetails, action, comment);
+    public void registerAction() {
+        when(userDetails.getUsername()).thenReturn("johnny");
+        doReturn(List.of(new SimpleGrantedAuthority("ADMIN"))).when(userDetails).getAuthorities();
+        when(userService.getUserByUsername("johnny")).thenReturn(user);
+        doNothing().when(validator).validateUserExists(user);
+        doNothing().when(validator).validateUserHasRole(user);
+
         ArgumentCaptor<Record> recordCaptor = ArgumentCaptor.forClass(Record.class);
-        verify(userService, times(1)).getUserByUsername("testUser");
-        verify(recordRepo).save(recordCaptor.capture());
+        recordService.registerAction(userDetails, "MODIFY", "Actualización de datos");
+
+        verify(userService, times(1)).getUserByUsername("johnny");
+        verify(validator, times(1)).validateUserExists(user);
+        verify(validator, times(1)).validateUserHasRole(user);
+        verify(recordRepo, times(1)).save(recordCaptor.capture());
 
         Record savedRecord = recordCaptor.getValue();
-        assertNotNull(savedRecord);
         assertEquals(user, savedRecord.getUser());
         assertNull(savedRecord.getEntryDate());
-        assertNull(savedRecord.getEndaDate());
+        assertNull(savedRecord.getEndDate());
         assertNotNull(savedRecord.getActionDate());
-        assertEquals(action, savedRecord.getAction());
-        assertEquals(comment, savedRecord.getComment());
+        assertEquals("MODIFY", savedRecord.getAction());
+        assertEquals("Actualización de datos", savedRecord.getComment());
     }
 
     //Prueba para obtener una lista de registros
     @Test
-    public void getAllRecord_valid() {
-        List<Record> records = Collections.singletonList(record);
+    public void getAllRecord() {
+        Record loginRecord = Record.builder().id(1L).user(user).comment(null).action("LOGIN")
+                .entryDate(LocalDateTime.now()).actionDate(null).endDate(null).build();
+        Record logoutRecord = Record.builder().id(1L).user(user).comment(null).action("LOGOUT")
+                .entryDate(null).actionDate(null).endDate(LocalDateTime.now()).build();
+        List<Record> records = List.of(loginRecord, logoutRecord);
         when(recordRepo.findAll()).thenReturn(records);
 
-        List<Record> result = recordService.getAllRecord();
+        List<RecordResponseDTO> result = recordService.getAllRecord();
+
+        verify(recordRepo, times(1)).findAll();
+
         assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals(record, result.get(0));
-        verify(recordRepo).findAll();
+        assertEquals(records.size(), result.size());
+        assertEquals(records.getFirst().getAction(), result.getFirst().getAction());
+        assertEquals(records.getLast().getAction(), result.getLast().getAction());
+    }
+
+    @Test
+    void registerActionManual() {
+        when(userService.getUserByUsername("johnny")).thenReturn(user);
+
+        ArgumentCaptor<Record> recordCaptor = ArgumentCaptor.forClass(Record.class);
+        recordService.registerActionManual("johnny", "MODIFY", "Actualización de datos");
+
+        verify(userService, times(1)).getUserByUsername("johnny");
+        verify(recordRepo, times(1)).save(recordCaptor.capture());
+
+        Record savedRecord = recordCaptor.getValue();
+        assertEquals(user, savedRecord.getUser());
+        assertEquals("MODIFY", savedRecord.getAction());
+        assertEquals("Actualización de datos", savedRecord.getComment());
     }
 }
