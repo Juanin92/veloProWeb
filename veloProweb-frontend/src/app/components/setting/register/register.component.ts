@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Record } from '../../../models/Entity/record';
+import { Record } from '../../../models/Entity/reporting/record';
 import { RecordService } from '../../../services/reproting/record.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -26,16 +26,14 @@ export class RegisterComponent implements OnInit{
     protected permission: SettingPermissionsService){}
 
   ngOnInit(): void {
-    this.getRecords();
+    this.loadRecords();
   }
 
-  getRecords(): void{
+  loadRecords(): void{
     this.recordService.getRecords().subscribe({
       next:(list)=>{
         this.recordList = list;
         this.filteredRecordList = list;
-      },error: (error)=>{
-        console.log('No se encontró información sobre los registros');
       }
     });
   }
@@ -77,9 +75,7 @@ export class RegisterComponent implements OnInit{
       this.filteredRecordList = this.recordList;
     } else {
       this.filteredRecordList = this.recordList.filter(record =>
-        record.user.name.toLowerCase().includes(this.textFilter.toLowerCase()) || 
-        record.user.surname.toLowerCase().includes(this.textFilter.toLowerCase()) || 
-        record.user.username.toLowerCase().includes(this.textFilter.toLowerCase()) || 
+        record.user.toLowerCase().includes(this.textFilter.toLowerCase()) || 
         record.action.toLowerCase().includes(this.textFilter.toLowerCase())
       );
     }
