@@ -30,7 +30,7 @@ public class Record {
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
-    private LocalDateTime endaDate;
+    private LocalDateTime endDate;
 
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
     @Temporal(TemporalType.TIMESTAMP)

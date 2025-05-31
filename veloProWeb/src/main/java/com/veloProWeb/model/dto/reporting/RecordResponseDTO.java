@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class RecordResponseDTO {
 
     private LocalDateTime entryDate;
-    private LocalDateTime endaDate;
+    private LocalDateTime endDate;
     private LocalDateTime actionDate;
     private String action;
     private String comment;
