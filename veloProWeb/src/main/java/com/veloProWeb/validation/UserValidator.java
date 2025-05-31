@@ -148,4 +148,14 @@ public class UserValidator {
             throw new UserAlreadyDeletedException("El usuario ha sido eliminado. No se puede realizar la operación.");
         }
     }
+
+    /**
+     * Verifica que el usuario tenga un rol asignado.
+     * @param user - usuario a validar
+     */
+    public void validateUserHasRole(User user){
+        if (user.getRole() == null) {
+            throw new UserRoleNotFoundException("El usuario no tiene un rol asignado");
+        }
+    }
 }

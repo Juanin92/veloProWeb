@@ -156,4 +156,14 @@ public class UserValidatorTest {
 
         assertEquals("El usuario ha sido eliminado. No se puede realizar la operación.", e.getMessage());
     }
+
+    //Prueba para validar que el usuario tenga un rol asignado
+    @Test
+    void validateUserHasRole() {
+        User user = User.builder().role(null).build();
+        UserRoleNotFoundException e = assertThrows(UserRoleNotFoundException.class,
+                () -> validator.validateUserHasRole(user));
+
+        assertEquals("El usuario no tiene un rol asignado", e.getMessage());
+    }
 }
