@@ -27,7 +27,7 @@ public class UserExceptionHandler extends BaseExceptionHandler {
         return buildResponse(e.getMessage(), HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
+    @ExceptionHandler({UserNotFoundException.class, UserRoleNotFoundException.class})
     public ResponseEntity<Map<String, String>> handleUserNotFound(Exception e) {
         return buildResponse(e.getMessage(), HttpStatus.NOT_FOUND);
     }
