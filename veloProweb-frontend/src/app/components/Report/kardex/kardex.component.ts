@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { KardexServiceService } from '../../../services/Report/kardex-service.service';
+import { KardexServiceService } from '../../../services/inventory/kardex-service.service';
 import { Kardex } from '../../../models/Entity/kardex';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
