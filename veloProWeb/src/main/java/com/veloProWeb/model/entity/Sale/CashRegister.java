@@ -2,7 +2,10 @@ package com.veloProWeb.model.entity.Sale;
 
 import com.veloProWeb.model.entity.User.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -10,6 +13,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CashRegister {
 
     @Id
