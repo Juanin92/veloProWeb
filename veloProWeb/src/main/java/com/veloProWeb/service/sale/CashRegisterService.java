@@ -1,25 +1,33 @@
 package com.veloProWeb.service.sale;
 
-import com.veloProWeb.model.dto.CashRegisterDTO;
+import com.veloProWeb.exceptions.sale.CashRegisterNotFoundException;
+import com.veloProWeb.mapper.CashRegisterMapper;
+import com.veloProWeb.model.dto.sale.CashRegisterRequestDTO;
+import com.veloProWeb.model.dto.sale.CashRegisterResponseDTO;
 import com.veloProWeb.model.entity.Sale.CashRegister;
 import com.veloProWeb.model.entity.User.User;
 import com.veloProWeb.model.Enum.Rol;
 import com.veloProWeb.repository.Sale.CashRegisterRepo;
+import com.veloProWeb.repository.UserRepo;
 import com.veloProWeb.service.sale.Interface.ICashRegisterService;
-import com.veloProWeb.service.user.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.veloProWeb.service.user.interfaces.IUserService;
+import com.veloProWeb.validation.CashRegisterValidator;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class CashRegisterService implements ICashRegisterService {
 
-    @Autowired private CashRegisterRepo cashRegisterRepo;
-    @Autowired private UserService userService;
+    private final CashRegisterRepo cashRegisterRepo;
+    private final UserRepo userRepo;
+    private final IUserService userService;
+    private final CashRegisterMapper mapper;
+    private final CashRegisterValidator validator;
 
     /**
      * Crea un registro de caja con los de la apertura
@@ -27,25 +35,12 @@ public class CashRegisterService implements ICashRegisterService {
      * @param amount - monto de la apertura de caja
      */
     @Override
-    public void addRegisterOpening(String username, int amount) {
+    public void openRegister(String username, int amount) {
         User user = userService.getUserByUsername(username);
-        if (user.getRole() != Rol.MASTER){
-            validateAmount(amount);
-        }
-        if (!user.getRole().equals(Rol.WAREHOUSE)) {
-            CashRegister cashRegister = new CashRegister();
-            cashRegister.setId(null);
-            cashRegister.setDateOpening(LocalDateTime.now());
-            cashRegister.setDateClosing(null);
-            cashRegister.setAmountOpening(amount);
-            cashRegister.setAmountClosingCash(0);
-            cashRegister.setAmountClosingPos(0);
-            cashRegister.setStatus("OPEN");
-            cashRegister.setComment(null);
-            cashRegister.setAlert(false);
-            cashRegister.setUser(user);
-            cashRegisterRepo.save(cashRegister);
-        }
+        validator.validateRoleCanRegister(user.getRole().equals(Rol.WAREHOUSE));
+        validator.validateAmount(amount);
+        CashRegister cashRegister = mapper.toOpeningRegisterEntity(user, amount);
+        cashRegisterRepo.save(cashRegister);
     }
 
     /**
@@ -55,25 +50,20 @@ public class CashRegisterService implements ICashRegisterService {
      * @param dto - Objeto con los datos necesario
      */
     @Override
-    public void addRegisterClosing(String username, CashRegisterDTO dto) {
+    public void closeRegister(String username, CashRegisterRequestDTO dto) {
         User user = userService.getUserByUsername(username);
-        if (user.getRole() != Rol.MASTER){
-            validateAmount(dto.getAmountClosingCash());
-            validateAmount(dto.getAmountClosingPos());
+        validator.validateRoleCanRegister(user.getRole().equals(Rol.WAREHOUSE));
+        CashRegister cashRegister = cashRegisterRepo.findLatestOpenRegisterByUser(user.getId());
+        validator.validateCloseRegister(dto, cashRegister);
+
+        cashRegister.setAmountClosingCash(dto.getAmountClosingCash());
+        cashRegister.setAmountClosingPos(dto.getAmountClosingPos());
+        cashRegister.setComment(dto.getComment());
+        if (dto.getComment().toLowerCase().matches(".*\\berror\\b.*")) {
+            cashRegister.setAlert(true);
         }
-        if (!user.getRole().equals(Rol.WAREHOUSE)) {
-            CashRegister cashRegister = getOpeningRegisterByUser(user.getId());
-            cashRegister.setAmountClosingCash(dto.getAmountClosingCash());
-            cashRegister.setAmountClosingPos(dto.getAmountClosingPos());
-            cashRegister.setDateClosing(LocalDateTime.now());
-            cashRegister.setStatus("CLOSED");
-            cashRegister.setComment(dto.getComment());
-            if (dto.getComment().toLowerCase().matches(".*\\berror\\b.*")) {
-                cashRegister.setAlert(true);
-            }
-            cashRegisterRepo.save(cashRegister);
-            validateClosingAndOpeningAmount(cashRegister);
-        }
+        cashRegisterRepo.save(cashRegister);
+        checkForNegativeClosingDifference(cashRegister);
     }
 
     /**
@@ -81,14 +71,11 @@ public class CashRegisterService implements ICashRegisterService {
      * @return - lista con los registros
      */
     @Override
-    public List<CashRegisterDTO> getAll() {
+    public List<CashRegisterResponseDTO> getAll() {
         List<CashRegister> cashRegisters= cashRegisterRepo.findAll();
-        return cashRegisters.stream().map(cashRegister ->
-            new CashRegisterDTO(cashRegister.getId(), cashRegister.getDateOpening(), cashRegister.getDateClosing(),
-                    cashRegister.getAmountOpening(), cashRegister.getAmountClosingCash(), cashRegister.getAmountClosingPos(),
-                    cashRegister.getStatus(), cashRegister.getComment(), cashRegister.isAlert(),
-                    String.format("%s %s", cashRegister.getUser().getName(), cashRegister.getUser().getSurname()))
-        ).toList();
+        return cashRegisters.stream()
+                .map(mapper::toResponseDTO)
+                .toList();
     }
 
     /**
@@ -97,14 +84,13 @@ public class CashRegisterService implements ICashRegisterService {
      * @param dto - Datos a actualizar del registro seleccionado
      */
     @Override
-    public void updateRegister(CashRegisterDTO dto) {
-        Optional<CashRegister> cashRegister = cashRegisterRepo.findById(dto.getId());
-        if (cashRegister.isPresent()) {
-            cashRegister.get().setAmountOpening(dto.getAmountOpening());
-            cashRegister.get().setAmountClosingPos(dto.getAmountClosingPos());
-            cashRegister.get().setAmountClosingCash(dto.getAmountClosingCash());
-            cashRegisterRepo.save(cashRegister.get());
-        }
+    public void updateRegister(CashRegisterRequestDTO dto) {
+        CashRegister cashRegister = cashRegisterRepo.findById(dto.getId()).orElseThrow(
+                () -> new CashRegisterNotFoundException("Registro de caja no encontrado"));
+        cashRegister.setAmountOpening(dto.getAmountOpening());
+        cashRegister.setAmountClosingPos(dto.getAmountClosingPos());
+        cashRegister.setAmountClosingCash(dto.getAmountClosingCash());
+        cashRegisterRepo.save(cashRegister);
     }
 
     /**
@@ -114,39 +100,12 @@ public class CashRegisterService implements ICashRegisterService {
      */
     @Override
     public boolean hasOpenRegisterOnDate(String username) {
-        User user = userService.getUserByUsername(username);
-        if (user != null) {
+        Optional<User> user = userRepo.findByUsername(username);
+        if (user.isPresent()) {
             LocalDate date = LocalDate.now();
-            return cashRegisterRepo.existsOpenRegisterByUserAndDate(user.getId(), date);
+            return cashRegisterRepo.existsOpenRegisterByUserAndDate(user.get().getId(), date);
         }
         return false;
-    }
-
-    /**
-     * Obtener un registro hecho por un usuario específico.
-     * Verifica si el registro esta vació o la fecha es después de la fecha de apertura
-     * @param userID - Identificador del usuario
-     * @return - Objeto del registro de caja encontrado
-     */
-    private CashRegister getOpeningRegisterByUser(Long userID) {
-        CashRegister cashRegister = cashRegisterRepo.findLatestOpenRegisterByUser(userID);
-        if (cashRegister == null) {
-            throw new IllegalArgumentException("No hay registro de apertura válido.");
-        }
-        if (cashRegister.getDateOpening().isAfter(LocalDateTime.now())) {
-            throw new IllegalArgumentException("La fecha no coincide con la apertura.");
-        }
-        return cashRegister;
-    }
-
-    /**
-     * Validar los montos ingresados
-     * @param amount - Monto a validar
-     */
-    private void validateAmount(int amount){
-        if (amount <= 0) {
-            throw new IllegalArgumentException("El monto debe ser mayor a 0");
-        }
     }
 
     /**
@@ -155,10 +114,10 @@ public class CashRegisterService implements ICashRegisterService {
      * y se marca como alerta
      * @param cashRegister - Objeto del registro de caja
      */
-    private void validateClosingAndOpeningAmount(CashRegister cashRegister) {
+    private void checkForNegativeClosingDifference(CashRegister cashRegister) {
         if (cashRegister.getAmountClosingCash() < cashRegister.getAmountOpening()) {
-            cashRegister.setComment(cashRegister.getComment() +
-                    " - El monto de cierre en efectivo es menor a la apertura.");
+            cashRegister.setComment(String.format("%s - El monto de cierre en efectivo es menor a la apertura.",
+                    cashRegister.getComment()));
             cashRegister.setAlert(true);
             cashRegisterRepo.save(cashRegister);
         }

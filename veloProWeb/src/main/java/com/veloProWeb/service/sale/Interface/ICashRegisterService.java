@@ -1,13 +1,14 @@
 package com.veloProWeb.service.sale.Interface;
 
-import com.veloProWeb.model.dto.CashRegisterDTO;
+import com.veloProWeb.model.dto.sale.CashRegisterRequestDTO;
+import com.veloProWeb.model.dto.sale.CashRegisterResponseDTO;
 
 import java.util.List;
 
 public interface ICashRegisterService {
-    void addRegisterOpening(String username, int amount);
-    void addRegisterClosing(String username, CashRegisterDTO cashRegister);
-    List<CashRegisterDTO> getAll();
-    void updateRegister(CashRegisterDTO cashRegister);
+    void openRegister(String username, int amount);
+    void closeRegister(String username, CashRegisterRequestDTO cashRegister);
+    List<CashRegisterResponseDTO> getAll();
+    void updateRegister(CashRegisterRequestDTO cashRegister);
     boolean hasOpenRegisterOnDate(String username);
 }
