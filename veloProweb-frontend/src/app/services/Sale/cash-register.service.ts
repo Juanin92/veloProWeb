@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { CashRegister } from '../../models/Entity/cash-register';
+import { CashRegister } from '../../models/Entity/Sale/cash-register';
 import { AuthService } from '../User/auth.service';
+import { CashRegisterForm } from '../../models/Entity/Sale/cash-register-form';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,11 @@ export class CashRegisterService {
       return this.http.post<{message: string}>(`${this.apiUrl}/apertura`, amount, {headers: this.auth.getAuthHeaders()});
     }
 
-    addRegisterClosing(cashier: CashRegister): Observable<{message: string}>{
+    addRegisterClosing(cashier: CashRegisterForm): Observable<{message: string}>{
       return this.http.post<{message: string}>(`${this.apiUrl}/cierre`, cashier, {headers: this.auth.getAuthHeaders()});
+    }
+
+    updateRegister(cashier: CashRegisterForm): Observable<{message: string}>{
+      return this.http.put<{message: string}>(`${this.apiUrl}`, cashier, {headers: this.auth.getAuthHeaders()});
     }
 }
