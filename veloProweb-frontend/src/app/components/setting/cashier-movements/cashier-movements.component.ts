@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { CashRegister } from '../../../models/Entity/cash-register';
+import { CashRegister } from '../../../models/Entity/Sale/cash-register';
 import { CommonModule } from '@angular/common';
 import { CashRegisterService } from '../../../services/Sale/cash-register.service';
 import { FormsModule } from '@angular/forms';
-import { SettingPermissionsService } from '../../../services/Permissions/setting-permissions.service';
+import { SettingPermissionsService } from '../../../services/permissions/setting-permissions.service';
 
 @Component({
   selector: 'app-cashier-movements',
@@ -27,17 +27,14 @@ export class CashierMovementsComponent implements OnInit{
     protected permission: SettingPermissionsService){}
 
   ngOnInit(): void {
-    this.getCashRegisters();
+    this.loadCashRegisters();
   }
 
-  getCashRegisters(): void{
+  loadCashRegisters(): void{
     this.cashRegisterService.getCashRegisters().subscribe({
       next:(list)=>{
         this.cashRegistersList = list;
         this.filteredCashRegistersList = list;
-        console.log(this.cashRegistersList);
-      },error: (error)=>{
-        console.log('No se encontró información sobre los registros de caja')
       }
     });
   }
