@@ -52,7 +52,7 @@ class CashRegisterValidatorTest {
     @Test
     void validateRoleCanRegister() {
         UnauthorizedCashRegisterAccessException e = assertThrows(UnauthorizedCashRegisterAccessException.class,
-                () -> validator.validateRoleCanRegister(false));
+                () -> validator.validateRoleCanRegister(true));
         assertEquals("Este rol no puede operar con registros de caja", e.getMessage());
     }
 }

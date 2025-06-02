@@ -42,8 +42,8 @@ public class CashRegisterValidator {
         }
     }
 
-    public void validateRoleCanRegister(Boolean canRegister){
-        if (!canRegister) {
+    public void validateRoleCanRegister(Boolean canNotRegister){
+        if (canNotRegister) {
             throw new UnauthorizedCashRegisterAccessException("Este rol no puede operar con registros de caja");
         }
     }
