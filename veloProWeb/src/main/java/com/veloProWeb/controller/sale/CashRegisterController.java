@@ -5,6 +5,7 @@ import com.veloProWeb.model.dto.sale.CashRegisterResponseDTO;
 import com.veloProWeb.service.reporting.interfaces.IRecordService;
 import com.veloProWeb.service.sale.Interface.ICashRegisterService;
 import com.veloProWeb.util.ResponseMessage;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,5 +62,16 @@ public class CashRegisterController {
         recordService.registerAction(userDetails, "CLOSE", String.format("Cierre de caja: $%s pesos - " +
                 "POS: $%s pesos", dto.getAmountClosingCash(), dto.getAmountClosingPos()));
         return new ResponseEntity<>(ResponseMessage.message("Cierre de caja exitoso"), HttpStatus.CREATED);
+    }
+
+    @PutMapping()
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
+    public ResponseEntity<Map<String, String>> updateRegister(@AuthenticationPrincipal UserDetails userDetails,
+                                                                  @RequestBody @Valid CashRegisterRequestDTO dto){
+        cashRegisterService.updateRegister(dto);
+        recordService.registerAction(userDetails, "UPDATE", String.format("Modificación de registro de caja: " +
+                "Apertura: $%s pesos - POS: $%s pesos - Cierre: $%s", dto.getAmountOpening(), dto.getAmountClosingPos(),
+                dto.getAmountClosingCash()));
+        return new ResponseEntity<>(ResponseMessage.message("Modificación exitosa del registro"), HttpStatus.OK);
     }
 }
