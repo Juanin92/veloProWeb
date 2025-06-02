@@ -59,6 +59,7 @@ public class CashRegisterService implements ICashRegisterService {
         cashRegister.setAmountClosingCash(dto.getAmountClosingCash());
         cashRegister.setAmountClosingPos(dto.getAmountClosingPos());
         cashRegister.setComment(dto.getComment());
+        cashRegister.setStatus("CLOSED");
         if (dto.getComment().toLowerCase().matches(".*\\berror\\b.*")) {
             cashRegister.setAlert(true);
         }
@@ -71,7 +72,7 @@ public class CashRegisterService implements ICashRegisterService {
      * @return - lista con los registros
      */
     @Override
-    public List<CashRegisterResponseDTO> getAll() {
+    public List<CashRegisterResponseDTO> getCashRegisters() {
         List<CashRegister> cashRegisters= cashRegisterRepo.findAll();
         return cashRegisters.stream()
                 .map(mapper::toResponseDTO)
