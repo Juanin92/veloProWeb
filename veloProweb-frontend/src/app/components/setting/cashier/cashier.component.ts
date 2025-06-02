@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CashRegisterService } from '../../../services/Sale/cash-register.service';
-import { CashRegister } from '../../../models/Entity/cash-register';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ModalService } from '../../../utils/modal.service';
+import { ErrorMessageService } from '../../../utils/error-message.service';
+import { CashRegisterForm } from '../../../models/Entity/Sale/cash-register-form';
 
 @Component({
   selector: 'app-cashier',
@@ -16,15 +17,18 @@ import { ModalService } from '../../../utils/modal.service';
 })
 export class CashierComponent {
 
-  cashier: CashRegister = this.initializeCashier();
+  cashier: CashRegisterForm;
 
   constructor(
     private cashierService: CashRegisterService,
     private router: Router,
     private notification: NotificationService,
-    public modalService: ModalService){}
+    private errorMessage: ErrorMessageService,
+    public modalService: ModalService){
+      this.cashier = this.initializeCashier();
+    }
 
-  saveOpeningRegister(): void {
+  createCashierOpening(): void {
     if (this.cashier.amountOpening !== null) {
       this.cashierService.addRegisterOpening(this.cashier.amountOpening).subscribe({
         next: (response) => {
@@ -36,15 +40,14 @@ export class CashierComponent {
           }, 1000);
         },
         error: (error) => {
-          const message = error.error?.error || error.error?.message || error?.error;
-          console.log('Error: ', message);
+          const message = this.errorMessage.errorMessageExtractor(error);
           this.notification.showErrorToast(message, 'top', 3000);
         }
       });
     }
   }
 
-  saveClosingRegister(): void{
+  closeCashierRegister(): void{
     if(this.cashier){
       this.cashierService.addRegisterClosing(this.cashier).subscribe({
         next: (response) => {
@@ -56,35 +59,30 @@ export class CashierComponent {
           }, 4000);
         },
         error: (error) => {
-          const message = error.error?.error || error.error?.message || error?.error;
-          console.log('Error: ', message);
+          const message = this.errorMessage.errorMessageExtractor(error);
           this.notification.showErrorToast(message, 'top', 3000);
         }
       });
     }
   }
 
-  validateAmounts(): boolean {
+  isAmountsValid(): boolean {
     return this.cashier.amountClosingCash <= 0 || this.cashier.amountClosingPos <= 0;
   }
 
-  resetValue(): void{
+  initializeCashierValues(): void{
     this.cashier.amountClosingCash = 0;
     this.cashier.amountClosingPos = 0;
     this.cashier.comment = '';
   }
 
-  initializeCashier(): CashRegister{
+  initializeCashier(): CashRegisterForm{
     return {
-      dateOpening: '',
-      dateClosing: '',
+      id: 0,
       amountOpening: 0,
       amountClosingCash: 0,
       amountClosingPos: 0,
-      status: '',
       comment: '',
-      alert: false,
-      user: ''
     }
   }
 }

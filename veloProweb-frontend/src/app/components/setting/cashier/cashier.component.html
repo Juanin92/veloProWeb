@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-success btn-lg rounded-pill" (click)="saveOpeningRegister()"
+                <button type="button" class="btn btn-success btn-lg rounded-pill" (click)="createCashierOpening()"
                     [attr.data-bs-dismiss]="modalService.isModalVisible() ? 'modal' : null">
                     Iniciar Caja
                 </button>
@@ -38,7 +38,7 @@
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title fw-bold w-100 text-center">Cierre de Caja</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
-                    (click)="resetValue()"></button>
+                    (click)="initializeCashierValues()"></button>
             </div>
             <div class="modal-body p-4">
                 <div class="form-floating mb-3">
@@ -69,8 +69,8 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button [disabled]="validateAmounts()" type="button" class="btn btn-primary btn-lg rounded-pill"
-                    (click)="saveClosingRegister()"
+                <button [disabled]="isAmountsValid()" type="button" class="btn btn-primary btn-lg rounded-pill"
+                    (click)="closeCashierRegister()"
                     [attr.data-bs-dismiss]="modalService.isModalVisible() ? 'modal' : null">
                     Cerrar Caja
                 </button>
