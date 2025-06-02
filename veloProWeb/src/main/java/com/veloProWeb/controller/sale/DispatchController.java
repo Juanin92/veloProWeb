@@ -1,4 +1,4 @@
-package com.veloProWeb.controller.Sale;
+package com.veloProWeb.controller.sale;
 
 import com.veloProWeb.model.dto.DetailSaleRequestDTO;
 import com.veloProWeb.model.dto.DispatchDTO;

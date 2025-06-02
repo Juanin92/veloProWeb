@@ -1,4 +1,4 @@
-package com.veloProWeb.controller.Sale;
+package com.veloProWeb.controller.sale;
 
 import com.veloProWeb.model.dto.sale.CashRegisterRequestDTO;
 import com.veloProWeb.model.dto.sale.CashRegisterResponseDTO;
