@@ -8,7 +8,7 @@ import java.util.List;
 public interface ICashRegisterService {
     void openRegister(String username, int amount);
     void closeRegister(String username, CashRegisterRequestDTO cashRegister);
-    List<CashRegisterResponseDTO> getAll();
+    List<CashRegisterResponseDTO> getCashRegisters();
     void updateRegister(CashRegisterRequestDTO cashRegister);
     boolean hasOpenRegisterOnDate(String username);
 }
