@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/despachos")
+@Validated
 @AllArgsConstructor
 public class DispatchController {
 
@@ -63,7 +65,9 @@ public class DispatchController {
 
     @GetMapping("/detalles")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'GUEST', 'SELLER')")
-    public ResponseEntity<List<DetailSaleRequestDTO>> getDetailSale(@RequestParam Long idDispatch){
+    public ResponseEntity<List<DetailSaleRequestDTO>> getDetailSale(@RequestParam
+                                                                    @NotNull(message = "El ID del despacho es obligatorio")
+                                                                    Long idDispatch){
         return ResponseEntity.ok(saleDetailService.getSaleDetailsToDispatch(idDispatch));
     }
 }
