@@ -8,6 +8,7 @@ import com.veloProWeb.service.sale.Interface.IDispatchService;
 import com.veloProWeb.service.sale.Interface.ISaleDetailService;
 import com.veloProWeb.service.sale.Interface.ISaleService;
 import com.veloProWeb.util.EmailService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +23,14 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/ventas")
-@CrossOrigin(origins = "http://localhost:4200")
+@AllArgsConstructor
 public class SaleController {
 
-    @Autowired private ISaleService saleService;
-    @Autowired private ISaleDetailService saleDetailService;
-    @Autowired private IDispatchService dispatchService;
-    @Autowired private IRecordService recordService;
-    @Autowired private EmailService emailService;
+    private final ISaleService saleService;
+    private final ISaleDetailService saleDetailService;
+    private final IDispatchService dispatchService;
+    private final IRecordService recordService;
+    private final EmailService emailService;
 
     /**
      * Crear una venta y su detalle de venta correspondiente

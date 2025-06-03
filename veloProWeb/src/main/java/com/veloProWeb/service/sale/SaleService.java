@@ -10,6 +10,7 @@ import com.veloProWeb.repository.Sale.SaleRepo;
 import com.veloProWeb.service.customer.CustomerService;
 import com.veloProWeb.service.customer.TicketHistoryService;
 import com.veloProWeb.service.sale.Interface.ISaleService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +20,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class SaleService implements ISaleService {
 
-    @Autowired private SaleRepo saleRepo;
-    @Autowired private TicketHistoryService ticketHistoryService;
-    @Autowired private CustomerService customerService;
+    private final SaleRepo saleRepo;
+    private final TicketHistoryService ticketHistoryService;
+    private final CustomerService customerService;
 
     /**
      * Crea una nueva venta.

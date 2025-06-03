@@ -19,7 +19,7 @@ import com.veloProWeb.service.inventory.IKardexService;
 import com.veloProWeb.service.sale.Interface.IDispatchService;
 import com.veloProWeb.service.sale.Interface.ISaleDetailService;
 import com.veloProWeb.service.sale.Interface.ISaleService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -29,17 +29,18 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class SaleDetailService implements ISaleDetailService {
 
-    @Autowired private SaleDetailRepo saleDetailRepo;
-    @Autowired private TicketHistoryRepo ticketHistoryRepo;
-    @Autowired private DispatchRepo dispatchRepo;
-    @Autowired private SaleRepo saleRepo;
-    @Autowired private IProductService productService;
-    @Autowired private ICustomerService customerService;
-    @Autowired private ISaleService saleService;
-    @Autowired private IKardexService kardexService;
-    @Autowired private IDispatchService dispatchService;
+    private final SaleDetailRepo saleDetailRepo;
+    private final TicketHistoryRepo ticketHistoryRepo;
+    private final DispatchRepo dispatchRepo;
+    private final SaleRepo saleRepo;
+    private final IProductService productService;
+    private final ICustomerService customerService;
+    private final ISaleService saleService;
+    private final IKardexService kardexService;
+    private final IDispatchService dispatchService;
 
     /**
      * Crear detalle de ventas proporcionadas para una venta
