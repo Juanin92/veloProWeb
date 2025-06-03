@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output} from '@angular/core';
-import { DispatchService } from '../../../services/Sale/dispatch.service';
+import { DispatchService } from '../../../services/sale/dispatch.service';
 import { Dispatch } from '../../../models/Entity/Sale/dispatch';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -7,7 +7,10 @@ import { DetailSaleRequestDTO } from '../../../models/DTO/detail-sale-request-dt
 import { TooltipService } from '../../../utils/tooltip.service';
 import { PaymentDispatchComponent } from "../payment-dispatch/payment-dispatch.component";
 import { DispatchModalComponent } from "../dispatch-modal/dispatch-modal.component";
-import { DispatchPermissionsService } from '../../../services/Permissions/dispatch-permissions.service';
+import { DispatchPermissionsService } from '../../../services/permissions/dispatch-permissions.service';
+import { DispatchStatus } from '../../../models/enum/dispatch-status';
+import { ErrorMessageService } from '../../../utils/error-message.service';
+import { NotificationService } from '../../../utils/notification-service.service';
 
 @Component({
   selector: 'app-dispatch',
@@ -23,57 +26,54 @@ export class DispatchComponent implements OnInit{
   saleDetailDispatchList: DetailSaleRequestDTO[] = [];
   selectedDispatch: Dispatch | null = null;
   totalSum: number = 0;
+  status = DispatchStatus;
 
   constructor(
     private dispatchService: DispatchService,
     protected permission: DispatchPermissionsService,
+    private errorMessage: ErrorMessageService,
+    private notification: NotificationService,
     private tooltip: TooltipService){}
 
   ngOnInit(): void {
     this.tooltip.initializeTooltips();
-    this.getDispatches();
+    this.loadCurrentDispatches();
   }
 
-  getDispatches(): void{
+  loadCurrentDispatches(): void{
     this.dispatchService.getDispatches().subscribe({
       next:(list)=>{
         const filteredList = list.filter(
-          dispatch => dispatch.status === 'En Preparación' || dispatch.status === 'En Ruta');
+          dispatch => dispatch.status === DispatchStatus.PREPARING || dispatch.status === DispatchStatus.IN_ROUTE);
         this.dispatchList = filteredList;
         this.dispatchUpdated.emit(filteredList);
-      }, error: (error)=>{
-        console.log('Error al obtener despachos', error.error?.error);
       }
     });
   }
 
-  getSaleDetailToDispatch(dispatchValue: Dispatch): void{
+  loadSaleDetailsForDispatch(dispatchValue: Dispatch): void{
     this.dispatchService.getDetailSale(dispatchValue.id).subscribe({
       next:(list) =>{
         this.saleDetailDispatchList = list;
         this.selectedDispatch = dispatchValue;
-        this.saleDetailDispatchList.push(this.newDetailDispatch());
+        this.saleDetailDispatchList.push(this.initializeSaleRequest());
         this.saleDetailDispatchList.map(value => this.totalSum += (value.price * value.quantity));
-      },error: (error)=>{
-        console.log('Error al obtener detalle del despacho, ', error?.error);
       }
     });
   }
 
-  handleStatusDispatch(dispatch: Dispatch, action: number): void{
+  handleStatusDispatch(dispatch: Dispatch, action: DispatchStatus): void{
     this.dispatchService.handleStatusDispatch(dispatch.id, action).subscribe({
       next:(response)=>{
-        const message = response.message;
-        console.log('Cambio de estado del despacho, ', message);
-        this.getDispatches();
+        this.loadCurrentDispatches();
       },error:(error)=>{
-        const message = error.error?.message || error.error?.error || error?.error;
-        console.log('Error estado del despacho, ', message);
+        const message = this.errorMessage.errorMessageExtractor(error);
+        this.notification.showErrorToast(message, 'top', 3000);
       }
     });
   }
 
-  newDetailDispatch(): DetailSaleRequestDTO{
+  initializeSaleRequest(): DetailSaleRequestDTO{
     return {
       descriptionProduct: 'Despacho',
       quantity: 1,
