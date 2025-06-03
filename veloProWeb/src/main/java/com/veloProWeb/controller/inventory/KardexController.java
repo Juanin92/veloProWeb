@@ -1,6 +1,6 @@
 package com.veloProWeb.controller.inventory;
 
-import com.veloProWeb.model.dto.KardexResponseDTO;
+import com.veloProWeb.model.dto.inventory.KardexResponseDTO;
 import com.veloProWeb.service.reporting.interfaces.IRecordService;
 import com.veloProWeb.service.inventory.IKardexService;
 import lombok.AllArgsConstructor;
