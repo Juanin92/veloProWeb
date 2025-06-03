@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { Dispatch } from '../../models/Entity/Sale/dispatch';
 import { DetailSaleRequestDTO } from '../../models/DTO/detail-sale-request-dto';
 import { AuthService } from '../User/auth.service';
+import { DispatchRequest } from '../../models/Entity/Sale/dispatch-request';
+import { DispatchStatus } from '../../models/enum/dispatch-status';
 
 @Injectable({
   providedIn: 'root'
@@ -18,11 +20,11 @@ export class DispatchService {
     return this.http.get<Dispatch[]>(this.apiUrl);
   };
 
-  createDispatch(dispatch: Dispatch): Observable<{message: string}>{
+  createDispatch(dispatch: DispatchRequest): Observable<{message: string}>{
     return this.http.post<{message: string}>(this.apiUrl, dispatch, {headers: this.auth.getAuthHeaders()});
   }
 
-  handleStatusDispatch(dispatchID: number, action: number): Observable<{message: string}>{
+  handleStatusDispatch(dispatchID: number, action: DispatchStatus): Observable<{message: string}>{
     return this.http.put<{message: string}>(this.apiUrl, {}, {
       params:{
         dispatchID: dispatchID.toString(),
