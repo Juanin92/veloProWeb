@@ -40,4 +40,17 @@ public class DispatchMapper {
                 .detailSaleDTOS(saleDTOList)
                 .build();
     }
+
+    public DispatchResponseDTO toResponseDTO(Dispatch dispatch) {
+        List<DetailSaleDTO> saleDTOList = dispatch.getSaleDetails().stream()
+                .map(saleDetail -> {
+                    DetailSaleDTO dto = new DetailSaleDTO();
+                    dto.setId(saleDetail.getId());
+                    dto.setIdProduct(saleDetail.getProduct().getId());
+                    dto.setQuantity(saleDetail.getQuantity());
+                    return dto;
+                })
+                .toList();
+        return toResponseDTO(dispatch, saleDTOList);
+    }
 }
