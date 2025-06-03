@@ -10,5 +10,5 @@ export interface Dispatch {
     hasSale: boolean,
     created: string,
     deliveryDate: string,
-    detailSaleDTOS: SaleDetailDTO[] | null
+    detailSaleDTOList: SaleDetailDTO[] | null
 }
