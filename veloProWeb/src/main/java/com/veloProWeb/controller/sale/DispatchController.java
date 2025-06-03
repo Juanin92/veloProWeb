@@ -44,7 +44,7 @@ public class DispatchController {
     public ResponseEntity<Map<String, String>> createDispatch(@RequestBody @Valid DispatchRequestDTO dto,
                                                               @AuthenticationPrincipal UserDetails userDetails){
         Dispatch dispatch = dispatchService.createDispatch(dto);
-        saleDetailService.createSaleDetailsToDispatch(dto.getDetailSaleDTOS(), dispatch);
+        saleDetailService.createSaleDetailsToDispatch(dto.getDetailSaleDTOList(), dispatch);
         recordService.registerAction(userDetails, "CREATE", "Despacho creado: " + dto.getCustomer());
         return new ResponseEntity<>(ResponseMessage.message("Despacho en preparación"), HttpStatus.CREATED);
     }
