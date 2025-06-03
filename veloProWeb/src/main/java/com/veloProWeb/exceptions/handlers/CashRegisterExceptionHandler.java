@@ -19,7 +19,8 @@ public class CashRegisterExceptionHandler extends BaseExceptionHandler {
 
     @ExceptionHandler({
             CashRegisterDateNotMatchException.class,
-            InvalidAmountCashRegisterException.class
+            InvalidAmountCashRegisterException.class,
+            InvalidDispatchStatusException.class
     })
     public ResponseEntity<Map<String, String>> handleCashRegisterException(Exception e){
         return buildResponse(e.getMessage(), HttpStatus.CONFLICT);
