@@ -1,25 +1,31 @@
 package com.veloProWeb.service.sale;
 
-import com.veloProWeb.model.dto.DispatchDTO;
+import com.veloProWeb.exceptions.sale.DispatchNotFoundException;
+import com.veloProWeb.exceptions.sale.InvalidDispatchStatusException;
+import com.veloProWeb.mapper.DispatchMapper;
+import com.veloProWeb.model.Enum.DispatchStatus;
+import com.veloProWeb.model.dto.DetailSaleDTO;
+import com.veloProWeb.model.dto.sale.DispatchRequestDTO;
+import com.veloProWeb.model.dto.sale.DispatchResponseDTO;
 import com.veloProWeb.model.entity.Sale.Dispatch;
+import com.veloProWeb.model.entity.Sale.SaleDetail;
+import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.repository.Sale.DispatchRepo;
+import com.veloProWeb.service.product.interfaces.IProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,120 +33,145 @@ public class DispatchServiceTest {
 
     @InjectMocks private DispatchService dispatchService;
     @Mock private DispatchRepo dispatchRepo;
-    private Dispatch dispatchDeleted, dispatchRoute, dispatchPreparation, dispatchDelivery;
-    private DispatchDTO dispatchRouteDTO, dispatchPreparationDTO, dispatchDeliveryDTO;
+    @Mock private IProductService productService;
+    @Spy private DispatchMapper mapper;
 
     @BeforeEach
     void setUp(){
-        dispatchDeleted = new Dispatch(1L, "#1", "Eliminado","calle 1", "Test 1",
-                "Cliente 1", false, LocalDate.now(),null, new ArrayList<>());
-        dispatchPreparation = new Dispatch(2L, "#2", "En Preparación", "calle 2",
-                "Test 2", "Cliente 2", false, LocalDate.now(),null, new ArrayList<>());
-        dispatchRoute = new Dispatch(3L, "#3", "En Ruta","calle 3", "Test 3",
-                "Cliente 3", false, LocalDate.now(),null, new ArrayList<>());
-        dispatchDelivery = new Dispatch(4L, "#4", "Entregado","calle 4",
-                "Test 4", "Cliente 4", true, LocalDate.now(),LocalDate.now(), new ArrayList<>());
-
-        dispatchPreparationDTO = new DispatchDTO(2L, "#2", "En Preparación", "calle 2",
-                "Test 2", "Cliente 1", false, LocalDate.now(),null, new ArrayList<>());
-        dispatchRouteDTO = new DispatchDTO(3L, "#3", "En Ruta","calle 3",
-                "Test 3", "Cliente 2", false, LocalDate.now(),null, new ArrayList<>());
-        dispatchDeliveryDTO = new DispatchDTO(4L, "#4", "Entregado","calle 4",
-                "Test 4", "Cliente 3", true, LocalDate.now(),LocalDate.now(), new ArrayList<>());
     }
 
     //Prueba para obtener los registro de los despachos
     @Test
-    public void getDispatches_valid(){
-        List<Dispatch> dispatchList = Arrays.asList(dispatchDeleted,dispatchRoute,dispatchPreparation,dispatchDelivery);
-        when(dispatchRepo.findAll()).thenReturn(dispatchList);
-        List<DispatchDTO> result = dispatchService.getDispatches();
-        List<DispatchDTO> dispatchListFiltered = Arrays.asList(dispatchRouteDTO,dispatchPreparationDTO,dispatchDeliveryDTO);
+    public void getDispatches(){
+        SaleDetail saleDetail = SaleDetail.builder().id(1L).product(Product.builder().id(1L).build()).quantity(10)
+                .total(1000).build();
+        Dispatch dispatch = Dispatch.builder().id(1L).trackingNumber("#2").status(DispatchStatus.PREPARING)
+                .created(LocalDate.now()).deliveryDate(null).hasSale(false).saleDetails(List.of(saleDetail)).build();
+        when(dispatchRepo.findByStatusNot(DispatchStatus.DELETED)).thenReturn(List.of(dispatch));
 
-        verify(dispatchRepo, times(1)).findAll();
-        assertEquals(dispatchListFiltered, result);
+        DetailSaleDTO saleDTO = DetailSaleDTO.builder().id(1L).idProduct(1L).quantity(10).build();
+        DispatchResponseDTO responseDTO = DispatchResponseDTO.builder().id(1L).trackingNumber("#2")
+                .status(DispatchStatus.PREPARING).created(LocalDate.now()).deliveryDate(null).hasSale(false)
+                .detailSaleDTOS(List.of(saleDTO)).build();
+        when(mapper.toResponseDTO(dispatch)).thenReturn(responseDTO);
+
+        List<DispatchResponseDTO> result = dispatchService.getDispatches();
+
+        verify(dispatchRepo, times(1)).findByStatusNot(DispatchStatus.DELETED);
+        verify(mapper, times(2)).toResponseDTO(dispatch);
+        assertEquals(1, result.size());
+        assertEquals(DispatchStatus.PREPARING, result.getFirst().getStatus());
     }
 
     //Prueba para crear registro de despacho
     @Test
-    public void createDispatch_valid(){
-        DispatchDTO dto = new DispatchDTO(null, null, null, "Calle Test",
-                "TEST", "Cliente", false, null, null, new ArrayList<>());
+    public void createDispatch(){
+        DetailSaleDTO detailSaleDTO = DetailSaleDTO.builder().id(1L).idProduct(1L).quantity(1).build();
+        DispatchRequestDTO dto = DispatchRequestDTO.builder().address("Test address").comment("test comment")
+                .customer("John Doe").detailSaleDTOS(List.of(detailSaleDTO)).build();
+        when(dispatchRepo.count()).thenReturn(1L);
+
+        Dispatch dispatchMapped = mapper.toEntity(dto, 1L);
+        when(mapper.toEntity(dto, 1L)).thenReturn(dispatchMapped);
+
         Dispatch dispatch = dispatchService.createDispatch(dto);
-        verify(dispatchRepo, times(1)).save(dispatch);
-        assertEquals(dispatch.getStatus(), "En Preparación");
-        assertEquals(dispatch.getAddress(), "Calle Test");
-        assertEquals(dispatch.getComment(), "TEST");
-        assertEquals(dispatch.getCreated(), LocalDate.now());
-    }
-    @Test
-    public void createDispatch_validNullDispatch(){
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,() -> dispatchService.createDispatch(null));
-        verify(dispatchRepo, never()).save(any(Dispatch.class));
-        assertEquals("Despacho debe tener datos", e.getMessage());
+
+        verify(dispatchRepo, times(1)).count();
+        verify(mapper, times(2)).toEntity(dto, 1L);
+        verify(dispatchRepo, times(1)).save(dispatchMapped);
+
+        assertEquals("#2", dispatch.getTrackingNumber());
+        assertEquals(DispatchStatus.PREPARING, dispatch.getStatus());
+        assertEquals("Test address", dispatch.getAddress());
+        assertEquals("test comment", dispatch.getComment());
+        assertEquals("John Doe", dispatch.getCustomer());
+        assertNull(dispatch.getDeliveryDate());
+        assertFalse(dispatch.isHasSale());
     }
 
     //Prueba para manejar los estados de un despacho
     @Test
-    public void handleStatus_validRouteDispatch(){
-        when(dispatchRepo.findById(2L)).thenReturn(Optional.of(dispatchPreparation));
-        dispatchService.handleStatus(2L, 1);
+    public void handleStatus_inRouteStatus(){
+        Dispatch dispatch = Dispatch.builder().id(1L).status(DispatchStatus.PREPARING).build();
+        when(dispatchRepo.findById(1L)).thenReturn(Optional.of(dispatch));
 
-        verify(dispatchRepo, times(1)).save(dispatchPreparation);
-        assertEquals("En Ruta", dispatchPreparation.getStatus());
-    }
-    @ParameterizedTest
-    @ValueSource(longs = {2L, 3L, 4L})
-    public void handleStatus_validDeleteDispatch(Long id){
-        Dispatch dispatch;
-        if (id == 2L) {
-            dispatch = dispatchPreparation;
-        } else if (id == 3L) {
-            dispatch = dispatchRoute;
-        } else {
-            dispatch = dispatchDelivery;
-        }
-        when(dispatchRepo.findById(id)).thenReturn(Optional.of(dispatch));
-        dispatchService.handleStatus(id, 2);
+        ArgumentCaptor<Dispatch> dispatchCaptor = ArgumentCaptor.forClass(Dispatch.class);
+        dispatchService.handleStatus(1L, DispatchStatus.IN_ROUTE);
 
-        verify(dispatchRepo, times(1)).save(dispatch);
-        assertEquals("Eliminado", dispatch.getStatus());
+        verify(dispatchRepo, times(1)).save(dispatchCaptor.capture());
+
+        Dispatch result = dispatchCaptor.getValue();
+        assertEquals(DispatchStatus.IN_ROUTE, result.getStatus());
     }
     @Test
-    public void handleStatus_validThrowsExceptionAction() {
-        when(dispatchRepo.findById(2L)).thenReturn(Optional.of(dispatchPreparation));
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> dispatchService.handleStatus(2L, 6));
+    public void handleStatus_deletedStatus(){
+        SaleDetail saleDetail = SaleDetail.builder().quantity(2).product(Product.builder().id(1L).build()).build();
+        Dispatch dispatch = Dispatch.builder().id(1L).status(DispatchStatus.IN_ROUTE).saleDetails(List.of(saleDetail))
+                .build();
+        when(dispatchRepo.findById(1L)).thenReturn(Optional.of(dispatch));
+        doNothing().when(productService).updateStockAndReserveDispatch(saleDetail.getProduct(),
+                saleDetail.getQuantity(), false);
 
-        verify(dispatchRepo, never()).save(dispatchPreparation);
-        assertEquals("Acción inválida", e.getMessage());
+        ArgumentCaptor<Dispatch> dispatchCaptor = ArgumentCaptor.forClass(Dispatch.class);
+        dispatchService.handleStatus(1L, DispatchStatus.DELETED);
+
+        verify(productService, times(1)).updateStockAndReserveDispatch(saleDetail.getProduct(),
+                saleDetail.getQuantity(), false);
+        verify(dispatchRepo, times(1)).save(dispatchCaptor.capture());
+
+        Dispatch result = dispatchCaptor.getValue();
+        assertEquals(DispatchStatus.DELETED, result.getStatus());
     }
     @Test
-    public void handleStatus_validThrowsExceptionNotFoundDispatch() {
-        when(dispatchRepo.findById(1L)).thenReturn(Optional.empty());
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> dispatchService.handleStatus(1L, 1));
+    public void handleStatus_DispatchNotFoundException() {
+        when(dispatchRepo.findById(2L)).thenReturn(Optional.empty());
+        DispatchNotFoundException e = assertThrows(DispatchNotFoundException.class,
+                () -> dispatchService.handleStatus(2L, DispatchStatus.IN_ROUTE));
 
+        verify(dispatchRepo, times(1)).findById(2L);
         verify(dispatchRepo, never()).save(any(Dispatch.class));
-        assertEquals("No se encontró el despacho", e.getMessage());
+        assertEquals("No se encontró el despacho.", e.getMessage());
     }
-
-    //Prueba para obtener un despacho por su identificador
     @Test
-    public void getDispatchById_valid(){
-        when(dispatchRepo.findById(1L)).thenReturn(Optional.of(dispatchDeleted));
-        Optional<Dispatch> result = dispatchService.getDispatchById(1L);
+    public void handleStatus_statusActionException() {
+        Dispatch dispatch = Dispatch.builder().id(1L).status(DispatchStatus.PREPARING).build();
+        when(dispatchRepo.findById(1L)).thenReturn(Optional.of(dispatch));
 
-        verify(dispatchRepo).findById(1L);
-        assertEquals(result.get(), dispatchDeleted);
+        InvalidDispatchStatusException e = assertThrows(InvalidDispatchStatusException.class,
+                () -> dispatchService.handleStatus(1L, DispatchStatus.PREPARING));
+
+        verify(dispatchRepo, times(1)).findById(1L);
+        verify(dispatchRepo, never()).save(any(Dispatch.class));
+        assertEquals("El estado escogido no es válido.", e.getMessage());
     }
 
     //Prueba para manejar despacho dejarlo como recibido
     @Test
     public void handleDispatchReceiveToSale_valid(){
-        when(dispatchRepo.findById(2L)).thenReturn(Optional.of(dispatchPreparation));
-        dispatchService.handleDispatchReceiveToSale(2L);
-        verify(dispatchRepo, times(1)).findById(2L);
-        verify(dispatchRepo, times(1)).save(dispatchPreparation);
-        assertEquals(LocalDate.now(), dispatchPreparation.getDeliveryDate());
-        assertEquals("Entregado", dispatchPreparation.getStatus());
+        Dispatch dispatch = Dispatch.builder().id(1L).status(DispatchStatus.PREPARING).build();
+        when(dispatchRepo.findById(1L)).thenReturn(Optional.of(dispatch));
+
+        ArgumentCaptor<Dispatch> dispatchCaptor = ArgumentCaptor.forClass(Dispatch.class);
+        dispatchService.handleDispatchReceiveToSale(1L);
+        verify(dispatchRepo, times(1)).findById(1L);
+        verify(dispatchRepo, times(1)).save(dispatchCaptor.capture());
+
+        Dispatch result = dispatchCaptor.getValue();
+        assertEquals(LocalDate.now(), result.getDeliveryDate());
+        assertEquals(DispatchStatus.DELIVERED, result.getStatus());
+    }
+
+    //Prueba para obtener un despacho por su identificador
+    @Test
+    public void getDispatchById_valid(){
+        Dispatch dispatch = Dispatch.builder().id(1L).status(DispatchStatus.PREPARING).build();
+        when(dispatchRepo.findById(1L)).thenReturn(Optional.of(dispatch));
+
+        Optional<Dispatch> result = dispatchService.getDispatchById(1L);
+
+        verify(dispatchRepo, times(1)).findById(1L);
+        assertTrue(result.isPresent());
+        assertEquals(1L, result.get().getId());
+        assertEquals(DispatchStatus.PREPARING, result.get().getStatus());
     }
 }

@@ -1,31 +1,30 @@
 package com.veloProWeb.service.sale;
 
-import com.veloProWeb.model.dto.DetailSaleDTO;
-import com.veloProWeb.model.dto.DispatchDTO;
+import com.veloProWeb.exceptions.sale.DispatchNotFoundException;
+import com.veloProWeb.exceptions.sale.InvalidDispatchStatusException;
+import com.veloProWeb.mapper.DispatchMapper;
+import com.veloProWeb.model.Enum.DispatchStatus;
+import com.veloProWeb.model.dto.sale.DispatchRequestDTO;
+import com.veloProWeb.model.dto.sale.DispatchResponseDTO;
 import com.veloProWeb.model.entity.Sale.Dispatch;
 import com.veloProWeb.model.entity.Sale.SaleDetail;
 import com.veloProWeb.repository.Sale.DispatchRepo;
 import com.veloProWeb.service.product.interfaces.IProductService;
 import com.veloProWeb.service.sale.Interface.IDispatchService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
 
 @Service
+@AllArgsConstructor
 public class DispatchService implements IDispatchService {
 
-    @Autowired private DispatchRepo dispatchRepo;
-    @Autowired private IProductService productService;
-    private final Map<Integer, String> statusMap = new HashMap<>();
-
-    public DispatchService(){
-        statusMap.put(1, "En Preparación");
-        statusMap.put(2, "En Ruta");
-        statusMap.put(3, "Entregado");
-        statusMap.put(4, "Eliminado");
-    }
+    private final DispatchRepo dispatchRepo;
+    private final IProductService productService;
+    private final DispatchMapper mapper;
 
     /**
      * Obtiene una lista filtrada de registro de despacho
@@ -33,88 +32,59 @@ public class DispatchService implements IDispatchService {
      * @return - Lista filtrada de despachos
      */
     @Override
-    public List<DispatchDTO> getDispatches() {
-        List<DispatchDTO> dtoList = new ArrayList<>();
-        List<Dispatch> dispatchList = dispatchRepo.findAll();
-        for (Dispatch dispatch : dispatchList){
-            if (!dispatch.getStatus().equals("Eliminado")) {
-                List<DetailSaleDTO> detailSaleDTOSList = new ArrayList<>();
-                for(SaleDetail saleDetail : dispatch.getSaleDetails()){
-                    DetailSaleDTO detailSaleDTO = new DetailSaleDTO();
-                    detailSaleDTO.setId(saleDetail.getId());
-                    detailSaleDTO.setIdProduct(saleDetail.getProduct().getId());
-                    detailSaleDTO.setQuantity(saleDetail.getQuantity());
-                    detailSaleDTOSList.add(detailSaleDTO);
-                }
-                DispatchDTO dto = new DispatchDTO(dispatch.getId(), dispatch.getTrackingNumber(), dispatch.getStatus(),
-                        dispatch.getAddress(), dispatch.getComment(), dispatch.getCustomer(), dispatch.isHasSale(),
-                        dispatch.getCreated(), dispatch.getDeliveryDate(), detailSaleDTOSList);
-                dtoList.add(dto);
-            }
-        }
-        return dtoList;
+    public List<DispatchResponseDTO> getDispatches() {
+        return dispatchRepo.findByStatusNot(DispatchStatus.DELETED).stream()
+                .map(mapper::toResponseDTO)
+                .toList();
     }
 
     /**
      * Creación de un despacho.
      * Verifica que el despacho no sea nulo y este contenga un objeto de Venta
-     * @param dto - dto Despacho con los datos necesarios
+     * @param dto - DTO Despacho con los datos necesarios
      * @return - Objeto despacho con los datos necesario
      */
+    @Transactional
     @Override
-    public Dispatch createDispatch(DispatchDTO dto) {
-        if (dto != null) {
-            Dispatch dispatch = new Dispatch();
-            dispatch.setId(null);
-            dispatch.setTrackingNumber("#" + (dispatchRepo.count() + 1));
-            dispatch.setCreated(LocalDate.now());
-            dispatch.setStatus(statusMap.get(1));
-            dispatch.setAddress(dto.getAddress());
-            dispatch.setComment(dto.getComment());
-            dispatch.setCustomer(dto.getCustomer());
-            dispatch.setDeliveryDate(null);
-            dispatch.setHasSale(false);
-            dispatchRepo.save(dispatch);
-            return dispatch;
-        }else {
-            throw new IllegalArgumentException("Despacho debe tener datos");
-        }
+    public Dispatch createDispatch(DispatchRequestDTO dto) {
+        Dispatch dispatch = mapper.toEntity(dto, dispatchRepo.count());
+        dispatchRepo.save(dispatch);
+        return dispatch;
     }
 
     /**
      * Manejo del estado de un despacho.
      * Verifica que el despacho exista y que la acción exista.
      * @param dispatchID - Identificador del despacho
-     * @param action - (número) Clave del Map para seleccionar estado
+     * @param statusAction - estado del despacho seleccionado a cambiar
      */
+    @Transactional
     @Override
-    public void handleStatus(Long dispatchID, int action) {
+    public void handleStatus(Long dispatchID, DispatchStatus statusAction) {
         Dispatch dispatch = getDispatchExisting(dispatchID);
-        if (dispatch != null) {
-            switch (action){
-                case 1:
-                    //Verifica que solo cuando sea "En Preparación" quede "En Ruta"
-                    if (dispatch.getStatus().equals(statusMap.get(1))){
-                        dispatch.setStatus(statusMap.get(2));
+        switch (statusAction){
+            case DispatchStatus.IN_ROUTE:
+                //Verifica que solo cuando sea "En Preparación" quede "En Ruta"
+                if (dispatch.getStatus().equals(DispatchStatus.PREPARING)){
+                    dispatch.setStatus(DispatchStatus.IN_ROUTE);
+                }
+                break;
+            case DispatchStatus.DELETED:
+                // Verifica que solo cuando el estado sea diferente de "Eliminado" o "Entregado" quede "Eliminado"
+                if (!dispatch.getStatus().equals(DispatchStatus.DELETED) &&
+                        !dispatch.getStatus().equals(DispatchStatus.DELIVERED)){
+                    dispatch.setStatus(DispatchStatus.DELETED);
+                    for (SaleDetail saleDetail : dispatch.getSaleDetails()){
+                        //Actualiza stock y reserva del producto eliminado del despacho
+                        productService.updateStockAndReserveDispatch(saleDetail.getProduct(), saleDetail.getQuantity(),
+                                false);
                     }
-                    break;
-                case 2:
-                    // Verifica que solo cuando el estado sea diferente de "Eliminado" o "Entregado" quede "Eliminado"
-                    if (!dispatch.getStatus().equals(statusMap.get(4)) && !dispatch.getStatus().equals(statusMap.get(3))){
-                        dispatch.setStatus(statusMap.get(4));
-                        for (SaleDetail saleDetail : dispatch.getSaleDetails()){
-                            //Actualiza stock y reserva del producto eliminado del despacho
-                            productService.updateStockAndReserveDispatch(saleDetail.getProduct(), saleDetail.getQuantity(), false);
-                        }
-                    }
-                    break;
-                default:
-                    throw new IllegalArgumentException("Acción inválida");
-            }
-            dispatchRepo.save(dispatch);
-        }else{
-            throw new IllegalArgumentException("No se encontró el despacho");
+                }
+                break;
+            default:
+                throw new InvalidDispatchStatusException("El estado escogido no es válido.");
         }
+        dispatchRepo.save(dispatch);
     }
 
     /**
@@ -123,17 +93,15 @@ public class DispatchService implements IDispatchService {
      *  Establece una fecha de entrega.
      * @param dispatchID - Identificador del despacho a actualizar
      */
+    @Transactional
     @Override
     public void handleDispatchReceiveToSale(Long dispatchID) {
         Dispatch dispatch = getDispatchExisting(dispatchID);
-        if (dispatch != null) {
-            if (dispatch.getStatus().equals(statusMap.get(1)) || dispatch.getStatus().equals(statusMap.get(2))){
-                dispatch.setStatus(statusMap.get(3));
-                dispatch.setDeliveryDate(LocalDate.now());
-                dispatchRepo.save(dispatch);
-            }
-        }else {
-            throw new IllegalArgumentException("No se encontró el despacho.");
+        if (dispatch.getStatus().equals(DispatchStatus.PREPARING) ||
+                dispatch.getStatus().equals(DispatchStatus.IN_ROUTE)){
+            dispatch.setStatus(DispatchStatus.DELIVERED);
+            dispatch.setDeliveryDate(LocalDate.now());
+            dispatchRepo.save(dispatch);
         }
     }
 
@@ -153,6 +121,7 @@ public class DispatchService implements IDispatchService {
      * @return - Si encuentra un despacho o valor nulo
      */
     private Dispatch getDispatchExisting(Long dispatchID){
-        return dispatchRepo.findById(dispatchID).orElse(null);
+        return dispatchRepo.findById(dispatchID).orElseThrow(() -> new
+                DispatchNotFoundException("No se encontró el despacho."));
     }
 }
