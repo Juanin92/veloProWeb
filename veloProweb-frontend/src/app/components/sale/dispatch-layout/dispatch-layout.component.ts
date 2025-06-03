@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Dispatch } from '../../../models/Entity/Sale/dispatch';
-import { DispatchService } from '../../../services/Sale/dispatch.service';
+import { DispatchService } from '../../../services/sale/dispatch.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DispatchPermissionsService } from '../../../services/Permissions/dispatch-permissions.service';
+import { DispatchPermissionsService } from '../../../services/permissions/dispatch-permissions.service';
 
 @Component({
   selector: 'app-dispatch-layout',
@@ -26,17 +26,14 @@ export class DispatchLayoutComponent implements OnInit{
     protected permission: DispatchPermissionsService){}
 
   ngOnInit(): void {
-    this.getDispatches();
+    this.loadDispatches();
   }
 
-  getDispatches(): void{
+  loadDispatches(): void{
     this.dispatchService.getDispatches().subscribe({
       next:(list)=>{
         this.dispatchList = list;
         this.filteredDispatchList = list;
-      },
-      error: (error)=>{
-        console.log('No se encontró información sobre los despachos registrados');
       }
     });
   }

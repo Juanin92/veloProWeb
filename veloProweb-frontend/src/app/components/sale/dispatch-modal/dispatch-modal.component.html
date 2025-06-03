@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header text-center w-100">
                 <h1 class="modal-title fs-3 w-100">Despacho </h1>
-                <button (click)="resetModal()" type="button" class="btn-close" aria-label="Close"
+                <button (click)="clearDispatchModal()" type="button" class="btn-close" aria-label="Close"
                     data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -55,10 +55,10 @@
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button (click)="createNewDispatch(dispatch)" [disabled]="!dispatch.address && !dispatch.customer"
+                <button (click)="processNewDispatch(dispatch)" [disabled]="!dispatch.address && !dispatch.customer"
                     type="button" class="btn btn-success"
                     [attr.data-bs-dismiss]="modalService.isModalVisible() ? 'modal' : null">Confirmar</button>
-                <button (click)="resetModal()" type="button" class="btn btn-danger"
+                <button (click)="clearDispatchModal()" type="button" class="btn btn-danger"
                     data-bs-dismiss="modal">Cancelar</button>
             </div>
         </div>
@@ -75,7 +75,7 @@
                         <span>Detalles del Despacho</span>
                         <span class="small fs-6 fw-lighter">({{selectedDispatch?.status}})</span>
                     </h1>
-                    <button (click)="resetModal()" type="button" class="btn-close" aria-label="Close"
+                    <button (click)="clearDispatchModal()" type="button" class="btn-close" aria-label="Close"
                         data-bs-dismiss="modal"></button>
                 </div>
             </div>
