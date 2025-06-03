@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.Map;
 
 @RestControllerAdvice
-public class CashRegisterExceptionHandler extends BaseExceptionHandler {
+public class SaleExceptionHandler extends BaseExceptionHandler {
 
     @ExceptionHandler({CashRegisterNotFoundException.class, DispatchNotFoundException.class})
-    public ResponseEntity<Map<String, String>> handleCashRegisterNotFoundException(Exception e){
+    public ResponseEntity<Map<String, String>> handleSaleNotFoundException(Exception e){
         return buildResponse(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
@@ -22,12 +22,12 @@ public class CashRegisterExceptionHandler extends BaseExceptionHandler {
             InvalidAmountCashRegisterException.class,
             InvalidDispatchStatusException.class
     })
-    public ResponseEntity<Map<String, String>> handleCashRegisterException(Exception e){
+    public ResponseEntity<Map<String, String>> handleSaleException(Exception e){
         return buildResponse(e.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(UnauthorizedCashRegisterAccessException.class)
-    public ResponseEntity<Map<String, String>> handleCashRegisterUnauthorizedException(Exception e){
+    public ResponseEntity<Map<String, String>> handleSaleUnauthorizedException(Exception e){
         return buildResponse(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 }
