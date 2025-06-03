@@ -1,10 +1,7 @@
 package com.veloProWeb.exceptions.handlers;
 
 import com.veloProWeb.exceptions.BaseExceptionHandler;
-import com.veloProWeb.exceptions.sale.CashRegisterDateNotMatchException;
-import com.veloProWeb.exceptions.sale.CashRegisterNotFoundException;
-import com.veloProWeb.exceptions.sale.InvalidAmountCashRegisterException;
-import com.veloProWeb.exceptions.sale.UnauthorizedCashRegisterAccessException;
+import com.veloProWeb.exceptions.sale.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,7 +12,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class CashRegisterExceptionHandler extends BaseExceptionHandler {
 
-    @ExceptionHandler(CashRegisterNotFoundException.class)
+    @ExceptionHandler({CashRegisterNotFoundException.class, DispatchNotFoundException.class})
     public ResponseEntity<Map<String, String>> handleCashRegisterNotFoundException(Exception e){
         return buildResponse(e.getMessage(), HttpStatus.NOT_FOUND);
     }
