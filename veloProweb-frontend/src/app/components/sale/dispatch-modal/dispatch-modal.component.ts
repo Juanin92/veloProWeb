@@ -5,10 +5,12 @@ import { SaleDetail } from '../../../models/Entity/Sale/sale-detail';
 import { Dispatch } from '../../../models/Entity/Sale/dispatch';
 import { ModalService } from '../../../utils/modal.service';
 import { DetailSaleRequestDTO } from '../../../models/DTO/detail-sale-request-dto';
-import { DispatchService } from '../../../services/Sale/dispatch.service';
+import { DispatchService } from '../../../services/sale/dispatch.service';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { SaleDetailDTO } from '../../../models/DTO/sale-detail-dto';
-import { DispatchPermissionsService } from '../../../services/Permissions/dispatch-permissions.service';
+import { DispatchPermissionsService } from '../../../services/permissions/dispatch-permissions.service';
+import { DispatchRequest } from '../../../models/Entity/Sale/dispatch-request';
+import { ErrorMessageService } from '../../../utils/error-message.service';
 
 @Component({
   selector: 'app-dispatch-modal',
@@ -26,23 +28,18 @@ export class DispatchModalComponent implements OnInit, OnChanges{
   selectedDispatch: Dispatch | null = null;
   saleDetailDTOList: SaleDetailDTO[] = [];
   totalSum: number = 0;
-  dispatch: Dispatch = {
-      id: 0,
-      trackingNumber: '',
-      status: '',
+  dispatch: DispatchRequest = {
       address: '',
       comment: '',
       customer: '',
-      hasSale: false,
-      created: '',
-      deliveryDate: '',
-      detailSaleDTOS: null,
+      detailSaleDTOList: null,
   }
   
   constructor(
       private dispatchService: DispatchService,
       protected permission: DispatchPermissionsService,
       private notification: NotificationService,
+      private errorMessage: ErrorMessageService,
       public modalService: ModalService){}
 
   ngOnInit(): void {
@@ -56,7 +53,7 @@ export class DispatchModalComponent implements OnInit, OnChanges{
     }
   }
 
-  createNewDispatch(dispatch: Dispatch): void{
+  processNewDispatch(dispatch: DispatchRequest): void{
     this.saleDetailDTOList = this.saleDetailList.map(saleDetail => {
       return {
         id: saleDetail.id,
@@ -64,23 +61,21 @@ export class DispatchModalComponent implements OnInit, OnChanges{
         quantity: saleDetail.quantity
       };
     });
-    dispatch.detailSaleDTOS = this.saleDetailDTOList;
+    dispatch.detailSaleDTOList = this.saleDetailDTOList;
     this.dispatchService.createDispatch(dispatch).subscribe({
       next:(response)=>{
-        const message = response.message;
-        this.notification.showSuccessToast(message, 'top', 3000);
-        this.resetModal();
+        this.notification.showSuccessToast(response.message, 'top', 3000);
+        this.clearDispatchModal();
         this.dispatchCreated.emit(true);
         this.modalService.closeModal();
       },error: (error)=>{
-        const message = error.error?.error || error.error?.message || error?.error;
-        console.log("ERROR: ", message);
+        const message = this.errorMessage.errorMessageExtractor(error);
         this.notification.showErrorToast(message, 'top', 3000);
       }
     });
   }
   
-  resetModal(): void{
+  clearDispatchModal(): void{
     this.dispatch.address = '';
     this.dispatch.comment = '';
     this.dispatch.customer = '';
