@@ -2,10 +2,16 @@ package com.veloProWeb.model.entity.Sale;
 
 import com.veloProWeb.model.entity.product.Product;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class SaleDetail {
 
     @Id

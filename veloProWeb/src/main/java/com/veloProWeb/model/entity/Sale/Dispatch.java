@@ -1,7 +1,9 @@
 package com.veloProWeb.model.entity.Sale;
 
+import com.veloProWeb.model.Enum.DispatchStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -13,6 +15,7 @@ import java.util.List;
 
 @Entity
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "dispatches")
@@ -22,7 +25,9 @@ public class Dispatch {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String trackingNumber;
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    private DispatchStatus status;
     private String address;
     private String comment;
     private String customer;
