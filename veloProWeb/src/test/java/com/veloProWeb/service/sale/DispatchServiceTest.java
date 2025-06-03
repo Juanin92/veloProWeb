@@ -52,7 +52,7 @@ public class DispatchServiceTest {
         DetailSaleDTO saleDTO = DetailSaleDTO.builder().id(1L).idProduct(1L).quantity(10).build();
         DispatchResponseDTO responseDTO = DispatchResponseDTO.builder().id(1L).trackingNumber("#2")
                 .status(DispatchStatus.PREPARING).created(LocalDate.now()).deliveryDate(null).hasSale(false)
-                .detailSaleDTOS(List.of(saleDTO)).build();
+                .detailSaleDTOList(List.of(saleDTO)).build();
         when(mapper.toResponseDTO(dispatch)).thenReturn(responseDTO);
 
         List<DispatchResponseDTO> result = dispatchService.getDispatches();

@@ -37,7 +37,7 @@ public class DispatchMapper {
                 .hasSale(dispatch.isHasSale())
                 .created(dispatch.getCreated())
                 .deliveryDate(dispatch.getDeliveryDate())
-                .detailSaleDTOS(saleDTOList)
+                .detailSaleDTOList(saleDTOList)
                 .build();
     }
 
