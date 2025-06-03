@@ -1,6 +1,5 @@
 package com.veloProWeb.model.dto.sale;
 
-import com.veloProWeb.model.dto.DetailSaleDTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

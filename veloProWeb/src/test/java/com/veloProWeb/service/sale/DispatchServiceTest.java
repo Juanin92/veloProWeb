@@ -4,7 +4,7 @@ import com.veloProWeb.exceptions.sale.DispatchNotFoundException;
 import com.veloProWeb.exceptions.sale.InvalidDispatchStatusException;
 import com.veloProWeb.mapper.DispatchMapper;
 import com.veloProWeb.model.Enum.DispatchStatus;
-import com.veloProWeb.model.dto.DetailSaleDTO;
+import com.veloProWeb.model.dto.sale.DetailSaleDTO;
 import com.veloProWeb.model.dto.sale.DispatchRequestDTO;
 import com.veloProWeb.model.dto.sale.DispatchResponseDTO;
 import com.veloProWeb.model.entity.Sale.Dispatch;

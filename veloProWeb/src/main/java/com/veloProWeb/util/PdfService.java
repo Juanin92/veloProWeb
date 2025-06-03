@@ -4,7 +4,7 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.veloProWeb.model.dto.DetailSaleRequestDTO;
+import com.veloProWeb.model.dto.sale.DetailSaleRequestDTO;
 import com.veloProWeb.model.entity.Sale.Sale;
 import com.veloProWeb.model.entity.data.LocalData;
 import com.veloProWeb.model.Enum.PaymentMethod;

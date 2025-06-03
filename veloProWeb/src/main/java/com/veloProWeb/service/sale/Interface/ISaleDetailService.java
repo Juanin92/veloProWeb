@@ -1,7 +1,7 @@
 package com.veloProWeb.service.sale.Interface;
 
-import com.veloProWeb.model.dto.DetailSaleDTO;
-import com.veloProWeb.model.dto.DetailSaleRequestDTO;
+import com.veloProWeb.model.dto.sale.DetailSaleDTO;
+import com.veloProWeb.model.dto.sale.DetailSaleRequestDTO;
 import com.veloProWeb.model.entity.Sale.Dispatch;
 import com.veloProWeb.model.entity.Sale.Sale;
 import com.veloProWeb.model.entity.Sale.SaleDetail;

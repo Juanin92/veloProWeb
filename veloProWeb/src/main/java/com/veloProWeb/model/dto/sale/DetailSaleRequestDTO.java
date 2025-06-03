@@ -1,4 +1,4 @@
-package com.veloProWeb.model.dto;
+package com.veloProWeb.model.dto.sale;
 
 import lombok.Data;
 

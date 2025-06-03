@@ -1,7 +1,7 @@
 package com.veloProWeb.service.sale;
 
-import com.veloProWeb.model.dto.DetailSaleDTO;
-import com.veloProWeb.model.dto.DetailSaleRequestDTO;
+import com.veloProWeb.model.dto.sale.DetailSaleDTO;
+import com.veloProWeb.model.dto.sale.DetailSaleRequestDTO;
 import com.veloProWeb.model.entity.customer.Customer;
 import com.veloProWeb.model.entity.customer.TicketHistory;
 import com.veloProWeb.model.entity.product.Product;

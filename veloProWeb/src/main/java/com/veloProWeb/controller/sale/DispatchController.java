@@ -1,7 +1,7 @@
 package com.veloProWeb.controller.sale;
 
 import com.veloProWeb.model.Enum.DispatchStatus;
-import com.veloProWeb.model.dto.DetailSaleRequestDTO;
+import com.veloProWeb.model.dto.sale.DetailSaleRequestDTO;
 import com.veloProWeb.model.dto.sale.DispatchRequestDTO;
 import com.veloProWeb.model.dto.sale.DispatchResponseDTO;
 import com.veloProWeb.model.entity.Sale.Dispatch;
