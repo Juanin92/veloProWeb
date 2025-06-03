@@ -1,12 +1,17 @@
 package com.veloProWeb.controller.sale;
 
+import com.veloProWeb.model.Enum.DispatchStatus;
 import com.veloProWeb.model.dto.DetailSaleRequestDTO;
-import com.veloProWeb.model.dto.DispatchDTO;
+import com.veloProWeb.model.dto.sale.DispatchRequestDTO;
+import com.veloProWeb.model.dto.sale.DispatchResponseDTO;
 import com.veloProWeb.model.entity.Sale.Dispatch;
 import com.veloProWeb.service.reporting.interfaces.IRecordService;
 import com.veloProWeb.service.sale.Interface.IDispatchService;
 import com.veloProWeb.service.sale.Interface.ISaleDetailService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.veloProWeb.util.ResponseMessage;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,73 +19,51 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/despachos")
-@CrossOrigin(origins = "http://localhost:4200")
+@AllArgsConstructor
 public class DispatchController {
 
-    @Autowired private IDispatchService dispatchService;
-    @Autowired private ISaleDetailService saleDetailService;
-    @Autowired private IRecordService recordService;
+    private final IDispatchService dispatchService;
+    private final ISaleDetailService saleDetailService;
+    private final IRecordService recordService;
 
     @GetMapping()
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'GUEST', 'SELLER')")
-    public ResponseEntity<List<DispatchDTO>> getDispatches(){
-        try{
-            return ResponseEntity.ok(dispatchService.getDispatches());
-        }catch (IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+    public ResponseEntity<List<DispatchResponseDTO>> getDispatches(){
+        return ResponseEntity.ok(dispatchService.getDispatches());
     }
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'GUEST', 'SELLER')")
-    public ResponseEntity<Map<String, String>> createDispatch(@RequestBody DispatchDTO dto,
+    public ResponseEntity<Map<String, String>> createDispatch(@RequestBody @Valid DispatchRequestDTO dto,
                                                               @AuthenticationPrincipal UserDetails userDetails){
-        Map<String, String> response = new HashMap<>();
-        try {
-            Dispatch dispatch = dispatchService.createDispatch(dto);
-            saleDetailService.createSaleDetailsToDispatch(dto.getDetailSaleDTOS(), dispatch);
-            recordService.registerAction(userDetails, "CREATE", "Despacho creado: " + dto.getCustomer());
-            response.put("message", "Despacho en preparación");
-            return ResponseEntity.ok(response);
-        }catch (IllegalArgumentException e){
-            response.put("error", e.getMessage());
-            recordService.registerAction(userDetails, "CREATE_FAILURE",
-                    "Error: crear despacho:  " + dto.getCustomer() + " / " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
+        Dispatch dispatch = dispatchService.createDispatch(dto);
+        saleDetailService.createSaleDetailsToDispatch(dto.getDetailSaleDTOS(), dispatch);
+        recordService.registerAction(userDetails, "CREATE", "Despacho creado: " + dto.getCustomer());
+        return new ResponseEntity<>(ResponseMessage.message("Despacho en preparación"), HttpStatus.CREATED);
     }
 
     @PutMapping()
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'SELLER')")
-    public ResponseEntity<Map<String, String>> handleStatusDispatch(@RequestParam Long dispatchID, @RequestParam int action,
+    public ResponseEntity<Map<String, String>> handleStatusDispatch(@RequestParam
+                                                                    @NotNull(message = "El ID del despacho es obligatorio")
+                                                                    Long dispatchID,
+                                                                    @RequestParam
+                                                                    @NotNull(message = "La acción aplicar del despacho es obligatorio")
+                                                                    DispatchStatus action,
                                                                     @AuthenticationPrincipal UserDetails userDetails){
-        Map<String, String> response = new HashMap<>();
-        try {
-            response.put("message", "Cambio de status del despacho");
-            dispatchService.handleStatus(dispatchID, action);
-            recordService.registerAction(userDetails, "UPDATE", "Actualiza estado del despacho " + dispatchID);
-            return ResponseEntity.ok(response);
-        }catch (IllegalArgumentException e){
-            response.put("error", e.getMessage());
-            recordService.registerAction(userDetails, "UPDATE_FAILURE",
-                    "Actualiza estado del despacho " + dispatchID + " (" + e.getMessage() + ")");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
+        dispatchService.handleStatus(dispatchID, action);
+        recordService.registerAction(userDetails, "UPDATE", "Actualiza estado del despacho " + dispatchID);
+        return ResponseEntity.ok(ResponseMessage.message("Cambio de estado del despacho"));
     }
 
     @GetMapping("/detalles")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'GUEST', 'SELLER')")
     public ResponseEntity<List<DetailSaleRequestDTO>> getDetailSale(@RequestParam Long idDispatch){
-        try{
-            return ResponseEntity.ok(saleDetailService.getSaleDetailsToDispatch(idDispatch));
-        }catch (IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        return ResponseEntity.ok(saleDetailService.getSaleDetailsToDispatch(idDispatch));
     }
 }
