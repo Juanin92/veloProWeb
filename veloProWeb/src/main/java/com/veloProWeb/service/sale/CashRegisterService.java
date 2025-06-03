@@ -14,6 +14,7 @@ import com.veloProWeb.service.user.interfaces.IUserService;
 import com.veloProWeb.validation.CashRegisterValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -34,6 +35,7 @@ public class CashRegisterService implements ICashRegisterService {
      * @param username - nombre de usuario del usuario que hace el registro
      * @param amount - monto de la apertura de caja
      */
+    @Transactional
     @Override
     public void openRegister(String username, int amount) {
         User user = userService.getUserByUsername(username);
@@ -49,6 +51,7 @@ public class CashRegisterService implements ICashRegisterService {
      * Verifica el usuario, si esta presenta agregas los datos y deja cerrado el registro
      * @param dto - Objeto con los datos necesario
      */
+    @Transactional
     @Override
     public void closeRegister(String username, CashRegisterRequestDTO dto) {
         User user = userService.getUserByUsername(username);
@@ -84,6 +87,7 @@ public class CashRegisterService implements ICashRegisterService {
      * Buscar el registro a actualizar y si está presente se actualiza
      * @param dto - Datos a actualizar del registro seleccionado
      */
+    @Transactional
     @Override
     public void updateRegister(CashRegisterRequestDTO dto) {
         CashRegister cashRegister = cashRegisterRepo.findById(dto.getId()).orElseThrow(
