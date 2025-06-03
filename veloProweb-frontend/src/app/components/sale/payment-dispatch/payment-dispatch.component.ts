@@ -10,7 +10,7 @@ import { SaleService } from '../../../services/Sale/sale.service';
 import { PaymentMethod } from '../../../models/enum/payment-method';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ModalService } from '../../../utils/modal.service';
-import { DispatchPermissionsService } from '../../../services/Permissions/dispatch-permissions.service';
+import { DispatchPermissionsService } from '../../../services/permissions/dispatch-permissions.service';
 
 @Component({
   selector: 'app-payment-dispatch',
@@ -60,12 +60,12 @@ export class PaymentDispatchComponent implements OnChanges, OnInit {
     }
   }
 
-  createSaleFromDispatch(dispatchSelected: Dispatch): void {
+  processDispatchForSale(dispatchSelected: Dispatch): void {
     if (dispatchSelected) {
       this.requestDTO.id = dispatchSelected.id;
       this.requestDTO.discount = this.discountAmount;
       this.requestDTO.total = this.totalSum;
-      this.requestDTO.detailList = dispatchSelected.detailSaleDTOS ? [...dispatchSelected.detailSaleDTOS] : [];
+      this.requestDTO.detailList = dispatchSelected.detailSaleDTOList ? [...dispatchSelected.detailSaleDTOList] : [];
 
       this.saleService.createSaleFromDispatch(this.requestDTO).subscribe({
         next: (response) => {

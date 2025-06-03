@@ -159,7 +159,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-center mb-0 mt-1 p-0">
                 <button [disabled]="!isOk" type="button" class="btn btn-success"
-                    (click)="createSaleFromDispatch(selectedDispatchPayment!)"
+                    (click)="processDispatchForSale(selectedDispatchPayment!)"
                     [attr.data-bs-dismiss]="modalService.isModalVisible() ? 'modal' : null">Confirmar</button>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
                     (click)="resetModal()">Cancelar</button>
