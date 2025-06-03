@@ -1,4 +1,4 @@
-package com.veloProWeb.model.dto;
+package com.veloProWeb.model.dto.customer;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
