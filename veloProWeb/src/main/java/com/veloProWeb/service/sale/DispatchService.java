@@ -32,7 +32,7 @@ public class DispatchService implements IDispatchService {
      * @return - Lista filtrada de despachos
      */
     @Override
-    public List<DispatchResponseDTO> getDispatches() {
+    public final List<DispatchResponseDTO> getDispatches() {
         return dispatchRepo.findByStatusNot(DispatchStatus.DELETED).stream()
                 .map(mapper::toResponseDTO)
                 .toList();
@@ -46,7 +46,7 @@ public class DispatchService implements IDispatchService {
      */
     @Transactional
     @Override
-    public Dispatch createDispatch(DispatchRequestDTO dto) {
+    public final Dispatch createDispatch(DispatchRequestDTO dto) {
         Dispatch dispatch = mapper.toEntity(dto, dispatchRepo.count());
         dispatchRepo.save(dispatch);
         return dispatch;
@@ -60,7 +60,7 @@ public class DispatchService implements IDispatchService {
      */
     @Transactional
     @Override
-    public void handleStatus(Long dispatchID, DispatchStatus statusAction) {
+    public final void handleStatus(Long dispatchID, DispatchStatus statusAction) {
         Dispatch dispatch = getDispatchExisting(dispatchID);
         switch (statusAction){
             case DispatchStatus.IN_ROUTE:
@@ -95,7 +95,7 @@ public class DispatchService implements IDispatchService {
      */
     @Transactional
     @Override
-    public void handleDispatchReceiveToSale(Long dispatchID) {
+    public final void handleDispatchReceiveToSale(Long dispatchID) {
         Dispatch dispatch = getDispatchExisting(dispatchID);
         if (dispatch.getStatus().equals(DispatchStatus.PREPARING) ||
                 dispatch.getStatus().equals(DispatchStatus.IN_ROUTE)){
@@ -111,7 +111,7 @@ public class DispatchService implements IDispatchService {
      * @return - Optional de despacho si se encuentra o null en el caso contrario
      */
     @Override
-    public Optional<Dispatch> getDispatchById(Long id) {
+    public final Optional<Dispatch> getDispatchById(Long id) {
         return dispatchRepo.findById(id);
     }
 
