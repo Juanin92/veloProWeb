@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { CashRegister } from '../../models/Entity/Sale/cash-register';
-import { AuthService } from '../User/auth.service';
-import { CashRegisterForm } from '../../models/Entity/Sale/cash-register-form';
+import { CashRegister } from '../../models/entity/sale/cash-register';
+import { AuthService } from '../user/auth.service';
+import { CashRegisterForm } from '../../models/entity/sale/cash-register-form';
 
 @Injectable({
   providedIn: 'root'

@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Dispatch } from '../../models/Entity/Sale/dispatch';
+import { Dispatch } from '../../models/entity/sale/dispatch';
 import { DetailSaleRequestDTO } from '../../models/DTO/detail-sale-request-dto';
-import { AuthService } from '../User/auth.service';
-import { DispatchRequest } from '../../models/Entity/Sale/dispatch-request';
+import { AuthService } from '../user/auth.service';
+import { DispatchRequest } from '../../models/entity/sale/dispatch-request';
 import { DispatchStatus } from '../../models/enum/dispatch-status';
 
 @Injectable({

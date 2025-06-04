@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ReportServiceService } from '../../../services/reproting/report-service.service';
 import { subDays, subMonths, subYears, format } from 'date-fns';
 import { RouterModule } from '@angular/router';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ReportDTO } from '../../../models/DTO/Report/report-dto';
 import { ChartService } from '../../../utils/chart.service';
 import { ProductReportDTO } from '../../../models/DTO/Report/product-report-dto';
-import { ReportPermissionsService } from '../../../services/Permissions/report-permissions.service';
+import { ReportPermissionsService } from '../../../services/permissions/report-permissions.service';
+import { ReportServiceService } from '../../../services/reporting/report-service.service';
 
 @Component({
   selector: 'app-report',

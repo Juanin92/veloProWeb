@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SaleRequestDTO } from '../../models/DTO/sale-request-dto';
 import { DetailSaleRequestDTO } from '../../models/DTO/detail-sale-request-dto';
-import { AuthService } from '../User/auth.service';
+import { AuthService } from '../user/auth.service';
 
 @Injectable({
   providedIn: 'root'

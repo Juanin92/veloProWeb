@@ -1,4 +1,4 @@
-import { SupplierForm } from "../models/Entity/Purchase/supplier-form";
+import { SupplierForm } from "../models/entity/purchase/supplier-form";
 
 export class SupplierValidator {
     static validateForm(selectedSupplier: SupplierForm): boolean{

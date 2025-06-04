@@ -1,6 +1,7 @@
-import { MovementsType } from "../enum/movements-type";
-import { Product } from "./Product/product";
-import { User } from "./user";
+import { MovementsType } from "../../enum/movements-type";
+import { Product } from "../product/product";
+import { User } from "../user";
+
 
 export interface Kardex {
     id: number;

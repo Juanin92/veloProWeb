@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { NotificationService } from '../../../utils/notification-service.service';
-import { UserService } from '../../../services/User/user.service';
+import { UserService } from '../../../services/user/user.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { UserResponse } from '../../../models/Entity/user/user-response';
+import { UserResponse } from '../../../models/entity/user/user-response';
 import { MessageService } from '../../../services/communication/message.service';
 import { ErrorMessageService } from '../../../utils/error-message.service';
-import { MessageForm } from '../../../models/Entity/communication/message-form';
+import { MessageForm } from '../../../models/entity/communication/message-form';
 
 @Component({
   selector: 'app-message-modal',

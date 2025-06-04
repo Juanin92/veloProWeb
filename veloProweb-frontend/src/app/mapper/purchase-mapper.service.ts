@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Purchase } from '../models/Entity/Purchase/purchase';
-import { PurchaseRequest } from '../models/Entity/Purchase/purchase-request';
-import { PurchaseDetailRequest } from '../models/Entity/Purchase/purchase-detail-request';
-import { PurchaseDetails } from '../models/Entity/Purchase/purchase-details';
+import { Purchase } from '../models/entity/purchase/purchase';
+import { PurchaseRequest } from '../models/entity/purchase/purchase-request';
+import { PurchaseDetailRequest } from '../models/entity/purchase/purchase-detail-request';
+import { PurchaseDetails } from '../models/entity/purchase/purchase-details';
 
 @Injectable({
   providedIn: 'root'

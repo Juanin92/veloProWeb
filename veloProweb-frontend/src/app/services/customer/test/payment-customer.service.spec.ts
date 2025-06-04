@@ -3,9 +3,9 @@ import { TestBed } from '@angular/core/testing';
 import { PaymentCustomerService } from '../payment-customer.service';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { PaymentCustomerResponse } from '../../../models/Entity/Customer/payment-customer-response';
-import { CustomerResponse } from '../../../models/Entity/Customer/customer-response';
-import { TicketHistory } from '../../../models/Entity/Customer/ticket-history';
+import { PaymentCustomerResponse } from '../../../models/entity/customer/payment-customer-response';
+import { CustomerResponse } from '../../../models/entity/customer/customer-response';
+import { TicketHistory } from '../../../models/entity/customer/ticket-history';
 
 describe('PaymentCustomerService', () => {
   let service: PaymentCustomerService;

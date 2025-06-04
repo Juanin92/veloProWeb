@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Alert } from '../../models/Entity/communication/alert';
-import { AuthService } from '../User/auth.service';
+import { Alert } from '../../models/entity/communication/alert';
+import { AuthService } from '../user/auth.service';
 import { AlertStatus } from '../../models/enum/alert-status';
 
 @Injectable({

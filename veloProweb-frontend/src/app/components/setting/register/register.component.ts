@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Record } from '../../../models/Entity/reporting/record';
-import { RecordService } from '../../../services/reproting/record.service';
+import { Record } from '../../../models/entity/reporting/record';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SettingPermissionsService } from '../../../services/Permissions/setting-permissions.service';
+import { SettingPermissionsService } from '../../../services/permissions/setting-permissions.service';
+import { RecordService } from '../../../services/reporting/record.service';
 
 @Component({
   selector: 'app-register',

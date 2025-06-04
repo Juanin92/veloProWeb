@@ -1,5 +1,3 @@
-import { UserDTO } from "../../DTO/user-dto";
-
 export interface Message {
     id: number,
     context: string,

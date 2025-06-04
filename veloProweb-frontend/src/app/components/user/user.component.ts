@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { UserService } from '../../services/User/user.service';
+import { UserService } from '../../services/user/user.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserValidator } from '../../validation/user-validator';
@@ -8,11 +8,11 @@ import { TooltipService } from '../../utils/tooltip.service';
 import { NotificationService } from '../../utils/notification-service.service';
 import { UserDTO } from '../../models/DTO/user-dto';
 import * as bootstrap from 'bootstrap';
-import { UserPermissionsService } from '../../services/Permissions/user-permissions.service';
-import { UserResponse } from '../../models/Entity/user/user-response';
+import { UserPermissionsService } from '../../services/permissions/user-permissions.service';
+import { UserResponse } from '../../models/entity/user/user-response';
 import { UserMapperService } from '../../mapper/user-mapper.service';
 import { ErrorMessageService } from '../../utils/error-message.service';
-import { UserHelperService } from '../../services/User/user-helper.service';
+import { UserHelperService } from '../../services/user/user-helper.service';
 
 @Component({
   selector: 'app-user',

@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AuthService } from '../User/auth.service';
-import { PurchaseRequest } from '../../models/Entity/Purchase/purchase-request';
-import { PurchaseResponse } from '../../models/Entity/Purchase/purchase-response';
+import { AuthService } from '../user/auth.service';
+import { PurchaseRequest } from '../../models/entity/purchase/purchase-request';
+import { PurchaseResponse } from '../../models/entity/purchase/purchase-response';
 
 @Injectable({
   providedIn: 'root'

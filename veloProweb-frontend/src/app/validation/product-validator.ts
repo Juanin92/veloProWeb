@@ -1,8 +1,9 @@
-import { Brand } from "../models/Entity/Product/brand";
-import { Category } from "../models/Entity/Product/category";
-import { Product } from "../models/Entity/Product/product";
-import { Subcategory } from "../models/Entity/Product/subcategory";
-import { UnitProduct } from "../models/Entity/Product/unit-product";
+import { Brand } from "../models/entity/product/brand";
+import { Category } from "../models/entity/product/category";
+import { Product } from "../models/entity/product/product";
+import { Subcategory } from "../models/entity/product/subcategory";
+import { UnitProduct } from "../models/entity/product/unit-product";
+
 
 export class ProductValidator {
     static validateForm(selectedProduct: Product): boolean {

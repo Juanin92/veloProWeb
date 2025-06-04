@@ -1,14 +1,14 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { CustomerResponse } from '../../../models/Entity/Customer/customer-response';
+import { CustomerResponse } from '../../../models/entity/customer/customer-response';
 import { CustomerService } from '../../../services/customer/customer.service';
 import { CustomerValidator } from '../../../validation/customer-validator';
 import { CustomerHelperServiceService } from '../../../services/customer/customer-helper-service.service';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ModalService } from '../../../utils/modal.service';
-import { CustomerPermissionsService } from '../../../services/Permissions/customer-permissions.service';
-import { CustomerForm } from '../../../models/Entity/Customer/customer-form';
+import { CustomerPermissionsService } from '../../../services/permissions/customer-permissions.service';
+import { CustomerForm } from '../../../models/entity/customer/customer-form';
 import { ErrorMessageService } from '../../../utils/error-message.service';
 
 @Component({

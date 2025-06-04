@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { CashRegisterService } from '../../../services/Sale/cash-register.service';
+import { CashRegisterService } from '../../../services/sale/cash-register.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ModalService } from '../../../utils/modal.service';
 import { ErrorMessageService } from '../../../utils/error-message.service';
-import { CashRegisterForm } from '../../../models/Entity/Sale/cash-register-form';
+import { CashRegisterForm } from '../../../models/entity/sale/cash-register-form';
 
 @Component({
   selector: 'app-cashier',

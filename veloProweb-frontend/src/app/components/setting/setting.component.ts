@@ -2,17 +2,17 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LocalDataService } from '../../services/data/local-data.service';
-import { LocalData } from '../../models/Entity/data/local-data';
+import { LocalData } from '../../models/entity/data/local-data';
 import { CashierMovementsComponent } from "./cashier-movements/cashier-movements.component";
 import { DispatchLayoutComponent } from "../sale/dispatch-layout/dispatch-layout.component";
-import { RegisterComponent } from "./register/register.component";
 import { TaskLayoutComponent } from "../communication/task-layout/task-layout.component";
-import { SettingPermissionsService } from '../../services/Permissions/setting-permissions.service';
+import { SettingPermissionsService } from '../../services/permissions/setting-permissions.service';
 import { NotificationService } from '../../utils/notification-service.service';
-import { AuthService } from '../../services/User/auth.service';
+import { AuthService } from '../../services/user/auth.service';
 import { EncryptionService } from '../../security/encryption.service';
 import { AuthRequestDTO } from '../../models/DTO/auth-request-dto';
 import { ErrorMessageService } from '../../utils/error-message.service';
+import { RegisterComponent } from './register/register.component';
 
 @Component({
   selector: 'app-setting',

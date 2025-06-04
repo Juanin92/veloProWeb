@@ -6,18 +6,18 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { ProductService } from '../../../services/Product/product.service';
-import { ProductHelperService } from '../../../services/Product/product-helper.service';
+import { ProductService } from '../../../services/product/product.service';
+import { ProductHelperService } from '../../../services/product/product-helper.service';
 import { NotificationService } from '../../../utils/notification-service.service';
-import { Product } from '../../../models/Entity/Product/product';
+import { Product } from '../../../models/entity/product/product';
 import { ProductValidator } from '../../../validation/product-validator';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ModalService } from '../../../utils/modal.service';
-import { ProductPermissionsService } from '../../../services/Permissions/product-permissions.service';
+import { ProductPermissionsService } from '../../../services/permissions/product-permissions.service';
 import { ProductMapperService } from '../../../mapper/product-mapper.service';
 import { ErrorMessageService } from '../../../utils/error-message.service';
-import { ProductUpdateForm } from '../../../models/Entity/Product/product-update-form';
+import { ProductUpdateForm } from '../../../models/entity/product/product-update-form';
 
 @Component({
   selector: 'app-update-product',

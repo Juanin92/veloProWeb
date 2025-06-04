@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Sale } from '../../models/Entity/Sale/sale';
-import { PaymentMethod } from '../../models/enum/payment-method';
-import { SaleDetail } from '../../models/Entity/Sale/sale-detail';
+import { Sale } from '../../models/entity/sale/sale';
+import { SaleDetail } from '../../models/entity/sale/sale-detail';
 import { SaleRequestDTO } from '../../models/DTO/sale-request-dto';
 import { SaleDetailDTO } from '../../models/DTO/sale-detail-dto';
 

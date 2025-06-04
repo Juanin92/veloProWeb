@@ -4,7 +4,7 @@ import { PurchaseService } from '../purchase.service';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { PurchaseRequestDTO } from '../../../models/DTO/purchase-request-dto';
-import { Purchase } from '../../../models/Entity/Purchase/purchase';
+import { Purchase } from '../../../models/entity/purchase/purchase';
 
 describe('PurchaseService', () => {
   let service: PurchaseService;

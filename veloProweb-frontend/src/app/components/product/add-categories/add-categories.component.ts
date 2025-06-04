@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { BrandService } from '../../../services/Product/brand.service';
-import { CategoryService } from '../../../services/Product/category.service';
-import { SubcategoryService } from '../../../services/Product/subcategory.service';
-import { UnitService } from '../../../services/Product/unit.service';
-import { Brand } from '../../../models/Entity/Product/brand';
-import { Category } from '../../../models/Entity/Product/category';
-import { Subcategory } from '../../../models/Entity/Product/subcategory';
-import { UnitProduct } from '../../../models/Entity/Product/unit-product';
-import { ProductHelperService } from '../../../services/Product/product-helper.service';
+import { BrandService } from '../../../services/product/brand.service';
+import { CategoryService } from '../../../services/product/category.service';
+import { SubcategoryService } from '../../../services/product/subcategory.service';
+import { UnitService } from '../../../services/product/unit.service';
+import { Brand } from '../../../models/entity/product/brand';
+import { Category } from '../../../models/entity/product/category';
+import { Subcategory } from '../../../models/entity/product/subcategory';
+import { UnitProduct } from '../../../models/entity/product/unit-product';
+import { ProductHelperService } from '../../../services/product/product-helper.service';
 import { ProductValidator } from '../../../validation/product-validator';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../../utils/notification-service.service';
-import { ProductPermissionsService } from '../../../services/Permissions/product-permissions.service';
+import { ProductPermissionsService } from '../../../services/permissions/product-permissions.service';
 import { ErrorMessageService } from '../../../utils/error-message.service';
 
 @Component({

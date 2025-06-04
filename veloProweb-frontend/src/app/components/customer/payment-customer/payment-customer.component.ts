@@ -1,17 +1,17 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { PaymentCustomerService } from '../../../services/customer/payment-customer.service';
-import { CustomerResponse } from '../../../models/Entity/Customer/customer-response';
+import { CustomerResponse } from '../../../models/entity/customer/customer-response';
 import { CustomerHelperServiceService } from '../../../services/customer/customer-helper-service.service';
-import { PaymentCustomerResponse } from '../../../models/Entity/Customer/payment-customer-response';
+import { PaymentCustomerResponse } from '../../../models/entity/customer/payment-customer-response';
 import { CommonModule } from '@angular/common';
 import { TicketHistoryService } from '../../../services/customer/ticket-history.service';
-import { TicketHistory } from '../../../models/Entity/Customer/ticket-history';
-import { PaymentDetails } from '../../../models/Entity/Customer/payment-details';
+import { TicketHistory } from '../../../models/entity/customer/ticket-history';
+import { PaymentDetails } from '../../../models/entity/customer/payment-details';
 import { FormsModule } from '@angular/forms';
 import { PaymentValidator } from '../../../validation/payment-validator';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ModalService } from '../../../utils/modal.service';
-import { CustomerPermissionsService } from '../../../services/Permissions/customer-permissions.service';
+import { CustomerPermissionsService } from '../../../services/permissions/customer-permissions.service';
 import { ErrorMessageService } from '../../../utils/error-message.service';
 
 @Component({

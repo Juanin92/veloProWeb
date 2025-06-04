@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { CustomerService } from "../../../services/customer/customer.service";
-import { CustomerResponse } from "../../../models/Entity/Customer/customer-response";
+import { CustomerResponse } from "../../../models/entity/customer/customer-response";
 import { of } from "rxjs/internal/observable/of";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";

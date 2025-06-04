@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AuthService } from '../User/auth.service';
+import { AuthService } from '../user/auth.service';
 import { Role } from '../../models/enum/role';
 
 @Injectable({

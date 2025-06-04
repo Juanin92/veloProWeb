@@ -1,4 +1,4 @@
-import { PaymentDetails } from "../models/Entity/Customer/payment-details";
+import { PaymentDetails } from "../models/entity/customer/payment-details";
 
 export class PaymentValidator {
     static validateFormPayment(payment: PaymentDetails): boolean{

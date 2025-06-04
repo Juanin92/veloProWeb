@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginRequest } from '../../models/DTO/login-request';
-import { AuthService } from '../../services/User/auth.service';
+import { AuthService } from '../../services/user/auth.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../utils/notification-service.service';

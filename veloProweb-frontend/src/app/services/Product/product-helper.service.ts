@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Product } from '../../models/Entity/Product/product';
+import { Product } from '../../models/entity/product/product';
 import { StatusProduct } from '../../models/enum/status-product';
-import { Brand } from '../../models/Entity/Product/brand';
-import { UnitProduct } from '../../models/Entity/Product/unit-product';
-import { Subcategory } from '../../models/Entity/Product/subcategory';
-import { Category } from '../../models/Entity/Product/category';
-import { ProductForm } from '../../models/Entity/Product/product-form';
-import { ProductUpdateForm } from '../../models/Entity/Product/product-update-form';
+import { Brand } from '../../models/entity/product/brand';
+import { UnitProduct } from '../../models/entity/product/unit-product';
+import { Subcategory } from '../../models/entity/product/subcategory';
+import { Category } from '../../models/entity/product/category';
+import { ProductForm } from '../../models/entity/product/product-form';
+import { ProductUpdateForm } from '../../models/entity/product/product-update-form';
 
 @Injectable({
   providedIn: 'root'

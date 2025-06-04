@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Supplier } from '../../../models/Entity/Purchase/supplier';
+import { Supplier } from '../../../models/entity/purchase/supplier';
 import { SupplierValidator } from '../../../validation/supplier-validator';
-import { SupplierService } from '../../../services/Purchase/supplier.service';
+import { SupplierService } from '../../../services/purchase/supplier.service';
 import { NotificationService } from '../../../utils/notification-service.service';
-import { PurchasePermissionsService } from '../../../services/Permissions/purchase-permissions.service';
-import { SupplierForm } from '../../../models/Entity/Purchase/supplier-form';
+import { PurchasePermissionsService } from '../../../services/permissions/purchase-permissions.service';
+import { SupplierForm } from '../../../models/entity/purchase/supplier-form';
 import { ErrorMessageService } from '../../../utils/error-message.service';
 
 @Component({

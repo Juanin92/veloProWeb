@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Message } from '../../models/Entity/communication/message';
-import { AuthService } from '../User/auth.service';
-import { MessageForm } from '../../models/Entity/communication/message-form';
+import { Message } from '../../models/entity/communication/message';
+import { AuthService } from '../user/auth.service';
+import { MessageForm } from '../../models/entity/communication/message-form';
 
 @Injectable({
   providedIn: 'root'

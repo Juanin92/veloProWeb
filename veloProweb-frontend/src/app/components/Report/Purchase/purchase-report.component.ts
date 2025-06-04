@@ -1,13 +1,13 @@
 import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
-import { PurchaseService } from '../../../services/Purchase/purchase.service';
+import { PurchaseService } from '../../../services/purchase/purchase.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TooltipService } from '../../../utils/tooltip.service';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ExcelService } from '../../../utils/excel.service';
-import { ReportPermissionsService } from '../../../services/Permissions/report-permissions.service';
-import { PurchaseResponse } from '../../../models/Entity/Purchase/purchase-response';
-import { PurchaseDetailResponse } from '../../../models/Entity/Purchase/purchase-detail-response';
+import { ReportPermissionsService } from '../../../services/permissions/report-permissions.service';
+import { PurchaseResponse } from '../../../models/entity/purchase/purchase-response';
+import { PurchaseDetailResponse } from '../../../models/entity/purchase/purchase-detail-response';
 
 @Component({
   selector: 'app-purchase-report',

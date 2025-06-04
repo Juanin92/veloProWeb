@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Dispatch } from '../../../models/Entity/Sale/dispatch';
+import { Dispatch } from '../../../models/entity/sale/dispatch';
 import { DispatchService } from '../../../services/sale/dispatch.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';

@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { UnitService } from '../unit.service';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { UnitProduct } from '../../../models/Entity/Product/unit-product';
+import { UnitProduct } from '../../../models/entity/product/unit-product';
 
 describe('UnitService', () => {
   let service: UnitService;

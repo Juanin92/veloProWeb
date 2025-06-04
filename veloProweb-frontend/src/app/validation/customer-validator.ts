@@ -1,5 +1,4 @@
-import { CustomerForm } from "../models/Entity/Customer/customer-form";
-import { CustomerResponse } from "../models/Entity/Customer/customer-response";
+import { CustomerForm } from "../models/entity/customer/customer-form"
 
 export class CustomerValidator {
 

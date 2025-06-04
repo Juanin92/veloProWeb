@@ -1,15 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TaskForm } from '../../../models/Entity/communication/task-form';
+import { TaskForm } from '../../../models/entity/communication/task-form';
 import { NotificationService } from '../../../utils/notification-service.service';
-import { UserService } from '../../../services/User/user.service';
 import * as bootstrap from 'bootstrap';
-import { SettingPermissionsService } from '../../../services/Permissions/setting-permissions.service';
-import { UserResponse } from '../../../models/Entity/user/user-response';
+import { SettingPermissionsService } from '../../../services/permissions/setting-permissions.service';
+import { UserResponse } from '../../../models/entity/user/user-response';
 import { TaskService } from '../../../services/communication/task.service';
 import { ErrorMessageService } from '../../../utils/error-message.service';
-import { Task } from '../../../models/Entity/communication/task';
+import { Task } from '../../../models/entity/communication/task';
+import { UserService } from '../../../services/user/user.service';
 
 @Component({
   selector: 'app-task-layout',

@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Supplier } from '../../models/Entity/Purchase/supplier';
-import { AuthService } from '../User/auth.service';
-import { SupplierForm } from '../../models/Entity/Purchase/supplier-form';
+import { Supplier } from '../../models/entity/purchase/supplier';
+import { AuthService } from '../user/auth.service';
+import { SupplierForm } from '../../models/entity/purchase/supplier-form';
 
 @Injectable({
   providedIn: 'root'

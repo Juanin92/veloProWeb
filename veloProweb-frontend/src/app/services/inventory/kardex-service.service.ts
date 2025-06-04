@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AuthService } from '../User/auth.service';
-import { Kardex } from '../../models/Entity/inventory/kardex';
+import { AuthService } from '../user/auth.service';
+import { Kardex } from '../../models/entity/inventory/kardex';
 
 @Injectable({
   providedIn: 'root'

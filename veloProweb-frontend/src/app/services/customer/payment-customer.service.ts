@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PaymentCustomerResponse } from '../../models/Entity/Customer/payment-customer-response';
-import { PaymentDetails } from '../../models/Entity/Customer/payment-details';
-import { AuthService } from '../User/auth.service';
+import { PaymentCustomerResponse } from '../../models/entity/customer/payment-customer-response';
+import { PaymentDetails } from '../../models/entity/customer/payment-details';
+import { AuthService } from '../user/auth.service';
 
 @Injectable({
   providedIn: 'root',

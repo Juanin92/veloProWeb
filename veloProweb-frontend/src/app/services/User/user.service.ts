@@ -1,11 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { UpdateUserForm } from '../../models/entity/user/update-user-form';
+import { UserForm } from '../../models/entity/user/user-form';
 import { AuthService } from './auth.service';
-import { UserDTO } from '../../models/DTO/user-dto';
-import { UpdateUserForm } from '../../models/Entity/user/update-user-form';
-import { UserResponse } from '../../models/Entity/user/user-response';
-import { UserForm } from '../../models/Entity/user/user-form';
+import { UserResponse } from '../../models/entity/user/user-response';
 
 @Injectable({
   providedIn: 'root'

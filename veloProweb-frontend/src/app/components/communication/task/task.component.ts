@@ -1,9 +1,9 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TaskForm } from '../../../models/Entity/communication/task-form';
+import { TaskForm } from '../../../models/entity/communication/task-form';
 import { TaskService } from '../../../services/communication/task.service';
-import { Task } from '../../../models/Entity/communication/task';
+import { Task } from '../../../models/entity/communication/task';
 import { ErrorMessageService } from '../../../utils/error-message.service';
 import { NotificationService } from '../../../utils/notification-service.service';
 

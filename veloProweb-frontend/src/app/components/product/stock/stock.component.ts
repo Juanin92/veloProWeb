@@ -1,10 +1,9 @@
 import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
-import { ProductService } from '../../../services/Product/product.service';
-import { Product } from '../../../models/Entity/Product/product';
+import { Product } from '../../../models/entity/product/product';
 import { CommonModule, NgStyle } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AddProductComponent } from '../add-product/add-product.component';
-import { ProductHelperService } from '../../../services/Product/product-helper.service';
+import { ProductHelperService } from '../../../services/product/product-helper.service';
 import { UpdateProductComponent } from '../update-product/update-product.component';
 import { AddCategoriesComponent } from '../add-categories/add-categories.component';
 import { RouterModule } from '@angular/router';
@@ -12,10 +11,11 @@ import { StatusProduct } from '../../../models/enum/status-product';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ModalService } from '../../../utils/modal.service';
 import { TooltipService } from '../../../utils/tooltip.service';
-import { ProductPermissionsService } from '../../../services/Permissions/product-permissions.service';
-import { ProductUpdateForm } from '../../../models/Entity/Product/product-update-form';
+import { ProductPermissionsService } from '../../../services/permissions/product-permissions.service';
+import { ProductUpdateForm } from '../../../models/entity/product/product-update-form';
 import { ErrorMessageService } from '../../../utils/error-message.service';
 import { ProductMapperService } from '../../../mapper/product-mapper.service';
+import { ProductService } from '../../../services/product/product.service';
 
 @Component({
   selector: 'app-stock',

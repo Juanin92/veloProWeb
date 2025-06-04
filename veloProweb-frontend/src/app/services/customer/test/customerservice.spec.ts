@@ -3,7 +3,7 @@ import { CustomerService } from "../customer.service";
 import { TestBed } from "@angular/core/testing";
 import { PaymentStatus } from "../../../models/enum/payment-status.enum";
 import { provideHttpClient, HttpClient } from "@angular/common/http";
-import { CustomerResponse } from "../../../models/Entity/Customer/customer-response";
+import { CustomerResponse } from "../../../models/entity/customer/customer-response";
 
 describe('CustomerService', () => {
     let service: CustomerService;

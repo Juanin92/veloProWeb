@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { ReportDTO } from '../../models/DTO/Report/report-dto';
 import { ProductReportDTO } from '../../models/DTO/Report/product-report-dto';
-import { AuthService } from '../User/auth.service';
+import { AuthService } from '../user/auth.service';
 
 @Injectable({
   providedIn: 'root'

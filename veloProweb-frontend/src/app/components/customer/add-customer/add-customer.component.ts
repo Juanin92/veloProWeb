@@ -6,8 +6,8 @@ import { CommonModule } from '@angular/common';
 import { CustomerHelperServiceService } from '../../../services/customer/customer-helper-service.service';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ModalService } from '../../../utils/modal.service';
-import { CustomerPermissionsService } from '../../../services/Permissions/customer-permissions.service';
-import { CustomerForm } from '../../../models/Entity/Customer/customer-form';
+import { CustomerPermissionsService } from '../../../services/permissions/customer-permissions.service';
+import { CustomerForm } from '../../../models/entity/customer/customer-form';
 import { ErrorMessageService } from '../../../utils/error-message.service';
 
 @Component({

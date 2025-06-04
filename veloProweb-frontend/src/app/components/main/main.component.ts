@@ -2,16 +2,16 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angula
 import { UpdateUserModalComponent } from "../user/update-user-modal/update-user-modal.component";
 import { MessageModalComponent } from "../communication/message-modal/message-modal.component";
 import { MenuComponent } from "../menu/menu.component";
-import { LocalData } from '../../models/Entity/data/local-data';
+import { LocalData } from '../../models/entity/data/local-data';
 import { CommonModule, DatePipe } from '@angular/common';
 import { LocalDataService } from '../../services/data/local-data.service';
 import { Router, RouterOutlet } from '@angular/router';
 import * as bootstrap from 'bootstrap';
-import { AuthService } from '../../services/User/auth.service';
+import { AuthService } from '../../services/user/auth.service';
 import { CashierComponent } from "../setting/cashier/cashier.component";
-import { MenuPermissionsService } from '../../services/Permissions/menu-permissions.service';
+import { MenuPermissionsService } from '../../services/permissions/menu-permissions.service';
 import { NotificationService } from '../../utils/notification-service.service';
-import { CashRegisterService } from '../../services/Sale/cash-register.service';
+import { CashRegisterService } from '../../services/sale/cash-register.service';
 import { firstValueFrom } from 'rxjs';
 import { ErrorMessageService } from '../../utils/error-message.service';
 

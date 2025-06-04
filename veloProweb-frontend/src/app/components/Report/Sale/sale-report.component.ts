@@ -1,15 +1,15 @@
 import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
-import { Sale } from '../../../models/Entity/Sale/sale';
+import { Sale } from '../../../models/entity/sale/sale';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SaleService } from '../../../services/Sale/sale.service';
+import { SaleService } from '../../../services/sale/sale.service';
 import { SaleRequestDTO } from '../../../models/DTO/sale-request-dto';
 import { DetailSaleRequestDTO } from '../../../models/DTO/detail-sale-request-dto';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { TooltipService } from '../../../utils/tooltip.service';
 import { ExcelService } from '../../../utils/excel.service';
 import { PdfService } from '../../../utils/pdf.service';
-import { ReportPermissionsService } from '../../../services/Permissions/report-permissions.service';
+import { ReportPermissionsService } from '../../../services/permissions/report-permissions.service';
 
 @Component({
   selector: 'app-sale-report',

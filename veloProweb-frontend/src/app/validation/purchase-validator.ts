@@ -1,4 +1,4 @@
-import { Purchase } from "../models/Entity/Purchase/purchase";
+import { Purchase } from "../models/entity/purchase/purchase";
 
 export class PurchaseValidator {
     static validateForm(purchase: Purchase, total: number): boolean{

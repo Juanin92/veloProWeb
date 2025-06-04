@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Dispatch } from '../../../models/Entity/Sale/dispatch';
+import { Dispatch } from '../../../models/entity/sale/dispatch';
 import { DetailSaleRequestDTO } from '../../../models/DTO/detail-sale-request-dto';
 import { CustomerService } from '../../../services/customer/customer.service';
-import { CustomerResponse } from '../../../models/Entity/Customer/customer-response';
+import { CustomerResponse } from '../../../models/entity/customer/customer-response';
 import { SaleRequestDTO } from '../../../models/DTO/sale-request-dto';
-import { SaleService } from '../../../services/Sale/sale.service';
+import { SaleService } from '../../../services/sale/sale.service';
 import { PaymentMethod } from '../../../models/enum/payment-method';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ModalService } from '../../../utils/modal.service';

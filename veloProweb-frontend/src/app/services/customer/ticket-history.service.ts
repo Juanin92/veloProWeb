@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TicketHistory } from '../../models/Entity/Customer/ticket-history';
-import { AuthService } from '../User/auth.service';
+import { TicketHistory } from '../../models/entity/customer/ticket-history';
+import { AuthService } from '../user/auth.service';
 
 @Injectable({
   providedIn: 'root',

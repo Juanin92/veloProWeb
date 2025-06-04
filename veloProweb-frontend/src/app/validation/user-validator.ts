@@ -1,5 +1,6 @@
-import { UserResponse } from "../models/Entity/user/user-response";
+import { UserResponse } from "../models/entity/user/user-response";
 import { Role } from "../models/enum/role";
+
 
 export class UserValidator {
     static validateForm(selectedUser: UserResponse): boolean {

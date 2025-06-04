@@ -2,12 +2,12 @@ import { AfterViewInit, Component, Input} from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { TooltipService } from '../../utils/tooltip.service';
 import { CommonModule } from '@angular/common';
-import { MenuPermissionsService } from '../../services/Permissions/menu-permissions.service';
-import { AuthService } from '../../services/User/auth.service';
+import { MenuPermissionsService } from '../../services/permissions/menu-permissions.service';
+import { AuthService } from '../../services/user/auth.service';
 import { Role } from '../../models/enum/role';
 import { NotificationService } from '../../utils/notification-service.service';
 import { firstValueFrom } from 'rxjs';
-import { CashRegisterService } from '../../services/Sale/cash-register.service';
+import { CashRegisterService } from '../../services/sale/cash-register.service';
 
 @Component({
   selector: 'app-menu',

@@ -1,11 +1,11 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { KardexServiceService } from '../../../services/inventory/kardex-service.service';
-import { Kardex } from '../../../models/Entity/kardex';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TooltipService } from '../../../utils/tooltip.service';
 import { ExcelService } from '../../../utils/excel.service';
-import { ReportPermissionsService } from '../../../services/Permissions/report-permissions.service';
+import { ReportPermissionsService } from '../../../services/permissions/report-permissions.service';
+import { Kardex } from '../../../models/entity/inventory/kardex';
 
 @Component({
   selector: 'app-kardex',

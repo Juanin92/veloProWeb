@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { CashRegister } from '../../../models/Entity/Sale/cash-register';
+import { CashRegister } from '../../../models/entity/sale/cash-register';
 import { CommonModule } from '@angular/common';
-import { CashRegisterService } from '../../../services/Sale/cash-register.service';
+import { CashRegisterService } from '../../../services/sale/cash-register.service';
 import { FormsModule } from '@angular/forms';
 import { SettingPermissionsService } from '../../../services/permissions/setting-permissions.service';
 

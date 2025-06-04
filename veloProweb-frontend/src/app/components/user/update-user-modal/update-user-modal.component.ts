@@ -1,15 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { UserService } from '../../../services/User/user.service';
+import { UserService } from '../../../services/user/user.service';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ModalService } from '../../../utils/modal.service';
 import { UserValidator } from '../../../validation/user-validator';
-import { UserPermissionsService } from '../../../services/Permissions/user-permissions.service';
-import { UserResponse } from '../../../models/Entity/user/user-response';
+import { UserPermissionsService } from '../../../services/permissions/user-permissions.service';
+import { UserResponse } from '../../../models/entity/user/user-response';
 import { UserMapperService } from '../../../mapper/user-mapper.service';
 import { ErrorMessageService } from '../../../utils/error-message.service';
-import { UserHelperService } from '../../../services/User/user-helper.service';
+import { UserHelperService } from '../../../services/user/user-helper.service';
 
 @Component({
   selector: 'app-update-user-modal',

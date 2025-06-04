@@ -1,25 +1,25 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { Purchase } from '../../../models/Entity/Purchase/purchase';
+import { Purchase } from '../../../models/entity/purchase/purchase';
 import { PurchaseValidator } from '../../../validation/purchase-validator';
 import { CommonModule } from '@angular/common';
-import { SupplierService } from '../../../services/Purchase/supplier.service';
-import { Supplier } from '../../../models/Entity/Purchase/supplier';
+import { SupplierService } from '../../../services/purchase/supplier.service';
+import { Supplier } from '../../../models/entity/purchase/supplier';
 import { FormsModule } from '@angular/forms';
-import { Product } from '../../../models/Entity/Product/product';
+import { Product } from '../../../models/entity/product/product';
 import { TooltipService } from '../../../utils/tooltip.service';
-import { PurchaseDetails } from '../../../models/Entity/Purchase/purchase-details';
+import { PurchaseDetails } from '../../../models/entity/purchase/purchase-details';
 import { NotificationService } from '../../../utils/notification-service.service';
-import { PurchaseService } from '../../../services/Purchase/purchase.service';
-import { PurchaseHelperService } from '../../../services/Purchase/purchase-helper.service';
+import { PurchaseService } from '../../../services/purchase/purchase.service';
+import { PurchaseHelperService } from '../../../services/purchase/purchase-helper.service';
 import { Router } from '@angular/router';
 import { AddCategoriesComponent } from '../../product/add-categories/add-categories.component';
 import { AddProductComponent } from "../../product/add-product/add-product.component";
 import { ProductListComponent } from "../../product/productList/product-list.component";
-import { PurchasePermissionsService } from '../../../services/Permissions/purchase-permissions.service';
-import { PurchaseRequest } from '../../../models/Entity/Purchase/purchase-request';
+import { PurchasePermissionsService } from '../../../services/permissions/purchase-permissions.service';
+import { PurchaseRequest } from '../../../models/entity/purchase/purchase-request';
 import { PurchaseMapperService } from '../../../mapper/purchase-mapper.service';
 import { ErrorMessageService } from '../../../utils/error-message.service';
-import { PurchaseDetailRequest } from '../../../models/Entity/Purchase/purchase-detail-request';
+import { PurchaseDetailRequest } from '../../../models/entity/purchase/purchase-detail-request';
 
 @Component({
   selector: 'app-purchase',

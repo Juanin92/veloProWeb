@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
-import { CustomerResponse } from '../../models/Entity/Customer/customer-response';
+import { CustomerResponse } from '../../models/entity/customer/customer-response';
 import { CustomerService } from '../../services/customer/customer.service';
 import { CommonModule, NgStyle } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -10,8 +10,8 @@ import { CustomerHelperServiceService } from '../../services/customer/customer-h
 import { NotificationService } from '../../utils/notification-service.service';
 import { TooltipService } from '../../utils/tooltip.service';
 import { ModalService } from '../../utils/modal.service';
-import { CustomerPermissionsService } from '../../services/Permissions/customer-permissions.service';
-import { CustomerForm } from '../../models/Entity/Customer/customer-form';
+import { CustomerPermissionsService } from '../../services/permissions/customer-permissions.service';
+import { CustomerForm } from '../../models/entity/customer/customer-form';
 import { ErrorMessageService } from '../../utils/error-message.service';
 
 @Component({

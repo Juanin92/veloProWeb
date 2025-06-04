@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Message } from '../../../models/Entity/communication/message';
+import { Message } from '../../../models/entity/communication/message';
 import { CommonModule } from '@angular/common';
 import { MessageModalComponent } from "../message-modal/message-modal.component";
 import { MessageService } from '../../../services/communication/message.service';

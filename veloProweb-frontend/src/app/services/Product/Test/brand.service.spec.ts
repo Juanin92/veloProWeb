@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { BrandService } from '../brand.service';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { Brand } from '../../../models/Entity/Product/brand';
+import { Brand } from '../../../models/entity/product/brand';
 
 describe('BrandService', () => {
   let service: BrandService;

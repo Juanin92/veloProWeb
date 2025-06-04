@@ -1,11 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ProductService } from '../../../services/Product/product.service';
-import { Product } from '../../../models/Entity/Product/product';
+import { ProductService } from '../../../services/product/product.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { StatusProduct } from '../../../models/enum/status-product';
 import { NotificationService } from '../../../utils/notification-service.service';
-import { ProductResponse } from '../../../models/Entity/Product/product-response';
+import { ProductResponse } from '../../../models/entity/product/product-response';
 
 @Component({
   selector: 'app-product-list',

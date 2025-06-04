@@ -1,15 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SaleDetail } from '../../../models/Entity/Sale/sale-detail';
-import { Dispatch } from '../../../models/Entity/Sale/dispatch';
+import { SaleDetail } from '../../../models/entity/sale/sale-detail';
+import { Dispatch } from '../../../models/entity/sale/dispatch';
 import { ModalService } from '../../../utils/modal.service';
 import { DetailSaleRequestDTO } from '../../../models/DTO/detail-sale-request-dto';
 import { DispatchService } from '../../../services/sale/dispatch.service';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { SaleDetailDTO } from '../../../models/DTO/sale-detail-dto';
 import { DispatchPermissionsService } from '../../../services/permissions/dispatch-permissions.service';
-import { DispatchRequest } from '../../../models/Entity/Sale/dispatch-request';
+import { DispatchRequest } from '../../../models/entity/sale/dispatch-request';
 import { ErrorMessageService } from '../../../utils/error-message.service';
 
 @Component({

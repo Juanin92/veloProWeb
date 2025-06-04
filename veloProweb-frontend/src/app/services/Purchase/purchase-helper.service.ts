@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Purchase } from '../../models/Entity/Purchase/purchase';
-import { PurchaseRequest } from '../../models/Entity/Purchase/purchase-request';
+import { Purchase } from '../../models/entity/purchase/purchase';
+import { PurchaseRequest } from '../../models/entity/purchase/purchase-request';
 
 @Injectable({
   providedIn: 'root'

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { UserResponse } from '../models/Entity/user/user-response';
-import { UserForm } from '../models/Entity/user/user-form';
-import { UpdateUserForm } from '../models/Entity/user/update-user-form';
+import { UserResponse } from '../models/entity/user/user-response';
+import { UserForm } from '../models/entity/user/user-form';
+import { UpdateUserForm } from '../models/entity/user/update-user-form';
 
 @Injectable({
   providedIn: 'root'

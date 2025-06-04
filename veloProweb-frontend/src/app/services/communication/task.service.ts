@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TaskForm } from '../../models/Entity/communication/task-form';
-import { AuthService } from '../User/auth.service';
-import { Task } from '../../models/Entity/communication/task';
+import { TaskForm } from '../../models/entity/communication/task-form';
+import { AuthService } from '../user/auth.service';
+import { Task } from '../../models/entity/communication/task';
 
 @Injectable({
   providedIn: 'root'

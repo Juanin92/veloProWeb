@@ -1,15 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Message } from '../../models/Entity/communication/message';
+import { Message } from '../../models/entity/communication/message';
 import { TaskComponent } from "../communication/task/task.component";
 import { AlertComponent } from "../communication/alert/alert.component";
-import { Alert } from '../../models/Entity/communication/alert';
+import { Alert } from '../../models/entity/communication/alert';
 import { DispatchComponent } from "../sale/dispatch/dispatch.component";
-import { Dispatch } from '../../models/Entity/Sale/dispatch';
+import { Dispatch } from '../../models/entity/sale/dispatch';
 import { MessageComponent } from "../communication/message/message.component";
-import { TaskForm } from '../../models/Entity/communication/task-form';
-import { DispatchPermissionsService } from '../../services/Permissions/dispatch-permissions.service';
-import { UserPermissionsService } from '../../services/Permissions/user-permissions.service';
+import { TaskForm } from '../../models/entity/communication/task-form';
+import { DispatchPermissionsService } from '../../services/permissions/dispatch-permissions.service';
+import { UserPermissionsService } from '../../services/permissions/user-permissions.service';
 
 @Component({
   selector: 'app-home',

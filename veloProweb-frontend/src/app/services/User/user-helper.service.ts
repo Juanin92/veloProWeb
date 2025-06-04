@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { UserResponse } from '../../models/Entity/user/user-response';
-import { UpdateUserForm } from '../../models/Entity/user/update-user-form';
+import { UserResponse } from '../../models/entity/user/user-response';
+import { UpdateUserForm } from '../../models/entity/user/update-user-form';
 import { Role } from '../../models/enum/role';
 
 @Injectable({

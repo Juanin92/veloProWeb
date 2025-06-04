@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CustomerResponse } from '../../models/Entity/Customer/customer-response';
-import { AuthService } from '../User/auth.service';
-import { CustomerForm } from '../../models/Entity/Customer/customer-form';
+import { CustomerResponse } from '../../models/entity/customer/customer-response';
+import { AuthService } from '../user/auth.service';
+import { CustomerForm } from '../../models/entity/customer/customer-form';
 
 @Injectable({
   providedIn: 'root',

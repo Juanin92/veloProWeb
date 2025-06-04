@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { DispatchService } from '../../../services/sale/dispatch.service';
-import { Dispatch } from '../../../models/Entity/Sale/dispatch';
+import { Dispatch } from '../../../models/entity/sale/dispatch';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DetailSaleRequestDTO } from '../../../models/DTO/detail-sale-request-dto';

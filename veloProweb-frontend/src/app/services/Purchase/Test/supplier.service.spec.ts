@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { SupplierService } from '../supplier.service';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { Supplier } from '../../../models/Entity/Purchase/supplier';
+import { Supplier } from '../../../models/entity/purchase/supplier';
 
 describe('SupplierService', () => {
   let service: SupplierService;

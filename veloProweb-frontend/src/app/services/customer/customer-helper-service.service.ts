@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { CustomerResponse } from '../../models/Entity/Customer/customer-response';
+import { CustomerResponse } from '../../models/entity/customer/customer-response';
 import { PaymentStatus } from '../../models/enum/payment-status.enum';
-import { CustomerForm } from '../../models/Entity/Customer/customer-form';
+import { CustomerForm } from '../../models/entity/customer/customer-form';
 
 @Injectable({
   providedIn: 'root',

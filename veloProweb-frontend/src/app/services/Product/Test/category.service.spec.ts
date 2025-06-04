@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { CategoryService } from '../category.service';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { Category } from '../../../models/Entity/Product/category';
+import { Category } from '../../../models/entity/product/category';
 
 describe('CategoryService', () => {
   let service: CategoryService;

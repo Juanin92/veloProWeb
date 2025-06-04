@@ -3,11 +3,11 @@ import { of, throwError } from 'rxjs';
 import { PaymentCustomerService } from '../../../services/customer/payment-customer.service';
 import { CustomerHelperServiceService } from '../../../services/customer/customer-helper-service.service';
 import { PaymentStatus } from '../../../models/enum/payment-status.enum';
-import { TicketHistory } from '../../../models/Entity/Customer/ticket-history';
-import { CustomerResponse } from '../../../models/Entity/Customer/customer-response';
+import { TicketHistory } from '../../../models/entity/customer/ticket-history';
+import { CustomerResponse } from '../../../models/entity/customer/customer-response';
 import { PaymentCustomerComponent } from '../payment-customer/payment-customer.component';
 import { TicketHistoryService } from '../../../services/customer/ticket-history.service';
-import { PaymentCustomerResponse } from '../../../models/Entity/Customer/payment-customer-response';
+import { PaymentCustomerResponse } from '../../../models/entity/customer/payment-customer-response';
 
 describe('PaymentCustomerComponent', () => {
   let component: PaymentCustomerComponent;

@@ -1,5 +1,5 @@
 import { PaymentMethod } from "../../enum/payment-method";
-import { CustomerResponse } from "../Customer/customer-response";
+import { CustomerResponse } from "../customer/customer-response";
 
 export interface Sale {
     id: number;

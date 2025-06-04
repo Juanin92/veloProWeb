@@ -1,23 +1,21 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { TooltipService } from '../../../utils/tooltip.service';
 import { ProductListComponent } from "../../product/productList/product-list.component";
-import { Product } from '../../../models/Entity/Product/product';
-import { Sale } from '../../../models/Entity/Sale/sale';
-import { CustomerResponse } from '../../../models/Entity/Customer/customer-response';
-import { SaleDetail } from '../../../models/Entity/Sale/sale-detail';
+import { Sale } from '../../../models/entity/sale/sale';
+import { CustomerResponse } from '../../../models/entity/customer/customer-response';
+import { SaleDetail } from '../../../models/entity/sale/sale-detail';
 import { NotificationService } from '../../../utils/notification-service.service';
-import { SaleHelperService } from '../../../services/Sale/sale-helper.service';
+import { SaleHelperService } from '../../../services/sale/sale-helper.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CustomerService } from '../../../services/customer/customer.service';
-import { SaleService } from '../../../services/Sale/sale.service';
+import { SaleService } from '../../../services/sale/sale.service';
 import { SaleRequestDTO } from '../../../models/DTO/sale-request-dto';
 import { PaymentMethod } from '../../../models/enum/payment-method';
 import { DispatchModalComponent } from "../dispatch-modal/dispatch-modal.component";
-import { SalePermissionsService } from '../../../services/Permissions/sale-permissions.service';
-import { CashRegisterService } from '../../../services/Sale/cash-register.service';
-import { lastValueFrom } from 'rxjs';
-import { ProductResponse } from '../../../models/Entity/Product/product-response';
+import { SalePermissionsService } from '../../../services/permissions/sale-permissions.service';
+import { CashRegisterService } from '../../../services/sale/cash-register.service';
+import { ProductResponse } from '../../../models/entity/product/product-response';
 
 @Component({
   selector: 'app-sale',

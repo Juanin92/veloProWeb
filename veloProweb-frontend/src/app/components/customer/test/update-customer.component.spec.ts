@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { CustomerResponse } from "../../../models/Entity/Customer/customer-response";
+import { CustomerResponse } from "../../../models/entity/customer/customer-response";
 import { CustomerService } from "../../../services/customer/customer.service";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { CommonModule } from "@angular/common";
