@@ -14,7 +14,7 @@
                         </div>
                         <div class="order-lg-0 order-1 d-flex flex-row align-items-start">
                             <button class="btn btn-outline-success border-0 btn-sm m-1" data-bs-toggle="tooltip" data-bs-placement="auto"
-                                data-bs-title="Exportar Excel" (click)="downloadExcel()">
+                                data-bs-title="Exportar Excel" (click)="exportKardexToExcel()">
                                 <img src="/assets/icons/iconExcel.png" alt="activar" width="30" height="30" class="img-fluid" />
                             </button>
                         </div>
@@ -55,13 +55,13 @@
                                     <tr *ngFor="let kardex of filteredKardexList; let i = index">
                                         <th scope="row">{{ sortPosition ? i + 1 : filteredKardexList.length - i}}</th>
                                         <td>{{kardex.date | date: 'dd-MM-yyyy'}}</td>
-                                        <td>{{kardex.product.description}}</td>
+                                        <td>{{kardex.product}}</td>
                                         <td>{{kardex.stock}}</td>
                                         <td>{{kardex.price | currency: 'CLP':'$':'1.0-0'}}</td>
                                         <td [ngClass]='colorToMovementTypes(kardex.movementsType.toString())'>
                                             {{kardex.movementsType}}</td>
                                         <td>{{kardex.quantity}}</td>
-                                        <td>{{kardex.user.name}}</td>
+                                        <td>{{kardex.user}}</td>
                                         <td>{{kardex.comment}}</td>
                                     </tr>
                                 </tbody>
