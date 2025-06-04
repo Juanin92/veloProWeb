@@ -35,16 +35,7 @@ public class KardexService implements IKardexService {
     @Override
     public void addKardex(UserDetails userDetails, Product product, int quantity, String comment, MovementsType moves) {
         User user = userService.getUserByUsername(userDetails.getUsername());
-        Kardex kardex = Kardex.builder()
-                .date(LocalDate.now())
-                .quantity(quantity)
-                .movementsType(moves)
-                .comment(comment)
-                .product(product)
-                .price(product.getBuyPrice())
-                .stock(product.getStock())
-                .user(user)
-                .build();
+        Kardex kardex = mapper.toEntity(product, quantity, comment, moves, user);
         kardexRepo.save(kardex);
     }
 
