@@ -12,7 +12,11 @@ import java.util.Map;
 @RestControllerAdvice
 public class SaleExceptionHandler extends BaseExceptionHandler {
 
-    @ExceptionHandler({CashRegisterNotFoundException.class, DispatchNotFoundException.class})
+    @ExceptionHandler({
+            CashRegisterNotFoundException.class,
+            DispatchNotFoundException.class,
+            SaleNotFoundException.class
+    })
     public ResponseEntity<Map<String, String>> handleSaleNotFoundException(Exception e){
         return buildResponse(e.getMessage(), HttpStatus.NOT_FOUND);
     }
