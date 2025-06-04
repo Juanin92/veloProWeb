@@ -34,20 +34,17 @@ export class KardexComponent implements OnInit, AfterViewInit{
   }
 
   ngOnInit(): void {
-    this.getAllKardex();
+    this.loadKardexList();
   }
 
   /**
    * Obtiene una lista de reportes de productos
    */
-  getAllKardex(): void{
+  loadKardexList(): void{
     this.kardexService.getAllKardex().subscribe({
       next:(list) =>{
         this.kardexList = list;
         this.filteredKardexList = list;
-      },
-      error:(error)=>{
-        console.log('Registro no encontrado', error);
       }
     });
   }
@@ -56,17 +53,16 @@ export class KardexComponent implements OnInit, AfterViewInit{
    * Descarga de datos de la lista (reportes) en un archivo excel
    * Transforma la lista filtrada a un formato y datos necesarios a mostrar
    */
-  downloadExcel(): void{
+  exportKardexToExcel(): void{
     const transformedData = this.filteredKardexList.map(item => ({
-      id: item.id,
       fecha: item.date,
-      descripcion: item.product.description,
+      descripción: item.product,
       stock: item.stock,
       precio: item.price,
       movimiento: item.movementsType,
       cantidad: item.quantity,
-      usuario: item.user.name + ' ' + item.user.surname,
-      observacion: item.comment
+      usuario: item.user,
+      observación: item.comment
     }));
     this.excelService.generateExcel(transformedData, 'Registro-Productos');
   }
@@ -95,7 +91,7 @@ export class KardexComponent implements OnInit, AfterViewInit{
     } else {
       this.filteredKardexList = this.kardexList.filter(kardex =>
         kardex.movementsType.toString().toLowerCase().includes(this.textFilter.toLowerCase()) || 
-        kardex.product.description.toLowerCase().includes(this.textFilter.toLowerCase()));
+        kardex.product.toLowerCase().includes(this.textFilter.toLowerCase()));
     }
   }
 
