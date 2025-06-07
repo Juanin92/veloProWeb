@@ -36,26 +36,26 @@
                 <form>
                     <div class="form-floating mb-2 mt-1">
                         <input type="text" class="form-control" id="customerModal" placeholder="Ingrese un cliente"
-                            name="customerModal" [(ngModel)]="dispatch.customer"
-                            [ngClass]="{'is-invalid':!dispatch.customer, 'is-valid':dispatch.customer}" required />
+                            name="customerModal" [(ngModel)]="dispatchRequest.customer"
+                            [ngClass]="{'is-invalid':!dispatchRequest.customer, 'is-valid':dispatchRequest.customer}" required />
                         <label for="customerModal" class="form-label">Cliente</label>
                     </div>
                     <div class="form-floating mb-2">
                         <input type="text" class="form-control" id="addressModal" placeholder="Ingrese una dirección"
-                            name="addressModal" [(ngModel)]="dispatch.address"
-                            [ngClass]="{'is-invalid':!dispatch.address, 'is-valid':dispatch.address}" required />
+                            name="addressModal" [(ngModel)]="dispatchRequest.address"
+                            [ngClass]="{'is-invalid':!dispatchRequest.address, 'is-valid':dispatchRequest.address}" required />
                         <label for="addressModal" class="form-label">Dirección</label>
                     </div>
                     <div class="form-floating mb-0">
                         <input type="text" class="form-control" id="commnetModal" placeholder="Ingrese un comentario"
-                            name="commentModal" [(ngModel)]="dispatch.comment" [ngClass]="{'is-valid':dispatch.comment}"
+                            name="commentModal" [(ngModel)]="dispatchRequest.comment" [ngClass]="{'is-valid':dispatchRequest.comment}"
                             required />
                         <label for="commentModal" class="form-label">Comentario</label>
                     </div>
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button (click)="processNewDispatch(dispatch)" [disabled]="!dispatch.address && !dispatch.customer"
+                <button (click)="processNewDispatch(dispatchRequest)" [disabled]="!dispatchRequest.address && !dispatchRequest.customer"
                     type="button" class="btn btn-success"
                     [attr.data-bs-dismiss]="modalService.isModalVisible() ? 'modal' : null">Confirmar</button>
                 <button (click)="clearDispatchModal()" type="button" class="btn btn-danger"
@@ -73,9 +73,9 @@
                     <h1 class="modal-title fs-4 mb-0 d-flex align-items-center gap-2">
                         <i class="bi bi-truck"></i>
                         <span>Detalles del Despacho</span>
-                        <span class="small fs-6 fw-lighter">({{selectedDispatch?.status}})</span>
+                        <span class="small fs-6 fw-lighter">{{helper.getStatusLabel(dispatchSelectedDetail.status)}}</span>
                     </h1>
-                    <button (click)="clearDispatchModal()" type="button" class="btn-close" aria-label="Close"
+                    <button type="button" class="btn-close" aria-label="Close"
                         data-bs-dismiss="modal"></button>
                 </div>
             </div>
@@ -88,7 +88,7 @@
                                     <i class="bi bi-person me-1"></i>Cliente
                                 </h6>
                                 <div class="ps-3">
-                                    <p class="mb-2 small fw-lighter">{{selectedDispatch?.customer}}</p>
+                                    <p class="mb-2 small fw-lighter">{{dispatchSelectedDetail.customer}}</p>
                                 </div>
                             </div>
                         </div>
@@ -97,11 +97,11 @@
                         <div class="card shadow-sm">
                             <div class="card-body py-2">
                                 <h6 class="card-title mb-2 fw-bold">
-                                    <i class="bi bi-geo-alt me-1"></i>Entrega ({{selectedDispatch?.created | date:
+                                    <i class="bi bi-geo-alt me-1"></i>Entrega ({{dispatchSelectedDetail.created | date:
                                     'dd-MM-yyy'}})
                                 </h6>
                                 <div class="ps-3">
-                                    <p class="mb-2 small">{{selectedDispatch?.address}}</p>
+                                    <p class="mb-2 small">{{dispatchSelectedDetail.address}}</p>
                                 </div>
                             </div>
                         </div>
@@ -112,7 +112,7 @@
                                 <h6 class="card-title mb-2 fw-bold">
                                     <i class="bi bi-chat-left-text me-1"></i>Comentarios
                                 </h6>
-                                <p class="ps-3 mb-0 small">{{selectedDispatch?.comment || 'Sin comentarios'}}</p>
+                                <p class="ps-3 mb-0 small">{{dispatchSelectedDetail.comment || 'Sin comentarios'}}</p>
                             </div>
                         </div>
                     </div>
@@ -132,7 +132,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let saleDetail of saleDetailDispatchList; let i = index">
+                                    <tr *ngFor="let saleDetail of dispatchSelectedDetail.saleDetails; let i = index">
                                         <td class="text-center">{{ i + 1 }}</td>
                                         <td>{{saleDetail.descriptionProduct}}</td>
                                         <td class="text-end">{{saleDetail.price | currency : "CLP" : "$" : "1.0-0"}}
