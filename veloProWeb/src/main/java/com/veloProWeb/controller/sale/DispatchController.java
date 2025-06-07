@@ -1,7 +1,6 @@
 package com.veloProWeb.controller.sale;
 
 import com.veloProWeb.model.Enum.DispatchStatus;
-import com.veloProWeb.model.dto.sale.DetailSaleRequestDTO;
 import com.veloProWeb.model.dto.sale.DispatchRequestDTO;
 import com.veloProWeb.model.dto.sale.DispatchResponseDTO;
 import com.veloProWeb.model.entity.Sale.Dispatch;
@@ -61,13 +60,5 @@ public class DispatchController {
         dispatchService.handleStatus(dispatchID, action);
         recordService.registerAction(userDetails, "UPDATE", "Actualiza estado del despacho " + dispatchID);
         return ResponseEntity.ok(ResponseMessage.message("Cambio de estado del despacho"));
-    }
-
-    @GetMapping("/detalles")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'GUEST', 'SELLER')")
-    public ResponseEntity<List<DetailSaleRequestDTO>> getDetailSale(@RequestParam
-                                                                    @NotNull(message = "El ID del despacho es obligatorio")
-                                                                    Long idDispatch){
-        return ResponseEntity.ok(saleDetailService.getSaleDetailsToDispatch(idDispatch));
     }
 }
