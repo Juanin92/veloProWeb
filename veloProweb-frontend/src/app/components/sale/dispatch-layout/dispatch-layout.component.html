@@ -36,6 +36,7 @@
                         <th scope="col">Dirección</th>
                         <th scope="col">Comentario</th>
                         <th scope="col">Estado</th>
+                        <th scope="col">Acción</th>
                     </tr>
                 </thead>
                 <tbody class="table-group-divider text-center align-middle">
@@ -46,10 +47,21 @@
                         <td>{{dispatch.customer}}</td>
                         <td>{{dispatch.address}}</td>
                         <td>{{dispatch.comment}}</td>
-                        <td>{{dispatch.status}}</td>
+                        <td>{{ helper.getStatusLabel(dispatch.status) }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary border-0 ms-1" data-bs-toggle="modal"
+                                data-bs-target="#dispatchDetailModal">
+                                <i class="bi bi-info-square" data-bs-toggle="tooltip" data-bs-placement="bottom" title="+ info"></i>
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+<!-- MODAL DISPATCH DETAILS -->
+<!-- <app-dispatch-modal 
+    [selectedDispatchDetail]="selectedDispatch"
+    [saleDetailDispatchList]="saleDetailDispatchList">
+</app-dispatch-modal> -->

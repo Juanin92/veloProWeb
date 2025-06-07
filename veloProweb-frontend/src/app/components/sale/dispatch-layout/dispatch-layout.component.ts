@@ -4,6 +4,7 @@ import { DispatchService } from '../../../services/sale/dispatch.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DispatchPermissionsService } from '../../../services/permissions/dispatch-permissions.service';
+import { DispatchHelperService } from '../../../services/sale/dispatch-helper.service';
 
 @Component({
   selector: 'app-dispatch-layout',
@@ -23,7 +24,8 @@ export class DispatchLayoutComponent implements OnInit{
 
   constructor(
     private dispatchService: DispatchService,
-    protected permission: DispatchPermissionsService){}
+    protected permission: DispatchPermissionsService,
+    protected helper: DispatchHelperService){}
 
   ngOnInit(): void {
     this.loadDispatches();
