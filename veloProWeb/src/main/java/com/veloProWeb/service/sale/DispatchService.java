@@ -7,7 +7,6 @@ import com.veloProWeb.model.Enum.DispatchStatus;
 import com.veloProWeb.model.dto.sale.DispatchRequestDTO;
 import com.veloProWeb.model.dto.sale.DispatchResponseDTO;
 import com.veloProWeb.model.entity.Sale.Dispatch;
-import com.veloProWeb.model.entity.Sale.SaleDetail;
 import com.veloProWeb.repository.Sale.DispatchRepo;
 import com.veloProWeb.service.product.interfaces.IProductService;
 import com.veloProWeb.service.sale.Interface.IDispatchService;
@@ -32,7 +31,7 @@ public class DispatchService implements IDispatchService {
      * @return - Lista filtrada de despachos
      */
     @Override
-    public final List<DispatchResponseDTO> getDispatches() {
+    public List<DispatchResponseDTO> getDispatches() {
         return dispatchRepo.findByStatusNot(DispatchStatus.DELETED).stream()
                 .map(mapper::toResponseDTO)
                 .toList();
@@ -46,7 +45,7 @@ public class DispatchService implements IDispatchService {
      */
     @Transactional
     @Override
-    public final Dispatch createDispatch(DispatchRequestDTO dto) {
+    public Dispatch createDispatch(DispatchRequestDTO dto) {
         Dispatch dispatch = mapper.toEntity(dto, dispatchRepo.count());
         dispatchRepo.save(dispatch);
         return dispatch;
@@ -60,7 +59,7 @@ public class DispatchService implements IDispatchService {
      */
     @Transactional
     @Override
-    public final void handleStatus(Long dispatchID, DispatchStatus statusAction) {
+    public void handleStatus(Long dispatchID, DispatchStatus statusAction) {
         Dispatch dispatch = getDispatchExisting(dispatchID);
         switch (statusAction){
             case DispatchStatus.IN_ROUTE:
@@ -74,11 +73,10 @@ public class DispatchService implements IDispatchService {
                 if (!dispatch.getStatus().equals(DispatchStatus.DELETED) &&
                         !dispatch.getStatus().equals(DispatchStatus.DELIVERED)){
                     dispatch.setStatus(DispatchStatus.DELETED);
-                    for (SaleDetail saleDetail : dispatch.getSaleDetails()){
-                        //Actualiza stock y reserva del producto eliminado del despacho
-                        productService.updateStockAndReserveDispatch(saleDetail.getProduct(), saleDetail.getQuantity(),
-                                false);
-                    }
+                    //Actualiza stock y reserva del producto eliminado del despacho
+                    dispatch.getSaleDetails().forEach(saleDetail ->
+                            productService.updateStockAndReserveDispatch(saleDetail.getProduct(),
+                                    saleDetail.getQuantity(), false));
                 }
                 break;
             default:
@@ -95,7 +93,7 @@ public class DispatchService implements IDispatchService {
      */
     @Transactional
     @Override
-    public final void handleDispatchReceiveToSale(Long dispatchID) {
+    public void handleDispatchReceiveToSale(Long dispatchID) {
         Dispatch dispatch = getDispatchExisting(dispatchID);
         if (dispatch.getStatus().equals(DispatchStatus.PREPARING) ||
                 dispatch.getStatus().equals(DispatchStatus.IN_ROUTE)){
@@ -111,8 +109,9 @@ public class DispatchService implements IDispatchService {
      * @return - Optional de despacho si se encuentra o null en el caso contrario
      */
     @Override
-    public final Optional<Dispatch> getDispatchById(Long id) {
-        return dispatchRepo.findById(id);
+    public Dispatch getDispatchById(Long id) {
+        return dispatchRepo.findById(id).orElseThrow(() -> new
+                DispatchNotFoundException("No se encontró el despacho."));
     }
 
     /**
