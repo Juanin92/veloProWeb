@@ -4,21 +4,17 @@ import com.veloProWeb.exceptions.sale.DispatchNotFoundException;
 import com.veloProWeb.exceptions.sale.InvalidDispatchStatusException;
 import com.veloProWeb.mapper.DispatchMapper;
 import com.veloProWeb.model.Enum.DispatchStatus;
-import com.veloProWeb.model.dto.sale.DetailSaleDTO;
-import com.veloProWeb.model.dto.sale.DispatchRequestDTO;
-import com.veloProWeb.model.dto.sale.DispatchResponseDTO;
+import com.veloProWeb.model.dto.sale.*;
 import com.veloProWeb.model.entity.Sale.Dispatch;
 import com.veloProWeb.model.entity.Sale.SaleDetail;
 import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.repository.Sale.DispatchRepo;
 import com.veloProWeb.service.product.interfaces.IProductService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
@@ -34,31 +30,29 @@ public class DispatchServiceTest {
     @InjectMocks private DispatchService dispatchService;
     @Mock private DispatchRepo dispatchRepo;
     @Mock private IProductService productService;
-    @Spy private DispatchMapper mapper;
-
-    @BeforeEach
-    void setUp(){
-    }
+    @Mock private DispatchMapper mapper;
 
     //Prueba para obtener los registro de los despachos
     @Test
     public void getDispatches(){
-        SaleDetail saleDetail = SaleDetail.builder().id(1L).product(Product.builder().id(1L).build()).quantity(10)
+        Product product = Product.builder().id(1L).description("Test Description").build();
+        SaleDetail saleDetail = SaleDetail.builder().id(1L).product(product).quantity(10)
                 .total(1000).build();
         Dispatch dispatch = Dispatch.builder().id(1L).trackingNumber("#2").status(DispatchStatus.PREPARING)
                 .created(LocalDate.now()).deliveryDate(null).hasSale(false).saleDetails(List.of(saleDetail)).build();
         when(dispatchRepo.findByStatusNot(DispatchStatus.DELETED)).thenReturn(List.of(dispatch));
 
-        DetailSaleDTO saleDTO = DetailSaleDTO.builder().id(1L).idProduct(1L).quantity(10).build();
+        SaleDetailResponseDTO saleDTO = SaleDetailResponseDTO.builder().descriptionProduct(product.getDescription())
+                .price(100).quantity(10).hasDispatch(true).tax(100).build();
         DispatchResponseDTO responseDTO = DispatchResponseDTO.builder().id(1L).trackingNumber("#2")
                 .status(DispatchStatus.PREPARING).created(LocalDate.now()).deliveryDate(null).hasSale(false)
-                .detailSaleDTOList(List.of(saleDTO)).build();
+                .saleDetails(List.of(saleDTO)).build();
         when(mapper.toResponseDTO(dispatch)).thenReturn(responseDTO);
 
         List<DispatchResponseDTO> result = dispatchService.getDispatches();
 
         verify(dispatchRepo, times(1)).findByStatusNot(DispatchStatus.DELETED);
-        verify(mapper, times(2)).toResponseDTO(dispatch);
+        verify(mapper, times(1)).toResponseDTO(dispatch);
         assertEquals(1, result.size());
         assertEquals(DispatchStatus.PREPARING, result.getFirst().getStatus());
     }
@@ -66,7 +60,7 @@ public class DispatchServiceTest {
     //Prueba para crear registro de despacho
     @Test
     public void createDispatch(){
-        DetailSaleDTO detailSaleDTO = DetailSaleDTO.builder().id(1L).idProduct(1L).quantity(1).build();
+        SaleDetailRequestDTO detailSaleDTO = SaleDetailRequestDTO.builder().idProduct(1L).quantity(1).build();
         DispatchRequestDTO dto = DispatchRequestDTO.builder().address("Test address").comment("test comment")
                 .customer("John Doe").detailSaleDTOList(List.of(detailSaleDTO)).build();
         when(dispatchRepo.count()).thenReturn(1L);
@@ -167,11 +161,10 @@ public class DispatchServiceTest {
         Dispatch dispatch = Dispatch.builder().id(1L).status(DispatchStatus.PREPARING).build();
         when(dispatchRepo.findById(1L)).thenReturn(Optional.of(dispatch));
 
-        Optional<Dispatch> result = dispatchService.getDispatchById(1L);
+        Dispatch result = dispatchService.getDispatchById(1L);
 
         verify(dispatchRepo, times(1)).findById(1L);
-        assertTrue(result.isPresent());
-        assertEquals(1L, result.get().getId());
-        assertEquals(DispatchStatus.PREPARING, result.get().getStatus());
+        assertEquals(1L, result.getId());
+        assertEquals(DispatchStatus.PREPARING, result.getStatus());
     }
 }
