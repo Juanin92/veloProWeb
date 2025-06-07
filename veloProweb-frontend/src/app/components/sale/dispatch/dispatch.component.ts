@@ -1,30 +1,33 @@
-import { Component, EventEmitter, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { DispatchService } from '../../../services/sale/dispatch.service';
 import { Dispatch } from '../../../models/entity/sale/dispatch';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DetailSaleRequestDTO } from '../../../models/DTO/detail-sale-request-dto';
 import { TooltipService } from '../../../utils/tooltip.service';
-import { PaymentDispatchComponent } from "../payment-dispatch/payment-dispatch.component";
-import { DispatchModalComponent } from "../dispatch-modal/dispatch-modal.component";
+import { PaymentDispatchComponent } from '../payment-dispatch/payment-dispatch.component';
+import { DispatchModalComponent } from '../dispatch-modal/dispatch-modal.component';
 import { DispatchPermissionsService } from '../../../services/permissions/dispatch-permissions.service';
 import { DispatchStatus } from '../../../models/enum/dispatch-status';
 import { ErrorMessageService } from '../../../utils/error-message.service';
 import { NotificationService } from '../../../utils/notification-service.service';
+import { DispatchHelperService } from '../../../services/sale/dispatch-helper.service';
 
 @Component({
   selector: 'app-dispatch',
   standalone: true,
-  imports: [CommonModule, FormsModule, PaymentDispatchComponent, DispatchModalComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    PaymentDispatchComponent,
+    DispatchModalComponent,
+  ],
   templateUrl: './dispatch.component.html',
-  styleUrl: './dispatch.component.css'
+  styleUrl: './dispatch.component.css',
 })
-export class DispatchComponent implements OnInit{
-
+export class DispatchComponent implements OnInit {
   @Output() dispatchUpdated = new EventEmitter<Dispatch[]>();
   dispatchList: Dispatch[] = [];
-  saleDetailDispatchList: DetailSaleRequestDTO[] = [];
-  selectedDispatch: Dispatch | null = null;
+  selectedDispatch: Dispatch;
   totalSum: number = 0;
   status = DispatchStatus;
 
@@ -33,56 +36,47 @@ export class DispatchComponent implements OnInit{
     protected permission: DispatchPermissionsService,
     private errorMessage: ErrorMessageService,
     private notification: NotificationService,
-    private tooltip: TooltipService){}
+    private tooltip: TooltipService,
+    protected helper: DispatchHelperService
+  ) {
+    this.selectedDispatch = helper.initializeDispatch();
+  }
 
   ngOnInit(): void {
     this.tooltip.initializeTooltips();
     this.loadCurrentDispatches();
   }
 
-  loadCurrentDispatches(): void{
+  loadCurrentDispatches(): void {
     this.dispatchService.getDispatches().subscribe({
-      next:(list)=>{
-        const filteredList = list.filter(
-          dispatch => dispatch.status === DispatchStatus.PREPARING || dispatch.status === DispatchStatus.IN_ROUTE);
+      next: (list) => {
+        const filteredList = list.filter((item) => item.status !== 'DELIVERED');
         this.dispatchList = filteredList;
         this.dispatchUpdated.emit(filteredList);
-      }
+      },
     });
   }
 
-  loadSaleDetailsForDispatch(dispatchValue: Dispatch): void{
-    this.dispatchService.getDetailSale(dispatchValue.id).subscribe({
-      next:(list) =>{
-        this.saleDetailDispatchList = list;
-        this.selectedDispatch = dispatchValue;
-        this.saleDetailDispatchList.push(this.initializeSaleRequest());
-        this.saleDetailDispatchList.map(value => this.totalSum += (value.price * value.quantity));
-      }
-    });
+  getSaleDetailsForDispatch(dispatchDetails: Dispatch): void {
+    this.selectedDispatch = dispatchDetails;
+    this.totalSum = this.selectedDispatch.saleDetails.reduce(
+      (sum, value) => sum + value.price * value.quantity,
+      0
+    );
   }
 
-  handleStatusDispatch(dispatch: Dispatch, action: DispatchStatus): void{
-    this.dispatchService.handleStatusDispatch(dispatch.id, action).subscribe({
-      next:(response)=>{
-        this.loadCurrentDispatches();
-      },error:(error)=>{
-        const message = this.errorMessage.errorMessageExtractor(error);
-        this.notification.showErrorToast(message, 'top', 3000);
-      }
-    });
-  }
-
-  initializeSaleRequest(): DetailSaleRequestDTO{
-    return {
-      descriptionProduct: 'Despacho',
-      quantity: 1,
-      price: 1000,
-      tax: 0,
-      customer: '',
-      notification: '',
-      ticketStatus: true,
-      hasDispatch: true
-    }
+  handleStatusDispatch(dispatch: Dispatch, action: DispatchStatus): void {
+    const statusKey = Object.keys(DispatchStatus).find(
+      (key) => DispatchStatus[key as keyof typeof DispatchStatus] === action
+    );
+    if (!statusKey)
+      return this.notification.showWarningToast('Estado de despacho inválido', 'top', 3000);
+    this.dispatchService
+      .handleStatusDispatch(dispatch.id, statusKey as DispatchStatus)
+      .subscribe({
+        next: () => this.loadCurrentDispatches(),
+        error: (error) => this.notification.showErrorToast(
+          this.errorMessage.errorMessageExtractor(error), 'top', 3000)
+      });
   }
 }
