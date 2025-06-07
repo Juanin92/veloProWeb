@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Dispatch } from '../../models/entity/sale/dispatch';
-import { DetailSaleRequestDTO } from '../../models/DTO/detail-sale-request-dto';
 import { AuthService } from '../user/auth.service';
 import { DispatchRequest } from '../../models/entity/sale/dispatch-request';
 import { DispatchStatus } from '../../models/enum/dispatch-status';
@@ -30,12 +29,6 @@ export class DispatchService {
         dispatchID: dispatchID.toString(),
         action: action.toString()},
         headers: this.auth.getAuthHeaders()
-    });
-  }
-
-  getDetailSale(idDispatch: number): Observable<DetailSaleRequestDTO[]>{
-    return this.http.get<DetailSaleRequestDTO[]>(`${this.apiUrl}/detalles`, {
-      params: {idDispatch: idDispatch.toString()}
     });
   }
 }
