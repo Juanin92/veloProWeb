@@ -7,7 +7,7 @@
                     <h1 class="modal-title fs-4 mb-0 d-flex align-items-center gap-2">
                         <i class="bi bi-truck"></i>
                         <span>Pago del Despacho</span>
-                        <span class="small fs-6 fw-lighter">({{selectedDispatchPayment?.status}})</span>
+                        <span class="small fs-6 fw-lighter">({{ helper.getStatusLabel(selectedDispatchPayment.status) }})</span>
                     </h1>
                     <button (click)="resetModal()" type="button" class="btn-close" aria-label="Close"
                         data-bs-dismiss="modal"></button>
@@ -29,7 +29,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let saleDetail of saleDetailDispatchList; let i = index">
+                                    <tr *ngFor="let saleDetail of selectedDispatchPayment.saleDetails; let i = index">
                                         <td class="text-center">{{ i + 1 }}</td>
                                         <td>{{saleDetail.descriptionProduct}}</td>
                                         <td class="text-end">{{saleDetail.price | currency : "CLP" : "$" : "1.0-0"}}
@@ -58,7 +58,7 @@
                             <div class="card-body">
                                 <h5 class="card-title text-center mb-3">Formas de Pagos</h5>
                                 <div class="d-flex flex-wrap justify-content-center gap-2">
-                                    <button [disabled]="saleDetailDispatchList.length === 0"
+                                    <button [disabled]="selectedDispatchPayment.saleDetails.length === 0"
                                         class="btn btn-outline-primary border-0 rounded-pill p-2"
                                         data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Efectivo"
                                         (click)="initiateMethodPayment(1)"
@@ -66,7 +66,7 @@
                                         <img src="/assets/icons/iconCash.png" alt="Efectivo" width="40" height="40"
                                             class="img-fluid"/>
                                     </button>
-                                    <button [disabled]="saleDetailDispatchList.length === 0"
+                                    <button [disabled]="selectedDispatchPayment.saleDetails.length === 0"
                                         class="btn btn-outline-primary border-0 rounded-pill p-2"
                                         data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Transferencia"
                                         (click)="initiateMethodPayment(2)"
@@ -74,7 +74,7 @@
                                         <img src="/assets/icons/iconsBanktransfer.png" alt="Transferencia" width="40"
                                             height="40" class="img-fluid" />
                                     </button>
-                                    <button [disabled]="saleDetailDispatchList.length === 0"
+                                    <button [disabled]="selectedDispatchPayment.saleDetails.length === 0"
                                         class="btn btn-outline-primary border-0 rounded-pill p-2"
                                         data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Crédito"
                                         (click)="initiateMethodPayment(4)"
@@ -82,7 +82,7 @@
                                         <img src="/assets/icons/iconCreditcard.png" alt="Crédito" width="40" height="40"
                                             class="img-fluid" />
                                     </button>
-                                    <button [disabled]="saleDetailDispatchList.length === 0"
+                                    <button [disabled]="selectedDispatchPayment.saleDetails.length === 0"
                                         class="btn btn-outline-primary border-0 rounded-pill p-2"
                                         data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Débito"
                                         (click)="initiateMethodPayment(5)"
@@ -90,7 +90,7 @@
                                         <img src="/assets/icons/iconPos.png" alt="Débito" width="40" height="40"
                                             class="img-fluid" />
                                     </button>
-                                    <button [disabled]="saleDetailDispatchList.length === 0"
+                                    <button [disabled]="selectedDispatchPayment.saleDetails.length === 0"
                                         class="btn btn-outline-primary border-0 rounded-pill p-2"
                                         data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Prestamos"
                                         (click)="initiateMethodPayment(3)"
@@ -98,7 +98,7 @@
                                         <img src="/assets/icons/iconLoan.png" alt="Prestamos" width="40" height="40"
                                             class="img-fluid" />
                                     </button>
-                                    <button [disabled]="saleDetailDispatchList.length === 0"
+                                    <button [disabled]="selectedDispatchPayment.saleDetails.length === 0"
                                         class="btn btn-outline-primary border-0 rounded-pill p-2"
                                         data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Mixto"
                                         (click)="initiateMethodPayment(6)"

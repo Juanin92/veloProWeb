@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Dispatch } from '../../../models/entity/sale/dispatch';
-import { DetailSaleRequestDTO } from '../../../models/DTO/detail-sale-request-dto';
 import { CustomerService } from '../../../services/customer/customer.service';
 import { CustomerResponse } from '../../../models/entity/customer/customer-response';
 import { SaleRequestDTO } from '../../../models/DTO/sale-request-dto';
@@ -11,6 +10,7 @@ import { PaymentMethod } from '../../../models/enum/payment-method';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ModalService } from '../../../utils/modal.service';
 import { DispatchPermissionsService } from '../../../services/permissions/dispatch-permissions.service';
+import { DispatchHelperService } from '../../../services/sale/dispatch-helper.service';
 
 @Component({
   selector: 'app-payment-dispatch',
@@ -19,14 +19,13 @@ import { DispatchPermissionsService } from '../../../services/permissions/dispat
   templateUrl: './payment-dispatch.component.html',
   styleUrl: './payment-dispatch.component.css'
 })
-export class PaymentDispatchComponent implements OnChanges, OnInit {
+export class PaymentDispatchComponent implements OnInit {
 
-  @Input() selectedDispatchPayment: Dispatch | null = null;
-  @Input() saleDetailDispatchList: DetailSaleRequestDTO[] = [];
+  @Input() selectedDispatchPayment: Dispatch;
+  @Input() totalSum: number = 0;
   @Output() dispatchPaid = new EventEmitter<boolean>();
   requestDTO: SaleRequestDTO;
   customerList: CustomerResponse[] = [];
-  totalSum: number = 0;
   discountAmount: number = 0;
   cashAmount: number = 0;
   comment: string = '';
@@ -46,7 +45,9 @@ export class PaymentDispatchComponent implements OnChanges, OnInit {
     private saleService: SaleService,
     private notification: NotificationService,
     protected permission: DispatchPermissionsService,
+    protected helper: DispatchHelperService,
     public modalService: ModalService) {
+    this.selectedDispatchPayment = helper.initializeDispatch();
     this.requestDTO = this.initializeRequestDTO();
   }
 
@@ -54,18 +55,12 @@ export class PaymentDispatchComponent implements OnChanges, OnInit {
     this.modalService.openModal();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['saleDetailDispatchList'] && changes['saleDetailDispatchList'].currentValue) {
-      this.totalSum = this.saleDetailDispatchList.reduce((sum, value) => sum + (value.price * value.quantity), 0);
-    }
-  }
-
   processDispatchForSale(dispatchSelected: Dispatch): void {
     if (dispatchSelected) {
       this.requestDTO.id = dispatchSelected.id;
       this.requestDTO.discount = this.discountAmount;
       this.requestDTO.total = this.totalSum;
-      this.requestDTO.detailList = dispatchSelected.detailSaleDTOList ? [...dispatchSelected.detailSaleDTOList] : [];
+      // this.requestDTO.detailList = dispatchSelected.saleDetails ? [...dispatchSelected.saleDetails] : [];
 
       this.saleService.createSaleFromDispatch(this.requestDTO).subscribe({
         next: (response) => {
@@ -183,7 +178,7 @@ export class PaymentDispatchComponent implements OnChanges, OnInit {
   }
 
   handleDiscountSwitch(): void {
-    const totalWithoutDiscount = this.saleDetailDispatchList.reduce((sum, value) => sum + (value.price * value.quantity), 0);
+    const totalWithoutDiscount = this.selectedDispatchPayment.saleDetails.reduce((sum, value) => sum + (value.price * value.quantity), 0);
 
     if (this.isDiscount) {
       if (this.discountAmount > 0 && this.discountAmount < this.totalSum) {
@@ -212,7 +207,6 @@ export class PaymentDispatchComponent implements OnChanges, OnInit {
   }
 
   resetModal(): void {
-    this.selectedDispatchPayment = null;
     this.totalSum = 0;
     this.isDiscount = false;
     this.isCash = false;
