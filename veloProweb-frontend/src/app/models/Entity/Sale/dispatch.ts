@@ -1,4 +1,4 @@
-import { SaleDetailDTO } from "../../DTO/sale-detail-dto";
+import { SaleDetailResponse } from "./sale-detail-response";
 
 export interface Dispatch {
     id: number,
@@ -10,5 +10,5 @@ export interface Dispatch {
     hasSale: boolean,
     created: string,
     deliveryDate: string,
-    detailSaleDTOList: SaleDetailDTO[] | null
+    saleDetails: SaleDetailResponse[]
 }
