@@ -24,5 +24,5 @@ public class DispatchResponseDTO {
     private boolean hasSale;
     private LocalDate created;
     private LocalDate deliveryDate;
-    private List<DetailSaleDTO> detailSaleDTOList = new ArrayList<>();
+    private List<SaleDetailResponseDTO> saleDetails = new ArrayList<>();
 }
