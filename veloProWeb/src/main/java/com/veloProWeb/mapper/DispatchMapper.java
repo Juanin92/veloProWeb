@@ -1,9 +1,9 @@
 package com.veloProWeb.mapper;
 
 import com.veloProWeb.model.Enum.DispatchStatus;
-import com.veloProWeb.model.dto.sale.DetailSaleDTO;
 import com.veloProWeb.model.dto.sale.DispatchRequestDTO;
 import com.veloProWeb.model.dto.sale.DispatchResponseDTO;
+import com.veloProWeb.model.dto.sale.SaleDetailResponseDTO;
 import com.veloProWeb.model.entity.Sale.Dispatch;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +26,7 @@ public class DispatchMapper {
                 .build();
     }
 
-    public DispatchResponseDTO toResponseDTO(Dispatch dispatch, List<DetailSaleDTO> saleDTOList){
+    public DispatchResponseDTO toResponseDTO(Dispatch dispatch, List<SaleDetailResponseDTO> saleDTOList){
         return DispatchResponseDTO.builder()
                 .id(dispatch.getId())
                 .trackingNumber(dispatch.getTrackingNumber())
@@ -37,17 +37,19 @@ public class DispatchMapper {
                 .hasSale(dispatch.isHasSale())
                 .created(dispatch.getCreated())
                 .deliveryDate(dispatch.getDeliveryDate())
-                .detailSaleDTOList(saleDTOList)
+                .saleDetails(saleDTOList)
                 .build();
     }
 
     public DispatchResponseDTO toResponseDTO(Dispatch dispatch) {
-        List<DetailSaleDTO> saleDTOList = dispatch.getSaleDetails().stream()
+        List<SaleDetailResponseDTO> saleDTOList = dispatch.getSaleDetails().stream()
                 .map(saleDetail -> {
-                    DetailSaleDTO dto = new DetailSaleDTO();
-                    dto.setId(saleDetail.getId());
-                    dto.setIdProduct(saleDetail.getProduct().getId());
+                    SaleDetailResponseDTO dto = new SaleDetailResponseDTO();
+                    dto.setDescriptionProduct(saleDetail.getProduct().getDescription());
                     dto.setQuantity(saleDetail.getQuantity());
+                    dto.setPrice(saleDetail.getPrice());
+                    dto.setTax(saleDetail.getTax());
+                    dto.setHasDispatch(true);
                     return dto;
                 })
                 .toList();
