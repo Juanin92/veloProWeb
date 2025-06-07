@@ -34,10 +34,10 @@ public class Kardex {
     private MovementsType movementsType;
 
     @ManyToOne
-    @JoinColumn(name = "id_product", nullable = true)
+    @JoinColumn(name = "id_product")
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "id_user", nullable = true)
+    @JoinColumn(name = "id_user")
     private User user;
 }
