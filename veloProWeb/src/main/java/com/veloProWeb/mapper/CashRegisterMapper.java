@@ -1,6 +1,5 @@
 package com.veloProWeb.mapper;
 
-import com.veloProWeb.model.dto.sale.CashRegisterRequestDTO;
 import com.veloProWeb.model.dto.sale.CashRegisterResponseDTO;
 import com.veloProWeb.model.entity.Sale.CashRegister;
 import com.veloProWeb.model.entity.User.User;
