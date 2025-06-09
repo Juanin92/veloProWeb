@@ -32,7 +32,8 @@ public class CashRegisterController {
      */
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER')")
-    public  ResponseEntity<List<CashRegisterResponseDTO>> getCashRegisters(@AuthenticationPrincipal UserDetails userDetails){
+    public  ResponseEntity<List<CashRegisterResponseDTO>> getCashRegisters(@AuthenticationPrincipal
+                                                                               UserDetails userDetails){
         recordService.registerAction(userDetails, "VIEW", "Lista de registro de la caja");
         return ResponseEntity.ok(cashRegisterService.getCashRegisters());
     }
