@@ -7,6 +7,5 @@ export interface SaleDetail {
     price: number;
     tax: number;
     total: number;
-    sale: Sale;
     product: Product;
 }
