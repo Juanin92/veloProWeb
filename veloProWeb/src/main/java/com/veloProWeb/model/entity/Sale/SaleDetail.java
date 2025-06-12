@@ -2,10 +2,7 @@ package com.veloProWeb.model.entity.Sale;
 
 import com.veloProWeb.model.entity.product.Product;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Data
@@ -23,7 +20,7 @@ public class SaleDetail {
     private int total;
 
     @ManyToOne
-    @JoinColumn(name = "id_sale", nullable = true)
+    @JoinColumn(name = "id_sale", nullable = false)
     private Sale sale;
 
     @ManyToOne
