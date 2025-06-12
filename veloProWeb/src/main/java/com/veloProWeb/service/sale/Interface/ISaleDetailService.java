@@ -1,19 +1,16 @@
 package com.veloProWeb.service.sale.Interface;
 
-import com.veloProWeb.model.dto.sale.DetailSaleDTO;
 import com.veloProWeb.model.dto.sale.DetailSaleRequestDTO;
+import com.veloProWeb.model.dto.sale.SaleDetailRequestDTO;
 import com.veloProWeb.model.entity.Sale.Dispatch;
 import com.veloProWeb.model.entity.Sale.Sale;
-import com.veloProWeb.model.entity.Sale.SaleDetail;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
 public interface ISaleDetailService {
-    void createSaleDetailsToSale(List<DetailSaleDTO> dto, Sale sale, UserDetails userDetails);
-    List<SaleDetail> getAll();
-    List<DetailSaleRequestDTO> getSaleDetailsToSale(Long idSale);
-    void createSaleDetailsToDispatch(List<DetailSaleDTO> dto, Dispatch dispatch);
-    List<DetailSaleRequestDTO> getSaleDetailsToDispatch(Long idDispatch);
+    void addDetailsToSale(List<SaleDetailRequestDTO> dto, Sale sale, UserDetails userDetails);
+    List<DetailSaleRequestDTO> getDetailsBySaleId(Long idSale);
+    void createSaleDetailsToDispatch(List<SaleDetailRequestDTO> dto, Dispatch dispatch);
     void addSaleToSaleDetailsDispatch(Long idDispatch, Sale sale);
 }
