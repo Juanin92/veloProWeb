@@ -45,6 +45,7 @@ public class DispatchMapper {
         List<SaleDetailResponseDTO> saleDTOList = dispatch.getSaleDetails().stream()
                 .map(saleDetail -> {
                     SaleDetailResponseDTO dto = new SaleDetailResponseDTO();
+                    dto.setIdProduct(saleDetail.getProduct().getId());
                     dto.setDescriptionProduct(saleDetail.getProduct().getDescription());
                     dto.setQuantity(saleDetail.getQuantity());
                     dto.setPrice(saleDetail.getPrice());
