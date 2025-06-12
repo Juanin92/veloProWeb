@@ -40,6 +40,7 @@ public class SaleEventService implements ISaleEventService {
     public void createSaleMixPaymentEvent(Customer customer, int amount) {
         customer.setTotalDebt(customer.getDebt() + amount);
         customerService.updateTotalDebt(customer);
+        customerService.addSaleToCustomer(customer);
         ticketHistoryService.addTicketToCustomer(customer, amount);
     }
 
