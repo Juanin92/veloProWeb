@@ -19,6 +19,7 @@ import java.util.List;
 public class SaleRequestDTO {
 
     private Long idCustomer;
+    private Long idDispatch;
 
     @NotNull(message = "Un método de pago es obligatorio")
     private PaymentMethod paymentMethod;
