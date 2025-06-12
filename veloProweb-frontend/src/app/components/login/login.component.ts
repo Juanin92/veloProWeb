@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../utils/notification-service.service';
 import { EncryptionService } from '../../security/encryption.service';
+import { ErrorMessageService } from '../../utils/error-message.service';
 
 @Component({
   selector: 'app-login',
@@ -27,19 +28,17 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private encryptionService: EncryptionService,
-    private notification: NotificationService) { }
+    private notification: NotificationService,
+    private errorMessage: ErrorMessageService) { }
 
   ngOnInit(): void {
     this.getEncryptedKey();
+    this.resetCache();
   }
 
   getEncryptedKey(): void{
-    this.authService.getEncryptionKey().subscribe({
-      next: (key) => { this.encryptionKey = key;},
-      error: (error) => {
-        const message = error.error?.error || error?.error;
-        console.log('Error: ', message);
-      }
+    this.authService.getEncryptionKey().subscribe((key) => { 
+      this.encryptionKey = key;
     });
   }
 
@@ -63,9 +62,7 @@ export class LoginComponent implements OnInit {
         this.authService.saveToken(response.token);
         this.authService.saveRole(response.role);
         this.router.navigate(['/main/home']);
-      },
-      error: (error) => {
-        console.error('login.component: login error', error);
+      },error: () => {
         this.notification.showWarning('Error!', 'Las credenciales no son correctas, intente de nuevo');
       }
     });
@@ -77,9 +74,7 @@ export class LoginComponent implements OnInit {
         this.authService.saveToken(response.token);
         this.authService.saveRole(response.role);
         this.router.navigate(['/main/home']);
-      },
-      error: (error) => {
-        console.error('login.component: login error', error);
+      },error: () => {
         this.notification.showWarning('Error!', 'Las credenciales no son correctas, intente de nuevo');
       }
     });
@@ -94,11 +89,15 @@ export class LoginComponent implements OnInit {
           console.log('OK: ', response.message);
         }, error: (error)=>{
           this.sendCode = error.action;
-          const message = error.error?.error || error.error?.message || error?.error;
-          console.log('Error: ', message);
+          const message = this.errorMessage.errorMessageExtractor(error);
           this.notification.showErrorToast(message, 'top', 3000);
         }
       });
     }
+  }
+
+  resetCache(): void{
+    sessionStorage.clear();
+    localStorage.clear();
   }
 }
