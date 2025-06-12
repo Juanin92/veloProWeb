@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SaleRequestDTO } from '../../models/DTO/sale-request-dto';
-import { DetailSaleRequestDTO } from '../../models/DTO/detail-sale-request-dto';
 import { AuthService } from '../user/auth.service';
+import { SaleRequest } from '../../models/entity/sale/sale-request';
+import { Sale } from '../../models/entity/sale/sale';
 
 @Injectable({
   providedIn: 'root'
@@ -19,9 +20,9 @@ export class SaleService {
      * @param saleRequest - DTO con los valores de venta a agregar
      * @returns - Observable emite un mensaje de confirmación o error
      */
-    createSale(saleRequest: SaleRequestDTO): Observable<{message: string}>{
-      return this.http.post<{message: string}>(`${this.apiUrl}`, saleRequest, {headers: this.auth.getAuthHeaders()});
-    }
+  createSale(saleRequest: SaleRequest): Observable<{message: string}>{
+    return this.http.post<{message: string}>(`${this.apiUrl}`, saleRequest, {headers: this.auth.getAuthHeaders()});
+  }
   
   /**
    * Obtiene cantidad total de ventas realizadas haciendo una petición GET a la API
@@ -35,19 +36,8 @@ export class SaleService {
    * Obtiene todas la ventas registradas haciendo una petición GET 
    * @returns - Observable emite una lista DTO con los datos de ventas registradas
    */
-  getAllSales(): Observable<SaleRequestDTO[]>{
-    return this.http.get<SaleRequestDTO[]>(`${this.apiUrl}/lista-venta`, {headers: this.auth.getAuthHeaders()});
-  }
-
-  /**
-   * Obtener detalle de ventas de una venta especifica mediante una petición GET
-   * @param idSale - Identificador de la venta seleccionada
-   * @returns - Observable emite una lista con los detalles de la venta
-   */
-  getDetailSale(idSale: number): Observable<DetailSaleRequestDTO[]>{
-    return this.http.get<DetailSaleRequestDTO[]>(`${this.apiUrl}/detalles`, {
-      params: {idSale: idSale.toString()}
-    });
+  getAllSales(): Observable<Sale[]>{
+    return this.http.get<Sale[]>(`${this.apiUrl}/lista-venta`, {headers: this.auth.getAuthHeaders()});
   }
 
   createSaleFromDispatch(saleRequest: SaleRequestDTO): Observable<{message: string}>{
