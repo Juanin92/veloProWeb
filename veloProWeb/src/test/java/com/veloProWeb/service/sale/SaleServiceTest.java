@@ -1,24 +1,25 @@
 package com.veloProWeb.service.sale;
 
-import com.veloProWeb.exceptions.customer.CustomerNotFoundException;
+import com.veloProWeb.exceptions.sale.SaleNotFoundException;
+import com.veloProWeb.mapper.SaleMapper;
+import com.veloProWeb.model.dto.sale.SaleDetailRequestDTO;
 import com.veloProWeb.model.dto.sale.SaleRequestDTO;
+import com.veloProWeb.model.dto.sale.SaleResponseDTO;
+import com.veloProWeb.model.entity.Sale.SaleDetail;
 import com.veloProWeb.model.entity.customer.Customer;
 import com.veloProWeb.model.entity.Sale.Sale;
 import com.veloProWeb.model.Enum.PaymentMethod;
+import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.repository.Sale.SaleRepo;
-import com.veloProWeb.service.customer.CustomerService;
-import com.veloProWeb.service.customer.TicketHistoryService;
+import com.veloProWeb.service.sale.Interface.ISaleEventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,161 +31,187 @@ public class SaleServiceTest {
 
     @InjectMocks private SaleService saleService;
     @Mock private SaleRepo saleRepo;
-    @Mock private TicketHistoryService ticketService;
-    @Mock private CustomerService customerService;
-    private SaleRequestDTO saleRequestDTO;
-    private Customer customer;
+    @Mock private ISaleEventService eventService;
+    @Spy private SaleMapper mapper;
     private Sale sale;
+    private Customer customer;
 
     @BeforeEach
     void setUp(){
-        sale = new Sale();
-        sale.setId(1L);
-        sale.setDate(LocalDate.now());
-        sale.setPaymentMethod(PaymentMethod.EFECTIVO);
-        sale.setDocument("BO001");
-        sale.setComment("Venta realizada");
-        sale.setDiscount(0);
-        sale.setTax(114);
-        sale.setTotalSale(714);
-        sale.setStatus(true);
-
-        saleRequestDTO = new SaleRequestDTO();
-        saleRequestDTO.setId(1L);
-        saleRequestDTO.setDate(LocalDate.now());
-        saleRequestDTO.setTax(114);
-        saleRequestDTO.setTotal(714);
-        saleRequestDTO.setDiscount(0);
-        saleRequestDTO.setNumberDocument(340);
-        saleRequestDTO.setDetailList(new ArrayList<>());
-
-        customer = new Customer();
-        customer.setId(2L);
+        sale = Sale.builder().id(1L).document("0001").build();
+        customer = Customer.builder().id(1L).name("John").surname("Doe").build();
     }
 
     //Prueba para crear uan nueva venta de diferentes modos de pago
     @Test
-    public void createSale_validCashPayment() {
-        saleRequestDTO.setPaymentMethod(PaymentMethod.EFECTIVO);
-        saleRequestDTO.setComment("1000");
-        saleRequestDTO.setIdCustomer(null);
+    public void createSale_cashPayment() {
+        SaleDetailRequestDTO saleDetailRequestDTO = SaleDetailRequestDTO.builder().idProduct(1L).quantity(10).build();
+        SaleRequestDTO saleRequestDTO = SaleRequestDTO.builder().idCustomer(null).paymentMethod(PaymentMethod.EFECTIVO)
+                .tax(100).total(1000).discount(0).comment("1000").detailList(List.of(saleDetailRequestDTO)).build();
 
-        Sale createdSale = saleService.createSale(saleRequestDTO);
-        ArgumentCaptor<Sale> saleCaptor = ArgumentCaptor.forClass(Sale.class);
-        verify(saleRepo).save(saleCaptor.capture());
-        Sale savedSale = saleCaptor.getValue();
-        assertEquals(PaymentMethod.EFECTIVO, savedSale.getPaymentMethod());
-        assertEquals("BO_340", savedSale.getDocument());
-        assertEquals("Efectivo: $1000", savedSale.getComment());
-        assertNull(savedSale.getCustomer());
-        assertTrue(savedSale.isStatus());
+        when(saleRepo.findLastCreated()).thenReturn(Optional.of(sale));
+        when(eventService.needsCustomer(saleRequestDTO.getPaymentMethod(), null)).thenReturn(null);
+
+        Sale saleMapped = mapper.toSaleEntity(saleRequestDTO, "0001", saleRequestDTO.getPaymentMethod(),
+                String.format("Efectivo: $%s", saleRequestDTO.getComment()), null);
+
+        Sale saleCreated = saleService.createSale(saleRequestDTO);
+
+        verify(saleRepo, times(1)).findLastCreated();
+        verify(eventService, times(1)).needsCustomer(saleRequestDTO.getPaymentMethod(),
+                null);
+        verify(saleRepo, times(1)).save(saleCreated);
+
+        assertEquals(saleMapped, saleCreated);
+        assertEquals("BO-0625-0001", saleCreated.getDocument());
+        assertEquals("Efectivo: $1000", saleCreated.getComment());
+        assertEquals(PaymentMethod.EFECTIVO, saleCreated.getPaymentMethod());
+        assertTrue(saleCreated.isStatus());
+        assertNull(saleCreated.getCustomer());
     }
     @Test
-    public void createSale_validDebitPayment() {
-        saleRequestDTO.setPaymentMethod(PaymentMethod.DEBITO);
-        saleRequestDTO.setComment("1233424");
-        saleRequestDTO.setIdCustomer(null);
+    public void createSale_debitPayment() {
+        SaleDetailRequestDTO saleDetailRequestDTO = SaleDetailRequestDTO.builder().idProduct(1L).quantity(10).build();
+        SaleRequestDTO saleRequestDTO = SaleRequestDTO.builder().idCustomer(null).paymentMethod(PaymentMethod.DEBITO)
+                .tax(100).total(1000).discount(0).comment("ticket number").detailList(List.of(saleDetailRequestDTO)).build();
 
-        Sale createdSale = saleService.createSale(saleRequestDTO);
-        ArgumentCaptor<Sale> saleCaptor = ArgumentCaptor.forClass(Sale.class);
-        verify(saleRepo).save(saleCaptor.capture());
-        Sale savedSale = saleCaptor.getValue();
-        assertEquals(PaymentMethod.DEBITO, savedSale.getPaymentMethod());
-        assertEquals("BO_340", savedSale.getDocument());
-        assertEquals("Comprobante: n°1233424", savedSale.getComment());
-        assertNull(savedSale.getCustomer());
-        assertTrue(savedSale.isStatus());
+        when(saleRepo.findLastCreated()).thenReturn(Optional.of(sale));
+        when(eventService.needsCustomer(saleRequestDTO.getPaymentMethod(), null)).thenReturn(null);
+
+        Sale saleMapped = mapper.toSaleEntity(saleRequestDTO, "0001", saleRequestDTO.getPaymentMethod(),
+                String.format("Comprobante: n°%s", saleRequestDTO.getComment()), null);
+
+        Sale saleCreated = saleService.createSale(saleRequestDTO);
+
+        verify(saleRepo, times(1)).findLastCreated();
+        verify(eventService, times(1)).needsCustomer(saleRequestDTO.getPaymentMethod(),
+                null);
+        verify(saleRepo, times(1)).save(saleCreated);
+
+        assertEquals(saleMapped, saleCreated);
+        assertEquals("BO-0625-0001", saleCreated.getDocument());
+        assertEquals("Comprobante: n°ticket number", saleCreated.getComment());
+        assertEquals(PaymentMethod.DEBITO, saleCreated.getPaymentMethod());
+        assertTrue(saleCreated.isStatus());
+        assertNull(saleCreated.getCustomer());
     }
     @Test
-    public void createSale_validCreditPayment() {
-        saleRequestDTO.setPaymentMethod(PaymentMethod.CREDITO);
-        saleRequestDTO.setComment("1233424");
-        saleRequestDTO.setIdCustomer(null);
+    public void createSale_creditPayment() {
+        SaleDetailRequestDTO saleDetailRequestDTO = SaleDetailRequestDTO.builder().idProduct(1L).quantity(10).build();
+        SaleRequestDTO saleRequestDTO = SaleRequestDTO.builder().idCustomer(null).paymentMethod(PaymentMethod.CREDITO)
+                .tax(100).total(1000).discount(0).comment("ticket number").detailList(List.of(saleDetailRequestDTO)).build();
 
-        Sale createdSale = saleService.createSale(saleRequestDTO);
-        ArgumentCaptor<Sale> saleCaptor = ArgumentCaptor.forClass(Sale.class);
-        verify(saleRepo).save(saleCaptor.capture());
-        Sale savedSale = saleCaptor.getValue();
-        assertEquals(PaymentMethod.CREDITO, savedSale.getPaymentMethod());
-        assertEquals("BO_340", savedSale.getDocument());
-        assertEquals("Comprobante: n°1233424", savedSale.getComment());
-        assertNull(savedSale.getCustomer());
-        assertTrue(savedSale.isStatus());
+        when(saleRepo.findLastCreated()).thenReturn(Optional.of(sale));
+        when(eventService.needsCustomer(saleRequestDTO.getPaymentMethod(), null)).thenReturn(null);
+
+        Sale saleMapped = mapper.toSaleEntity(saleRequestDTO, "0001", saleRequestDTO.getPaymentMethod(),
+                String.format("Comprobante: n°%s", saleRequestDTO.getComment()), null);
+
+        Sale saleCreated = saleService.createSale(saleRequestDTO);
+
+        verify(saleRepo, times(1)).findLastCreated();
+        verify(eventService, times(1)).needsCustomer(saleRequestDTO.getPaymentMethod(),
+                null);
+        verify(saleRepo, times(1)).save(saleCreated);
+
+        assertEquals(saleMapped, saleCreated);
+        assertEquals("BO-0625-0001", saleCreated.getDocument());
+        assertEquals("Comprobante: n°ticket number", saleCreated.getComment());
+        assertEquals(PaymentMethod.CREDITO, saleCreated.getPaymentMethod());
+        assertTrue(saleCreated.isStatus());
+        assertNull(saleCreated.getCustomer());
     }
     @Test
-    public void createSale_validTransferPayment() {
-        saleRequestDTO.setPaymentMethod(PaymentMethod.TRANSFERENCIA);
-        saleRequestDTO.setComment("1233424");
-        saleRequestDTO.setIdCustomer(null);
+    public void createSale_transferPayment() {
+        SaleDetailRequestDTO saleDetailRequestDTO = SaleDetailRequestDTO.builder().idProduct(1L).quantity(10).build();
+        SaleRequestDTO saleRequestDTO = SaleRequestDTO.builder().idCustomer(null).tax(100).total(1000).discount(0)
+                .paymentMethod(PaymentMethod.TRANSFERENCIA).comment("transfer number")
+                .detailList(List.of(saleDetailRequestDTO)).build();
 
-        Sale createdSale = saleService.createSale(saleRequestDTO);
-        ArgumentCaptor<Sale> saleCaptor = ArgumentCaptor.forClass(Sale.class);
-        verify(saleRepo).save(saleCaptor.capture());
-        Sale savedSale = saleCaptor.getValue();
-        assertEquals(PaymentMethod.TRANSFERENCIA, savedSale.getPaymentMethod());
-        assertEquals("BO_340", savedSale.getDocument());
-        assertEquals("Transferencia: n°1233424", savedSale.getComment());
-        assertNull(savedSale.getCustomer());
-        assertTrue(savedSale.isStatus());
+        when(saleRepo.findLastCreated()).thenReturn(Optional.of(sale));
+        when(eventService.needsCustomer(saleRequestDTO.getPaymentMethod(), null)).thenReturn(null);
+
+        Sale saleMapped = mapper.toSaleEntity(saleRequestDTO, "0001", saleRequestDTO.getPaymentMethod(),
+                String.format("Transferencia: n°%s", saleRequestDTO.getComment()), null);
+
+        Sale saleCreated = saleService.createSale(saleRequestDTO);
+
+        verify(saleRepo, times(1)).findLastCreated();
+        verify(eventService, times(1)).needsCustomer(saleRequestDTO.getPaymentMethod(),
+                null);
+        verify(saleRepo, times(1)).save(saleCreated);
+
+        assertEquals(saleMapped, saleCreated);
+        assertEquals("BO-0625-0001", saleCreated.getDocument());
+        assertEquals("Transferencia: n°transfer number", saleCreated.getComment());
+        assertEquals(PaymentMethod.TRANSFERENCIA, saleCreated.getPaymentMethod());
+        assertTrue(saleCreated.isStatus());
+        assertNull(saleCreated.getCustomer());
     }
     @Test
-    public void createSale_validLoanPayment() {
-        saleRequestDTO.setPaymentMethod(PaymentMethod.PRESTAMO);
-        saleRequestDTO.setComment(null);
-        saleRequestDTO.setIdCustomer(2L);
-        when(customerService.getCustomerById(saleRequestDTO.getIdCustomer())).thenReturn(customer);
+    public void createSale_loanPayment() {
+        SaleDetailRequestDTO saleDetailRequestDTO = SaleDetailRequestDTO.builder().idProduct(1L).quantity(10).build();
+        SaleRequestDTO saleRequestDTO = SaleRequestDTO.builder().idCustomer(1L).paymentMethod(PaymentMethod.PRESTAMO)
+                .tax(100).total(1000).discount(0).comment("ticket number").detailList(List.of(saleDetailRequestDTO)).build();
 
-        Sale createdSale = saleService.createSale(saleRequestDTO);
-        ArgumentCaptor<Sale> saleCaptor = ArgumentCaptor.forClass(Sale.class);
-        verify(saleRepo).save(saleCaptor.capture());
-        Sale savedSale = saleCaptor.getValue();
-        assertEquals(PaymentMethod.PRESTAMO, savedSale.getPaymentMethod());
-        assertEquals("BO_340", savedSale.getDocument());
-        assertNull(savedSale.getComment());
-        assertEquals( 2L, savedSale.getCustomer().getId());
-        assertTrue(savedSale.isStatus());
-        verify(customerService).getCustomerById(saleRequestDTO.getIdCustomer());
-        verify(customerService).updateTotalDebt(customer);
-        verify(ticketService).addTicketToCustomer(customer, saleRequestDTO.getTotal());
+        when(saleRepo.findLastCreated()).thenReturn(Optional.of(sale));
+        when(eventService.needsCustomer(saleRequestDTO.getPaymentMethod(), 1L)).thenReturn(customer);
+
+        Sale saleMapped = mapper.toSaleEntity(saleRequestDTO, "0001", saleRequestDTO.getPaymentMethod(),
+                null, customer);
+
+        doNothing().when(eventService).createSaleLoanPaymentEvent(customer, saleRequestDTO.getTotal());
+
+        Sale saleCreated = saleService.createSale(saleRequestDTO);
+
+        verify(saleRepo, times(1)).findLastCreated();
+        verify(eventService, times(1)).needsCustomer(saleRequestDTO.getPaymentMethod(),
+                1L);
+        verify(eventService, times(1)).createSaleLoanPaymentEvent(customer,
+                saleRequestDTO.getTotal());
+        verify(saleRepo, times(1)).save(saleCreated);
+
+        assertEquals(saleMapped, saleCreated);
+        assertEquals("BO-0625-0001", saleCreated.getDocument());
+        assertNull(saleCreated.getComment());
+        assertEquals(PaymentMethod.PRESTAMO, saleCreated.getPaymentMethod());
+        assertTrue(saleCreated.isStatus());
+        assertEquals(customer, saleCreated.getCustomer());
     }
     @Test
-    public void createSale_validMixPayment() {
-        saleRequestDTO.setPaymentMethod(PaymentMethod.MIXTO);
-        saleRequestDTO.setComment("1000");
-        saleRequestDTO.setIdCustomer(2L);
-        when(customerService.getCustomerById(saleRequestDTO.getIdCustomer())).thenReturn(customer);
+    public void createSale_mixedPayment() {
+        SaleDetailRequestDTO saleDetailRequestDTO = SaleDetailRequestDTO.builder().idProduct(1L).quantity(10).build();
+        SaleRequestDTO saleRequestDTO = SaleRequestDTO.builder().idCustomer(1L).paymentMethod(PaymentMethod.MIXTO)
+                .tax(100).total(1000).discount(0).comment("ticket number").detailList(List.of(saleDetailRequestDTO)).build();
 
-        Sale createdSale = saleService.createSale(saleRequestDTO);
-        ArgumentCaptor<Sale> saleCaptor = ArgumentCaptor.forClass(Sale.class);
-        verify(saleRepo).save(saleCaptor.capture());
-        Sale savedSale = saleCaptor.getValue();
-        assertEquals(PaymentMethod.MIXTO, savedSale.getPaymentMethod());
-        assertEquals("BO_340", savedSale.getDocument());
-        assertEquals( "Abono inicial: $1000", savedSale.getComment());
-        assertEquals( 2L, savedSale.getCustomer().getId());
-        assertTrue(savedSale.isStatus());
-        verify(customerService).getCustomerById(saleRequestDTO.getIdCustomer());
-        verify(customerService).updateTotalDebt(customer);
-        verify(ticketService).addTicketToCustomer(customer, saleRequestDTO.getTotal());
-    }
-    @Test
-    public void createSale_customerNotFound() {
-        saleRequestDTO.setPaymentMethod(PaymentMethod.PRESTAMO);
-        saleRequestDTO.setComment(null);
-        saleRequestDTO.setIdCustomer(4L);
-        when(customerService.getCustomerById(saleRequestDTO.getIdCustomer()))
-                .thenThrow(new CustomerNotFoundException("Cliente no encontrado"));
-        CustomerNotFoundException exception = assertThrows(CustomerNotFoundException.class,
-                () -> saleService.createSale(saleRequestDTO));
+        when(saleRepo.findLastCreated()).thenReturn(Optional.of(sale));
+        when(eventService.needsCustomer(saleRequestDTO.getPaymentMethod(), 1L)).thenReturn(customer);
 
-        assertEquals("Cliente no encontrado", exception.getMessage());
-        verify(saleRepo , never()).save(any(Sale.class));
-        verify(customerService).getCustomerById(saleRequestDTO.getIdCustomer());
+        Sale saleMapped = mapper.toSaleEntity(saleRequestDTO, "0001", saleRequestDTO.getPaymentMethod(),
+                String.format("Abono inicial: $%s", saleRequestDTO.getComment()), customer);
+
+        doNothing().when(eventService).createSaleMixPaymentEvent(customer, saleRequestDTO.getTotal());
+
+        Sale saleCreated = saleService.createSale(saleRequestDTO);
+
+        verify(saleRepo, times(1)).findLastCreated();
+        verify(eventService, times(1)).needsCustomer(saleRequestDTO.getPaymentMethod(),
+                1L);
+        verify(eventService, times(1)).createSaleMixPaymentEvent(customer,
+                saleRequestDTO.getTotal());
+        verify(saleRepo, times(1)).save(saleCreated);
+
+        assertEquals(saleMapped, saleCreated);
+        assertEquals("BO-0625-0001", saleCreated.getDocument());
+        assertEquals("Abono inicial: $ticket number", saleCreated.getComment());
+        assertEquals(PaymentMethod.MIXTO, saleCreated.getPaymentMethod());
+        assertTrue(saleCreated.isStatus());
+        assertEquals(customer, saleCreated.getCustomer());
     }
 
     //Prueba para obtener el total de ventas realizadas
     @Test
-    public void totalSales_valid(){
+    public void totalSales(){
         when(saleRepo.count()).thenReturn(1L);
         Long totalSale =  saleService.totalSales();
         verify(saleRepo).count();
@@ -193,31 +220,40 @@ public class SaleServiceTest {
 
     //Prueba para obtener todas las ventas registradas
     @Test
-    public void getAllSale_valid(){
-        when(saleRepo.findAll()).thenReturn(Collections.singletonList(sale));
+    public void getAllSales(){
+        Sale backUp = Sale.builder().document("Test-Doc").customer(customer).build();
+        SaleDetail saleDetail = SaleDetail.builder().id(1L).sale(backUp).dispatch(null)
+                .product(Product.builder().description("Product Description").build()).build();
+        backUp.setSaleDetails(List.of(saleDetail));
+        when(saleRepo.findAll()).thenReturn(List.of(backUp));
 
-        List<SaleRequestDTO> result = saleService.getAllSale();
+        List<SaleResponseDTO> result = saleService.getAllSales();
+
         verify(saleRepo, times(1)).findAll();
+
         assertNotNull(result);
         assertEquals(1, result.size());
-
-        SaleRequestDTO dto = result.getFirst();
-        assertEquals(sale.getId(), dto.getId());
-        assertEquals(sale.getDate(), dto.getDate());
-        assertEquals(sale.getPaymentMethod(), dto.getPaymentMethod());
+        assertEquals("Product Description", result.getFirst().getSaleDetails().getFirst()
+                .getDescriptionProduct());
+        assertEquals("John Doe", result.getFirst().getCustomer());
     }
 
     //Prueba para obtener una venta por ID
     @Test
-    public void getSaleById_valid(){
+    public void getSaleById(){
         when(saleRepo.findById(1L)).thenReturn(Optional.of(sale));
-        saleService.getSaleById(1L);
+
+        Sale result = saleService.getSaleById(1L);
         verify(saleRepo).findById(1L);
+        assertEquals("0001", result.getDocument());
     }
     @Test
-    public void getSaleById_validNull(){
+    public void getSaleById_NotFoundException(){
         when(saleRepo.findById(2L)).thenReturn(Optional.empty());
-        saleService.getSaleById(2L);
-        verify(saleRepo).findById(2L);
+
+        SaleNotFoundException e = assertThrows(SaleNotFoundException.class, () -> saleService.getSaleById(2L));
+
+        verify(saleRepo, times(1)).findById(2L);
+        assertEquals("Venta no encontrada", e.getMessage());
     }
 }
