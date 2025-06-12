@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { SaleRequestDTO } from '../../models/DTO/sale-request-dto';
 import { AuthService } from '../user/auth.service';
 import { SaleRequest } from '../../models/entity/sale/sale-request';
 import { Sale } from '../../models/entity/sale/sale';
@@ -40,7 +39,7 @@ export class SaleService {
     return this.http.get<Sale[]>(`${this.apiUrl}/lista-venta`, {headers: this.auth.getAuthHeaders()});
   }
 
-  createSaleFromDispatch(saleRequest: SaleRequestDTO): Observable<{message: string}>{
+  createSaleFromDispatch(saleRequest: SaleRequest): Observable<{message: string}>{
     return this.http.post<{message: string}>(`${this.apiUrl}/venta_despacho`, saleRequest, {headers: this.auth.getAuthHeaders()});
   }
 }
