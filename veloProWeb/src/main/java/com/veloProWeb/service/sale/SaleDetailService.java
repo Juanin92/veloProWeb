@@ -13,7 +13,6 @@ import com.veloProWeb.model.Enum.MovementsType;
 import com.veloProWeb.repository.customer.TicketHistoryRepo;
 import com.veloProWeb.repository.Sale.DispatchRepo;
 import com.veloProWeb.repository.Sale.SaleDetailRepo;
-import com.veloProWeb.repository.Sale.SaleRepo;
 import com.veloProWeb.service.customer.interfaces.ICustomerService;
 import com.veloProWeb.service.product.interfaces.IProductService;
 import com.veloProWeb.service.inventory.IKardexService;
@@ -24,6 +23,7 @@ import com.veloProWeb.validation.SaleValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -36,7 +36,6 @@ public class SaleDetailService implements ISaleDetailService {
     private final SaleDetailRepo saleDetailRepo;
     private final TicketHistoryRepo ticketHistoryRepo;
     private final DispatchRepo dispatchRepo;
-    private final SaleRepo saleRepo;
     private final IProductService productService;
     private final ICustomerService customerService;
     private final ISaleService saleService;
@@ -54,6 +53,7 @@ public class SaleDetailService implements ISaleDetailService {
      * @param sale - Objeto que representa la venta asociada a los detalles.
      * @param userDetails - detalles del usuario autenticado.
      */
+    @Transactional
     @Override
     public void addDetailsToSale(List<SaleDetailRequestDTO> dtoList, Sale sale, UserDetails userDetails) {
         validator.hasSale(sale);
@@ -117,6 +117,7 @@ public class SaleDetailService implements ISaleDetailService {
      * @param dtoList - Lista de objetos dto que contienen los detalles de la venta.
      * @param dispatch - Objeto que representa el despacho asociado a los detalles.
      */
+    @Transactional
     @Override
     public void createSaleDetailsToDispatch(List<SaleDetailRequestDTO> dtoList, Dispatch dispatch) {
         for (SaleDetailRequestDTO dto : dtoList) {
@@ -135,21 +136,18 @@ public class SaleDetailService implements ISaleDetailService {
      * @param idDispatch - Identificador del despacho seleccionado
      * @param sale - Venta que se asociara al detalle de venta
      */
+    @Transactional
     @Override
     public void addSaleToSaleDetailsDispatch(Long idDispatch, Sale sale) {
         Dispatch dispatch = dispatchService.getDispatchById(idDispatch);
         List<SaleDetail> saleDetails = saleDetailRepo.findByDispatchId(dispatch.getId());
-        int totalTax = 0;
         for (SaleDetail saleDetail : saleDetails){
             saleDetail.setSale(sale);
             saleDetailRepo.save(saleDetail);
-            totalTax += saleDetail.getTax() * saleDetail.getQuantity();
             productService.updateStockAndReserveDispatch(saleDetail.getProduct(), saleDetail.getQuantity(), false);
             productService.updateStockSale(saleDetail.getProduct(), saleDetail.getQuantity());
         }
         dispatch.setHasSale(true);
         dispatchRepo.save(dispatch);
-        sale.setTax(totalTax);
-        saleRepo.save(sale);
     }
 }
