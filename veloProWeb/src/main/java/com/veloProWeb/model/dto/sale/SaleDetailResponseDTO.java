@@ -1,4 +1,4 @@
-package com.veloProWeb.model.dto.purchase;
+package com.veloProWeb.model.dto.sale;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,11 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PurchaseDetailDTO {
-    private Long idProduct;
-    private Long idPurchase;
+public class SaleDetailResponseDTO {
+    private String descriptionProduct;
+    private int quantity;
     private int price;
     private int tax;
-    private int quantity;
-    private int total;
+    private boolean hasDispatch;
 }
