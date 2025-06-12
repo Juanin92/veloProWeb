@@ -8,6 +8,7 @@ import { Role } from '../../models/enum/role';
 import { NotificationService } from '../../utils/notification-service.service';
 import { firstValueFrom } from 'rxjs';
 import { CashRegisterService } from '../../services/sale/cash-register.service';
+import { ErrorMessageService } from '../../utils/error-message.service';
 
 @Component({
   selector: 'app-menu',
@@ -24,7 +25,8 @@ export class MenuComponent implements AfterViewInit{
     private auth: AuthService,
     private cashRegisterService: CashRegisterService,
     private router: Router,
-    private notification: NotificationService){}
+    private notification: NotificationService,
+    private errorMessage: ErrorMessageService){}
 
   ngAfterViewInit(): void {
     this.tooltipService.initializeTooltips();
@@ -43,15 +45,14 @@ export class MenuComponent implements AfterViewInit{
         return;
       }
       this.auth.logout().subscribe({
-        next:(response) =>{
-          console.log(response.message);
+        next:() =>{
           this.auth.removeToken();
           sessionStorage.clear();
           localStorage.clear();
           this.router.navigate(['/login']);
         }, error: (error) =>{
-          const message = error.error?.error || error.error?.message || error?.error;
-          console.log('Error: ', message);
+          const message = this.errorMessage.errorMessageExtractor(error);
+          this.notification.showErrorToast(message, 'center', 3000);
         }
       });
     }
@@ -60,7 +61,6 @@ export class MenuComponent implements AfterViewInit{
       try {
         return await firstValueFrom(this.cashRegisterService.hasOpenRegisterOnDate());
       } catch (error) {
-        console.error("Error en la solicitud:", error);
         return false;
       }
     }
