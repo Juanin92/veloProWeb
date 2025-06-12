@@ -30,7 +30,6 @@ export class DispatchModalComponent implements OnInit{
   saleDetailDispatchList: SaleDetailResponse[] = [];
   selectedDispatch: Dispatch;
   saleDetailRequests: SaleDetailRequest[] = [];
-  // totalSum: number = 0;
   dispatchRequest: DispatchRequest;
   
   constructor(
@@ -53,24 +52,23 @@ export class DispatchModalComponent implements OnInit{
   processNewDispatch(dispatch: DispatchRequest): void{
     this.saleDetailRequests = this.mapper.mapToSaleDetailRequest(this.saleDetailList);
     dispatch.saleDetails = this.saleDetailRequests;
-    console.log('despacho nuevo: ',  dispatch);
-    // this.dispatchService.createDispatch(dispatch).subscribe({
-    //   next:(response)=>{
-    //     this.notification.showSuccessToast(response.message, 'top', 3000);
-    //     this.clearDispatchModal();
-    //     this.dispatchCreated.emit(true);
-    //     this.modalService.closeModal();
-    //   },error: (error)=>{
-    //     const message = this.errorMessage.errorMessageExtractor(error);
-    //     this.notification.showErrorToast(message, 'top', 3000);
-    //   }
-    // });
+    this.dispatchService.createDispatch(dispatch).subscribe({
+      next:(response)=>{
+        this.notification.showSuccessToast(response.message, 'top', 3000);
+        this.clearDispatchModal();
+        this.dispatchCreated.emit(true);
+        this.modalService.closeModal();
+      },error: (error)=>{
+        const message = this.errorMessage.errorMessageExtractor(error);
+        this.notification.showErrorToast(message, 'top', 3000);
+      }
+    });
   }
   
   clearDispatchModal(): void{
-    // this.dispatchSelectedDetail = this.helper.initializeDispatch();
-    // this.selectedDispatch = this.helper.initializeDispatch();
-    // this.dispatchRequest = this.helper.initializeDispatchRequest();
-    // this.totalSum = 0;
+    this.dispatchSelectedDetail = this.helper.initializeDispatch();
+    this.selectedDispatch = this.helper.initializeDispatch();
+    this.dispatchRequest = this.helper.initializeDispatchRequest();
+    this.totalSum = 0;
   }
 }
