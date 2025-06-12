@@ -5,6 +5,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.veloProWeb.model.dto.sale.DetailSaleRequestDTO;
+import com.veloProWeb.model.dto.sale.SaleDetailResponseDTO;
 import com.veloProWeb.model.entity.Sale.Sale;
 import com.veloProWeb.model.entity.data.LocalData;
 import com.veloProWeb.model.Enum.PaymentMethod;
@@ -86,8 +87,8 @@ public class PdfService {
         table.addCell(new PdfPCell(new Phrase("Descripción", boldFont)));
         table.addCell(new PdfPCell(new Phrase("Precio", boldFont)));
 
-        List<DetailSaleRequestDTO> detailList = saleDetailService.getDetailsBySaleId(sale.getId());
-        for (DetailSaleRequestDTO item : detailList) {
+        List<SaleDetailResponseDTO> detailList = saleDetailService.getDetailsBySaleId(sale.getId());
+        for (SaleDetailResponseDTO item : detailList) {
             table.addCell(new PdfPCell(new Phrase(String.valueOf(item.getQuantity()), normalFont)));
             table.addCell(new PdfPCell(new Phrase(item.getDescriptionProduct(), normalFont)));
             table.addCell(new PdfPCell(new Phrase("$" + item.getPrice(), normalFont)));
