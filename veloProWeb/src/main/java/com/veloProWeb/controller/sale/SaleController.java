@@ -38,7 +38,7 @@ public class SaleController {
         Sale sale = saleService.createSale(dto);
         saleDetailService.addDetailsToSale(dto.getDetailList(), sale, userDetails);
         recordService.registerAction(userDetails, "CREATE", "Venta realizada " + sale.getDocument());
-        emailService.sendSalesReceiptEmail(sale);
+//        emailService.sendSalesReceiptEmail(sale);
         return new ResponseEntity<>(ResponseMessage.message("Venta registrada correctamente!"), HttpStatus.CREATED);
     }
 
@@ -55,17 +55,14 @@ public class SaleController {
         return ResponseEntity.ok(saleService.getAllSales());
     }
 
-//    @PostMapping("venta_despacho")
-//    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'GUEST', 'SELLER')")
-//    public ResponseEntity<Map<String, String>> createSaleFromDispatch(@RequestBody SaleRequestDTO dto,
-//                                                                      @AuthenticationPrincipal UserDetails userDetails){
-//        Long idDispatch = dto.getId();
-//        dispatchService.handleDispatchReceiveToSale(idDispatch);
-//        dto.setNumberDocument(saleService.totalSales().intValue());
-//        Sale sale = saleService.createSale(dto);
-//        saleDetailService.addSaleToSaleDetailsDispatch(idDispatch, sale);
-//        recordService.registerAction(userDetails, "CREATE",
-//                String.format("Venta realizada: %s por despacho", dto.getNumberDocument()));
-//        return new ResponseEntity<>(ResponseMessage.message("Venta registrada correctamente!"), HttpStatus.CREATED);
-//    }
+    @PostMapping("venta_despacho")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'GUEST', 'SELLER')")
+    public ResponseEntity<Map<String, String>> createSaleFromDispatch(@RequestBody SaleRequestDTO dto,
+                                                                      @AuthenticationPrincipal UserDetails userDetails){
+        dispatchService.handleDispatchReceiveToSale(dto.getIdDispatch());
+        Sale sale = saleService.createSale(dto);
+        saleDetailService.addSaleToSaleDetailsDispatch(dto.getIdDispatch(), sale);
+        recordService.registerAction(userDetails, "CREATE","Venta realizada: por despacho");
+        return new ResponseEntity<>(ResponseMessage.message("Venta registrada correctamente!"), HttpStatus.CREATED);
+    }
 }
