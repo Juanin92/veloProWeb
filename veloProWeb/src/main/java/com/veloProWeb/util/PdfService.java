@@ -86,7 +86,7 @@ public class PdfService {
         table.addCell(new PdfPCell(new Phrase("Descripción", boldFont)));
         table.addCell(new PdfPCell(new Phrase("Precio", boldFont)));
 
-        List<DetailSaleRequestDTO> detailList = saleDetailService.getSaleDetailsToSale(sale.getId());
+        List<DetailSaleRequestDTO> detailList = saleDetailService.getDetailsBySaleId(sale.getId());
         for (DetailSaleRequestDTO item : detailList) {
             table.addCell(new PdfPCell(new Phrase(String.valueOf(item.getQuantity()), normalFont)));
             table.addCell(new PdfPCell(new Phrase(item.getDescriptionProduct(), normalFont)));
