@@ -4,6 +4,7 @@ import com.veloProWeb.exceptions.sale.SaleNotFoundException;
 import com.veloProWeb.mapper.SaleMapper;
 import com.veloProWeb.model.Enum.PaymentMethod;
 import com.veloProWeb.model.dto.sale.SaleDetailRequestDTO;
+import com.veloProWeb.model.dto.sale.SaleDetailResponseDTO;
 import com.veloProWeb.model.entity.Sale.Dispatch;
 import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.model.entity.Sale.Sale;
@@ -134,5 +135,25 @@ public class SaleDetailServiceTest {
         Dispatch dispatchResult = dispatchCaptor.getValue();
         assertEquals(sale, saleDetailResult.getSale());
         assertTrue(dispatchResult.isHasSale());
+    }
+
+    @Test
+    void getDetailsBySaleId() {
+        Product product = Product.builder().id(1L).description("Product Description").build();
+        SaleDetail saleDetail = SaleDetail.builder().id(1L).product(product).quantity(1).price(100).tax(119)
+                .dispatch(null).build();
+        when(saleDetailRepo.findBySaleId(1L)).thenReturn(List.of(saleDetail));
+
+        List<SaleDetailResponseDTO> result = saleDetailService.getDetailsBySaleId(1L);
+
+        verify(saleDetailRepo, times(1)).findBySaleId(1L);
+        verify(mapper, times(1)).toDetailResponseDTO(saleDetail);
+
+        assertEquals(1L, result.getFirst().getIdProduct());
+        assertEquals("Product Description", result.getFirst().getDescriptionProduct());
+        assertEquals(1, result.getFirst().getQuantity());
+        assertEquals(100, result.getFirst().getPrice());
+        assertEquals(119, result.getFirst().getTax());
+        assertFalse(result.getFirst().isHasDispatch());
     }
 }
