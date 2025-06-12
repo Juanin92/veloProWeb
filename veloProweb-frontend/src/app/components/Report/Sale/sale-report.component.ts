@@ -10,6 +10,7 @@ import { TooltipService } from '../../../utils/tooltip.service';
 import { ExcelService } from '../../../utils/excel.service';
 import { PdfService } from '../../../utils/pdf.service';
 import { ReportPermissionsService } from '../../../services/permissions/report-permissions.service';
+import { SaleDetailResponse } from '../../../models/entity/sale/sale-detail-response';
 
 @Component({
   selector: 'app-sale-report',
@@ -20,9 +21,10 @@ import { ReportPermissionsService } from '../../../services/permissions/report-p
 })
 export class SaleReportComponent implements OnInit, AfterViewInit {
 
-  saleReportList: SaleRequestDTO[] = [];
+  saleReportList: Sale[] = [];
   saleList: Sale[] = [];
   filteredSaleList: Sale[] = [];
+  saleDetails: SaleDetailResponse[] = [];
   saleDetailList: DetailSaleRequestDTO[] = [];
   saleSelected: Sale | null = null;
   customerSale: string = '';
@@ -54,101 +56,24 @@ export class SaleReportComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.getSalesList();
+    this.loadSales();
   }
 
   /**
    * Obtiene una lista de ventas
    */
-  getSalesList(): void {
+  loadSales(): void {
     this.saleService.getAllSales().subscribe({
       next: (list) => {
         this.saleReportList = list;
-        this.getDocumentAndCommentSale(this.saleReportList);
+        this.filteredSaleList = list;
       },
-      error: (error) => {
-        console.log('Error al obtener la lista de ventas: ', error);
-      }
     });
   }
 
-  /**
-   * Obtiene documento y comentario de una lista de ventas.
-   * Crea un objeto Ventas con los datos de la lista.
-   * Valida que el contenido del documento tenga una formato
-   * @param list - Lista con los detalles de las ventas
-   */
-  getDocumentAndCommentSale(list: SaleRequestDTO[]): void {
-    list.forEach(dto => {
-      const documentMatch = dto.comment.match(/# (BO_\d+)/);
-      const documentValue = documentMatch ? documentMatch[1] : null;
-
-      const sale: Sale = {
-        id: dto.id,
-        date: dto.date,
-        paymentMethod: dto.paymentMethod,
-        document: documentValue ? documentValue : '',
-        comment: dto.comment.replace(/# (BO_\d+)/, ''),
-        discount: dto.discount,
-        tax: dto.tax,
-        totalSale: dto.total,
-        status: dto.comment.includes('ANULADO') ? false : true,
-        customer: null,
-      };
-      this.saleList.push(sale);
-    });
-    this.filteredSaleList = this.saleList;
-  }
-
-  /**
-   * Obtiene los detalles de una venta seleccionado y actualiza sus propiedades
-   * realiza una petición asíncrona para obtener los detalles de la venta
-   * y los asigna a las propiedades relevantes.
-   * @param sale - Venta seleccionada
-   * @returns {Promise<void>} - Una promesa que se resuelve cuando se han obtenido y asignado
-   * los datos detallados de la venta.
-   */
-  getSaleDetailsData(sale: Sale): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.saleSelected = sale;
-     this.saleService.getDetailSale(this.saleSelected.id).subscribe({
-      next: (list) => {
-        this.saleDetailList = list;
-        if (this.saleDetailList.length > 0) {
-          this.customerSale = this.saleDetailList[0].customer;
-          this.notificationSale = this.saleDetailList[0].notification;
-          this.statusTicket = this.saleDetailList[0].ticketStatus;
-          this.hasDispatchDetailsSale = this.saleDetailList[0].hasDispatch;
-
-          if(this.hasDispatchDetailsSale){
-            this.saleDetailList.push(this.createDispatchRegisterItem());
-          }
-        }
-        resolve();
-      },
-      error: (error) => {
-        console.log('Error al obtener detalles de la venta: ', error);
-        reject(error);
-      }
-    });
-    });
-  }
-
-  /**
-   * Crea un objeto DetailSaleRequestDTO representa a un despacho
-   * @returns - Devuelve el objeto
-   */
-  private createDispatchRegisterItem(): DetailSaleRequestDTO{
-    return {
-      descriptionProduct: 'Despacho',
-      quantity: 1,
-      price: 1000,
-      tax: 0,
-      customer: '',
-      notification: '',
-      ticketStatus: false,
-      hasDispatch: true
-    };
+  loadSaleDetails(sale: Sale): void{
+    this.saleSelected = sale;
+    this.hasDispatchDetailsSale = sale.saleDetails[0].hasDispatch;
   }
 
   /**
@@ -178,7 +103,7 @@ export class SaleReportComponent implements OnInit, AfterViewInit {
   cleanInputFilterDates(): void {
     this.startDate = '';
     this.finalDate = '';
-    this.filteredSaleList = this.saleList;
+    this.filteredSaleList = this.saleReportList;
     this.tooltip.initializeTooltips();
   }
 
@@ -186,27 +111,9 @@ export class SaleReportComponent implements OnInit, AfterViewInit {
    * Imprimir una boleta de venta.
    * primero obtiene los datos detallados de la venta y luego genera un PDF
    * @param sale - Venta a imprimir
-   * @returns {Promise<void>} - Una promesa que se resuelve cuando se ha generado el PDF.
    */
-  async printSale(sale: Sale): Promise<void> {
-    await this.getSaleDetailsData(sale);
-  
-    const saleDetails = {
-      document: sale.document,
-      customer: this.customerSale,
-      date: sale.date,
-      paymentMethod: sale.paymentMethod,
-      totalSale: sale.totalSale,
-      discount: sale.discount,
-      tax: sale.tax,
-      comment: sale.comment,
-      items: this.saleDetailList.map(detail => ({
-        quantity: detail.quantity,
-        description: detail.descriptionProduct,
-        price: detail.price
-      }))
-    };
-    this.pdfService.generatePDF(saleDetails);
+  printSale(sale: Sale): void{
+    this.pdfService.generatePDF(sale);
   }
 
   /**
@@ -217,10 +124,10 @@ export class SaleReportComponent implements OnInit, AfterViewInit {
     const transformedData = this.filteredSaleList.map(item => ({
       documento: item.document,
       fecha: item.date,
-      MetodoPago: item.paymentMethod,
+      MétodoPago: item.paymentMethod,
       iva: item.tax,
       total: item.totalSale,
-      observacion: item.comment
+      observación: item.comment
     }));
     this.excelService.generateExcel(transformedData, 'Reporte-ventas');
   }

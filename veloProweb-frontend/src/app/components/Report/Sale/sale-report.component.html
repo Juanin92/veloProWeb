@@ -92,12 +92,13 @@
                         <td>{{ sale.paymentMethod }}</td>
                         <td>{{ sale.tax | currency: 'CLP':'$':'1.0-0'}}</td>
                         <td>{{ sale.totalSale | currency: 'CLP':'$':'1.0-0' }}</td>
-                        <td>{{ sale.comment.includes('null') ? '-' : sale.comment }}</td>
+                        <td>{{ sale.comment === null ? '-' : sale.comment }}</td>
                         <td class="d-flex flex-row">
                             <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal"
-                                data-bs-target="#saleDetailModal" (click)="getSaleDetailsData(sale)">
+                                data-bs-target="#saleDetailModal">
                                 <img src="/assets/icons/iconAdd.png" alt="Más información" width="24" height="24"
-                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Más información">
+                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Más información"
+                                    (click)="loadSaleDetails(sale)">
                             </button>
                             <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="tooltip"
                                 data-bs-placement="top" title="Imprimir" (click)="printSale(sale)">
@@ -133,11 +134,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col" *ngIf="customerSale !== ''">
+                    <div class="col" *ngIf="saleSelected?.customer !== 'Sin Cliente'">
                         <div class="card h-100 shadow-sm">
                             <div class="card-body text-center">
                                 <h6 class="card-title fw-bold fs-5 mb-0">Cliente</h6>
-                                <p class="card-text mt-1">{{customerSale}}</p>
+                                <p class="card-text mt-1">{{saleSelected?.customer}}</p>
                             </div>
                         </div>
                     </div>
@@ -152,11 +153,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col" *ngIf="notificationSale !== null">
+                    <div class="col" *ngIf="saleSelected?.notification !== null">
                         <div class="card h-100 shadow-sm">
                             <div class="card-body text-center">
                                 <h6 class="card-title fw-bold fs-5 mb-0">Notificación</h6>
-                                <p class="card-text mt-1">{{notificationSale | date: 'dd-MM-yyyy'}}</p>
+                                <p class="card-text mt-1">{{saleSelected?.notification| date: 'dd-MM-yyyy'}}</p>
                             </div>
                         </div>
                     </div>
@@ -165,8 +166,8 @@
                             <div class="card-body text-center">
                                 <h6 class="card-title fw-bold fs-5 mb-0">Pagada</h6>
                                 <p class="card-text mt-1"
-                                    [ngClass]="{'text-success': statusTicket, 'text-danger': !statusTicket}">
-                                    {{statusTicket ? 'Si': 'No'}}
+                                    [ngClass]="{'text-success': saleSelected?.ticketStatus, 'text-danger': !saleSelected?.ticketStatus}">
+                                    {{saleSelected?.ticketStatus ? 'Si': 'No'}}
                                 </p>
                             </div>
                         </div>
@@ -190,7 +191,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let detail of saleDetailList; let i = index">
+                            <tr *ngFor="let detail of saleSelected?.saleDetails; let i = index">
                                 <th scope="row">{{i + 1}}</th>
                                 <td>{{detail?.descriptionProduct}}</td>
                                 <td>{{detail?.quantity}}</td>
