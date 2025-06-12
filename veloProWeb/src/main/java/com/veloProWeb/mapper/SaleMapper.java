@@ -66,7 +66,9 @@ public class SaleMapper {
                 .tax(sale.getTax())
                 .totalSale(sale.getTotalSale())
                 .status(sale.isStatus())
-                .customer(String.format("%s %s", sale.getCustomer().getName(), sale.getCustomer().getSurname()))
+                .customer(sale.getCustomer() == null ?
+                        "Sin Cliente" : 
+                        String.format("%s %s", sale.getCustomer().getName(), sale.getCustomer().getSurname()))
                 .notification(null)
                 .ticketStatus(true)
                 .saleDetails(
