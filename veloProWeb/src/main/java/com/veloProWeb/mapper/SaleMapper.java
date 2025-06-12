@@ -81,6 +81,7 @@ public class SaleMapper {
 
     private SaleDetailResponseDTO toDetailResponseDTO(SaleDetail saleDetail){
         return SaleDetailResponseDTO.builder()
+                .idProduct(saleDetail.getProduct().getId())
                 .descriptionProduct(saleDetail.getProduct().getDescription())
                 .quantity(saleDetail.getQuantity())
                 .price(saleDetail.getPrice())
