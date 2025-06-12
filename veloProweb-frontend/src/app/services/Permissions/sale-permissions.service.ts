@@ -9,11 +9,11 @@ export class SalePermissionsService {
 
   constructor(private auth: AuthService) { }
 
-  canViewSale(): boolean{
+  isSaleViewAllowed(): boolean{
     return this.auth.getRole() !== Role.WAREHOUSE;
   }
 
-  canLoanPayment(): boolean{
+  isLoanPaymentAllowed(): boolean{
     return this.auth.getRole() !== Role.GUEST;
   }
 }
