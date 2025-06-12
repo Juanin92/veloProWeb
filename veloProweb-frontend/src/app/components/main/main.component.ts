@@ -64,10 +64,11 @@ export class MainComponent implements AfterViewInit, OnInit {
     const hasOpenerRegister = await this.validateOpeningCashierRegister();
     if(hasOpenerRegister) {
       this.notification.showErrorToast('Debes registrar el cierre de caja para cerrar sesión', 'center', 3000);
+      this.isOpen = true;
       return;
     }
     this.auth.logout().subscribe({
-      next:(response) =>{
+      next:() =>{
         this.auth.removeToken();
         sessionStorage.clear();
         localStorage.clear();
@@ -83,7 +84,6 @@ export class MainComponent implements AfterViewInit, OnInit {
     try {
       return await firstValueFrom(this.cashRegisterService.hasOpenRegisterOnDate());
     } catch (error) {
-      console.error("Error en la solicitud:", error);
       return false;
     }
   }
