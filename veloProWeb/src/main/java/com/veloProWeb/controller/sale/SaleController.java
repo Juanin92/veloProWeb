@@ -1,15 +1,15 @@
 package com.veloProWeb.controller.sale;
 
-import com.veloProWeb.model.dto.sale.DetailSaleRequestDTO;
 import com.veloProWeb.model.dto.sale.SaleRequestDTO;
+import com.veloProWeb.model.dto.sale.SaleResponseDTO;
 import com.veloProWeb.model.entity.Sale.Sale;
 import com.veloProWeb.service.reporting.interfaces.IRecordService;
 import com.veloProWeb.service.sale.Interface.IDispatchService;
 import com.veloProWeb.service.sale.Interface.ISaleDetailService;
 import com.veloProWeb.service.sale.Interface.ISaleService;
 import com.veloProWeb.util.EmailService;
+import com.veloProWeb.util.ResponseMessage;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,7 +17,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,96 +31,41 @@ public class SaleController {
     private final IRecordService recordService;
     private final EmailService emailService;
 
-    /**
-     * Crear una venta y su detalle de venta correspondiente
-     * @param dto - Objeto con los datos necesarios
-     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
-     */
     @PostMapping()
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'GUEST', 'SELLER')")
     public ResponseEntity<Map<String, String>> createSale(@RequestBody SaleRequestDTO dto,
                                                           @AuthenticationPrincipal UserDetails userDetails){
-        Map<String, String> response = new HashMap<>();
-        try {
-            Sale sale = saleService.createSale(dto);
-            saleDetailService.createSaleDetailsToSale(dto.getDetailList(), sale, userDetails);
-            response.put("message", "Venta registrada correctamente!");
-            recordService.registerAction(userDetails, "CREATE", "Venta realizada " + dto.getNumberDocument());
-            emailService.sendSalesReceiptEmail(sale);
-            return ResponseEntity.ok(response);
-        }catch (IllegalArgumentException e){
-            response.put("message", e.getMessage());
-            recordService.registerAction(userDetails, "CREATE_FAILURE",
-                    "Error: realizar venta " + dto.getNumberDocument() + " (" + e.getMessage() + ")");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
+        Sale sale = saleService.createSale(dto);
+        saleDetailService.addDetailsToSale(dto.getDetailList(), sale, userDetails);
+        recordService.registerAction(userDetails, "CREATE", "Venta realizada " + sale.getDocument());
+        emailService.sendSalesReceiptEmail(sale);
+        return new ResponseEntity<>(ResponseMessage.message("Venta registrada correctamente!"), HttpStatus.CREATED);
     }
 
-    /**
-     * Obtener la cantidad de ventas registrada
-     * @return - Long con el valor resultante
-     */
     @GetMapping()
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'GUEST', 'SELLER')")
     public ResponseEntity<Long> getTotalSale(){
-        try{
-            return ResponseEntity.ok(saleService.totalSales());
-        }catch (IllegalArgumentException e){
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok(saleService.totalSales());
     }
 
-    /**
-     *  Obtener todas las ventas registradas
-     * @return - Lista con las ventas registradas
-     */
     @GetMapping("/lista-venta")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'SELLER')")
-    public List<SaleRequestDTO> getAllSales(@AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<List<SaleResponseDTO>> getAllSales(@AuthenticationPrincipal UserDetails userDetails){
         recordService.registerAction(userDetails, "VIEW", "Reporte - Lista de ventas realizadas");
-        return saleService.getAllSale();
+        return ResponseEntity.ok(saleService.getAllSales());
     }
 
-    /**
-     * Obtener detalles de una venta especifica
-     * @param idSale - Identificador de la venta seleccionada
-     * @return - ResponseEntity con una lista de dto con detalles de la venta
-     */
-    @GetMapping("/detalles")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'GUEST', 'SELLER')")
-    public ResponseEntity<List<DetailSaleRequestDTO>> getDetailSale(@RequestParam Long idSale){
-        try{
-            return ResponseEntity.ok(saleDetailService.getSaleDetailsToSale(idSale));
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-    }
-
-    /**
-     * Crea una venta a partir de un despacho existente.
-     * @param dto - Objeto con los datos necesarios
-     * @return - ResponseEntity con un mensaje de éxito o error según sea el caso
-     */
-    @PostMapping("venta_despacho")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'GUEST', 'SELLER')")
-    public ResponseEntity<Map<String, String>> createSaleFromDispatch(@RequestBody SaleRequestDTO dto,
-                                                                      @AuthenticationPrincipal UserDetails userDetails){
-        Map<String, String> response = new HashMap<>();
-        try {
-            Long idDispatch = dto.getId();
-            dispatchService.handleDispatchReceiveToSale(idDispatch);
-            dto.setNumberDocument(saleService.totalSales().intValue());
-            Sale sale = saleService.createSale(dto);
-            saleDetailService.addSaleToSaleDetailsDispatch(idDispatch, sale);
-            response.put("message", "Venta registrada correctamente!");
-            recordService.registerAction(userDetails, "CREATE",
-                    "Venta realizada: " + dto.getNumberDocument() + " por despacho");
-            return ResponseEntity.ok(response);
-        }catch (IllegalArgumentException e){
-            response.put("message", e.getMessage());
-            recordService.registerAction(userDetails, "CREATE_FAILURE",
-                    "Error: realizar venta por despacho: " + dto.getNumberDocument() + " (" + e.getMessage() + ")");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
-    }
+//    @PostMapping("venta_despacho")
+//    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'GUEST', 'SELLER')")
+//    public ResponseEntity<Map<String, String>> createSaleFromDispatch(@RequestBody SaleRequestDTO dto,
+//                                                                      @AuthenticationPrincipal UserDetails userDetails){
+//        Long idDispatch = dto.getId();
+//        dispatchService.handleDispatchReceiveToSale(idDispatch);
+//        dto.setNumberDocument(saleService.totalSales().intValue());
+//        Sale sale = saleService.createSale(dto);
+//        saleDetailService.addSaleToSaleDetailsDispatch(idDispatch, sale);
+//        recordService.registerAction(userDetails, "CREATE",
+//                String.format("Venta realizada: %s por despacho", dto.getNumberDocument()));
+//        return new ResponseEntity<>(ResponseMessage.message("Venta registrada correctamente!"), HttpStatus.CREATED);
+//    }
 }
