@@ -1,5 +1,5 @@
 
-<div *ngIf="!openingRegisterStatus"
+<div *ngIf="!isRegisterOpen"
   class="container-fluid d-flex flex-column justify-content-center align-items-center min-vh-100">
   <div class="text-center">
     <i class="bi bi-exclamation-triangle-fill text-warning" style="font-size: 3rem;"></i>
@@ -10,7 +10,8 @@
     </button>
   </div>
 </div>
-<div *ngIf="permission.canViewSale() && openingRegisterStatus" class="container-fluid d-flex flex-column p-2 min-vh-100 p-0">
+<div *ngIf="permission.isSaleViewAllowed() && isRegisterOpen" 
+  class="container-fluid d-flex flex-column p-2 min-vh-100 p-0">
   <!-- Área superior -->
   <div class="row py-1 align-items-center">
     <div class="col-md-4 col-6">
@@ -39,10 +40,10 @@
       </button>
     </div>
     <div class="col-md-4 col-12 text-center">
-      <h4 class="mb-0 fw-bold">Venta n° {{ TotalSaleDB }}</h4>
+      <h4 class="mb-0 fw-bold">Venta n° {{ AccumulatedSaleTotal }}</h4>
     </div>
     <div
-      *ngIf="isLoanPayment || isMixPayment"
+      *ngIf="isPaymentOnLoan || hasMixedPayment"
       class="col-md-4 col-6 mt-lg-0 mt-2"
     >
       <select
@@ -50,11 +51,11 @@
         name="customer"
         id="customer"
         aria-label="Seleccione un cliente"
-        [(ngModel)]="sale.customer"
-        (change)="chooseCustomerToPay()"
+        [(ngModel)]="saleRequest.idCustomer"
+        (change)="confirmCustomerForPayment()"
       >
         <option [ngValue]="null" selected disabled>Clientes</option>
-        <option *ngFor="let customer of customerList" [ngValue]="customer">
+        <option *ngFor="let customer of customerList" [ngValue]="customer.id">
           {{ customer.name + " " + customer.surname }}
         </option>
       </select>
@@ -154,8 +155,8 @@
               data-bs-title="Efectivo"
               (click)="initiateMethodPayment(1)"
               [ngClass]="{
-                'btn-primary': isCashPayment,
-                'btn-outline-primary': !isCashPayment
+                'btn-primary': isPaymentInCash,
+                'btn-outline-primary': !isPaymentInCash
               }"
             >
               <img
@@ -174,8 +175,8 @@
               data-bs-title="Transferencia"
               (click)="initiateMethodPayment(2)"
               [ngClass]="{
-                'btn-primary': isTransferPayment,
-                'btn-outline-primary': !isTransferPayment
+                'btn-primary': isPaymentByTransfer,
+                'btn-outline-primary': !isPaymentByTransfer
               }"
             >
               <img
@@ -194,8 +195,8 @@
               data-bs-title="Crédito"
               (click)="initiateMethodPayment(4)"
               [ngClass]="{
-                'btn-primary': isCreditPayment,
-                'btn-outline-primary': !isCreditPayment
+                'btn-primary': isPaymentByCredit,
+                'btn-outline-primary': !isPaymentByCredit
               }"
             >
               <img
@@ -214,8 +215,8 @@
               data-bs-title="Débito"
               (click)="initiateMethodPayment(5)"
               [ngClass]="{
-                'btn-primary': isDebitPayment,
-                'btn-outline-primary': !isDebitPayment
+                'btn-primary': isPaymentByDebitCard,
+                'btn-outline-primary': !isPaymentByDebitCard
               }"
             >
               <img
@@ -227,7 +228,7 @@
               />
             </button>
             <button
-              *ngIf="permission.canLoanPayment()"
+              *ngIf="permission.isLoanPaymentAllowed()"
               [disabled]="saleDetailList.length === 0"
               class="btn btn-outline-primary border-0 rounded-pill p-2"
               data-bs-toggle="tooltip"
@@ -235,8 +236,8 @@
               data-bs-title="Prestamos"
               (click)="initiateMethodPayment(3)"
               [ngClass]="{
-                'btn-primary': isLoanPayment,
-                'btn-outline-primary': !isLoanPayment
+                'btn-primary': isPaymentOnLoan,
+                'btn-outline-primary': !isPaymentOnLoan
               }"
             >
               <img
@@ -248,7 +249,7 @@
               />
             </button>
             <button
-              *ngIf="permission.canLoanPayment()"
+              *ngIf="permission.isLoanPaymentAllowed()"
               [disabled]="saleDetailList.length === 0"
               class="btn btn-outline-primary border-0 rounded-pill p-2"
               data-bs-toggle="tooltip"
@@ -256,8 +257,8 @@
               data-bs-title="Mixto"
               (click)="initiateMethodPayment(6)"
               [ngClass]="{
-                'btn-primary': isMixPayment,
-                'btn-outline-primary': !isMixPayment
+                'btn-primary': hasMixedPayment,
+                'btn-outline-primary': !hasMixedPayment
               }"
             >
               <img
@@ -282,14 +283,14 @@
               type="checkbox"
               role="switch"
               id="SwitchCheckDiscount"
-              [(ngModel)]="isDiscount"
+              [(ngModel)]="hasDiscount"
               (ngModelChange)="handleDiscountSwitch()"
             />
             <label class="form-check-label" for="SwitchCheckDiscount"
               >Aplicar Descuento</label
             >
           </div>
-          <div *ngIf="isDiscount" class="form-floating mb-2 w-75">
+          <div *ngIf="hasDiscount" class="form-floating mb-2 w-75">
             <input
               type="number"
               class="form-control form-control-lg"
@@ -298,13 +299,13 @@
               placeholder="Ingrese monto de descuento"
               aria-label="Ingrese monto de descuento"
               aria-describedby="amountDiscount"
-              [(ngModel)]="discountAmount"
+              [(ngModel)]="saleRequest.discount"
               (keyup.enter)="updateTotalWithDiscount()"
             />
             <label for="amountDiscount" class="form-label">Descuento</label>
           </div>
           <div
-            *ngIf="isCashPayment || isMixPayment"
+            *ngIf="isPaymentInCash || hasMixedPayment"
             class="form-floating mb-2 w-100"
           >
             <input
@@ -333,20 +334,20 @@
             >
               Total a pagar
               <span class="badge bg-primary rounded-pill fs-5">{{
-                total | currency : "CLP" : "$" : "1.0-0"
+                saleRequest.total| currency : "CLP" : "$" : "1.0-0"
               }}</span>
             </li>
             <li
-              *ngIf="isDiscount && discountAmount > 0"
+              *ngIf="hasDiscount && saleRequest.discount"
               class="list-group-item d-flex justify-content-between align-items-center fw-semibold"
             >
               Descuento
               <span class="badge bg-danger rounded-pill">{{
-                discountAmount | currency : "CLP" : "$" : "1.0-0"
+                saleRequest.discount| currency : "CLP" : "$" : "1.0-0"
               }}</span>
             </li>
             <li
-              *ngIf="isCashPayment"
+              *ngIf="isPaymentInCash"
               class="list-group-item d-flex justify-content-between align-items-center fw-semibold"
             >
               Efectivo
@@ -355,7 +356,7 @@
               }}</span>
             </li>
             <li
-              *ngIf="isCashPayment"
+              *ngIf="isPaymentInCash"
               class="list-group-item d-flex justify-content-between align-items-center fw-semibold"
             >
               Vuelto
@@ -364,21 +365,21 @@
               }}</span>
             </li>
             <li
-              *ngIf="isLoanPayment || isMixPayment"
+              *ngIf="isPaymentOnLoan || hasMixedPayment"
               class="list-group-item d-flex justify-content-between align-items-center fw-semibold"
             >
               Préstamo
               <span class="badge bg-success fs-6 rounded-pill">{{
-                total | currency : "CLP" : "$" : "1.0-0"
+                saleRequest.total| currency : "CLP" : "$" : "1.0-0"
               }}</span>
             </li>
             <li
-              *ngIf="isMixPayment"
+              *ngIf="hasMixedPayment"
               class="list-group-item d-flex justify-content-between align-items-center fw-semibold"
             >
               Diferencia
               <span class="badge bg-success fs-6 rounded-pill">{{
-                total - cashAmount | currency : "CLP" : "$" : "1.0-0"
+                saleRequest.total | currency : "CLP" : "$" : "1.0-0"
               }}</span>
             </li>
           </ul>
@@ -390,7 +391,7 @@
         <div class="card-body">
           <div class="d-flex flex-column gap-2 mb-1 justify-content-center">
             <button
-              [disabled]="!isOk"
+              [disabled]="!isTransactionValid"
               (click)="createNewSaleProcess()"
               class="btn btn-success btn-lg"
             >

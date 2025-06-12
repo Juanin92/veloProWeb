@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { TooltipService } from '../../../utils/tooltip.service';
 import { ProductListComponent } from "../../product/productList/product-list.component";
-import { Sale } from '../../../models/entity/sale/sale';
 import { CustomerResponse } from '../../../models/entity/customer/customer-response';
 import { SaleDetail } from '../../../models/entity/sale/sale-detail';
 import { NotificationService } from '../../../utils/notification-service.service';
@@ -10,12 +9,14 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CustomerService } from '../../../services/customer/customer.service';
 import { SaleService } from '../../../services/sale/sale.service';
-import { SaleRequestDTO } from '../../../models/DTO/sale-request-dto';
 import { PaymentMethod } from '../../../models/enum/payment-method';
 import { DispatchModalComponent } from "../dispatch-modal/dispatch-modal.component";
 import { SalePermissionsService } from '../../../services/permissions/sale-permissions.service';
 import { CashRegisterService } from '../../../services/sale/cash-register.service';
 import { ProductResponse } from '../../../models/entity/product/product-response';
+import { SaleRequest } from '../../../models/entity/sale/sale-request';
+import { SaleMapperService } from '../../../mapper/sale-mapper.service';
+import { ErrorMessageService } from '../../../utils/error-message.service';
 
 @Component({
   selector: 'app-sale',
@@ -26,27 +27,24 @@ import { ProductResponse } from '../../../models/entity/product/product-response
 })
 export class SaleComponent implements AfterViewInit, OnInit {
 
-  sale: Sale;
   customerList: CustomerResponse[] = [];
   productSelected: ProductResponse | null = null;
   saleDetailList: SaleDetail[] = [];
-  requestDTO: SaleRequestDTO | null = null;
-  total: number = 0; //Total acumulado de la venta
-  TotalSaleDB: number = 0; //Total de ventas registradas en la BD
+  saleRequest: SaleRequest;
+  AccumulatedSaleTotal: number = 0; //Total de ventas registradas en la BD
   cashAmount: number = 0;
   changeAmount: number = 0;
-  discountAmount: number = 0;
   originalTotal: number = 0;
   showSwitch: boolean =  false;
-  isDiscount: boolean = false; 
-  isCashPayment: boolean = false; 
-  isTransferPayment: boolean =  false;
-  isLoanPayment: boolean =  false;
-  isCreditPayment: boolean =  false;
-  isDebitPayment: boolean =  false;
-  isMixPayment: boolean =  false;
-  isOk: boolean = false;
-  openingRegisterStatus: boolean = false;
+  hasDiscount: boolean = false; 
+  isPaymentInCash: boolean = false; 
+  isPaymentByTransfer: boolean =  false;
+  isPaymentOnLoan: boolean =  false;
+  isPaymentByCredit: boolean =  false;
+  isPaymentByDebitCard: boolean =  false;
+  hasMixedPayment: boolean =  false;
+  isTransactionValid: boolean = false;
+  isRegisterOpen: boolean = false;
   editingFields: { [key: string]: { quantity?: boolean; } } = {}; // (Map) Campos de edición activa para cantidades o precios en detalles de compra
 
 
@@ -56,14 +54,16 @@ export class SaleComponent implements AfterViewInit, OnInit {
     private tooltipService: TooltipService,
     private notification: NotificationService,
     private helper: SaleHelperService,
+    private mapper: SaleMapperService,
     protected permission: SalePermissionsService,
+    private errorMessage: ErrorMessageService,
     private cashRegisterService: CashRegisterService) {
-    this.sale = helper.createEmptySale();
+    this.saleRequest = helper.initializeSaleRequest();
   }
 
   ngOnInit(): void {
-    this.getCustomer();
-    this.getTotalSale();
+    this.loadCustomers();
+    this.loadTotalSales();
     this.hasOpeningCashierRegister();
   }
 
@@ -71,24 +71,35 @@ export class SaleComponent implements AfterViewInit, OnInit {
     this.tooltipService.initializeTooltips();
   }
 
+  /**Obtener una lista de clientes */
+  loadCustomers(): void {
+    this.customerService.getCustomer().subscribe((list) => this.customerList = list);
+  }
+
+  /**
+   * Obtiene número de total de ventas registradas
+   */
+  loadTotalSales(): void{
+    this.saleService.getTotalSale().subscribe((totalSales) => this.AccumulatedSaleTotal = totalSales);
+  }
+
   /**
    * Crea un nuevo proceso de venta, 
    * confirmando el método de pago y enviando la solicitud al servicio de ventas.
    */
   async createNewSaleProcess(): Promise<void>{
-    await this.requestPaymentConfirmation(this.sale.paymentMethod!);
-    this.requestDTO = this.helper.createDto(this.sale, this.saleDetailList, 
-      this.TotalSaleDB, this.total, this.discountAmount);
-    if (this.requestDTO.detailList.length > 0 || this.requestDTO.paymentMethod !== null) {
-      this.saleService.createSale(this.requestDTO).subscribe((response) => {
-        console.log('Venta realizada exitosamente: ', response);
-        this.notification.showSuccessToast(`¡Venta N°${this.TotalSaleDB} fue realizada exitosamente!`, 'top', 3000);
-        this.resetProcess();
-        this.getTotalSale();
-      }, (error) =>{
-        const message = error.error?.message || error.error?.error;
-        console.error('Error al realizar la venta: ', error);
-        this.notification.showErrorToast(`Error al realizar la venta \n${message}`, 'top', 5000);
+    await this.requestPaymentConfirmation(this.saleRequest.paymentMethod!);
+    if (this.saleRequest.detailList.length > 0 || this.saleRequest.paymentMethod !== null) {
+      this.saleRequest.detailList = this.mapper.mapToSaleDetailRequest(this.saleDetailList);
+      this.saleService.createSale(this.saleRequest).subscribe({
+        next: (response) =>{
+          this.notification.showSuccessToast(`N°${this.AccumulatedSaleTotal}, ${response.message}`, 'top', 3000);
+          this.resetProcess();
+          this.loadTotalSales();
+        }, error: (error) =>{
+          const message = this.errorMessage.errorMessageExtractor(error);
+          this.notification.showErrorToast(`Error al realizar la venta \n${message}`, 'top', 5000);
+        }
       });
     } else {
       this.notification.showWarning('Problemas con la venta', 'Por favor, Ingrese datos a la venta.');
@@ -102,16 +113,15 @@ export class SaleComponent implements AfterViewInit, OnInit {
      */
   addSelectedProductToSaleDetailList(product: ProductResponse): void {
     this.productSelected = product;
-    const isProductAdded = this.saleDetailList.some((detail) => detail.product.id === product.id);
+    const isProductAdded = this.saleDetailList.some((detail) => detail.id === product.id);
     if (!isProductAdded) {
       const newSaleDetail: SaleDetail = {
-        id: 0,
+        id: product.id,
         quantity: 1,
         price: 0,
         tax: 0,
         total: 0,
-        sale: this.sale,
-        product: product
+        product: product,
       }
       newSaleDetail.price = this.productSelected.salePrice * 1.19;
       newSaleDetail.tax = this.productSelected.salePrice * 0.19;
@@ -131,72 +141,72 @@ export class SaleComponent implements AfterViewInit, OnInit {
     switch(button){
       case 1 : 
         this.showSwitch = true;
-        this.isCashPayment = true;
-        this.isTransferPayment = false;
-        this.isLoanPayment = false;
-        this.isCreditPayment = false;
-        this.isDebitPayment = false;
-        this.isMixPayment = false;
-        this.sale.customer = null;
-        this.sale.paymentMethod = PaymentMethod.EFECTIVO;
+        this.isPaymentInCash = true;
+        this.isPaymentByTransfer = false;
+        this.isPaymentOnLoan = false;
+        this.isPaymentByCredit = false;
+        this.isPaymentByDebitCard = false;
+        this.hasMixedPayment = false;
+        this.saleRequest.idCustomer = 0;
+        this.saleRequest.paymentMethod = PaymentMethod.EFECTIVO;
         break;
       case 2 : 
         this.showSwitch = true;
-        this.isTransferPayment = true;
-        this.isCashPayment = false;
-        this.isLoanPayment = false;
-        this.isCreditPayment = false;
-        this.isDebitPayment = false;
-        this.isMixPayment = false;
-        this.isOk = true;
-        this.sale.customer = null;
-        this.sale.paymentMethod = PaymentMethod.TRANSFERENCIA;
+        this.isPaymentByTransfer = true;
+        this.isPaymentInCash = false;
+        this.isPaymentOnLoan = false;
+        this.isPaymentByCredit = false;
+        this.isPaymentByDebitCard = false;
+        this.hasMixedPayment = false;
+        this.isTransactionValid = true;
+        this.saleRequest.idCustomer = 0;
+        this.saleRequest.paymentMethod = PaymentMethod.TRANSFERENCIA;
         break;
       case 3 : 
         this.showSwitch = true;
-        this.isLoanPayment = true;
-        this.isTransferPayment = false;
-        this.isCashPayment = false;
-        this.isCreditPayment = false;
-        this.isDebitPayment = false;
-        this.isMixPayment = false;
-        this.isOk = false;
-        this.sale.paymentMethod = PaymentMethod.PRESTAMO;
+        this.isPaymentOnLoan = true;
+        this.isPaymentByTransfer = false;
+        this.isPaymentInCash = false;
+        this.isPaymentByCredit = false;
+        this.isPaymentByDebitCard = false;
+        this.hasMixedPayment = false;
+        this.isTransactionValid = false;
+        this.saleRequest.paymentMethod = PaymentMethod.PRESTAMO;
         break;
       case 4 : 
         this.showSwitch = true;
-        this.isCreditPayment = true;
-        this.isTransferPayment = false;
-        this.isLoanPayment = false;
-        this.isCashPayment = false;
-        this.isDebitPayment = false;
-        this.isMixPayment = false;
-        this.isOk = true;
-        this.sale.customer = null;
-        this.sale.paymentMethod = PaymentMethod.CREDITO;
+        this.isPaymentByCredit = true;
+        this.isPaymentByTransfer = false;
+        this.isPaymentOnLoan = false;
+        this.isPaymentInCash = false;
+        this.isPaymentByDebitCard = false;
+        this.hasMixedPayment = false;
+        this.isTransactionValid = true;
+        this.saleRequest.idCustomer = 0;
+        this.saleRequest.paymentMethod = PaymentMethod.CREDITO;
         break;
       case 5 : 
         this.showSwitch = true;
-        this.isDebitPayment = true;
-        this.isTransferPayment = false;
-        this.isLoanPayment = false;
-        this.isCreditPayment = false;
-        this.isCashPayment = false;
-        this.isMixPayment = false;
-        this.isOk = true;
-        this.sale.customer = null;
-        this.sale.paymentMethod = PaymentMethod.DEBITO;
+        this.isPaymentByDebitCard = true;
+        this.isPaymentByTransfer = false;
+        this.isPaymentOnLoan = false;
+        this.isPaymentByCredit = false;
+        this.isPaymentInCash = false;
+        this.hasMixedPayment = false;
+        this.isTransactionValid = true;
+        this.saleRequest.idCustomer = 0;
+        this.saleRequest.paymentMethod = PaymentMethod.DEBITO;
         break;
       case 6 :
         this.showSwitch = false;
-        this.isMixPayment = true;
-        this.isTransferPayment = false;
-        this.isLoanPayment = false;
-        this.isCreditPayment = false;
-        this.isDebitPayment = false;
-        this.isCashPayment = false;
-        this.isOk = false;
-        this.sale.paymentMethod = PaymentMethod.MIXTO;
+        this.hasMixedPayment = true;
+        this.isPaymentByTransfer = false;
+        this.isPaymentOnLoan = false;
+        this.isPaymentByCredit = false;
+        this.isPaymentByDebitCard = false;
+        this.isPaymentInCash = false;
+        this.isTransactionValid = false;
+        this.saleRequest.paymentMethod = PaymentMethod.MIXTO;
         break;
     }
   }
@@ -216,7 +226,7 @@ export class SaleComponent implements AfterViewInit, OnInit {
           'Cancelar'
         ).then((result) => {
           if (result.isConfirmed) {
-            this.sale.comment = result.value;
+            this.saleRequest.comment = result.value;
             resolve();
           } else {
             this.resetProcess();
@@ -232,7 +242,7 @@ export class SaleComponent implements AfterViewInit, OnInit {
           'Cancelar'
         ).then((result) => {
           if (result.isConfirmed) {
-            this.sale.comment = result.value;
+            this.saleRequest.comment = result.value;
             resolve();
           } else {
             this.resetProcess();
@@ -241,29 +251,16 @@ export class SaleComponent implements AfterViewInit, OnInit {
           }
         });
       } else if (method === PaymentMethod.EFECTIVO) {
-        this.sale.comment = this.cashAmount.toString();
+        this.saleRequest.comment = this.cashAmount.toString();
         resolve();
-      } else if (method === PaymentMethod.MIXTO || method === PaymentMethod.PRESTAMO){
+      } else if ( method === PaymentMethod.PRESTAMO){
+        resolve();
+      } else if(method === PaymentMethod.MIXTO) {
+        this.saleRequest.comment = this.cashAmount.toString();
         resolve();
       } else {
         reject('Método de pago no reconocido');
       }
-    });
-  }
-  
-  /**Obtener una lista de clientes */
-  getCustomer(): void {
-    this.customerService.getCustomer().subscribe((list) => {
-      this.customerList = list;
-    });
-  }
-
-  /**
-   * Obtiene número de total de ventas registradas
-   */
-  getTotalSale(): void{
-    this.saleService.getTotalSale().subscribe((totalSales) =>{
-      this.TotalSaleDB = totalSales;
     });
   }
 
@@ -293,22 +290,22 @@ export class SaleComponent implements AfterViewInit, OnInit {
 
   /** Calcula el total y los impuestos acumulados de la lista de detalles */
   sumTotalAndTaxList(): void {
-    this.total = 0;
-    this.sale.tax = 0;
+    this.saleRequest.tax = 0;
+    this.saleRequest.total = 0;
     this.saleDetailList.forEach((saleDetail) => {
-      this.total += saleDetail.total;
-      this.sale.tax += saleDetail.tax * saleDetail.quantity;
+      this.saleRequest.total += saleDetail.total;
+      this.saleRequest.tax += saleDetail.tax * saleDetail.quantity;
     });
-    this.originalTotal = this.total;
+    this.originalTotal = this.saleRequest.total ;
   }
 
   /**
    * Verifica si se ha elegido un cliente para el pago.
    * Permite el pago de la venta
    */
-  chooseCustomerToPay(): void{
-    if (this.sale.customer) {
-      this.isOk = true;
+  confirmCustomerForPayment(): void{
+    if (this.saleRequest.idCustomer) {
+      this.isTransactionValid = true;
     }
   }
 
@@ -316,14 +313,28 @@ export class SaleComponent implements AfterViewInit, OnInit {
    * Actualiza el total cuando se paga en efectivo.
    */
   updateTotalWithCash(): void{
-    if(this.cashAmount >= this.total){
-      this.changeAmount = this.cashAmount - this.total;
-      this.isOk = true;
-    }else if(this.cashAmount === 0){
-      this.changeAmount = 0;
-    }else{
-      this.cashAmount = 0;
-      this.notification.showError("Monto erróneo", `Debe ingresar un monto igual o superior a $${this.total}`);
+    if(this.hasMixedPayment){
+      if(this.cashAmount < this.saleRequest.total ){
+        this.changeAmount = this.saleRequest.total - this.cashAmount;
+        this.saleRequest.total = this.changeAmount;
+      }else if(this.cashAmount === 0){
+        this.changeAmount = 0;
+      }else{
+        this.cashAmount = 0;
+        this.notification.showError("Monto erróneo", `Debe ingresar un monto inferior a $${this.saleRequest.total } 
+          para hacer un abono a la venta`);
+      }
+    }
+    if(this.isPaymentInCash){
+      if(this.cashAmount >= this.saleRequest.total ){
+        this.changeAmount = this.cashAmount - this.saleRequest.total ;
+        this.isTransactionValid = true;
+      }else if(this.cashAmount === 0){
+        this.changeAmount = 0;
+      }else{
+        this.cashAmount = 0;
+        this.notification.showError("Monto erróneo", `Debe ingresar un monto igual o superior a $${this.saleRequest.total }`);
+      }
     }
   }
 
@@ -331,12 +342,14 @@ export class SaleComponent implements AfterViewInit, OnInit {
    * Actualiza el total con un descuento aplicado.
    */
   updateTotalWithDiscount(): void{
-    if (this.discountAmount >= 0 && this.discountAmount < this.originalTotal) {
-      this.total = this.originalTotal - this.discountAmount; 
-      this.updateTotalWithCash();
-    } else {
-      this.discountAmount = 0;
-      this.notification.showError("Monto erróneo", `Debe agregar un descuento menor al total de la venta o menor a 0`);
+    if(!this.hasMixedPayment){
+      if (this.saleRequest.discount >= 0 && this.saleRequest.discount < this.originalTotal) {
+        this.saleRequest.total  = this.originalTotal - this.saleRequest.discount; 
+        this.updateTotalWithCash();
+      } else {
+        this.saleRequest.discount = 0;
+        this.notification.showError("Monto erróneo", `Debe agregar un descuento menor al total de la venta o menor a 0`);
+      }
     }
   }
 
@@ -344,11 +357,11 @@ export class SaleComponent implements AfterViewInit, OnInit {
    * Maneja el cambio de estado del descuento.
    */
   handleDiscountSwitch(): void{
-    if (this.isDiscount) {
+    if (this.hasDiscount) {
       this.updateTotalWithDiscount();
     } else {
-      this.total = this.originalTotal;
-      this.discountAmount = 0;
+      this.saleRequest.total  = this.originalTotal;
+      this.saleRequest.discount = 0;
       this.updateTotalWithCash();
     }
   }
@@ -356,43 +369,36 @@ export class SaleComponent implements AfterViewInit, OnInit {
   hasOpeningCashierRegister(): void {
     const isOpen = sessionStorage.getItem('isOpen');
     if (isOpen) {
-        this.openingRegisterStatus = true;
+        this.isRegisterOpen = true;
     } else {
         this.cashRegisterService.hasOpenRegisterOnDate().subscribe({
-            next: (response) => {
-                this.openingRegisterStatus = response;
-            },
-            error: (error) => {
-                console.error("Error en la solicitud:", error);
-                this.openingRegisterStatus = false;
-            }
+            next: (response) => this.isRegisterOpen = response,
+            error: () => this.isRegisterOpen = false
         });
     }
-}
+  }
   
 
   /**
    * Reinicia el proceso de venta a su estado inicial.
    */
   resetProcess(): void{
-    this.getTotalSale();
-    this.sale = this.helper.createEmptySale();
+    this.loadTotalSales();
+    this.saleRequest = this.helper.initializeSaleRequest();
     this.customerList = [];
     this.saleDetailList = [];
-    this.total = 0;
     this.cashAmount = 0;
     this.changeAmount = 0;
-    this.discountAmount = 0;
     this.showSwitch =  false;
-    this.isDiscount = false;
-    this.isCashPayment = false;
-    this.isTransferPayment = false;
-    this.isLoanPayment = false;
-    this.isCreditPayment = false;
-    this.isDebitPayment = false;
-    this.isMixPayment = false;
-    this.isOk = false;
-    this.getCustomer();
+    this.hasDiscount = false;
+    this.isPaymentInCash = false;
+    this.isPaymentByTransfer = false;
+    this.isPaymentOnLoan = false;
+    this.isPaymentByCredit = false;
+    this.isPaymentByDebitCard = false;
+    this.hasMixedPayment = false;
+    this.isTransactionValid = false;
+    this.loadCustomers();
   }
 
   /** Habilita la edición de un campo en un detalle específico */
