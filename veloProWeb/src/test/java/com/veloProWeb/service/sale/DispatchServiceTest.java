@@ -62,7 +62,7 @@ public class DispatchServiceTest {
     public void createDispatch(){
         SaleDetailRequestDTO detailSaleDTO = SaleDetailRequestDTO.builder().idProduct(1L).quantity(1).build();
         DispatchRequestDTO dto = DispatchRequestDTO.builder().address("Test address").comment("test comment")
-                .customer("John Doe").detailSaleDTOList(List.of(detailSaleDTO)).build();
+                .customer("John Doe").saleDetails(List.of(detailSaleDTO)).build();
         when(dispatchRepo.count()).thenReturn(1L);
 
         Dispatch dispatchMapped = mapper.toEntity(dto, 1L);
