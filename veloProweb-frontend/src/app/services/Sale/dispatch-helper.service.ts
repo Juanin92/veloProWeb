@@ -41,6 +41,7 @@ export class DispatchHelperService {
 
   initializeSaleRequest(): SaleDetailResponse{
     return {
+      idProduct: 0,
       descriptionProduct: '',
       quantity: 0,
       price: 0,
