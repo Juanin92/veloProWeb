@@ -1,32 +1,25 @@
 package com.veloProWeb.service.sale;
 
 import com.veloProWeb.mapper.SaleMapper;
-import com.veloProWeb.model.dto.sale.DetailSaleRequestDTO;
 import com.veloProWeb.model.dto.sale.SaleDetailRequestDTO;
-import com.veloProWeb.model.entity.customer.Customer;
-import com.veloProWeb.model.entity.customer.TicketHistory;
+import com.veloProWeb.model.dto.sale.SaleDetailResponseDTO;
 import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.model.entity.Sale.Dispatch;
 import com.veloProWeb.model.entity.Sale.Sale;
 import com.veloProWeb.model.entity.Sale.SaleDetail;
 import com.veloProWeb.model.Enum.MovementsType;
-import com.veloProWeb.repository.customer.TicketHistoryRepo;
 import com.veloProWeb.repository.Sale.DispatchRepo;
 import com.veloProWeb.repository.Sale.SaleDetailRepo;
-import com.veloProWeb.service.customer.interfaces.ICustomerService;
 import com.veloProWeb.service.product.interfaces.IProductService;
 import com.veloProWeb.service.inventory.IKardexService;
 import com.veloProWeb.service.sale.Interface.IDispatchService;
 import com.veloProWeb.service.sale.Interface.ISaleDetailService;
-import com.veloProWeb.service.sale.Interface.ISaleService;
 import com.veloProWeb.validation.SaleValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,11 +27,8 @@ import java.util.List;
 public class SaleDetailService implements ISaleDetailService {
 
     private final SaleDetailRepo saleDetailRepo;
-    private final TicketHistoryRepo ticketHistoryRepo;
     private final DispatchRepo dispatchRepo;
     private final IProductService productService;
-    private final ICustomerService customerService;
-    private final ISaleService saleService;
     private final IKardexService kardexService;
     private final IDispatchService dispatchService;
     private final SaleValidator validator;
@@ -75,39 +65,10 @@ public class SaleDetailService implements ISaleDetailService {
      * @return - Lista de dto con detalles de la venta
      */
     @Override
-    public List<DetailSaleRequestDTO> getDetailsBySaleId(Long idSale) {
-        List<DetailSaleRequestDTO> saleRequestDTOS = new ArrayList<>();
-        List<SaleDetail> saleDetails = saleDetailRepo.findBySaleId(idSale);
-        Sale sale = saleService.getSaleById(idSale);
-        String customerNames = "";
-        boolean status = true;
-        LocalDate notification = null;
-        if (sale != null){
-            if (sale.getCustomer() != null){
-                Long idCustomer = sale.getCustomer().getId();
-                Customer customer = customerService.getCustomerById(idCustomer);
-                customerNames = customer.getName() + " " + customer.getSurname();
-                List<TicketHistory> ticketHistoryList = ticketHistoryRepo.findByCustomerId(customer.getId());
-                for (TicketHistory ticket : ticketHistoryList){
-                    if (ticket.getDocument().equals(sale.getDocument())){
-                        status = ticket.isStatus();
-                        notification = ticket.getNotificationsDate();
-                    }
-                }
-            }
-            for (SaleDetail saleDetail : saleDetails){
-                DetailSaleRequestDTO dto = new DetailSaleRequestDTO();
-                dto.setQuantity(saleDetail.getQuantity());
-                dto.setPrice(saleDetail.getPrice());
-                dto.setDescriptionProduct(saleDetail.getProduct().getDescription());
-                dto.setCustomer(customerNames);
-                dto.setTicketStatus(status);
-                dto.setNotification(notification);
-                dto.setHasDispatch(saleDetail.getDispatch() != null);
-                saleRequestDTOS.add(dto);
-            }
-        }
-        return saleRequestDTOS;
+    public List<SaleDetailResponseDTO> getDetailsBySaleId(Long idSale) {
+        return saleDetailRepo.findBySaleId(idSale).stream()
+                .map(mapper::toDetailResponseDTO)
+                .toList();
     }
 
     /**
