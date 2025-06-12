@@ -25,5 +25,5 @@ public class DispatchRequestDTO {
     private String comment;
 
     @NotNull(message = "Debe contener al menos un producto en el despacho")
-    private List<SaleDetailRequestDTO> detailSaleDTOList = new ArrayList<>();
+    private List<SaleDetailRequestDTO> saleDetails = new ArrayList<>();
 }
