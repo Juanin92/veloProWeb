@@ -1,15 +1,17 @@
 import { PaymentMethod } from "../../enum/payment-method";
-import { CustomerResponse } from "../customer/customer-response";
+import { SaleDetailResponse } from "./sale-detail-response";
 
 export interface Sale {
-    id: number;
-    date: string;
-    paymentMethod: PaymentMethod | null;
-    document: string;
-    comment: string;
-    discount: number;
-    tax: number;
-    totalSale: number;
-    status: boolean;
-    customer: CustomerResponse | null;
+    date: string,
+    paymentMethod: PaymentMethod,
+    document: string,
+    comment: string,
+    discount: number,
+    tax: number,
+    totalSale: number,
+    status: boolean,
+    customer: string,
+    notification: string,
+    ticketStatus: boolean,
+    saleDetails: SaleDetailResponse[],
 }
