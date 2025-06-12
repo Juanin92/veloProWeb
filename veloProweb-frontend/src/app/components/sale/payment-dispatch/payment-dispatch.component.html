@@ -44,7 +44,7 @@
                                         <td colspan="3"></td>
                                         <td class="text-end">Total:</td>
                                         <td class="text-end">
-                                            {{totalSum | currency : "CLP" : "$" : "1.0-0"}}
+                                            {{totalSale | currency : "CLP" : "$" : "1.0-0"}}
                                         </td>
                                     </tr>
                                 </tfoot>
@@ -122,7 +122,7 @@
                                     <input type="number" class="form-control form-control-lg" id="amountDiscountDispatch"
                                         name="amountDiscountDispatch" placeholder="Ingrese monto de descuento"
                                         aria-label="Ingrese monto de descuento" aria-describedby="amountDiscountDispatch" 
-                                        [(ngModel)]="discountAmount" (keyup.enter)="handleDiscountSwitch()"/>
+                                        [(ngModel)]="saleRequest.discount" (keyup.enter)="handleDiscountSwitch()"/>
                                     <label for="amountDiscountDispatch" class="form-label">Descuento</label>
                                 </div>
                                 <div *ngIf="isCash || isMix" class="form-floating mb-2 w-100">
@@ -139,7 +139,7 @@
                             <div class="card-body">
                                 <div *ngIf="isMix || isLoan" class="col-md-4 col-6 mt-lg-0 mt-2 w-100">
                                     <select class="form-select form-select-sm shadow-sm" name="customerDispatch" id="customerDispatch"
-                                        aria-label="Seleccione un cliente" [(ngModel)]="requestDTO.idCustomer">
+                                        aria-label="Seleccione un cliente" [(ngModel)]="saleRequest.idCustomer">
                                         <option [ngValue]="null" selected disabled>Clientes</option>
                                         <option *ngFor="let customer of customerList"
                                             [ngValue]="customer.id">{{customer.name + " " + customer.surname}}</option>
@@ -149,7 +149,7 @@
                                     <input type="text" class="form-control form-control-lg" id="commentDispatch"
                                         name="commentDispatch" placeholder="Ingrese Comprobante de la transacción"
                                         aria-label="Ingrese Comprobante" aria-describedby="commentDispatch" 
-                                        [(ngModel)]="comment" (change)="handleCommentToRequest('comment')"/>
+                                        [(ngModel)]="saleRequest.comment" (change)="handleCommentToRequest('comment')"/>
                                     <label for="commentDispatch" class="form-label">Comprobante</label>
                                 </div>
                             </div>
@@ -159,7 +159,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-center mb-0 mt-1 p-0">
                 <button [disabled]="!isOk" type="button" class="btn btn-success"
-                    (click)="processDispatchForSale(selectedDispatchPayment!)"
+                    (click)="processDispatchForSale(selectedDispatchPayment)"
                     [attr.data-bs-dismiss]="modalService.isModalVisible() ? 'modal' : null">Confirmar</button>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
                     (click)="resetModal()">Cancelar</button>

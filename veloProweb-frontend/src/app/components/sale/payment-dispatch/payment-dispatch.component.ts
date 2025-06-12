@@ -1,16 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Dispatch } from '../../../models/entity/sale/dispatch';
 import { CustomerService } from '../../../services/customer/customer.service';
 import { CustomerResponse } from '../../../models/entity/customer/customer-response';
-import { SaleRequestDTO } from '../../../models/DTO/sale-request-dto';
 import { SaleService } from '../../../services/sale/sale.service';
 import { PaymentMethod } from '../../../models/enum/payment-method';
 import { NotificationService } from '../../../utils/notification-service.service';
 import { ModalService } from '../../../utils/modal.service';
 import { DispatchPermissionsService } from '../../../services/permissions/dispatch-permissions.service';
 import { DispatchHelperService } from '../../../services/sale/dispatch-helper.service';
+import { SaleRequest } from '../../../models/entity/sale/sale-request';
+import { SaleHelperService } from '../../../services/sale/sale-helper.service';
+import { ErrorMessageService } from '../../../utils/error-message.service';
+import { SaleMapperService } from '../../../mapper/sale-mapper.service';
 
 @Component({
   selector: 'app-payment-dispatch',
@@ -19,16 +22,15 @@ import { DispatchHelperService } from '../../../services/sale/dispatch-helper.se
   templateUrl: './payment-dispatch.component.html',
   styleUrl: './payment-dispatch.component.css'
 })
-export class PaymentDispatchComponent implements OnInit {
+export class PaymentDispatchComponent implements OnInit, OnChanges {
 
   @Input() selectedDispatchPayment: Dispatch;
   @Input() totalSum: number = 0;
   @Output() dispatchPaid = new EventEmitter<boolean>();
-  requestDTO: SaleRequestDTO;
+  saleRequest: SaleRequest;
   customerList: CustomerResponse[] = [];
-  discountAmount: number = 0;
+  totalSale: number = 0;
   cashAmount: number = 0;
-  comment: string = '';
   isDiscount: boolean = false;
   isCash: boolean = false;
   isTransfer: boolean = false;
@@ -43,12 +45,21 @@ export class PaymentDispatchComponent implements OnInit {
   constructor(
     private customerService: CustomerService,
     private saleService: SaleService,
+    private mapper: SaleMapperService,
     private notification: NotificationService,
     protected permission: DispatchPermissionsService,
     protected helper: DispatchHelperService,
+    private saleHelper: SaleHelperService,
+    private errorMessage: ErrorMessageService,
     public modalService: ModalService) {
     this.selectedDispatchPayment = helper.initializeDispatch();
-    this.requestDTO = this.initializeRequestDTO();
+    this.saleRequest = this.saleHelper.initializeSaleRequest();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['totalSum']) {
+      this.totalSale = this.totalSum;
+    }
   }
 
   ngOnInit(): void {
@@ -57,27 +68,24 @@ export class PaymentDispatchComponent implements OnInit {
 
   processDispatchForSale(dispatchSelected: Dispatch): void {
     if (dispatchSelected) {
-      this.requestDTO.id = dispatchSelected.id;
-      this.requestDTO.discount = this.discountAmount;
-      this.requestDTO.total = this.totalSum;
-      // this.requestDTO.detailList = dispatchSelected.saleDetails ? [...dispatchSelected.saleDetails] : [];
-
-      this.saleService.createSaleFromDispatch(this.requestDTO).subscribe({
+      this.saleRequest.idDispatch = dispatchSelected.id;
+      this.saleRequest.total = this.totalSale;
+      this.saleRequest.tax = dispatchSelected.saleDetails.reduce((sum, value) => sum + value.tax, 0);
+      this.saleRequest.detailList = this.mapper.mapSaleDetailResponseToRequest(dispatchSelected.saleDetails);
+      this.saleService.createSaleFromDispatch(this.saleRequest).subscribe({
         next: (response) => {
-          const message = response.message
-          this.notification.showSuccessToast(message, 'top', 3000);
+          this.notification.showSuccessToast(response.message, 'top', 3000);
           this.dispatchPaid.emit(true);
           this.modalService.closeModal();
         }, error: (error) => {
-          const message = error.error?.error || error.error?.message || error?.error;
-          console.log("ERROR: ", message);
+          const message = this.errorMessage.errorMessageExtractor(error);
           this.notification.showErrorToast(message, 'top', 3000);
         }
-      })
+      });
     }
   }
 
-  getCustomersToDispatchPayment(): void {
+  loadCustomersForPaymentProcessing(): void {
     this.customerService.getCustomer().subscribe({
       next: (list) => {
         const searchTerms = this.selectedDispatchPayment?.customer.toLowerCase().split(" ");
@@ -88,9 +96,6 @@ export class PaymentDispatchComponent implements OnInit {
             customer.surname.toLowerCase().includes(term)
           )
         );
-      }, 
-      error: (error) => {
-        console.log('Error al obtener los clientes, ', error?.error);
       }
     });
   }
@@ -106,8 +111,8 @@ export class PaymentDispatchComponent implements OnInit {
         this.isDebit = false;
         this.isMix = false;
         this.isOk = true;
-        this.requestDTO.idCustomer = null;
-        this.requestDTO.paymentMethod = PaymentMethod.EFECTIVO;
+        this.saleRequest.idCustomer = 0;
+        this.saleRequest.paymentMethod = PaymentMethod.EFECTIVO;
         break;
       case 2:
         this.showSwitch = true;
@@ -119,8 +124,8 @@ export class PaymentDispatchComponent implements OnInit {
         this.isMix = false;
         this.isOk = false;
         this.showComment = true;
-        this.requestDTO.idCustomer = null;
-        this.requestDTO.paymentMethod = PaymentMethod.TRANSFERENCIA;
+        this.saleRequest.idCustomer = 0;
+        this.saleRequest.paymentMethod = PaymentMethod.TRANSFERENCIA;
         break;
       case 3:
         this.showSwitch = true;
@@ -132,8 +137,8 @@ export class PaymentDispatchComponent implements OnInit {
         this.isMix = false;
         this.isOk = true;
         this.showComment = false;
-        this.requestDTO.paymentMethod = PaymentMethod.PRESTAMO;
-        this.getCustomersToDispatchPayment();
+        this.saleRequest.paymentMethod = PaymentMethod.PRESTAMO;
+        this.loadCustomersForPaymentProcessing();
         break;
       case 4:
         this.showSwitch = true;
@@ -145,8 +150,8 @@ export class PaymentDispatchComponent implements OnInit {
         this.isMix = false;
         this.isOk = false;
         this.showComment = true;
-        this.requestDTO.idCustomer = null;
-        this.requestDTO.paymentMethod = PaymentMethod.CREDITO;
+        this.saleRequest.idCustomer = 0;
+        this.saleRequest.paymentMethod = PaymentMethod.CREDITO;
         break;
       case 5:
         this.showSwitch = true;
@@ -158,8 +163,8 @@ export class PaymentDispatchComponent implements OnInit {
         this.isMix = false;
         this.isOk = false;
         this.showComment = true;
-        this.requestDTO.idCustomer = null;
-        this.requestDTO.paymentMethod = PaymentMethod.DEBITO;
+        this.saleRequest.idCustomer = 0;
+        this.saleRequest.paymentMethod = PaymentMethod.DEBITO;
         break;
       case 6:
         this.showSwitch = false;
@@ -171,35 +176,33 @@ export class PaymentDispatchComponent implements OnInit {
         this.isCash = false;
         this.isOk = true;
         this.showComment = false;
-        this.requestDTO.paymentMethod = PaymentMethod.MIXTO;
-        this.getCustomersToDispatchPayment();
+        this.saleRequest.paymentMethod = PaymentMethod.MIXTO;
+        this.loadCustomersForPaymentProcessing();
         break;
     }
   }
 
   handleDiscountSwitch(): void {
-    const totalWithoutDiscount = this.selectedDispatchPayment.saleDetails.reduce((sum, value) => sum + (value.price * value.quantity), 0);
+    const totalWithoutDiscount = this.selectedDispatchPayment.saleDetails.reduce(
+      (sum, value) => sum + (value.price * value.quantity), 0);
 
     if (this.isDiscount) {
-      if (this.discountAmount > 0 && this.discountAmount < this.totalSum) {
-        this.totalSum = Math.max(0, totalWithoutDiscount - this.discountAmount);
+      if (this.saleRequest.discount > 0 && this.saleRequest.discount < this.totalSale) {
+        this.totalSale = Math.max(0, totalWithoutDiscount - this.saleRequest.discount);
       }
     } else {
-      this.discountAmount = 0;
-      this.totalSum = totalWithoutDiscount;
+      this.saleRequest.discount = 0;
+      this.totalSale = totalWithoutDiscount;
     }
   }
 
   handleCommentToRequest(option: string): void {
-    if (this.requestDTO.paymentMethod === PaymentMethod.CREDITO || this.requestDTO.paymentMethod === PaymentMethod.DEBITO
-      || this.requestDTO.paymentMethod === PaymentMethod.TRANSFERENCIA) {
-      this.requestDTO.comment = this.comment;
-    } else if (this.requestDTO.paymentMethod === PaymentMethod.EFECTIVO || this.requestDTO.paymentMethod === PaymentMethod.MIXTO) {
-      this.requestDTO.comment = this.cashAmount.toString();
+    if (this.saleRequest.paymentMethod === PaymentMethod.EFECTIVO || this.saleRequest.paymentMethod === PaymentMethod.MIXTO) {
+      this.saleRequest.comment = this.cashAmount.toString();
     }
 
     if (option.includes('comment')) {
-      this.isOk = !!this.comment;
+      this.isOk = !!this.saleRequest.comment;
     }
     if (option.includes('cash')) {
       this.isOk = !!this.cashAmount;
@@ -207,29 +210,13 @@ export class PaymentDispatchComponent implements OnInit {
   }
 
   resetModal(): void {
-    this.totalSum = 0;
+    this.totalSale = 0;
     this.isDiscount = false;
     this.isCash = false;
     this.isMix = false;
     this.isLoan = false;
     this.isOk = false;
-    this.discountAmount = 0;
     this.showSwitch = false;
-    this.requestDTO = this.initializeRequestDTO();
-  }
-
-  initializeRequestDTO(): SaleRequestDTO {
-    return {
-      id: 0,
-      date: '',
-      idCustomer: null,
-      paymentMethod: PaymentMethod.EFECTIVO,
-      tax: 0,
-      total: 0,
-      discount: 0,
-      numberDocument: 0,
-      comment: '',
-      detailList: [],
-    }
+    this.saleRequest = this.saleHelper.initializeSaleRequest();
   }
 }
