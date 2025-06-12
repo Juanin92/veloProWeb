@@ -79,7 +79,7 @@ public class SaleMapper {
                 .build();
     }
 
-    private SaleDetailResponseDTO toDetailResponseDTO(SaleDetail saleDetail){
+    public SaleDetailResponseDTO toDetailResponseDTO(SaleDetail saleDetail){
         return SaleDetailResponseDTO.builder()
                 .idProduct(saleDetail.getProduct().getId())
                 .descriptionProduct(saleDetail.getProduct().getDescription())
