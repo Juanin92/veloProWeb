@@ -2,7 +2,6 @@ package com.veloProWeb.scheduler;
 
 import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.repository.product.ProductRepo;
-import com.veloProWeb.service.communication.interfaces.IAlertService;
 import com.veloProWeb.service.product.interfaces.IProductEventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,6 @@ public class ProductScheduledTasksTest {
 
     @InjectMocks private ProductScheduledTasks productScheduledTasks;
     @Mock private ProductRepo productRepo;
-    @Mock private IAlertService alertService;
     @Mock private IProductEventService productEventService;
     private Product product2, product3, product4, product5;
 
