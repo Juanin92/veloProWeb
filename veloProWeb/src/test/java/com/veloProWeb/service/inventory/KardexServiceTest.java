@@ -37,12 +37,17 @@ public class KardexServiceTest {
         Product product = Product.builder().id(1L).description("Product Test").build();
         User user = User.builder().id(1L).username("usernameTest").build();
         when(userService.getUserByUsername("usernameTest")).thenReturn(user);
+        Kardex mapped = Kardex.builder().movementsType(MovementsType.ENTRADA).date(LocalDate.now()).product(product)
+                .user(user).comment("Test kardex").build();
+        when(mapper.toEntity(product, 2, "Test kardex", MovementsType.ENTRADA, user)).thenReturn(mapped);
 
         kardexService.addKardex( userDetails, product, 2, "Test kardex", MovementsType.ENTRADA);
 
         ArgumentCaptor<Kardex> kardexArgumentCaptor = ArgumentCaptor.forClass(Kardex.class);
-        verify(kardexRepo, times(1)).save(kardexArgumentCaptor.capture());
         verify(userService, times(1)).getUserByUsername("usernameTest");
+        verify(mapper, times(1)).toEntity(product, 2, "Test kardex",
+                MovementsType.ENTRADA, user);
+        verify(kardexRepo, times(1)).save(kardexArgumentCaptor.capture());
 
         Kardex result = kardexArgumentCaptor.getValue();
         assertEquals(LocalDate.now(), result.getDate());
