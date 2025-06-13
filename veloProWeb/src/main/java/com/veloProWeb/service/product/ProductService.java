@@ -34,12 +34,6 @@ public class ProductService implements IProductService {
     @Override
     public void create(ProductRequestDTO dto, UserDetails userDetails) {
         Product product = mapper.toEntity(dto);
-        product.setStatus(false);
-        product.setStatusProduct(StatusProduct.NODISPONIBLE);
-        product.setBuyPrice(0);
-        product.setSalePrice(0);
-        product.setStock(0);
-        product.setThreshold(0);
         productRepo.save(product);
         productEventService.handleCreateRegister(product, "Creación Producto", userDetails);
     }
@@ -68,7 +62,6 @@ public class ProductService implements IProductService {
      * y si tiene un stock menor a 0 lo deja como no disponible predeterminado.
      * @param product - Producto a actualizar
      */
-    @Transactional
     @Override
     public void updateStockStatus(Product product){
         if (product.getStock() > 0){
