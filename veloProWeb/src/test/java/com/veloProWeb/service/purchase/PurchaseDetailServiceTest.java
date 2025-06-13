@@ -52,18 +52,19 @@ public class PurchaseDetailServiceTest {
         doNothing().when(kardexService).addKardex(userDetails, product, 1, String.format("Compra / %s - %s",
                 purchase.getDocumentType(), purchase.getDocument()), MovementsType.ENTRADA);
 
-        ArgumentCaptor<PurchaseDetail> purchaseDetailCaptor = ArgumentCaptor.forClass(PurchaseDetail.class);
+        ArgumentCaptor<List<PurchaseDetail>> purchaseDetailsListCaptor = ArgumentCaptor.forClass(List.class);
         purchaseDetailService.createPurchaseDetail(userDetails, dtoList, purchase);
 
-        verify(purchaseDetailRepo, times(1)).save(purchaseDetailCaptor.capture());
         verify(validator, times(1)).hasPurchase(purchase);
         verify(mapper, times(1)).toPurchaseDetailEntity(detail, product, purchase);
         verify(productService, times(1)).getProductById(1L);
         verify(productService, times(1)).updateStockPurchase(product, 1000, 1);
         verify(kardexService, times(1)).addKardex(userDetails, product, 1,
                 String.format("Compra / %s - %s", "Factura", "F-100"), MovementsType.ENTRADA);
+        verify(purchaseDetailRepo, times(1)).saveAll(purchaseDetailsListCaptor.capture());
 
-        PurchaseDetail result = purchaseDetailCaptor.getValue();
+        List<PurchaseDetail> purchaseDetailsResult = purchaseDetailsListCaptor.getValue();
+        PurchaseDetail result = purchaseDetailsResult.getFirst();
         assertEquals( 1000, result.getPrice());
         assertEquals( 1, result.getQuantity());
         assertEquals(product, result.getProduct());
