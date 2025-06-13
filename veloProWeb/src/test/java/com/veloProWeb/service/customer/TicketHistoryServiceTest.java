@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -26,10 +27,7 @@ public class TicketHistoryServiceTest {
 
     @InjectMocks private TicketHistoryService ticketHistoryService;
     @Mock private TicketHistoryRepo ticketHistoryRepo;
-    @Mock private Customer customers;
-    @Mock private CustomerService customerService;
     private TicketHistory ticketHistory, ticketHistoryFirst, ticketHistorySecond, ticketHistoryThird;
-    private LocalDate lastValidationDate;
     private Customer customer;
 
     @BeforeEach
@@ -49,9 +47,11 @@ public class TicketHistoryServiceTest {
                 .id(4L).document("BO004").total(3000).status(false).notificationsDate(LocalDate.now())
                 .date(LocalDate.now()).customer(customer).build();
     }
+
     //Prueba para agregar un ticket al cliente
     @Test
     public void addTicketToCustomer_valid(){
+        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("MMyy"));
         when(ticketHistoryRepo.findLastCreated()).thenReturn(ticketHistoryThird);
 
         ticketHistoryService.addTicketToCustomer(customer, 2000);
@@ -59,7 +59,7 @@ public class TicketHistoryServiceTest {
         verify(ticketHistoryRepo).save(ticketHistoryCaptor.capture());
         TicketHistory ticketHistoryCaptured = ticketHistoryCaptor.getValue();
         assertEquals(ticketHistory.getTotal(), ticketHistoryCaptured.getTotal());
-        assertEquals("T-0525-0001", ticketHistoryCaptured.getDocument());
+        assertEquals(String.format("T-%s-0001",date), ticketHistoryCaptured.getDocument());
         assertEquals(ticketHistory.isStatus(), ticketHistoryCaptured.isStatus());
         assertEquals(ticketHistory.getDate(), ticketHistoryCaptured.getDate());
         assertEquals(ticketHistory.getCustomer(), ticketHistoryCaptured.getCustomer());
