@@ -1,5 +1,6 @@
 package com.veloProWeb.mapper;
 
+import com.veloProWeb.model.Enum.StatusProduct;
 import com.veloProWeb.model.dto.product.ProductRequestDTO;
 import com.veloProWeb.model.dto.product.ProductResponseDTO;
 import com.veloProWeb.model.entity.product.Product;
@@ -14,6 +15,12 @@ public class ProductMapper {
                 .brand(dto.getBrand())
                 .subcategoryProduct(dto.getSubcategoryProduct())
                 .category(dto.getCategory())
+                .status(false)
+                .statusProduct(StatusProduct.NODISPONIBLE)
+                .buyPrice(0)
+                .salePrice(0)
+                .stock(0)
+                .threshold(0)
                 .unit(dto.getUnit()).build();
     }
 
