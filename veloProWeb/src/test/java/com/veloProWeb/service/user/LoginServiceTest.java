@@ -67,7 +67,7 @@ class LoginServiceTest {
         verify(userService, times(1)).getUserByUsername("johnny");
         verify(passwordEncoder, times(1)).matches(originalToken, user.getToken());
 
-        assertEquals("Los códigos de seguridad no tiene similitud", e.getMessage());
+        assertEquals("El código de seguridad ingresado es incorrecto", e.getMessage());
     }
 
     //Prueba para enviar un correo con el código de seguridad generado aleatoriamente
