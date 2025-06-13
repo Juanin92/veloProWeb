@@ -65,13 +65,14 @@ public class DispatchServiceTest {
                 .customer("John Doe").saleDetails(List.of(detailSaleDTO)).build();
         when(dispatchRepo.count()).thenReturn(1L);
 
-        Dispatch dispatchMapped = mapper.toEntity(dto, 1L);
+        Dispatch dispatchMapped = Dispatch.builder().address("Test address").comment("test comment")
+                .customer("John Doe").saleDetails(List.of()).trackingNumber("#2").status(DispatchStatus.PREPARING).build();
         when(mapper.toEntity(dto, 1L)).thenReturn(dispatchMapped);
 
         Dispatch dispatch = dispatchService.createDispatch(dto);
 
         verify(dispatchRepo, times(1)).count();
-        verify(mapper, times(2)).toEntity(dto, 1L);
+        verify(mapper, times(1)).toEntity(dto, 1L);
         verify(dispatchRepo, times(1)).save(dispatchMapped);
 
         assertEquals("#2", dispatch.getTrackingNumber());
