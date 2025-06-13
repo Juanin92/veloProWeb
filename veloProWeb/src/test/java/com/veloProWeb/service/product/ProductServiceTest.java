@@ -15,7 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -31,9 +30,8 @@ public class ProductServiceTest {
     @Mock private ProductRepo productRepo;
     @Mock private ProductValidator validator;
     @Mock private ProductEventService productEventService;
-    @Spy private ProductMapper mapper = new ProductMapper();
+    @Mock private ProductMapper mapper;
     @Mock private UserDetails userDetails;
-    private Product product;
     private BrandProduct brand;
     private UnitProduct unit;
     private CategoryProduct category;
@@ -50,16 +48,19 @@ public class ProductServiceTest {
     //Prueba para crear un nuevo producto
     @Test
     public void create_valid(){
-        ProductRequestDTO dto = ProductRequestDTO.builder()
-                .description("product 1").brand(brand).unit(unit)
+        ProductRequestDTO dto = ProductRequestDTO.builder().description("product 1").brand(brand).unit(unit)
                 .subcategoryProduct(subcategory).category(category).build();
+        Product productMapped = Product.builder().description("product 1").brand(brand).unit(unit)
+                .subcategoryProduct(subcategory).category(category).build();
+        when(mapper.toEntity(dto)).thenReturn(productMapped);
 
         productService.create(dto, userDetails);
 
         ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
+        verify(mapper, times(1)).toEntity(dto);
         verify(productRepo, times(1)).save(productArgumentCaptor.capture());
         verify(productEventService, times(1))
-                .handleCreateRegister(productArgumentCaptor.capture(), eq("Creación Producto"), userDetails);
+                .handleCreateRegister(any(Product.class), eq("Creación Producto"), any(UserDetails.class));
 
         Product result = productArgumentCaptor.getValue();
         assertEquals(result.getDescription(), dto.getDescription());
@@ -88,8 +89,8 @@ public class ProductServiceTest {
         verify(productRepo, times(1)).save(productArgumentCaptor.capture());
         verify(productRepo, times(1)).findById(dto.getId());
         verify(productEventService, times(1))
-                .isChangeStockOriginalValue(productArgumentCaptor.capture(), eq(product.getStock()), eq(dto),
-                        userDetails);
+                .isChangeStockOriginalValue(any(Product.class), eq(product.getStock()), eq(dto),
+                        any(UserDetails.class));
 
         Product result = productArgumentCaptor.getValue();
         assertEquals(result.getDescription(), dto.getDescription());
@@ -111,7 +112,7 @@ public class ProductServiceTest {
         verify(productRepo, times(1)).save(productArgumentCaptor.capture());
         verify(productRepo, times(1)).findById(dto.getId());
         verify(productEventService, times(1))
-                .isChangeStockOriginalValue(productArgumentCaptor.capture(), eq(originalStock), eq(dto), userDetails);
+                .isChangeStockOriginalValue(any(Product.class), eq(originalStock), eq(dto), any(UserDetails.class));
 
         Product result = productArgumentCaptor.getValue();
         assertEquals(result.getDescription(), dto.getDescription());
@@ -122,7 +123,7 @@ public class ProductServiceTest {
     //Prueba para actualizar un producto
     @Test
     public void update_StockStatus_validMoreStock(){
-        product.setStock(10);
+        Product product = Product.builder().stock(10).build();
         productService.updateStockStatus(product);
 
         verify(productRepo).save(product);
@@ -132,7 +133,7 @@ public class ProductServiceTest {
     }
     @Test
     public void update_StockStatus_validNonStock(){
-        product.setStock(0);
+        Product product = Product.builder().stock(0).build();
         productService.updateStockStatus(product);
 
         verify(productRepo).save(product);
@@ -155,7 +156,7 @@ public class ProductServiceTest {
         verify(productRepo, times(1)).findById(dto.getId());
         verify(productRepo, times(1)).save(productArgumentCaptor.capture());
         verify(productEventService, times(1))
-                .handleCreateRegister(productArgumentCaptor.capture(), eq("Activado"), userDetails);
+                .handleCreateRegister(any(Product.class), eq("Activado"), any(UserDetails.class));
 
         Product result = productArgumentCaptor.getValue();
         assertEquals(StatusProduct.NODISPONIBLE, result.getStatusProduct());
@@ -178,6 +179,7 @@ public class ProductServiceTest {
     //Prueba para actualizar el stock después de una compra un producto
     @Test
     public void updateStockStatusStockPurchase_valid(){
+        Product product = Product.builder().build();
         productService.updateStockPurchase(product, 20000, 10);
         assertEquals(20000, product.getBuyPrice());
         assertEquals(10, product.getStock());
@@ -187,7 +189,7 @@ public class ProductServiceTest {
     //Prueba para actualizar el stock después de una venta un producto
     @Test
     public void updateStockStatusStockSale_valid(){
-        product.setStock(30);
+        Product product = Product.builder().stock(30).build();
         productService.updateStockSale(product, 10);
         assertEquals(20, product.getStock());
         verify(productRepo).save(product);
@@ -207,8 +209,7 @@ public class ProductServiceTest {
         verify(productRepo, times(1)).findById(dto.getId());
         verify(productRepo, times(1)).save(productArgumentCaptor.capture());
         verify(productEventService, times(1))
-                .handleCreateRegister(productArgumentCaptor.capture(), eq("Eliminado / Descontinuado"),
-                        userDetails);
+                .handleCreateRegister(any(Product.class), eq("Eliminado / Descontinuado"),any(UserDetails.class));
 
         Product result = productArgumentCaptor.getValue();
         assertFalse(result.isStatus());
@@ -247,8 +248,7 @@ public class ProductServiceTest {
     //Prueba para actualizar el stock y reserva de un producto después de un despacho
     @Test
     public void updateStockStatusStockAndReserveDispatch_validSuccess(){
-        product.setStock(30);
-        product.setReserve(0);
+        Product product = Product.builder().stock(30).reserve(0).build();
         productService.updateStockAndReserveDispatch(product, 10, true);
         assertEquals(20, product.getStock());
         assertEquals(10, product.getReserve());
@@ -256,8 +256,7 @@ public class ProductServiceTest {
     }
     @Test
     public void updateStockStatusStockAndReserveDispatch_validNoSuccess(){
-        product.setStock(30);
-        product.setReserve(10);
+        Product product = Product.builder().stock(30).reserve(10).build();
         productService.updateStockAndReserveDispatch(product, 10, false);
         assertEquals(40, product.getStock());
         assertEquals(0, product.getReserve());
