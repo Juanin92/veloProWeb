@@ -7,6 +7,7 @@ import com.veloProWeb.model.dto.communication.AlertResponseDTO;
 import com.veloProWeb.model.entity.communication.Alert;
 import com.veloProWeb.model.entity.product.Product;
 import com.veloProWeb.repository.communication.AlertRepo;
+import com.veloProWeb.service.reporting.interfaces.IRecordService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,6 +30,7 @@ public class AlertServiceTest {
     @InjectMocks private AlertService alertService;
     @Mock private AlertRepo alertRepo;
     @Mock private UserDetails userDetails;
+    @Mock private IRecordService recordService;
     private Product product;
 
     @BeforeEach
@@ -78,6 +80,9 @@ public class AlertServiceTest {
 
         verify(alertRepo, times(1)).findById(1L);
         verify(alertRepo, times(1)).save(alertCaptor.capture());
+        verify(recordService, times(1)).registerAction(userDetails, "UPDATE",
+                String.format("Actualizar estado de la alerta %s (%s) ", "Alert 1",
+                        AlertStatus.CHECKED));
 
         Alert resultAlert = alertCaptor.getValue();
         assertEquals(AlertStatus.CHECKED, resultAlert.getStatus());
@@ -93,6 +98,9 @@ public class AlertServiceTest {
 
         verify(alertRepo, times(1)).findById(1L);
         verify(alertRepo, times(1)).save(alertCaptor.capture());
+        verify(recordService, times(1)).registerAction(userDetails, "UPDATE",
+                String.format("Actualizar estado de la alerta %s (%s) ", "Alert 1",
+                        AlertStatus.CHECKED));
 
         Alert resultAlert = alertCaptor.getValue();
         assertEquals(AlertStatus.CHECKED, resultAlert.getStatus());
@@ -108,6 +116,9 @@ public class AlertServiceTest {
 
         verify(alertRepo, times(1)).findById(1L);
         verify(alertRepo, times(1)).save(alertCaptor.capture());
+        verify(recordService, times(1)).registerAction(userDetails, "UPDATE",
+                String.format("Actualizar estado de la alerta %s (%s) ", "Alert 1",
+                        AlertStatus.PENDING));
 
         Alert resultAlert = alertCaptor.getValue();
         assertEquals(AlertStatus.PENDING, resultAlert.getStatus());
