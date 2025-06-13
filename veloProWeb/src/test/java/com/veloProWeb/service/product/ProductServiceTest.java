@@ -51,7 +51,8 @@ public class ProductServiceTest {
         ProductRequestDTO dto = ProductRequestDTO.builder().description("product 1").brand(brand).unit(unit)
                 .subcategoryProduct(subcategory).category(category).build();
         Product productMapped = Product.builder().description("product 1").brand(brand).unit(unit)
-                .subcategoryProduct(subcategory).category(category).build();
+                .subcategoryProduct(subcategory).category(category).threshold(0).stock(0).status(false)
+                .statusProduct(StatusProduct.NODISPONIBLE).buyPrice(0).salePrice(0).build();
         when(mapper.toEntity(dto)).thenReturn(productMapped);
 
         productService.create(dto, userDetails);
