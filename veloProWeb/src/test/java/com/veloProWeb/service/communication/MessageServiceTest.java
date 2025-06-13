@@ -123,14 +123,14 @@ public class MessageServiceTest {
         Message message = Message.builder().id(1L).context("test").isDelete(false).isRead(false).senderUser(senderUser)
                 .receiverUser(receiverUser).created(LocalDate.now()).build();
         when(mapper.toEntity(dto.getContext(), senderUser, receiverUser)).thenReturn(message);
-        doNothing().when(validation).validateSenderAndReceiverAreDifferent(message, receiverUser);
+        doNothing().when(validation).validateSenderAndReceiverAreDifferent(message, senderUser);
 
         ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
         messageService.sendMessage(dto, "peter");
 
         verify(userService, times(2)).getUserByUsername(anyString());
         verify(mapper, times(1)).toEntity(dto.getContext(), senderUser, receiverUser);
-        verify(validation, times(1)).validateSenderAndReceiverAreDifferent(message, receiverUser);
+        verify(validation, times(1)).validateSenderAndReceiverAreDifferent(message, senderUser);
         verify(messageRepo, times(1)).save(messageCaptor.capture());
 
         Message resultMessage = messageCaptor.getValue();
