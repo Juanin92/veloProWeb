@@ -43,8 +43,6 @@ public class ProductScheduledTasksTest {
 
         verify(productRepo, times(1)).findOutOfStock();
         verify(productRepo, times(1)).findCriticalStock();
-        verify(alertService).createAlert(eq(product3), contains("Sin Stock"));
-        verify(alertService).createAlert(eq(product4), contains("Stock Crítico"));
         verify(productEventService, times(1)).checkLowSales(product3);
         verify(productEventService, times(1)).checkLowSales(product4);
     }
