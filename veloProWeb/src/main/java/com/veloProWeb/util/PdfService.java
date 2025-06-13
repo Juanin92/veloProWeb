@@ -10,6 +10,8 @@ import com.veloProWeb.model.entity.data.LocalData;
 import com.veloProWeb.model.Enum.PaymentMethod;
 import com.veloProWeb.service.sale.Interface.ISaleDetailService;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -22,6 +24,7 @@ import java.util.List;
 public class PdfService {
 
    private final ISaleDetailService saleDetailService;
+   private static final Logger logger = LoggerFactory.getLogger(PdfService.class);
 
     /**
      * Genera un archivo PDF del comprobante de venta
@@ -123,7 +126,7 @@ public class PdfService {
         File file = new File(filePath);
         if (file.exists()) {
             if (!file.delete()) {
-                System.err.println("Error: no se pudo eliminar el archivo " + filePath);
+                logger.warn("No se pudo eliminar el archivo: {}", filePath);
             }
         }
     }
