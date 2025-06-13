@@ -100,20 +100,19 @@ public class SubcategoryServiceTest {
         subcategory = SubcategoryProduct.builder().id(1L).name("Milk").category(category).build();
         SubcategoryProduct subcategory2 = SubcategoryProduct.builder().id(2L).name("Pasta").category(category).build();
         SubcategoryProduct subcategory3 = SubcategoryProduct.builder().id(3L).name("Meat").category(category).build();
-
         when(categoryProductRepo.findById(1L)).thenReturn(Optional.of(category));
 
-        List<SubcategoryProduct> expectedSubcategories = List.of(subcategory, subcategory2, subcategory3);
+        List<SubcategoryProduct> expectedSubcategories = List.of(subcategory3, subcategory, subcategory2);
         when(subcategoryProductRepo.findByCategoryId(category.getId())).thenReturn(expectedSubcategories);
 
         List<SubcategoryProduct> result = subcategoryService.getSubcategoryByCategoryID(1L);
 
+        verify(categoryProductRepo, times(1)).findById(1L);
+        verify(subcategoryProductRepo, times(1)).findByCategoryId(category.getId());
+
         assertEquals(expectedSubcategories.size(), result.size());
         assertEquals(expectedSubcategories.get(0).getName(), result.get(0).getName());
         assertEquals(expectedSubcategories.get(1).getName(), result.get(1).getName());
-
-        verify(categoryProductRepo, times(1)).findById(1L);
-        verify(subcategoryProductRepo, times(1)).findByCategoryId(category.getId());
     }
     @Test
     public void getSubcategoryByCategoryID_validEmptyList(){
