@@ -2,12 +2,14 @@ package com.veloProWeb.service.purchase;
 
 import com.veloProWeb.exceptions.supplier.SupplierNotFoundException;
 import com.veloProWeb.mapper.PurchaseMapper;
+import com.veloProWeb.model.dto.purchase.PurchaseDetailRequestDTO;
 import com.veloProWeb.model.dto.purchase.PurchaseRequestDTO;
 import com.veloProWeb.model.dto.purchase.PurchaseResponseDTO;
 import com.veloProWeb.model.entity.purchase.Purchase;
 import com.veloProWeb.model.entity.purchase.Supplier;
 import com.veloProWeb.repository.purchase.PurchaseRepo;
 import com.veloProWeb.service.purchase.interfaces.ISupplierService;
+import com.veloProWeb.validation.PurchaseValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +30,7 @@ public class PurchaseServiceTest {
     @Mock private PurchaseRepo purchaseRepo;
     @Mock private ISupplierService supplierService;
     @Mock private PurchaseMapper mapper;
+    @Mock private PurchaseValidator validator;
 
     @BeforeEach
     void setUp(){
@@ -37,11 +40,13 @@ public class PurchaseServiceTest {
     @Test
     public void createPurchase_valid() {
         Supplier supplier = Supplier.builder().id(1L).rut("12345678-9").build();
+        PurchaseDetailRequestDTO detailDto = PurchaseDetailRequestDTO.builder().build();
         PurchaseRequestDTO dto = PurchaseRequestDTO.builder().supplier("12345678-9").total(1000).tax(100)
-                .document("F-100").documentType("Factura").build();
+                .document("F-100").documentType("Factura").detailList(List.of(detailDto)).build();
         when(supplierService.getEntityByRut(dto.getSupplier())).thenReturn(supplier);
         Purchase purchaseMapped = Purchase.builder().build();
         when(mapper.toPurchaseEntity(dto, supplier)).thenReturn(purchaseMapped);
+        doNothing().when(validator).validateTotal(dto.getTotal(), dto.getDetailList());
 
         Purchase createdPurchase = purchaseService.createPurchase(dto);
         ArgumentCaptor<Purchase> purchaseCaptor = ArgumentCaptor.forClass(Purchase.class);
