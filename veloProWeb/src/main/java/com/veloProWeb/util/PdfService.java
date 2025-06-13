@@ -4,13 +4,12 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.veloProWeb.model.dto.sale.DetailSaleRequestDTO;
 import com.veloProWeb.model.dto.sale.SaleDetailResponseDTO;
 import com.veloProWeb.model.entity.Sale.Sale;
 import com.veloProWeb.model.entity.data.LocalData;
 import com.veloProWeb.model.Enum.PaymentMethod;
 import com.veloProWeb.service.sale.Interface.ISaleDetailService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -19,9 +18,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class PdfService {
 
-    @Autowired private ISaleDetailService saleDetailService;
+   private final ISaleDetailService saleDetailService;
 
     /**
      * Genera un archivo PDF del comprobante de venta
@@ -122,7 +122,9 @@ public class PdfService {
         String filePath = "src/main/resources/static/pdf/boleta_" + documentNumber + ".pdf";
         File file = new File(filePath);
         if (file.exists()) {
-            boolean deleted = file.delete();
+            if (!file.delete()) {
+                System.err.println("Error: no se pudo eliminar el archivo " + filePath);
+            }
         }
     }
 }
