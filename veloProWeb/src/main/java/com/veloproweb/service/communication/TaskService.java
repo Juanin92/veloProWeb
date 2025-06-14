@@ -5,7 +5,7 @@ import com.veloproweb.mapper.TaskMapper;
 import com.veloproweb.model.dto.communication.TaskRequestDTO;
 import com.veloproweb.model.dto.communication.TaskResponseDTO;
 import com.veloproweb.model.entity.communication.Task;
-import com.veloproweb.model.entity.User.User;
+import com.veloproweb.model.entity.user.User;
 import com.veloproweb.repository.communication.TaskRepo;
 import com.veloproweb.service.communication.interfaces.ITaskService;
 import com.veloproweb.service.user.interfaces.IUserService;

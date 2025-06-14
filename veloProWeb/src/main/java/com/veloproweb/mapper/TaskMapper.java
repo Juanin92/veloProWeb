@@ -2,7 +2,7 @@ package com.veloproweb.mapper;
 
 import com.veloproweb.model.dto.communication.TaskRequestDTO;
 import com.veloproweb.model.dto.communication.TaskResponseDTO;
-import com.veloproweb.model.entity.User.User;
+import com.veloproweb.model.entity.user.User;
 import com.veloproweb.model.entity.communication.Task;
 import org.springframework.stereotype.Component;
 
