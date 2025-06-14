@@ -2,9 +2,9 @@ package com.veloproweb.util;
 
 import com.veloproweb.model.entity.customer.Customer;
 import com.veloproweb.model.entity.customer.TicketHistory;
-import com.veloproweb.model.entity.Sale.Sale;
+import com.veloproweb.model.entity.sale.Sale;
 import com.veloproweb.model.entity.data.LocalData;
-import com.veloproweb.model.entity.User.User;
+import com.veloproweb.model.entity.user.User;
 import com.veloproweb.model.Enum.PaymentMethod;
 import com.veloproweb.service.data.ILocalDataService;
 import jakarta.mail.internet.MimeMessage;
