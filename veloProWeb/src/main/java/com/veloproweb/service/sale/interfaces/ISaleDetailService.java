@@ -1,9 +1,9 @@
-package com.veloproweb.service.sale.Interface;
+package com.veloproweb.service.sale.interfaces;
 
 import com.veloproweb.model.dto.sale.SaleDetailRequestDTO;
 import com.veloproweb.model.dto.sale.SaleDetailResponseDTO;
-import com.veloproweb.model.entity.Sale.Dispatch;
-import com.veloproweb.model.entity.Sale.Sale;
+import com.veloproweb.model.entity.sale.Dispatch;
+import com.veloproweb.model.entity.sale.Sale;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.veloproweb.service.sale.Interface;
+package com.veloproweb.service.sale.interfaces;
 
 import com.veloproweb.model.Enum.PaymentMethod;
 import com.veloproweb.model.entity.customer.Customer;

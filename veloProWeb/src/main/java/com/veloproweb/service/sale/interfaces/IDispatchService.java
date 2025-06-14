@@ -1,9 +1,9 @@
-package com.veloproweb.service.sale.Interface;
+package com.veloproweb.service.sale.interfaces;
 
 import com.veloproweb.model.Enum.DispatchStatus;
 import com.veloproweb.model.dto.sale.DispatchRequestDTO;
 import com.veloproweb.model.dto.sale.DispatchResponseDTO;
-import com.veloproweb.model.entity.Sale.Dispatch;
+import com.veloproweb.model.entity.sale.Dispatch;
 
 import java.util.List;
 

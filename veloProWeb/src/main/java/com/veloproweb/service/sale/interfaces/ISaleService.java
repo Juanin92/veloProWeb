@@ -1,8 +1,8 @@
-package com.veloproweb.service.sale.Interface;
+package com.veloproweb.service.sale.interfaces;
 
 import com.veloproweb.model.dto.sale.SaleRequestDTO;
 import com.veloproweb.model.dto.sale.SaleResponseDTO;
-import com.veloproweb.model.entity.Sale.Sale;
+import com.veloproweb.model.entity.sale.Sale;
 
 import java.util.List;
 
