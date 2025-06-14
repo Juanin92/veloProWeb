@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
-public class PurchaseValidatorTest {
+class PurchaseValidatorTest {
     @InjectMocks private PurchaseValidator validator;
 
     //Prueba para validar la existencia de una compra

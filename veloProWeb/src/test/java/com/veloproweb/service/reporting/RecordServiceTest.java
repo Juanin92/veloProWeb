@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class RecordServiceTest {
+class RecordServiceTest {
 
     @InjectMocks private RecordService recordService;
     @Mock private RecordRepo recordRepo;

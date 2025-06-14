@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class PurchaseDetailServiceTest {
+class PurchaseDetailServiceTest {
 
     @InjectMocks private PurchaseDetailService purchaseDetailService;
     @Mock private PurchaseDetailRepo purchaseDetailRepo;

@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class BrandServiceTest {
+class BrandServiceTest {
 
     @InjectMocks private BrandService brandService;
     @Mock private BrandProductRepo brandRepo;

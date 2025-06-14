@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class TicketHistoryServiceTest {
+class TicketHistoryServiceTest {
 
     @InjectMocks private TicketHistoryService ticketHistoryService;
     @Mock private TicketHistoryRepo ticketHistoryRepo;

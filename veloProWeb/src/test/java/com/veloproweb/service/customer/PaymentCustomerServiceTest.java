@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class PaymentCustomerServiceTest {
+class PaymentCustomerServiceTest {
     @InjectMocks private PaymentCustomerService paymentCustomerService;
     @Mock private PaymentCustomerRepo paymentCustomerRepo;
     @Mock private TicketHistoryService ticketService;

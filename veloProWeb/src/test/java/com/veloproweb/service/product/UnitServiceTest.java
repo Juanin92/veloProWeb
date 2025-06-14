@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class UnitServiceTest {
+class UnitServiceTest {
 
     @InjectMocks private UnitService unitService;
     @Mock private UnitProductRepo unitRepo;

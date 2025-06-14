@@ -15,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ProductValidatorTest {
+class ProductValidatorTest {
     @InjectMocks private ProductValidator validator;
     private Product product;
 

@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class DispatchServiceTest {
+class DispatchServiceTest {
 
     @InjectMocks private DispatchService dispatchService;
     @Mock private DispatchRepo dispatchRepo;

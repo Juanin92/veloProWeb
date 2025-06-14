@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
-public class CategoryValidatorTest {
+class CategoryValidatorTest {
 
     @InjectMocks private CategoryValidator validator;
 

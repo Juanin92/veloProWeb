@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class KardexServiceTest {
+class KardexServiceTest {
     @InjectMocks private KardexService kardexService;
     @Mock private KardexRepo kardexRepo;
     @Mock private IUserService userService;

@@ -14,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-public class CommunicationValidationTest {
+class CommunicationValidationTest {
 
     @InjectMocks private CommunicationValidation validation;
 

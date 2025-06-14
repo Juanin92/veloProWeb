@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class SubcategoryServiceTest {
+class SubcategoryServiceTest {
 
     @InjectMocks private SubcategoryService subcategoryService;
     @Mock private SubcategoryProductRepo subcategoryProductRepo;

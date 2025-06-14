@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class LoginServiceTest {
+class LoginServiceTest {
 
     @InjectMocks private LoginService loginService;
     @Mock private UserRepo userRepo;

@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
-public class IdentifyDocumentGeneratorTest {
+class IdentifyDocumentGeneratorTest {
 
     String date = LocalDate.now().format(DateTimeFormatter.ofPattern("MMyy"));
 

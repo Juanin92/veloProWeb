@@ -18,7 +18,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class LocalDataServiceTest {
+class LocalDataServiceTest {
 
     @InjectMocks private LocalDataService localDataService;
     @Mock private LocalDataRepo localDataRepo;

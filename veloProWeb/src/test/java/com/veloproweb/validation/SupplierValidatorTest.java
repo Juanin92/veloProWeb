@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
-public class SupplierValidatorTest {
+class SupplierValidatorTest {
     @InjectMocks private SupplierValidator validator;
 
     //Prueba para validar proveedor no exista
