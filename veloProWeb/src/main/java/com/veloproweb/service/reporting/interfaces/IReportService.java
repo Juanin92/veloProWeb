@@ -1,6 +1,6 @@
 package com.veloproweb.service.reporting.interfaces;
 
-import com.veloproweb.model.dto.Report.*;
+import com.veloproweb.model.dto.report.*;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.veloproweb.controller.reporting;
 
-import com.veloproweb.model.dto.Report.*;
+import com.veloproweb.model.dto.report.*;
 import com.veloproweb.service.reporting.interfaces.IRecordService;
 import com.veloproweb.service.reporting.interfaces.IReportService;
 import org.springframework.beans.factory.annotation.Autowired;
