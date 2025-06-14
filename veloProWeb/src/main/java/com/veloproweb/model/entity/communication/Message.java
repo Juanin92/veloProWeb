@@ -1,6 +1,6 @@
 package com.veloproweb.model.entity.communication;
 
-import com.veloproweb.model.entity.User.User;
+import com.veloproweb.model.entity.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

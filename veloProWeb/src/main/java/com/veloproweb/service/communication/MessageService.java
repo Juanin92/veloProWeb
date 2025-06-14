@@ -5,7 +5,7 @@ import com.veloproweb.mapper.MessageMapper;
 import com.veloproweb.model.dto.communication.MessageRequestDTO;
 import com.veloproweb.model.dto.communication.MessageResponseDTO;
 import com.veloproweb.model.entity.communication.Message;
-import com.veloproweb.model.entity.User.User;
+import com.veloproweb.model.entity.user.User;
 import com.veloproweb.repository.communication.MessageRepo;
 import com.veloproweb.service.communication.interfaces.IMessageService;
 import com.veloproweb.service.user.interfaces.IUserService;
