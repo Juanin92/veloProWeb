@@ -2,7 +2,7 @@ package com.veloproweb.service.user;
 
 import com.veloproweb.exceptions.user.InvalidTokenException;
 import com.veloproweb.exceptions.user.UserAlreadyDeletedException;
-import com.veloproweb.model.entity.User.User;
+import com.veloproweb.model.entity.user.User;
 import com.veloproweb.repository.UserRepo;
 import com.veloproweb.security.service.CodeGenerator;
 import com.veloproweb.service.user.interfaces.IUserService;
