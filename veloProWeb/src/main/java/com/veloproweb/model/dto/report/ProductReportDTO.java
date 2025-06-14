@@ -1,4 +1,4 @@
-package com.veloproweb.model.dto.Report;
+package com.veloproweb.model.dto.report;
 
 import lombok.Data;
 
