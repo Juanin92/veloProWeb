@@ -20,7 +20,7 @@ public class UnitValidatorTest {
 
     //Prueba para validar una unidad de medida
     @Test
-    public void validateUnit_validExistsException(){
+    void validateUnit_validExistsException(){
         UnitProduct unit = UnitProduct.builder().build();
         UnitAlreadyExistsException e = assertThrows(UnitAlreadyExistsException.class,
                 () -> validator.validateUnitDoesNotExist(unit));
@@ -30,7 +30,7 @@ public class UnitValidatorTest {
     //Prueba para validar el formato del nombre de la unidad de medida
     @ParameterizedTest
     @ValueSource(strings = {"2 kilo ", "1 unidad"})
-    public void validateUnit_invalid(String value){
+    void validateUnit_invalid(String value){
         UnitProduct unit = UnitProduct.builder().nameUnit(value).build();
         ValidationException exception = assertThrows(ValidationException.class,
                 () -> validator.validateUnitNameFormat(unit));

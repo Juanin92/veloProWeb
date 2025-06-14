@@ -47,7 +47,7 @@ public class ProductServiceTest {
 
     //Prueba para crear un nuevo producto
     @Test
-    public void create_valid(){
+    void create_valid(){
         ProductRequestDTO dto = ProductRequestDTO.builder().description("product 1").brand(brand).unit(unit)
                 .subcategoryProduct(subcategory).category(category).build();
         Product productMapped = Product.builder().description("product 1").brand(brand).unit(unit)
@@ -77,7 +77,7 @@ public class ProductServiceTest {
 
     //Prueba para actualizar info de producto
     @Test
-    public void updateProductInfo_normalNoStockChange(){
+    void updateProductInfo_normalNoStockChange(){
         ProductUpdatedRequestDTO dto = ProductUpdatedRequestDTO.builder().id(1L).description("Sony TV 50p").comment("")
                 .salePrice(1000).stock(2).build();
         Product product = Product.builder().id(1L).description("Sony Tv").salePrice(900).stock(2).build();
@@ -99,7 +99,7 @@ public class ProductServiceTest {
         assertEquals(result.getSalePrice(), dto.getSalePrice());
     }
     @Test
-    public void updateProductInfo_StockChange(){
+    void updateProductInfo_StockChange(){
         ProductUpdatedRequestDTO dto = ProductUpdatedRequestDTO.builder().id(1L).description("Sony TV 50p")
                 .comment("Comment change stock").salePrice(1000).stock(5).build();
         Product product = Product.builder().id(1L).description("Sony Tv").salePrice(900).stock(2).build();
@@ -123,7 +123,7 @@ public class ProductServiceTest {
 
     //Prueba para actualizar un producto
     @Test
-    public void update_StockStatus_validMoreStock(){
+    void update_StockStatus_validMoreStock(){
         Product product = Product.builder().stock(10).build();
         productService.updateStockStatus(product);
 
@@ -133,7 +133,7 @@ public class ProductServiceTest {
         assertEquals(10, product.getStock());
     }
     @Test
-    public void update_StockStatus_validNonStock(){
+    void update_StockStatus_validNonStock(){
         Product product = Product.builder().stock(0).build();
         productService.updateStockStatus(product);
 
@@ -145,7 +145,7 @@ public class ProductServiceTest {
 
     //Prueba para activar un producto
     @Test
-    public void reactive_valid(){
+    void reactive_valid(){
         ProductUpdatedRequestDTO dto = ProductUpdatedRequestDTO.builder().id(1L).build();
         Product product = Product.builder().id(1L).status(false).build();
         when(productRepo.findById(dto.getId())).thenReturn(Optional.of(product));
@@ -163,7 +163,7 @@ public class ProductServiceTest {
         assertEquals(StatusProduct.NODISPONIBLE, result.getStatusProduct());
     }
     @Test
-    public void reactive_ThrowException(){
+    void reactive_ThrowException(){
         ProductUpdatedRequestDTO dto = ProductUpdatedRequestDTO.builder().id(1L).build();
         Product product = Product.builder().id(1L).status(true).build();
         when(productRepo.findById(dto.getId())).thenReturn(Optional.of(product));
@@ -179,7 +179,7 @@ public class ProductServiceTest {
 
     //Prueba para actualizar el stock después de una compra un producto
     @Test
-    public void updateStockStatusStockPurchase_valid(){
+    void updateStockStatusStockPurchase_valid(){
         Product product = Product.builder().build();
         productService.updateStockPurchase(product, 20000, 10);
         assertEquals(20000, product.getBuyPrice());
@@ -189,7 +189,7 @@ public class ProductServiceTest {
 
     //Prueba para actualizar el stock después de una venta un producto
     @Test
-    public void updateStockStatusStockSale_valid(){
+    void updateStockStatusStockSale_valid(){
         Product product = Product.builder().stock(30).build();
         productService.updateStockSale(product, 10);
         assertEquals(20, product.getStock());
@@ -198,7 +198,7 @@ public class ProductServiceTest {
 
     //Prueba para eliminar un producto
     @Test
-    public void discontinueProduct_valid(){
+    void discontinueProduct_valid(){
         ProductUpdatedRequestDTO dto = ProductUpdatedRequestDTO.builder().id(1L).build();
         Product product = Product.builder().id(1L).status(true).build();
         when(productRepo.findById(dto.getId())).thenReturn(Optional.of(product));
@@ -217,7 +217,7 @@ public class ProductServiceTest {
         assertEquals(StatusProduct.DESCONTINUADO, result.getStatusProduct());
     }
     @Test
-    public void discontinueProduct_ThrowException(){
+    void discontinueProduct_ThrowException(){
         ProductUpdatedRequestDTO dto = ProductUpdatedRequestDTO.builder().id(1L).build();
         Product product = Product.builder().id(1L).status(false).build();
         when(productRepo.findById(dto.getId())).thenReturn(Optional.of(product));
@@ -232,14 +232,14 @@ public class ProductServiceTest {
 
     //Prueba para obtener todos los productos
     @Test
-    public void getAll_valid(){
+    void getAll_valid(){
         productService.getAll();
         verify(productRepo).findAll();
     }
 
     //Prueba para obtener producto por ID
     @Test
-    public void getProductById_valid(){
+    void getProductById_valid(){
         Product product = Product.builder().id(1L).status(true).build();
         when(productRepo.findById(product.getId())).thenReturn(Optional.of(product));
         productService.getProductById(product.getId());
@@ -248,7 +248,7 @@ public class ProductServiceTest {
 
     //Prueba para actualizar el stock y reserva de un producto después de un despacho
     @Test
-    public void updateStockStatusStockAndReserveDispatch_validSuccess(){
+    void updateStockStatusStockAndReserveDispatch_validSuccess(){
         Product product = Product.builder().stock(30).reserve(0).build();
         productService.updateStockAndReserveDispatch(product, 10, true);
         assertEquals(20, product.getStock());
@@ -256,7 +256,7 @@ public class ProductServiceTest {
         verify(productRepo).save(product);
     }
     @Test
-    public void updateStockStatusStockAndReserveDispatch_validNoSuccess(){
+    void updateStockStatusStockAndReserveDispatch_validNoSuccess(){
         Product product = Product.builder().stock(30).reserve(10).build();
         productService.updateStockAndReserveDispatch(product, 10, false);
         assertEquals(40, product.getStock());

@@ -31,7 +31,7 @@ public class KardexServiceTest {
 
     //Prueba para crear un registro
     @Test
-    public void addKardex_valid(){
+    void addKardex_valid(){
         UserDetails userDetails = mock(UserDetails.class);
         when(userDetails.getUsername()).thenReturn("usernameTest");
         Product product = Product.builder().id(1L).description("Product Test").build();
@@ -58,7 +58,7 @@ public class KardexServiceTest {
 
     //Prueba para obtener todos los registros
     @Test
-    public void getAll_valid(){
+    void getAll_valid(){
         Kardex kardex = Kardex.builder().id(1L).movementsType(MovementsType.AJUSTE)
                 .user(User.builder().name("John").surname("Doe").build()).build();
         Kardex kardex2 = Kardex.builder().id(2L).movementsType(MovementsType.ENTRADA).build();
@@ -79,7 +79,7 @@ public class KardexServiceTest {
 
     //Prueba para obtener un registro de movimiento de un producto desde una fecha
     @Test
-    public void getProductMovementsSinceDate_valid(){
+    void getProductMovementsSinceDate_valid(){
         LocalDate days = LocalDate.now().minusDays(90);
         Product product = Product.builder().id(1L).description("TV").build();
         Kardex entry = Kardex.builder().product(product).movementsType(MovementsType.ENTRADA)

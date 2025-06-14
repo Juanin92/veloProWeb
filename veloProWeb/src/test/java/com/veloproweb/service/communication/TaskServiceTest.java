@@ -32,7 +32,7 @@ public class TaskServiceTest {
 
     //Prueba para obtener una lista de tareas de un usuario
     @Test
-    public void getTaskByUser(){
+    void getTaskByUser(){
         User user = User.builder().id(1L).username("johnny").name("John").surname("Doe").build();
         Task task = Task.builder().id(1L).user(user).status(true).description("Task1").created(LocalDate.now()).build();
         Task task2 = Task.builder().id(2L).user(user).status(true).description("Task").created(LocalDate.now()).build();
@@ -56,7 +56,7 @@ public class TaskServiceTest {
 
     //Prueba para crear una tarea a un usuario
     @Test
-    public void createTask(){
+    void createTask(){
         TaskRequestDTO dto = TaskRequestDTO.builder().description("test task").user("johnny").build();
         User user = User.builder().id(1L).username("johnny").name("John").surname("Doe").build();
         when(userService.getUserByUsername(dto.getUser())).thenReturn(user);
@@ -79,7 +79,7 @@ public class TaskServiceTest {
 
     //Prueba para dejar como completa una tarea
     @Test
-    public void completeTask(){
+    void completeTask(){
         Task task = Task.builder().id(1L).status(true).build();
         when(taskRepo.findById(1L)).thenReturn(Optional.of(task));
 
@@ -93,7 +93,7 @@ public class TaskServiceTest {
         assertFalse(result.isStatus());
     }
     @Test
-    public void completeTask_taskNotFound(){
+    void completeTask_taskNotFound(){
         when(taskRepo.findById(6L)).thenReturn(Optional.empty());
         TaskNotFoundException e = assertThrows(TaskNotFoundException.class,() -> taskService.completeTask(6L));
 

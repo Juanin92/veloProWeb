@@ -40,7 +40,7 @@ public class AlertServiceTest {
 
     //Prueba para obtener todos los registros de alertas
     @Test
-    public void getAlerts(){
+    void getAlerts(){
         Alert alert = Alert.builder().id(1L).created(LocalDate.now()).description("Alert 1")
                 .status(AlertStatus.ALERT).product(product).build();
         Alert alert2 = Alert.builder().id(2L).created(LocalDate.now()).description("Alert 2")
@@ -55,7 +55,7 @@ public class AlertServiceTest {
 
     //Prueba para crear una alerta
     @Test
-    public void createAlert(){
+    void createAlert(){
         ArgumentCaptor<Alert> alertCaptor = ArgumentCaptor.forClass(Alert.class);
         alertService.createAlert(product, "Description test");
 
@@ -70,7 +70,7 @@ public class AlertServiceTest {
 
     //Prueba para manejar el estado de la alerta
     @Test
-    public void updateAlertStatus_validAlertToCheck(){
+    void updateAlertStatus_validAlertToCheck(){
         Alert alert = Alert.builder().id(1L).created(LocalDate.now()).description("Alert 1")
                 .status(AlertStatus.ALERT).product(product).build();
         when(alertRepo.findById(1L)).thenReturn(Optional.of(alert));
@@ -88,7 +88,7 @@ public class AlertServiceTest {
         assertEquals(AlertStatus.CHECKED, resultAlert.getStatus());
     }
     @Test
-    public void updateAlertStatus_validPendingToCheck(){
+    void updateAlertStatus_validPendingToCheck(){
         Alert alert = Alert.builder().id(1L).created(LocalDate.now()).description("Alert 1")
                 .status(AlertStatus.PENDING).product(product).build();
         when(alertRepo.findById(1L)).thenReturn(Optional.of(alert));
@@ -106,7 +106,7 @@ public class AlertServiceTest {
         assertEquals(AlertStatus.CHECKED, resultAlert.getStatus());
     }
     @Test
-    public void updateAlertStatus_validAlertToPending(){
+    void updateAlertStatus_validAlertToPending(){
         Alert alert = Alert.builder().id(1L).created(LocalDate.now()).description("Alert 1")
                 .status(AlertStatus.ALERT).product(product).build();
         when(alertRepo.findById(1L)).thenReturn(Optional.of(alert));
@@ -124,7 +124,7 @@ public class AlertServiceTest {
         assertEquals(AlertStatus.PENDING, resultAlert.getStatus());
     }
     @Test
-    public void updateAlertStatus_alertNotFound(){
+    void updateAlertStatus_alertNotFound(){
         when(alertRepo.findById(5L)).thenReturn(Optional.empty());
         AlertNotFoundException e = assertThrows(AlertNotFoundException.class,
                 () -> alertService.updateAlertStatus(5L, AlertStatus.CHECKED, userDetails));
@@ -134,7 +134,7 @@ public class AlertServiceTest {
         assertEquals("Alerta no encontrada", e.getMessage());
     }
     @Test
-    public void updateAlertStatus_invalidAlertAction(){
+    void updateAlertStatus_invalidAlertAction(){
         Alert alert = Alert.builder().id(1L).created(LocalDate.now()).description("Alert 1")
                 .status(AlertStatus.CHECKED).product(product).build();
         when(alertRepo.findById(1L)).thenReturn(Optional.of(alert));
@@ -148,7 +148,7 @@ public class AlertServiceTest {
 
     //Prueba para verificar si una alerta activa
     @Test
-    public void isAlertActive_validTrue(){
+    void isAlertActive_validTrue(){
         Alert alert = Alert.builder().id(1L).created(LocalDate.now()).description("Alert 1")
                 .status(AlertStatus.ALERT).product(product).build();
         Alert alert2 = Alert.builder().id(2L).created(LocalDate.now()).description("Alert 1")
@@ -164,7 +164,7 @@ public class AlertServiceTest {
         assertTrue(result);
     }
     @Test
-    public void isAlertActive_validFalse(){
+    void isAlertActive_validFalse(){
         List<AlertStatus> statusList = List.of(AlertStatus.ALERT, AlertStatus.PENDING);
         when(alertRepo.findByProductAndDescriptionAndStatusIn(product, "Test 1", statusList))
                 .thenReturn(List.of());

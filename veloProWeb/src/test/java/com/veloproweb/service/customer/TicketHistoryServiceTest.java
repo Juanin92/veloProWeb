@@ -50,7 +50,7 @@ public class TicketHistoryServiceTest {
 
     //Prueba para agregar un ticket al cliente
     @Test
-    public void addTicketToCustomer_valid(){
+    void addTicketToCustomer_valid(){
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("MMyy"));
         when(ticketHistoryRepo.findLastCreated()).thenReturn(ticketHistoryThird);
 
@@ -67,7 +67,7 @@ public class TicketHistoryServiceTest {
 
     //Prueba para obtener todos los tickets de un cliente
     @Test
-    public void getByCustomerId_validValues(){
+    void getByCustomerId_validValues(){
         List<TicketHistory> mockTickets =
                 Arrays.asList(ticketHistory, ticketHistoryFirst, ticketHistorySecond, ticketHistoryThird);
         when(ticketHistoryRepo.findByCustomerId(1L)).thenReturn(mockTickets);
@@ -83,7 +83,7 @@ public class TicketHistoryServiceTest {
 
     //Prueba para actualizar el estado de un ticket
     @Test
-    public void updateStatus_valid(){
+    void updateStatus_valid(){
         ticketHistoryService.updateStatus(ticketHistory);
         ArgumentCaptor<TicketHistory> ticketHistoryCaptor = ArgumentCaptor.forClass(TicketHistory.class);
 
@@ -93,7 +93,7 @@ public class TicketHistoryServiceTest {
         assertTrue(ticketHistoryCaptured.isStatus());
     }
     @Test
-    public void updateStatus_ThrowException(){
+    void updateStatus_ThrowException(){
         ticketHistory.setStatus(true);
 
         TicketAlreadyPaidException e = assertThrows(TicketAlreadyPaidException.class,
@@ -105,7 +105,7 @@ public class TicketHistoryServiceTest {
 
     //Prueba para obtener un ticket por ID
     @Test
-    public void getTicketById_valid(){
+    void getTicketById_valid(){
         when(ticketHistoryRepo.findById(1L)).thenReturn(Optional.of(ticketHistory));
 
         TicketHistory result = ticketHistoryService.getTicketById(1L);
@@ -114,7 +114,7 @@ public class TicketHistoryServiceTest {
         assertEquals(1L, result.getId());
     }
     @Test
-    public void getTicketById_invalid(){
+    void getTicketById_invalid(){
         when(ticketHistoryRepo.findById(2L)).thenReturn(Optional.empty());
 
         TicketNotFoundException e = assertThrows(TicketNotFoundException.class,

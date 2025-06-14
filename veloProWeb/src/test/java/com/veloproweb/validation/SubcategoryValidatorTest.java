@@ -19,7 +19,7 @@ public class SubcategoryValidatorTest {
 
     //Prueba para validar una subcategoría existe
     @Test
-    public void validateSubcategory_validNotExistException(){
+    void validateSubcategory_validNotExistException(){
         CategoryProduct category = CategoryProduct.builder().id(1L).name("Food").build();
         SubcategoryProduct subcategory = SubcategoryProduct.builder().id(1L).name("Milk").category(category).build();
         SubcategoryAlreadyExistsException exception = assertThrows(SubcategoryAlreadyExistsException.class,
@@ -30,7 +30,7 @@ public class SubcategoryValidatorTest {
 
     //Prueba si la subcategoría tiene una categoría asociada
     @Test
-    public void validateSubcategory_validHasCategoryException(){
+    void validateSubcategory_validHasCategoryException(){
         SubcategoryProduct subcategory = SubcategoryProduct.builder().id(1L).name("Milk").category(null).build();
         CategoryNotFoundException exception = assertThrows(CategoryNotFoundException.class,
                 () -> validator.validateSubcategoryHasCategory(subcategory));

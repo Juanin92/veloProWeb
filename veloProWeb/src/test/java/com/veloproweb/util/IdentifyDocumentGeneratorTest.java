@@ -18,38 +18,38 @@ public class IdentifyDocumentGeneratorTest {
 
     // Prueba para generar identificador para un ticket
     @Test
-    public void generateIdentifyDocumentTicket_valid(){
+    void generateIdentifyDocumentTicket_valid(){
         String document = String.format("T-%s-0001",date);
         String result = IdentifyDocumentGenerator.generateIdentifyDocumentTicket(document);
         assertEquals(String.format("T-%s-0002",date), result);
     }
     @Test
-    public void generateIdentifyDocumentTicket_FirstDocument(){
+    void generateIdentifyDocumentTicket_FirstDocument(){
         String result = IdentifyDocumentGenerator.generateIdentifyDocumentTicket(null);
         assertEquals(String.format("T-%s-0001",date), result);
     }
     @ParameterizedTest
     @ValueSource(strings = {"T_21", "TicketTest01"})
-    public void generateIdentifyDocumentTicket_DifferentFormatDocument(String document){
+    void generateIdentifyDocumentTicket_DifferentFormatDocument(String document){
         String result = IdentifyDocumentGenerator.generateIdentifyDocumentTicket(document);
         assertEquals(String.format("T-%s-0001",date), result);
     }
 
     // Prueba para generar identificador para una boleta de venta
     @Test
-    public void generateIdentifyDocumentSale_valid(){
+    void generateIdentifyDocumentSale_valid(){
         String document = String.format("BO-%s-0001",date);
         String result = IdentifyDocumentGenerator.generateIdentifyDocumentSale(document);
         assertEquals(String.format("BO-%s-0002",date), result);
     }
     @Test
-    public void generateIdentifyDocumentSale_FirstDocument(){
+    void generateIdentifyDocumentSale_FirstDocument(){
         String result = IdentifyDocumentGenerator.generateIdentifyDocumentSale(null);
         assertEquals(String.format("BO-%s-0001",date), result);
     }
     @ParameterizedTest
     @ValueSource(strings = {"BO_21", "TicketTest01"})
-    public void generateIdentifyDocumentSale_DifferentFormatDocument(String document){
+    void generateIdentifyDocumentSale_DifferentFormatDocument(String document){
         String result = IdentifyDocumentGenerator.generateIdentifyDocumentSale(document);
         assertEquals(String.format("BO-%s-0001",date), result);
     }

@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
-class CashRegisterValidatorTest {
+public class CashRegisterValidatorTest {
 
     @InjectMocks private CashRegisterValidator validator;
 

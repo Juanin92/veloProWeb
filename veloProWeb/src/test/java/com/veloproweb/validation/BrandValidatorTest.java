@@ -17,7 +17,7 @@ public class BrandValidatorTest {
 
     //Prueba para validar la existencia de una marca
     @Test
-    public void validateBrand_validException(){
+    void validateBrand_validException(){
         BrandProduct brand = BrandProduct.builder().build();
         BrandAlreadyExistsException e = assertThrows(BrandAlreadyExistsException.class,
                 () -> validator.validateBrandDoesNotExist(brand));

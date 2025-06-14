@@ -19,7 +19,7 @@ public class PurchaseValidatorTest {
 
     //Prueba para validar la existencia de una compra
     @Test
-    public void hasPurchase_valid(){
+    void hasPurchase_valid(){
         PurchaseNotFoundException exception = assertThrows(PurchaseNotFoundException.class,
                 () -> validator.hasPurchase(null));
         assertEquals("Compra no encontrada", exception.getMessage());
@@ -27,7 +27,7 @@ public class PurchaseValidatorTest {
 
     //Prueba para validar el total de la compra
     @Test
-    public void validateTotal_valid(){
+    void validateTotal_valid(){
         PurchaseDetailRequestDTO dto = PurchaseDetailRequestDTO.builder().total(1000).build();
         PurchaseDetailRequestDTO dto2 = PurchaseDetailRequestDTO.builder().total(1000).build();
 

@@ -58,7 +58,7 @@ public class CustomerServiceTest {
 
     //Pruebas de creación de clientes nuevos
     @Test
-    public void addNewCustomer_valid(){
+    void addNewCustomer_valid(){
         customerRequestDTO.setName("jose");
         customerRequestDTO.setSurname("perez");
         customer.setName("Jose");
@@ -81,7 +81,7 @@ public class CustomerServiceTest {
         assertEquals(PaymentStatus.NULO, customer.getStatus());
     }
     @Test
-    public void addNewCustomer_existingCustomer(){
+    void addNewCustomer_existingCustomer(){
         when(customerRepo.findBySimilarNameAndSurname(TextFormatter.capitalize(customerRequestDTO.getName()),
                 TextFormatter.capitalize(customerRequestDTO.getSurname()))).thenReturn(Optional.of(customer));
         doThrow(new CustomerAlreadyExistsException("Cliente Existente: Hay registro de este cliente."))
@@ -97,7 +97,7 @@ public class CustomerServiceTest {
 
     //Pruebas de actualización de clientes
     @Test
-    public void updateCustomer_valid(){
+    void updateCustomer_valid(){
         customer.setStatus(PaymentStatus.PAGADA);
         when(customerRepo.findById(customerRequestDTO.getId())).thenReturn(Optional.of(customer));
 
@@ -117,7 +117,7 @@ public class CustomerServiceTest {
         assertTrue(capturedCustomer.isAccount());
     }
     @Test
-    public void updateCustomer_ExistingCustomer(){
+    void updateCustomer_ExistingCustomer(){
         customerRequestDTO.setId(2L);
         when(customerRepo.findById(customerRequestDTO.getId())).thenReturn(Optional.empty());
 
@@ -132,7 +132,7 @@ public class CustomerServiceTest {
 
     //Prueba para obtener todos los clientes de la BD
     @Test
-    public void getAll_valid(){
+    void getAll_valid(){
         List<Customer> customers = List.of(customer);
         when(customerRepo.findAll()).thenReturn(List.of(customer));
         when(mapper.toResponseDTO(customer)).thenReturn(customerResponseDTO);
@@ -147,7 +147,7 @@ public class CustomerServiceTest {
 
     //Prueba para eliminar cliente seleccionado
     @Test
-    public void delete_valid(){
+    void delete_valid(){
         when(customerRepo.findById(customerRequestDTO.getId())).thenReturn(Optional.of(customer));
         customerService.delete(customerRequestDTO);
 
@@ -157,7 +157,7 @@ public class CustomerServiceTest {
         assertFalse(customer.isAccount());
     }
     @Test
-    public void delete_NotActiveException(){
+    void delete_NotActiveException(){
         customer.setAccount(false);
         when(customerRepo.findById(customerRequestDTO.getId())).thenReturn(Optional.of(customer));
         doThrow(new CustomerAlreadyDeletedException("Cliente ya ha sido eliminado anteriormente.")).when(validator)
@@ -170,7 +170,7 @@ public class CustomerServiceTest {
         assertEquals("Cliente ya ha sido eliminado anteriormente.", e.getMessage());
     }
     @Test
-    public void delete_HasDebtException(){
+    void delete_HasDebtException(){
         customer.setDebt(2000);
         when(customerRepo.findById(customerRequestDTO.getId())).thenReturn(Optional.of(customer));
         doThrow(new ValidationException("El cliente tiene deuda pendiente, no se puede eliminar.")).when(validator)
@@ -184,7 +184,7 @@ public class CustomerServiceTest {
 
     //Prueba para activar cliente seleccionado
     @Test
-    public void activate_valid(){
+    void activate_valid(){
         customer.setAccount(false);
         when(customerRepo.findById(customerRequestDTO.getId())).thenReturn(Optional.of(customer));
         customerService.activeCustomer(customerRequestDTO);
@@ -195,7 +195,7 @@ public class CustomerServiceTest {
         assertTrue(customer.isAccount());
     }
     @Test
-    public void activate_isActiveException(){
+    void activate_isActiveException(){
         when(customerRepo.findById(customerRequestDTO.getId())).thenReturn(Optional.of(customer));
         doThrow(new CustomerAlreadyActivatedException("El cliente tiene su cuenta activada")).when(validator)
                 .isActive(customer);
@@ -209,7 +209,7 @@ public class CustomerServiceTest {
 
     //Prueba validar el pago de la deuda
     @Test
-    public void paymentDebt_valid(){
+    void paymentDebt_valid(){
         customer.setDebt(2000);
         customerService.paymentDebt(customer, "1000");
         assertEquals(1000, customer.getDebt());
@@ -219,26 +219,26 @@ public class CustomerServiceTest {
 
     //Pruebas para asignar el estado de los clientes por deudas vigentes
     @Test
-    public void statusAssign_null(){
+    void statusAssign_null(){
         customerService.statusAssign(customer);
         assertEquals(PaymentStatus.NULO, customer.getStatus());
     }
     @Test
-    public void statusAssign_pending(){
+    void statusAssign_pending(){
         customer.setTotalDebt(2000);
         customer.setDebt(1500);
         customerService.statusAssign(customer);
         assertEquals(PaymentStatus.PENDIENTE, customer.getStatus());
     }
     @Test
-    public void statusAssign_partial(){
+    void statusAssign_partial(){
         customer.setTotalDebt(2000);
         customer.setDebt(1000);
         customerService.statusAssign(customer);
         assertEquals(PaymentStatus.PARCIAL, customer.getStatus());
     }
     @Test
-    public void statusAssign_paid(){
+    void statusAssign_paid(){
         customer.setTotalDebt(2000);
         customer.setDebt(0);
         customerService.statusAssign(customer);
@@ -247,7 +247,7 @@ public class CustomerServiceTest {
 
     //Prueba para agregar una venta al cliente
     @Test
-    public void addSaleToCustomer_valid(){
+    void addSaleToCustomer_valid(){
         customer.setTotalDebt(20000);
         customerService.addSaleToCustomer(customer);
         assertEquals(20000, customer.getDebt());
@@ -256,21 +256,21 @@ public class CustomerServiceTest {
 
     //Prueba para actualizar la deuda total del cliente
     @Test
-    public void updateTotalDebt_valid(){
+    void updateTotalDebt_valid(){
         customerService.updateTotalDebt(customer);
         verify(customerRepo).save(customer);
     }
 
     //Prueba para obtener un cliente por ID
     @Test
-    public void getCustomerByID_valid(){
+    void getCustomerByID_valid(){
         when(customerRepo.findById(1L)).thenReturn(Optional.of(customer));
         Customer result = customerService.getCustomerById(1L);
         verify(customerRepo).findById(1L);
         assertEquals(1L, result.getId());
     }
     @Test
-    public void getCustomerByID_invalid(){
+    void getCustomerByID_invalid(){
         when(customerRepo.findById(1L)).thenReturn(Optional.empty());
         CustomerNotFoundException e = assertThrows(CustomerNotFoundException.class,() ->
                 customerService.getCustomerById(1L));

@@ -36,7 +36,7 @@ public class UserServiceTest {
 
     //Prueba para crear usuario
     @Test
-    public void createUser(){
+    void createUser(){
         UserRequestDTO dto = UserRequestDTO.builder().name("john david").surname("doe").username("johnny")
                 .email("test@test.com").rut("19365567-8").role(Rol.ADMIN).build();
         when(userRepo.findByUsername(dto.getUsername())).thenReturn(Optional.empty());
@@ -69,7 +69,7 @@ public class UserServiceTest {
         assertNull(resultUser.getToken());
     }
     @Test
-    public void createUser_userExisting(){
+    void createUser_userExisting(){
         UserRequestDTO dto = UserRequestDTO.builder().name("john david").surname("doe").username("johnny")
                 .email("test@test.com").rut("19365567-8").role(Rol.ADMIN).build();
         when(userRepo.findByUsername(dto.getUsername())).thenReturn(Optional.empty());
@@ -89,7 +89,7 @@ public class UserServiceTest {
         assertEquals("Usuario ya registrado", e.getMessage());
     }
     @Test
-    public void createUser_usernameIsNotAvailable(){
+    void createUser_usernameIsNotAvailable(){
         UserRequestDTO dto = UserRequestDTO.builder().name("john david").surname("doe").username("johnny")
                 .email("test@test.com").rut("19365567-8").role(Rol.ADMIN).build();
         User user = User.builder().name("John David").surname("Doe").username("johnny")
@@ -112,7 +112,7 @@ public class UserServiceTest {
         assertEquals("El nombre de usuario ya está en uso", e.getMessage());
     }
     @Test
-    public void createUser_masterRole(){
+    void createUser_masterRole(){
         UserRequestDTO dto = UserRequestDTO.builder().name("john david").surname("doe").username("johnny")
                 .email("test@test.com").rut("19365567-8").role(Rol.MASTER).build();
         doThrow(new UserMasterRoleSelectedException("El rol maestro ya ha sido asignado")).when(validator)
@@ -133,7 +133,7 @@ public class UserServiceTest {
 
     //Prueba para actualizar usuario seleccionado
     @Test
-    public void updateUser(){
+    void updateUser(){
         UserRequestDTO dto = UserRequestDTO.builder().name("john david").surname("doe").username("johnny")
                 .email("test@example.cl").rut("19365567-8").role(Rol.MASTER).build();
         User existingUser = User.builder().name("John David").surname("Doe").username("johnny")
@@ -159,7 +159,7 @@ public class UserServiceTest {
         assertEquals(dto.getEmail(), updateUser.getEmail());
     }
     @Test
-    public void updateUser_usernameExisting(){
+    void updateUser_usernameExisting(){
         UserRequestDTO dto = UserRequestDTO.builder().name("john david").surname("doe").username("johnny")
                 .email("test@example.cl").rut("19365567-8").role(Rol.MASTER).build();
         User existingUser = User.builder().name("John David").surname("Doe").username("johnny")
@@ -184,7 +184,7 @@ public class UserServiceTest {
         assertEquals("El nombre de usuario ya está en uso por otro usuario", e.getMessage());
     }
     @Test
-    public void updateUser_userNotExisting(){
+    void updateUser_userNotExisting(){
         UserRequestDTO dto = UserRequestDTO.builder().name("john david").surname("doe").username("johnny")
                 .email("test@example.cl").rut("19365567-8").role(Rol.MASTER).build();
         when(userRepo.findByRut(dto.getRut())).thenReturn(Optional.empty());
@@ -204,7 +204,7 @@ public class UserServiceTest {
 
     //Prueba para actualizar los datos de un usuario
     @Test
-    public void updateOwnData(){
+    void updateOwnData(){
         UpdateUserDTO dto = UpdateUserDTO.builder().username("johnnie").email("test@example.com")
                 .currentPassword(null).newPassword(null).confirmPassword(null).build();
         User existingUser = User.builder().name("John David").surname("Doe").username("johnny")
@@ -232,7 +232,7 @@ public class UserServiceTest {
         assertEquals("test@example.com", updatedUser.getEmail());
     }
     @Test
-    public void updateOwnData_changePasswordWithToken(){
+    void updateOwnData_changePasswordWithToken(){
         UpdateUserDTO dto = UpdateUserDTO.builder().username("johnnie").email("test@example.com")
                 .currentPassword("Test-Token").newPassword("johnny1234").confirmPassword("johnny1234").build();
         User existingUser = User.builder().name("John David").surname("Doe").username("johnny")
@@ -271,7 +271,7 @@ public class UserServiceTest {
         assertNull(updatedUser.getToken());
     }
     @Test
-    public void updateOwnData_normalChangePassword(){
+    void updateOwnData_normalChangePassword(){
         UpdateUserDTO dto = UpdateUserDTO.builder().username("johnnie").email("test@example.com")
                 .currentPassword("johnny19365").newPassword("johnny1234").confirmPassword("johnny1234").build();
         User existingUser = User.builder().name("John David").surname("Doe").username("johnny")
@@ -309,7 +309,7 @@ public class UserServiceTest {
         assertNull(updatedUser.getToken());
     }
     @Test
-    public void updateOwnData_invalidCredentials(){
+    void updateOwnData_invalidCredentials(){
         UpdateUserDTO dto = UpdateUserDTO.builder().username("johnnie").email("test@example.com")
                 .currentPassword("johnny19").newPassword("johnny1234").confirmPassword("johnny1234").build();
         User existingUser = User.builder().name("John David").surname("Doe").username("johnny")
@@ -341,7 +341,7 @@ public class UserServiceTest {
         assertEquals("La contraseña actual o el código de recuperación son incorrectos", e.getMessage());
     }
     @Test
-    public void updateOwnData_passwordNotMatch(){
+    void updateOwnData_passwordNotMatch(){
         UpdateUserDTO dto = UpdateUserDTO.builder().username("johnnie").email("test@example.com")
                 .currentPassword("johnny19365").newPassword("johnny5467").confirmPassword("johnny1234").build();
         User existingUser = User.builder().name("John David").surname("Doe").username("johnny")
@@ -375,7 +375,7 @@ public class UserServiceTest {
         assertEquals("Las contraseñas nuevas no coinciden", e.getMessage());
     }
     @Test
-    public void updateUserData_OwnNotFound(){
+    void updateUserData_OwnNotFound(){
         when(userRepo.findByUsername("johnny")).thenReturn(Optional.empty());
         UserNotFoundException e = assertThrows(UserNotFoundException.class,() ->
                 userService.updateOwnData(any(UpdateUserDTO.class), "johnny"));
@@ -391,7 +391,7 @@ public class UserServiceTest {
         assertEquals("Usuario no encontrado", e.getMessage());
     }
     @Test
-    public void updateUserData_OwnIsDeleted(){
+    void updateUserData_OwnIsDeleted(){
         User existingUser = User.builder().name("John David").surname("Doe").username("johnny")
                 .email("test@test.com").rut("19365567-8").role(Rol.ADMIN).password("johnny19365").date(LocalDate.now())
                 .token(null).status(false).build();
@@ -412,7 +412,7 @@ public class UserServiceTest {
         assertEquals("Usuario ya está inactivo", e.getMessage());
     }
     @Test
-    public void updateOwnData_usernameExists(){
+    void updateOwnData_usernameExists(){
         UpdateUserDTO dto = UpdateUserDTO.builder().username("johnnie").email("test@example.com")
                 .currentPassword(null).newPassword(null).confirmPassword(null).build();
         User existingUser = User.builder().name("John David").surname("Doe").username("johnny")
@@ -438,7 +438,7 @@ public class UserServiceTest {
         assertEquals("El nombre de usuario ya está en uso", e.getMessage());
     }
     @Test
-    public void updateOwnData_emailExists(){
+    void updateOwnData_emailExists(){
         UpdateUserDTO dto = UpdateUserDTO.builder().username("johnnie").email("test@example.com")
                 .currentPassword(null).newPassword(null).confirmPassword(null).build();
         User existingUser = User.builder().name("John David").surname("Doe").username("johnny")
@@ -466,7 +466,7 @@ public class UserServiceTest {
 
     //Prueba para eliminar/desactivar un usuario
     @Test
-    public void deleteUser(){
+    void deleteUser(){
         UserRequestDTO dto = UserRequestDTO.builder().name("john david").surname("doe").username("johnny")
                 .email("test@example.cl").rut("19365567-8").role(Rol.ADMIN).build();
         User user = User.builder().name("John David").surname("Doe").username("johnny")
@@ -485,7 +485,7 @@ public class UserServiceTest {
         assertFalse(user.isStatus());
     }
     @Test
-    public void deleteUser_userAlreadyDeleted(){
+    void deleteUser_userAlreadyDeleted(){
         UserRequestDTO dto = UserRequestDTO.builder().name("john david").surname("doe").username("johnny")
                 .email("test@example.cl").rut("19365567-8").role(Rol.ADMIN).build();
         User user = User.builder().name("John David").surname("Doe").username("johnny")
@@ -506,7 +506,7 @@ public class UserServiceTest {
 
     //Prueba para activar un usuario
     @Test
-    public void activateUser(){
+    void activateUser(){
         UserRequestDTO dto = UserRequestDTO.builder().name("john david").surname("doe").username("johnny")
                 .email("test@example.cl").rut("19365567-8").role(Rol.ADMIN).build();
         User user = User.builder().name("John David").surname("Doe").username("johnny")
@@ -525,7 +525,7 @@ public class UserServiceTest {
         assertTrue(user.isStatus());
     }
     @Test
-    public void activateUser_validUserActivated(){
+    void activateUser_validUserActivated(){
         UserRequestDTO dto = UserRequestDTO.builder().name("john david").surname("doe").username("johnny")
                 .email("test@example.cl").rut("19365567-8").role(Rol.ADMIN).build();
         User user = User.builder().name("John David").surname("Doe").username("johnny")
@@ -546,7 +546,7 @@ public class UserServiceTest {
 
     //Prueba para obtener todos los usuarios registrados
     @Test
-    public void getAllUsers(){
+    void getAllUsers(){
         User user = User.builder().name("John David").surname("Doe").username("johnny")
                 .email("test@test.com").rut("19365567-8").role(Rol.ADMIN).password("johnny19365").date(LocalDate.now())
                 .token(null).status(true).build();
@@ -570,7 +570,7 @@ public class UserServiceTest {
 
     //Prueba para obtener la información de un usuario
     @Test
-    public void getUserProfile_valid(){
+    void getUserProfile_valid(){
         User user = User.builder().username("johnny").rut("12345678-9").name("John").surname("Doe")
                 .email("test@test.com").status(true).date(LocalDate.now()).role(Rol.ADMIN).build();
         when(userRepo.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
@@ -591,7 +591,7 @@ public class UserServiceTest {
 
     //Prueba para obtener un usuario por su username
     @Test
-    public void getUserByUsername(){
+    void getUserByUsername(){
         User user = User.builder().username("johnny").rut("12345678-9").name("John").surname("Doe")
                 .email("test@test.com").status(true).date(LocalDate.now()).role(Rol.ADMIN).build();
         when(userRepo.findByUsername("johnny")).thenReturn(Optional.of(user));
@@ -603,7 +603,7 @@ public class UserServiceTest {
         assertEquals(user.getUsername(), result.getUsername());
     }
     @Test
-    public void getUserWithUsername_userNotFound(){
+    void getUserWithUsername_userNotFound(){
         when(userRepo.findByUsername("johnny")).thenReturn(Optional.empty());
 
         UserNotFoundException e = assertThrows(UserNotFoundException.class,

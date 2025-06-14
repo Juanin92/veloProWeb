@@ -48,7 +48,7 @@ public class CashRegisterServiceTest {
 
     //Prueba para registrar una apertura de la caja
     @Test
-    public void openRegister(){
+    void openRegister(){
         when(userService.getUserByUsername("johnny")).thenReturn(user);
         doNothing().when(validator).validateRoleCanRegister(false);
         doNothing().when(validator).validateAmount(1000);
@@ -72,7 +72,7 @@ public class CashRegisterServiceTest {
         assertEquals(user, savedRegister.getUser());
     }
     @Test
-    public void openRegister_roleException(){
+    void openRegister_roleException(){
         User wareHouseUser = User.builder().id(1L).name("John").surname("Doe").username("johnny")
                 .role(Rol.WAREHOUSE).build();
         when(userService.getUserByUsername("johnny")).thenReturn(wareHouseUser);
@@ -88,7 +88,7 @@ public class CashRegisterServiceTest {
         assertEquals("Este rol no puede operar con registros de caja", e.getMessage());
     }
     @Test
-    public void openRegister_amountException(){
+    void openRegister_amountException(){
         when(userService.getUserByUsername("johnny")).thenReturn(user);
         doNothing().when(validator).validateRoleCanRegister(false);
         doThrow(new InvalidAmountCashRegisterException("El monto de la caja debe ser mayor a 0"))
@@ -105,7 +105,7 @@ public class CashRegisterServiceTest {
 
     //Prueba para crear un registro de cierre de caja
     @Test
-    public void closeRegister(){
+    void closeRegister(){
         CashRegisterRequestDTO dto = CashRegisterRequestDTO.builder().amountClosingCash(1500).amountClosingPos(500)
                 .comment("Test comment").build();
         when(userService.getUserByUsername("johnny")).thenReturn(user);
@@ -130,7 +130,7 @@ public class CashRegisterServiceTest {
         assertFalse(savedRegister.isAlert());
     }
     @Test
-    public void closeRegister_alert(){
+    void closeRegister_alert(){
         CashRegisterRequestDTO dto = CashRegisterRequestDTO.builder().amountClosingCash(1500).amountClosingPos(500)
                 .comment("error Test comment").build();
         when(userService.getUserByUsername("johnny")).thenReturn(user);
@@ -155,7 +155,7 @@ public class CashRegisterServiceTest {
         assertTrue(savedRegister.isAlert());
     }
     @Test
-    public void closeRegister_differentOpeningAndClosingAmount(){
+    void closeRegister_differentOpeningAndClosingAmount(){
         CashRegisterRequestDTO dto = CashRegisterRequestDTO.builder().amountClosingCash(1500).amountClosingPos(500)
                 .comment("Test comment").build();
         when(userService.getUserByUsername("johnny")).thenReturn(user);
@@ -181,7 +181,7 @@ public class CashRegisterServiceTest {
         assertTrue(savedRegister.isAlert());
     }
     @Test
-    public void closeRegisterClosing_cashRegisterDoesNotExists(){
+    void closeRegisterClosing_cashRegisterDoesNotExists(){
         CashRegisterRequestDTO dto = CashRegisterRequestDTO.builder().amountClosingCash(1500).amountClosingPos(500)
                 .comment("Test comment").build();
         when(userService.getUserByUsername("johnny")).thenReturn(user);
@@ -201,7 +201,7 @@ public class CashRegisterServiceTest {
         assertEquals("No hay registro de apertura válido.", e.getMessage());
     }
     @Test
-    public void closeRegisterClosing_dateNotMatch(){
+    void closeRegisterClosing_dateNotMatch(){
         CashRegisterRequestDTO dto = CashRegisterRequestDTO.builder().amountClosingCash(1500).amountClosingPos(500)
                 .comment("Test comment").build();
         when(userService.getUserByUsername("johnny")).thenReturn(user);
@@ -225,7 +225,7 @@ public class CashRegisterServiceTest {
 
     //Prueba para obtener lista de cashRegister
     @Test
-    public void getCashRegisters(){
+    void getCashRegisters(){
         CashRegister cashRegister = CashRegister.builder().user(user).amountOpening(1000).amountClosingCash(1500)
                 .amountClosingPos(5000).status("CLOSED").alert(false).build();
         CashRegister cashRegister2 = CashRegister.builder().user(user).amountOpening(1000).amountClosingCash(100)
@@ -241,7 +241,7 @@ public class CashRegisterServiceTest {
 
     //Prueba para actualizar los montos del registro existente
     @Test
-    public void updateRegister(){
+    void updateRegister(){
         CashRegisterRequestDTO dto = CashRegisterRequestDTO.builder().id(1L).amountClosingCash(1000)
                 .amountClosingPos(5000).amountOpening(500).build();
         CashRegister cashRegister = CashRegister.builder().id(1L).build();
@@ -259,7 +259,7 @@ public class CashRegisterServiceTest {
         assertEquals(5000, updatedRegister.getAmountClosingPos());
     }
     @Test
-    public void updateRegister_registerNotFound(){
+    void updateRegister_registerNotFound(){
         CashRegisterRequestDTO dto = CashRegisterRequestDTO.builder().id(1L).build();
         when(cashRegisterRepo.findById(1L)).thenReturn(Optional.empty());
 
@@ -274,7 +274,7 @@ public class CashRegisterServiceTest {
 
     //Prueba para verificar si un usuario tiene un registro abierto en la fecha actual
     @Test
-    public void hasOpenRegisterOnDate_true(){
+    void hasOpenRegisterOnDate_true(){
         when(userRepo.findByUsername("johnny")).thenReturn(Optional.of(user));
         when(cashRegisterRepo.existsOpenRegisterByUserAndDate(user.getId(), LocalDate.now())).thenReturn(true);
 
@@ -286,7 +286,7 @@ public class CashRegisterServiceTest {
         assertTrue(result);
     }
     @Test
-    public void hasOpenRegisterOnDate_false(){
+    void hasOpenRegisterOnDate_false(){
         when(userRepo.findByUsername("johnny")).thenReturn(Optional.of(user));
         when(cashRegisterRepo.existsOpenRegisterByUserAndDate(user.getId(), LocalDate.now())).thenReturn(false);
 
@@ -298,7 +298,7 @@ public class CashRegisterServiceTest {
         assertFalse(result);
     }
     @Test
-    public void hasOpenRegisterOnDate_NoUserFound(){
+    void hasOpenRegisterOnDate_NoUserFound(){
         when(userRepo.findByUsername("johnny")).thenReturn(Optional.empty());
 
         boolean result = cashRegisterService.hasOpenRegisterOnDate("johnny");

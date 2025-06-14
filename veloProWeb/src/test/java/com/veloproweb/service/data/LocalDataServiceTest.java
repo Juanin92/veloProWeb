@@ -25,7 +25,7 @@ public class LocalDataServiceTest {
 
     //Prueba para actualizar los datos
     @Test
-    public void updateData(){
+    void updateData(){
         LocalDataDTO dto = LocalDataDTO.builder().name("newName").phone("+569 12345678").address("newAddress")
                 .email("test@test.com").emailSecurityApp(null).build();
         LocalData data = LocalData.builder().id(1L).name("TestName").phone("+569 12345678").email("test@test.com")
@@ -44,7 +44,7 @@ public class LocalDataServiceTest {
         assertEquals(data.getEmailSecurityApp(), resultData.getEmailSecurityApp());
     }
     @Test
-    public void updateData_emailSecurityAppChange(){
+    void updateData_emailSecurityAppChange(){
         LocalDataDTO dto = LocalDataDTO.builder().name("newName").phone("+569 12345678").address("newAddress")
                 .email("test@test.com").emailSecurityApp("TestCodeApp").build();
         LocalData data = LocalData.builder().id(1L).name("TestName").phone("+569 12345678").email("test@test.com")
@@ -63,7 +63,7 @@ public class LocalDataServiceTest {
         assertEquals(dto.getEmailSecurityApp(), resultData.getEmailSecurityApp());
     }
     @Test
-    public void updateData_DataNotFound(){
+    void updateData_DataNotFound(){
         LocalDataDTO dto = LocalDataDTO.builder().name("newName").phone("+569 12345678").address("newAddress")
                 .email("test@test.com").emailSecurityApp(null).build();
         doThrow(new LocalDataNotFoundException("No se encontró la data")).when(localDataRepo).findById(1L);
@@ -79,7 +79,7 @@ public class LocalDataServiceTest {
 
     //Prueba para obtener datos
     @Test
-    public void getData(){
+    void getData(){
         LocalData data = LocalData.builder().id(1L).name("TestName").address("TestAddress").phone("+569 12345678")
                 .email("test@test.com").emailSecurityApp("testCode").build();
         when(localDataRepo.findById(1L)).thenReturn(Optional.of(data));
@@ -91,7 +91,7 @@ public class LocalDataServiceTest {
         assertEquals(data.getName(), result.getName());
     }
     @Test
-    public void getData_emptyValue(){
+    void getData_emptyValue(){
         when(localDataRepo.findById(1L)).thenReturn(Optional.empty());
 
         LocalDataDTO result = localDataService.getData();
@@ -107,7 +107,7 @@ public class LocalDataServiceTest {
 
     //Prueba para obtener datos para enviar por email
     @Test
-    public void getDataToEmail(){
+    void getDataToEmail(){
         LocalData data = LocalData.builder().id(1L).name("TestName").address("TestAddress").phone("+569 12345678")
                 .email("test@test.com").emailSecurityApp("testCode").build();
         when(localDataRepo.findById(1L)).thenReturn(Optional.of(data));
@@ -118,7 +118,7 @@ public class LocalDataServiceTest {
         assertEquals(data.getName(), result.getName());
     }
     @Test
-    public void getDataToEmail_DataNotFound(){
+    void getDataToEmail_DataNotFound(){
         when(localDataRepo.findById(1L)).thenReturn(Optional.empty());
 
         LocalDataNotFoundException e = assertThrows(LocalDataNotFoundException.class,

@@ -34,7 +34,7 @@ public class CustomerValidatorTest {
 
     //Prueba para saber la existencia de un cliente en la DB
     @Test
-    public void validateExistence_exception(){
+    void validateExistence_exception(){
         CustomerAlreadyExistsException e = assertThrows(CustomerAlreadyExistsException.class,
                 ()-> validator.existCustomer(customer));
         assertEquals("Cliente Existente: Hay registro de este cliente.", e.getMessage());
@@ -42,7 +42,7 @@ public class CustomerValidatorTest {
     //Pruebas para validar apellido del cliente
     @ParameterizedTest
     @ValueSource(strings = {"Jackson","Doe","Perez"})
-    public void validateSurname_invalidLong(String surname){
+    void validateSurname_invalidLong(String surname){
         customer.setSurname(surname);
         ValidationException exception = assertThrows(ValidationException.class,
                 () -> validator.validateInfoCustomer(customer));
@@ -51,14 +51,14 @@ public class CustomerValidatorTest {
 
     //Prueba para validar eliminación de cliente
     @Test
-    public void validateDelete_accountException(){
+    void validateDelete_accountException(){
         customer.setAccount(false);
         CustomerAlreadyDeletedException e = assertThrows(CustomerAlreadyDeletedException.class,
                 ()-> validator.deleteCustomer(customer));
         assertEquals("Cliente ya ha sido eliminado anteriormente.", e.getMessage());
     }
     @Test
-    public void validateDelete_hasDebtException(){
+    void validateDelete_hasDebtException(){
         customer.setDebt(2000);
         ValidationException e = assertThrows(ValidationException.class,
                 ()-> validator.deleteCustomer(customer));
@@ -67,7 +67,7 @@ public class CustomerValidatorTest {
 
     //Prueba para validar activación de cliente
     @Test
-    public void validateActivate_isActiveException(){
+    void validateActivate_isActiveException(){
         CustomerAlreadyActivatedException e = assertThrows(CustomerAlreadyActivatedException.class,
                 ()-> validator.isActive(customer));
         assertEquals("El cliente tiene su cuenta activada", e.getMessage());
@@ -75,7 +75,7 @@ public class CustomerValidatorTest {
 
     //Prueba para validar email
     @Test
-    public void validateEmail_blankException(){
+    void validateEmail_blankException(){
         customer.setEmail("");
         ValidationException exception = assertThrows(ValidationException.class,
                 () -> validator.validateInfoCustomer(customer));
@@ -83,7 +83,7 @@ public class CustomerValidatorTest {
     }
     @ParameterizedTest
     @ValueSource(strings = {"test", "test@com", "test.com", "test@.com", "test@com."})
-    public void validateEmail_notMatchException(String email){
+    void validateEmail_notMatchException(String email){
         customer.setEmail(email);
         ValidationException exception = assertThrows(ValidationException.class,
                 () -> validator.validateInfoCustomer(customer));
@@ -92,20 +92,20 @@ public class CustomerValidatorTest {
 
     //Pruebas para validar el monto del pago de un abono asociado a un cliente
     @Test
-    public void validateValuePayment_valid(){
+    void validateValuePayment_valid(){
         int number = 10000;
         customer.setDebt(20000);
         validator.validateValuePayment(number, customer);
     }
     @Test
-    public void validateValuePayment_invalidNumber(){
+    void validateValuePayment_invalidNumber(){
         int number = 0;
         InvalidPaymentAmountException exception = assertThrows(InvalidPaymentAmountException.class,
                 () -> validator.validateValuePayment(number, customer));
         assertEquals("El monto no puede ser menor a 0.", exception.getMessage());
     }
     @Test
-    public void validateValuePayment_invalidDebt(){
+    void validateValuePayment_invalidDebt(){
         int number = 20000;
         customer.setDebt(1000);
         InvalidPaymentAmountException exception = assertThrows(InvalidPaymentAmountException.class,

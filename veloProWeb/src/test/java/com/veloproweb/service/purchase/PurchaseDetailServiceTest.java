@@ -36,7 +36,7 @@ public class PurchaseDetailServiceTest {
 
     //Prueba para crear un detalle de compra
     @Test
-    public void createPurchase_Detail_valid(){
+    void createPurchase_Detail_valid(){
         Purchase purchase = Purchase.builder().id(1L).documentType("Factura").document("F-100").build();
         doNothing().when(validator).hasPurchase(purchase);
         PurchaseDetailRequestDTO detail = PurchaseDetailRequestDTO.builder().idPurchase(1L).idProduct(1L)

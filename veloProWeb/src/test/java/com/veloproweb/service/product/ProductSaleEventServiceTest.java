@@ -38,7 +38,7 @@ public class ProductSaleEventServiceTest {
 
     //Prueba para el manejo de creación de un registro de un kardex
     @Test
-    public void handleCreateRegister_valid(){
+    void handleCreateRegister_valid(){
         productEventService.handleCreateRegister(product, "Test comment", userDetails);
         verify(kardexService, times(1)).addKardex(userDetails, product, 0,
                 "Test comment", MovementsType.AJUSTE);
@@ -46,7 +46,7 @@ public class ProductSaleEventServiceTest {
 
     //Prueba para cuando el cambio de stock ha cambiado
     @Test
-    public void isChangeStockOriginalValue_valid(){
+    void isChangeStockOriginalValue_valid(){
         productEventService.isChangeStockOriginalValue(product, 10, dto, userDetails);
         String comment = String.format("%s - stock original: %s, stock nuevo: %s", dto.getComment(),
                 10, dto.getStock());
@@ -57,7 +57,7 @@ public class ProductSaleEventServiceTest {
         verify(alertService, times(1)).createAlert(product, comment);
     }
     @Test
-    public void isChangeStockOriginalValue_NoChangeStock(){
+    void isChangeStockOriginalValue_NoChangeStock(){
         dto.setStock(10);
         productEventService.isChangeStockOriginalValue(product, 10, dto, userDetails);
 
@@ -66,7 +66,7 @@ public class ProductSaleEventServiceTest {
 
     //Prueba para manejar cuando hay alerta de producto sin stock
     @Test
-    public void handleNoStockAlert_valid(){
+    void handleNoStockAlert_valid(){
         String description = String.format("Sin Stock ( %s )", product.getDescription());
         when(alertService.isAlertActive(product, description)).thenReturn(false);
 
@@ -76,7 +76,7 @@ public class ProductSaleEventServiceTest {
         verify(alertService, times(1)).createAlert(product, description);
     }
     @Test
-    public void handleNoStockAlert_alert(){
+    void handleNoStockAlert_alert(){
         String description = String.format("Sin Stock ( %s )", product.getDescription());
         when(alertService.isAlertActive(product, description)).thenReturn(true);
 
@@ -88,7 +88,7 @@ public class ProductSaleEventServiceTest {
 
     //Prueba para manejar cuando hay alerta de stock crítico de un producto
     @Test
-    public void handleCriticalStockAlert_valid(){
+    void handleCriticalStockAlert_valid(){
         String description = String.format("Stock Crítico (%s - %s unidades)", product.getDescription(),
                 product.getStock());
         when(alertService.isAlertActive(product, description)).thenReturn(false);
@@ -99,7 +99,7 @@ public class ProductSaleEventServiceTest {
         verify(alertService, times(1)).createAlert(product, description);
     }
     @Test
-    public void handleCriticalStockAlert_alert(){
+    void handleCriticalStockAlert_alert(){
         String description = String.format("Stock Crítico (%s - %s unidades)", product.getDescription(),
                 product.getStock());
         when(alertService.isAlertActive(product, description)).thenReturn(true);
@@ -112,7 +112,7 @@ public class ProductSaleEventServiceTest {
 
     //Prueba para validar las ventas bajas de un producto
     @Test
-    public void checkLowSales_valid(){
+    void checkLowSales_valid(){
         LocalDate days = LocalDate.now().minusDays(90);
         Product product = Product.builder().id(1L).description("Product test").stock(10).buyPrice(2000).build();
         Kardex kardexEntry = Kardex.builder().id(1L).product(product).quantity(20).movementsType(MovementsType.ENTRADA)
@@ -130,7 +130,7 @@ public class ProductSaleEventServiceTest {
         verify(alertService, times(1)).createAlert(product, description);
     }
     @Test
-    public void checkLowSales_noLowSalesCondition() {
+    void checkLowSales_noLowSalesCondition() {
         LocalDate days = LocalDate.now().minusDays(90);
         Product product = Product.builder().build();
         Kardex kardexEntry = Kardex.builder().id(1L).product(product).quantity(20).movementsType(MovementsType.ENTRADA)
@@ -145,7 +145,7 @@ public class ProductSaleEventServiceTest {
         verifyNoInteractions(alertService);
     }
     @Test
-    public void checkLowSales_alertAlreadyExists() {
+    void checkLowSales_alertAlreadyExists() {
         LocalDate days = LocalDate.now().minusDays(90);
         Product product = Product.builder().build();
         Kardex kardexEntry = Kardex.builder().id(1L).product(product).quantity(20).movementsType(MovementsType.ENTRADA)

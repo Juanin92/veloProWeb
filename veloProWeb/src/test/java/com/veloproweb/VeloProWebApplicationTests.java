@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @Disabled
 @SpringBootTest
-class VeloProWebApplicationTests {
+public class VeloProWebApplicationTests {
 
 	@Test
 	void contextLoads() {

@@ -38,7 +38,7 @@ public class PurchaseServiceTest {
 
     //Prueba para crear una nueva compra
     @Test
-    public void createPurchase_valid() {
+    void createPurchase_valid() {
         Supplier supplier = Supplier.builder().id(1L).rut("12345678-9").build();
         PurchaseDetailRequestDTO detailDto = PurchaseDetailRequestDTO.builder().build();
         PurchaseRequestDTO dto = PurchaseRequestDTO.builder().supplier("12345678-9").total(1000).tax(100)
@@ -62,7 +62,7 @@ public class PurchaseServiceTest {
         assertEquals(result.getPurchaseTotal(), createdPurchase.getPurchaseTotal());
     }
     @Test
-    public void createPurchase_supplierNotFound() {
+    void createPurchase_supplierNotFound() {
         PurchaseRequestDTO dto = PurchaseRequestDTO.builder().supplier("12345678-9").total(1000).tax(100)
                 .document("F-100").documentType("Factura").build();
         doThrow(new SupplierNotFoundException("Proveedor no encontrado")).when(supplierService)
@@ -78,7 +78,7 @@ public class PurchaseServiceTest {
 
     //Prueba para obtener el total de compras realizadas
     @Test
-    public void totalPurchase_valid(){
+    void totalPurchase_valid(){
         when(purchaseRepo.count()).thenReturn(1L);
         Long totalPurchase =  purchaseService.totalPurchase();
         verify(purchaseRepo).count();
@@ -87,7 +87,7 @@ public class PurchaseServiceTest {
 
     //Prueba para obtener todas las compras
     @Test
-    public void getAllPurchases_valid(){
+    void getAllPurchases_valid(){
         Supplier supplier = Supplier.builder().id(1L).rut("12345678-9").name("Sony").build();
         Purchase purchase = Purchase.builder().supplier(supplier).purchaseTotal(1000).iva(100)
                 .document("F-100").documentType("Factura").build();

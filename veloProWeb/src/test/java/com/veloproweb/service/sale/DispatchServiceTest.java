@@ -34,7 +34,7 @@ public class DispatchServiceTest {
 
     //Prueba para obtener los registro de los despachos
     @Test
-    public void getDispatches(){
+    void getDispatches(){
         Product product = Product.builder().id(1L).description("Test Description").build();
         SaleDetail saleDetail = SaleDetail.builder().id(1L).product(product).quantity(10)
                 .total(1000).build();
@@ -59,7 +59,7 @@ public class DispatchServiceTest {
 
     //Prueba para crear registro de despacho
     @Test
-    public void createDispatch(){
+    void createDispatch(){
         SaleDetailRequestDTO detailSaleDTO = SaleDetailRequestDTO.builder().idProduct(1L).quantity(1).build();
         DispatchRequestDTO dto = DispatchRequestDTO.builder().address("Test address").comment("test comment")
                 .customer("John Doe").saleDetails(List.of(detailSaleDTO)).build();
@@ -86,7 +86,7 @@ public class DispatchServiceTest {
 
     //Prueba para manejar los estados de un despacho
     @Test
-    public void handleStatus_inRouteStatus(){
+    void handleStatus_inRouteStatus(){
         Dispatch dispatch = Dispatch.builder().id(1L).status(DispatchStatus.PREPARING).build();
         when(dispatchRepo.findById(1L)).thenReturn(Optional.of(dispatch));
 
@@ -99,7 +99,7 @@ public class DispatchServiceTest {
         assertEquals(DispatchStatus.IN_ROUTE, result.getStatus());
     }
     @Test
-    public void handleStatus_deletedStatus(){
+    void handleStatus_deletedStatus(){
         SaleDetail saleDetail = SaleDetail.builder().quantity(2).product(Product.builder().id(1L).build()).build();
         Dispatch dispatch = Dispatch.builder().id(1L).status(DispatchStatus.IN_ROUTE).saleDetails(List.of(saleDetail))
                 .build();
@@ -118,7 +118,7 @@ public class DispatchServiceTest {
         assertEquals(DispatchStatus.DELETED, result.getStatus());
     }
     @Test
-    public void handleStatus_DispatchNotFoundException() {
+    void handleStatus_DispatchNotFoundException() {
         when(dispatchRepo.findById(2L)).thenReturn(Optional.empty());
         DispatchNotFoundException e = assertThrows(DispatchNotFoundException.class,
                 () -> dispatchService.handleStatus(2L, DispatchStatus.IN_ROUTE));
@@ -128,7 +128,7 @@ public class DispatchServiceTest {
         assertEquals("No se encontró el despacho.", e.getMessage());
     }
     @Test
-    public void handleStatus_statusActionException() {
+    void handleStatus_statusActionException() {
         Dispatch dispatch = Dispatch.builder().id(1L).status(DispatchStatus.PREPARING).build();
         when(dispatchRepo.findById(1L)).thenReturn(Optional.of(dispatch));
 
@@ -142,7 +142,7 @@ public class DispatchServiceTest {
 
     //Prueba para manejar despacho dejarlo como recibido
     @Test
-    public void handleDispatchReceiveToSale_valid(){
+    void handleDispatchReceiveToSale_valid(){
         Dispatch dispatch = Dispatch.builder().id(1L).status(DispatchStatus.PREPARING).build();
         when(dispatchRepo.findById(1L)).thenReturn(Optional.of(dispatch));
 
@@ -158,7 +158,7 @@ public class DispatchServiceTest {
 
     //Prueba para obtener un despacho por su identificador
     @Test
-    public void getDispatchById_valid(){
+    void getDispatchById_valid(){
         Dispatch dispatch = Dispatch.builder().id(1L).status(DispatchStatus.PREPARING).build();
         when(dispatchRepo.findById(1L)).thenReturn(Optional.of(dispatch));
 

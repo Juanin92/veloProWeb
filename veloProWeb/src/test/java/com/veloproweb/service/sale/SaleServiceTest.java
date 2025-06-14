@@ -44,7 +44,7 @@ public class SaleServiceTest {
 
     //Prueba para crear uan nueva venta de diferentes modos de pago
     @Test
-    public void createSale_cashPayment() {
+    void createSale_cashPayment() {
         SaleDetailRequestDTO saleDetailRequestDTO = SaleDetailRequestDTO.builder().idProduct(1L).quantity(10).build();
         SaleRequestDTO saleRequestDTO = SaleRequestDTO.builder().idCustomer(null).paymentMethod(PaymentMethod.EFECTIVO)
                 .tax(100).total(1000).discount(0).comment("1000").detailList(List.of(saleDetailRequestDTO)).build();
@@ -70,7 +70,7 @@ public class SaleServiceTest {
         assertNull(saleCreated.getCustomer());
     }
     @Test
-    public void createSale_debitPayment() {
+    void createSale_debitPayment() {
         SaleDetailRequestDTO saleDetailRequestDTO = SaleDetailRequestDTO.builder().idProduct(1L).quantity(10).build();
         SaleRequestDTO saleRequestDTO = SaleRequestDTO.builder().idCustomer(null).paymentMethod(PaymentMethod.DEBITO)
                 .tax(100).total(1000).discount(0).comment("ticket number").detailList(List.of(saleDetailRequestDTO)).build();
@@ -96,7 +96,7 @@ public class SaleServiceTest {
         assertNull(saleCreated.getCustomer());
     }
     @Test
-    public void createSale_creditPayment() {
+    void createSale_creditPayment() {
         SaleDetailRequestDTO saleDetailRequestDTO = SaleDetailRequestDTO.builder().idProduct(1L).quantity(10).build();
         SaleRequestDTO saleRequestDTO = SaleRequestDTO.builder().idCustomer(null).paymentMethod(PaymentMethod.CREDITO)
                 .tax(100).total(1000).discount(0).comment("ticket number").detailList(List.of(saleDetailRequestDTO)).build();
@@ -122,7 +122,7 @@ public class SaleServiceTest {
         assertNull(saleCreated.getCustomer());
     }
     @Test
-    public void createSale_transferPayment() {
+    void createSale_transferPayment() {
         SaleDetailRequestDTO saleDetailRequestDTO = SaleDetailRequestDTO.builder().idProduct(1L).quantity(10).build();
         SaleRequestDTO saleRequestDTO = SaleRequestDTO.builder().idCustomer(null).tax(100).total(1000).discount(0)
                 .paymentMethod(PaymentMethod.TRANSFERENCIA).comment("transfer number")
@@ -149,7 +149,7 @@ public class SaleServiceTest {
         assertNull(saleCreated.getCustomer());
     }
     @Test
-    public void createSale_loanPayment() {
+    void createSale_loanPayment() {
         SaleDetailRequestDTO saleDetailRequestDTO = SaleDetailRequestDTO.builder().idProduct(1L).quantity(10).build();
         SaleRequestDTO saleRequestDTO = SaleRequestDTO.builder().idCustomer(1L).paymentMethod(PaymentMethod.PRESTAMO)
                 .tax(100).total(1000).discount(0).comment("ticket number").detailList(List.of(saleDetailRequestDTO)).build();
@@ -179,7 +179,7 @@ public class SaleServiceTest {
         assertEquals(customer, saleCreated.getCustomer());
     }
     @Test
-    public void createSale_mixedPayment() {
+    void createSale_mixedPayment() {
         SaleDetailRequestDTO saleDetailRequestDTO = SaleDetailRequestDTO.builder().idProduct(1L).quantity(10).build();
         SaleRequestDTO saleRequestDTO = SaleRequestDTO.builder().idCustomer(1L).paymentMethod(PaymentMethod.MIXTO)
                 .tax(100).total(1000).discount(0).comment("ticket number").detailList(List.of(saleDetailRequestDTO)).build();
@@ -211,7 +211,7 @@ public class SaleServiceTest {
 
     //Prueba para obtener el total de ventas realizadas
     @Test
-    public void totalSales(){
+    void totalSales(){
         when(saleRepo.count()).thenReturn(1L);
         Long totalSale =  saleService.totalSales();
         verify(saleRepo).count();
@@ -220,7 +220,7 @@ public class SaleServiceTest {
 
     //Prueba para obtener todas las ventas registradas
     @Test
-    public void getAllSales(){
+    void getAllSales(){
         Sale backUp = Sale.builder().document("Test-Doc").customer(customer).build();
         SaleDetail saleDetail = SaleDetail.builder().id(1L).sale(backUp).dispatch(null)
                 .product(Product.builder().description("Product Description").build()).build();
@@ -240,7 +240,7 @@ public class SaleServiceTest {
 
     //Prueba para obtener una venta por ID
     @Test
-    public void getSaleById(){
+    void getSaleById(){
         when(saleRepo.findById(1L)).thenReturn(Optional.of(sale));
 
         Sale result = saleService.getSaleById(1L);
@@ -248,7 +248,7 @@ public class SaleServiceTest {
         assertEquals("0001", result.getDocument());
     }
     @Test
-    public void getSaleById_NotFoundException(){
+    void getSaleById_NotFoundException(){
         when(saleRepo.findById(2L)).thenReturn(Optional.empty());
 
         SaleNotFoundException e = assertThrows(SaleNotFoundException.class, () -> saleService.getSaleById(2L));

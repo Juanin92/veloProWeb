@@ -42,13 +42,13 @@ public class PaymentCustomerValidatorTest {
 
     //Pruebas para validar abono de una deuda
     @Test
-    public void validatePayment_valid(){
+    void validatePayment_valid(){
         validator.validatePayment(amount, comment);
     }
 
     //Prueba para validar el monto del abono
     @Test
-    public void validatePaymentAmount_invalid(){
+    void validatePaymentAmount_invalid(){
         amount = "test";
         ValidationException exception = assertThrows(ValidationException.class,
                 () -> validator.validatePayment(amount, comment));
@@ -57,13 +57,13 @@ public class PaymentCustomerValidatorTest {
 
     //Pruebas para validar el comentario del proceso de abono
     @Test
-    public void validateComment_invalidEmptyValue(){
+    void validateComment_invalidEmptyValue(){
         ValidationException exception = assertThrows(ValidationException.class,
                 () -> validator.validatePayment(amount, " "));
         assertEquals("Seleccione una forma de pago.", exception.getMessage());
     }
     @Test
-    public void validateComment_invalidNullValue(){
+    void validateComment_invalidNullValue(){
         ValidationException exception = assertThrows(ValidationException.class,
                 () -> validator.validatePayment(amount, null));
         assertEquals("Seleccione una forma de pago.", exception.getMessage());
@@ -71,12 +71,12 @@ public class PaymentCustomerValidatorTest {
 
     //Prueba para validar lista de boletas seleccionadas
     @Test
-    public void validateTickets_valid(){
+    void validateTickets_valid(){
         List<TicketHistory> tickets = List.of(ticketHistory);
         validator.validateTickets(tickets);
     }
     @Test
-    public void validateTickets_validException(){
+    void validateTickets_validException(){
         List<TicketHistory> tickets = Collections.emptyList();
         NoTicketSelectedException e = assertThrows(NoTicketSelectedException.class,
                 () -> validator.validateTickets(tickets));
@@ -85,11 +85,11 @@ public class PaymentCustomerValidatorTest {
 
     //Prueba para validar monto de abono no exceda la deuda
     @Test
-    public void validatePaymentNotExceedDebt_valid(){
+    void validatePaymentNotExceedDebt_valid(){
         validator.validatePaymentNotExceedDebt(1000, 5000);
     }
     @Test
-    public void validatePaymentNotExceedDebt_validException(){
+    void validatePaymentNotExceedDebt_validException(){
         InvalidPaymentAmountException e = assertThrows(InvalidPaymentAmountException.class,
                 () -> validator.validatePaymentNotExceedDebt(5000, 1000));
         assertEquals("El monto supera el valor de la deuda.", e.getMessage());
@@ -97,12 +97,12 @@ public class PaymentCustomerValidatorTest {
 
     //Prueba para validar monto de abono similar al total de boletas seleccionadas
     @Test
-    public void validatePaymentsForMultipleTickets_valid(){
+    void validatePaymentsForMultipleTickets_valid(){
         List<TicketHistory> tickets = List.of(ticketHistory);
         validator.validateExactPaymentForMultipleTickets(1000, tickets);
     }
     @Test
-    public void validatePaymentsForMultipleTickets_validException(){
+    void validatePaymentsForMultipleTickets_validException(){
         List<TicketHistory> tickets = List.of(ticketHistory);
         InvalidPaymentAmountException e = assertThrows(InvalidPaymentAmountException.class,
                 () -> validator.validateExactPaymentForMultipleTickets(5000, tickets));

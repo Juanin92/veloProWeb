@@ -33,7 +33,7 @@ public class ProductScheduledTasksTest {
 
     //Prueba para verificar las alertas creadas o cuáles se deben crear para cada situación
     @Test
-    public void checkAndCreateAlertsByProduct_valid(){
+    void checkAndCreateAlertsByProduct_valid(){
         when(productRepo.findOutOfStock()).thenReturn(List.of(product3, product5));
         when(productRepo.findCriticalStock()).thenReturn(List.of(product2 ,product4));
 

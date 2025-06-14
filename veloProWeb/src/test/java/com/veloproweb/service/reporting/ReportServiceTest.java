@@ -37,7 +37,7 @@ public class ReportServiceTest {
     //Prueba para obtener una lista de DailySaleCountDTO
     @ParameterizedTest
     @CsvSource({"2024-12-12","2024-11-12","2024-10-12","2024-07-12","2024-01-12","2022-11-12","2025-01-12"})
-    public void getDailySale_valid(LocalDate startDate){
+    void getDailySale_valid(LocalDate startDate){
         Object[] result1 = {Date.valueOf(startDate), 10L};
         Object[] result2 = {Date.valueOf(start.plusDays(1)), 15L};
         List<Object[]> mockResults = Arrays.asList(result1, result2);
@@ -51,7 +51,7 @@ public class ReportServiceTest {
         verify(reportRepo, times(1)).findSalesByDateRange(Date.valueOf(startDate), Date.valueOf(end));
     }
     @Test
-    public void getDailySale_invalidDates(){
+    void getDailySale_invalidDates(){
         LocalDate invalidStart = LocalDate.of(2025, 1, 15);
 
         Exception exception = assertThrows(IllegalArgumentException.class,() -> reportService.getDailySale(invalidStart, end));
@@ -62,7 +62,7 @@ public class ReportServiceTest {
     //Prueba para obtener una lista de DailySaleSumDTO
     @ParameterizedTest
     @CsvSource({"2024-12-12","2024-11-12","2024-10-12","2024-07-12","2024-01-12","2022-11-12","2025-01-12"})
-    public void getTotalSaleDaily_valid(LocalDate startDate){
+    void getTotalSaleDaily_valid(LocalDate startDate){
         Object[] result1 = {Date.valueOf(startDate), BigDecimal.valueOf(10)};
         Object[] result2 = {Date.valueOf(start.plusDays(1)), BigDecimal.valueOf(15)};
         List<Object[]> mockResults = Arrays.asList(result1, result2);
@@ -76,7 +76,7 @@ public class ReportServiceTest {
         verify(reportRepo, times(1)).findTotalSalesByDateRange(Date.valueOf(startDate), Date.valueOf(end));
     }
     @Test
-    public void getTotalSaleDaily_invalidDates(){
+    void getTotalSaleDaily_invalidDates(){
         LocalDate invalidStart = LocalDate.of(2025, 1, 15);
 
         Exception exception = assertThrows(IllegalArgumentException.class,() -> reportService.getTotalSaleDaily(invalidStart, end));
@@ -87,7 +87,7 @@ public class ReportServiceTest {
     //Prueba para obtener una lista de DailySaleAvgDTO
     @ParameterizedTest
     @CsvSource({"2024-12-12","2024-11-12","2024-10-12","2024-07-12","2024-01-12","2022-11-12","2025-01-12"})
-    public void getAverageTotalSaleDaily_valid(LocalDate startDate){
+    void getAverageTotalSaleDaily_valid(LocalDate startDate){
         Object[] result1 = {Date.valueOf(startDate), BigDecimal.valueOf(10)};
         Object[] result2 = {Date.valueOf(start.plusDays(1)), BigDecimal.valueOf(15)};
         List<Object[]> mockResults = Arrays.asList(result1, result2);
@@ -101,7 +101,7 @@ public class ReportServiceTest {
         verify(reportRepo, times(1)).findAverageSalesPerDay(Date.valueOf(startDate), Date.valueOf(end));
     }
     @Test
-    public void getAverageTotalSaleDaily_invalidDates(){
+    void getAverageTotalSaleDaily_invalidDates(){
         LocalDate invalidStart = LocalDate.of(2025, 1, 15);
 
         Exception exception = assertThrows(IllegalArgumentException.class,() -> reportService.getAverageTotalSaleDaily(invalidStart, end));
@@ -112,7 +112,7 @@ public class ReportServiceTest {
     //Prueba para obtener una lista de DailySaleEarningDTO
     @ParameterizedTest
     @CsvSource({"2024-12-12","2024-11-12","2024-10-12","2024-07-12","2024-01-12","2022-11-12","2025-01-12"})
-    public void getEarningSale_valid(LocalDate startDate){
+    void getEarningSale_valid(LocalDate startDate){
         Object[] result1 = {Date.valueOf(startDate), BigDecimal.valueOf(10)};
         Object[] result2 = {Date.valueOf(start.plusDays(1)), BigDecimal.valueOf(15)};
         List<Object[]> mockResults = Arrays.asList(result1, result2);
@@ -126,7 +126,7 @@ public class ReportServiceTest {
         verify(reportRepo, times(1)).findEarningPerDay(Date.valueOf(startDate), Date.valueOf(end));
     }
     @Test
-    public void getEarningSale_invalidDates(){
+    void getEarningSale_invalidDates(){
         LocalDate invalidStart = LocalDate.of(2025, 1, 15);
 
         Exception exception = assertThrows(IllegalArgumentException.class,() -> reportService.getEarningSale(invalidStart, end));
@@ -137,7 +137,7 @@ public class ReportServiceTest {
     //Prueba para obtener los productos más vendidos
     @ParameterizedTest
     @CsvSource({"2024-12-12","2024-11-12","2024-10-12","2024-07-12","2024-01-12","2022-11-12","2025-01-12"})
-    public void getMostProductSale_valid(LocalDate startDate){
+    void getMostProductSale_valid(LocalDate startDate){
         Object[] result1 = {1L, "Brand Test", "Test description 1", BigDecimal.valueOf(20)};
         Object[] result2 = {2L, "Brand Test 2", "Test description 2", BigDecimal.valueOf(5)};
         List<Object[]> mockResults = Arrays.asList(result1, result2);
@@ -153,7 +153,7 @@ public class ReportServiceTest {
         verify(reportRepo, times(1)).findMostProductSale(Date.valueOf(startDate), Date.valueOf(end));
     }
     @Test
-    public void getMostProductSale_invalidDates(){
+    void getMostProductSale_invalidDates(){
         LocalDate invalidStart = LocalDate.of(2025, 1, 15);
         Exception exception = assertThrows(IllegalArgumentException.class,() -> reportService.getMostProductSale(invalidStart, end));
         assertEquals("La fecha de inicio no puede ser posterior a la fecha de fin.", exception.getMessage());
@@ -163,7 +163,7 @@ public class ReportServiceTest {
     //Prueba para obtener las categorías más vendidas
     @ParameterizedTest
     @CsvSource({"2024-12-12","2024-11-12","2024-10-12","2024-07-12","2024-01-12","2022-11-12","2025-01-12"})
-    public void getMostCategorySale_valid(LocalDate startDate){
+    void getMostCategorySale_valid(LocalDate startDate){
         Object[] result1 = {1L, "Category Test", BigDecimal.valueOf(20)};
         Object[] result2 = {2L, "Category Test 2", BigDecimal.valueOf(5)};
         List<Object[]> mockResults = Arrays.asList(result1, result2);
@@ -179,7 +179,7 @@ public class ReportServiceTest {
         verify(reportRepo, times(1)).findMostCategorySale(Date.valueOf(startDate), Date.valueOf(end));
     }
     @Test
-    public void getMostCategorySale_invalidDates(){
+    void getMostCategorySale_invalidDates(){
         LocalDate invalidStart = LocalDate.of(2025, 1, 15);
         Exception exception = assertThrows(IllegalArgumentException.class,() -> reportService.getMostCategorySale(invalidStart, end));
         assertEquals("La fecha de inicio no puede ser posterior a la fecha de fin.", exception.getMessage());

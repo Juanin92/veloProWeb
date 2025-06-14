@@ -36,7 +36,7 @@ public class BrandServiceTest {
 
     //Prueba para crear una nueva marca
     @Test
-    public void save_valid(){
+    void save_valid(){
         when(brandRepo.findByName("Asus")).thenReturn(Optional.empty());
         doNothing().when(validator).validateBrandDoesNotExist(null);
 
@@ -47,7 +47,7 @@ public class BrandServiceTest {
         assertEquals("Asus", brand.getName());
     }
     @Test
-    public void save_invalidExistingBrand(){
+    void save_invalidExistingBrand(){
         when(brandRepo.findByName("Samsung")).thenReturn(Optional.of(existingBrand));
         doThrow(new BrandAlreadyExistsException("Nombre Existente: Hay registro de esta marca.")).when(validator)
                 .validateBrandDoesNotExist(existingBrand);
@@ -62,7 +62,7 @@ public class BrandServiceTest {
 
     //Prueba para obtener todas las marcas
     @Test
-    public void getAll_valid(){
+    void getAll_valid(){
         List<BrandProduct> brands = List.of(brand2, brand, existingBrand, brand3);
         when(brandRepo.findAllOrderByNameAsc()).thenReturn(brands);
 

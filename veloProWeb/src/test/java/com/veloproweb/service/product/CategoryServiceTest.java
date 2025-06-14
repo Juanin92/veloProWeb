@@ -37,7 +37,7 @@ public class CategoryServiceTest {
 
     //Prueba para crear una nueva marca
     @Test
-    public void save_valid(){
+    void save_valid(){
         when(categoryProductRepo.findByName("Tech")).thenReturn(Optional.empty());
         doNothing().when(validator).validateCategoryDoesNotExist(null);
 
@@ -48,7 +48,7 @@ public class CategoryServiceTest {
         assertEquals("Tech", category.getName());
     }
     @Test
-    public void save_invalidExistingCategory(){
+    void save_invalidExistingCategory(){
         when(categoryProductRepo.findByName("Cleaning")).thenReturn(Optional.of(existingCategory));
         doThrow(new CategoryAlreadyExistsException("Nombre Existente: Hay registro de esta categoría.")).when(validator)
                 .validateCategoryDoesNotExist(existingCategory);
@@ -64,7 +64,7 @@ public class CategoryServiceTest {
 
     //Prueba para obtener todas las marcas
     @Test
-    public void getAll_valid(){
+    void getAll_valid(){
         List<CategoryProduct> categories = List.of(existingCategory, category3, category2, category);
         when(categoryProductRepo.findAllOrderByNameAsc()).thenReturn(categories);
 

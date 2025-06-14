@@ -59,7 +59,7 @@ public class PaymentCustomerServiceTest {
 
     //Prueba para obtener una lista de todos los abonos
     @Test
-    public void getAll_valid(){
+    void getAll_valid(){
         PaymentResponseDTO paymentResponseDTO = mapper.toDto(paymentCustomer);
         List<PaymentResponseDTO> dtoList = Collections.singletonList(paymentResponseDTO);
         List<PaymentCustomer> paymentCustomers = Collections.singletonList(paymentCustomer);
@@ -78,7 +78,7 @@ public class PaymentCustomerServiceTest {
 
     //Prueba para crear un proceso de pagos de tickets
     @Test
-    public void createPaymentProcess_validMultiplesTickets(){
+    void createPaymentProcess_validMultiplesTickets(){
         dto.setTicketIDs(List.of(ticketFirst.getId(), ticketSecond.getId()));
 
         when(ticketService.getTicketById(ticketFirst.getId())).thenReturn(ticketFirst);
@@ -104,7 +104,7 @@ public class PaymentCustomerServiceTest {
         assertEquals(ticketSecond, secondSaved.getDocument());
     }
     @Test
-    public void createPaymentProcess_invalidPaymentAmountException() {
+    void createPaymentProcess_invalidPaymentAmountException() {
         dto.setAmount(800);
         dto.setTicketIDs(Arrays.asList(ticketFirst.getId(), ticketSecond.getId()));
 
@@ -124,7 +124,7 @@ public class PaymentCustomerServiceTest {
 
     //Prueba para crear un proceso de pago de un solo ticket
     @Test
-    public void createPaymentProcess_validSingleTicket(){
+    void createPaymentProcess_validSingleTicket(){
         dto.setAmount(5000);
         ticketFirst.setTotal(5000);
         dto.setTicketIDs(List.of(ticketFirst.getId()));
@@ -147,7 +147,7 @@ public class PaymentCustomerServiceTest {
         assertEquals("Efectivo", firstSaved.getComment());
     }
     @Test
-    public void createPaymentProcess_validatePaymentNotExceedDebt(){
+    void createPaymentProcess_validatePaymentNotExceedDebt(){
         dto.setAmount(10000);
         ticketFirst.setTotal(5000);
         dto.setTicketIDs(List.of(ticketFirst.getId()));
@@ -168,7 +168,7 @@ public class PaymentCustomerServiceTest {
 
     //Prueba para crear un proceso de pago de un ticket con ajuste de deuda
     @Test
-    public void createPaymentProcess_adjustPaymentForSingleTicket() {
+    void createPaymentProcess_adjustPaymentForSingleTicket() {
         dto.setAmount(1000);
         dto.setTotalPaymentPaid(3000);
         dto.setTicketIDs(List.of(ticketFirst.getId()));
@@ -194,7 +194,7 @@ public class PaymentCustomerServiceTest {
 
     //Prueba para obtener una lista de las deudas del cliente seleccionado
     @Test
-    public void getCustomerSelected_validSingleTicket(){
+    void getCustomerSelected_validSingleTicket(){
         List<PaymentResponseDTO> responseDTOS = Collections.singletonList(mapper.toDto(paymentCustomer));
         List<TicketHistory> tickets = Collections.singletonList(ticketFirst);
         List<PaymentCustomer> paymentCustomers = Collections.singletonList(paymentCustomer);
@@ -211,7 +211,7 @@ public class PaymentCustomerServiceTest {
         assertEquals(result.getFirst().getDocument(), responseDTOS.getFirst().getDocument());
     }
     @Test
-    public void getCustomerSelected_validMultipleTickets(){
+    void getCustomerSelected_validMultipleTickets(){
         PaymentCustomer anotherPayment = PaymentCustomer.builder()
                 .id(2L).amount(2000).comment("Another Comment")
                 .date(LocalDate.now().plusDays(1)).customer(customer)
@@ -233,7 +233,7 @@ public class PaymentCustomerServiceTest {
         assertEquals(result.getLast().getDocument(), responseDTOS.getLast().getDocument());
     }
     @Test
-    public void getCustomerSelected_validEmptyTickets(){
+    void getCustomerSelected_validEmptyTickets(){
         TicketHistory anotherTicket = TicketHistory.builder().id(3L).customer(customer).document("Ticket_3").build();
         List<TicketHistory> tickets = List.of(anotherTicket);
         List<PaymentCustomer> paymentCustomers = List.of(paymentCustomer);

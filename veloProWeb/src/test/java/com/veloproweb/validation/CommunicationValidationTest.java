@@ -14,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-class CommunicationValidationTest {
+public class CommunicationValidationTest {
 
     @InjectMocks private CommunicationValidation validation;
 
@@ -30,7 +30,7 @@ class CommunicationValidationTest {
 
     //Prueba para validar mensaje como leído
     @Test
-    public void validateMessageNotRead(){
+    void validateMessageNotRead(){
         Message message = Message.builder().receiverUser(User.builder().id(1L).username("johnny").build())
                 .isRead(true).isDelete(false).build();
         MessageAlreadyReadException e = assertThrows(MessageAlreadyReadException.class,
@@ -40,7 +40,7 @@ class CommunicationValidationTest {
 
     //Prueba para validar mensaje como leído
     @Test
-    public void validateMessageNotDeleted(){
+    void validateMessageNotDeleted(){
         Message message = Message.builder().receiverUser(User.builder().id(1L).username("johnny").build())
                 .isDelete(true).build();
         MessageAlreadyDeletedException e = assertThrows(MessageAlreadyDeletedException.class,
@@ -50,7 +50,7 @@ class CommunicationValidationTest {
 
     //Prueba para verificar que el mensaje pertenece al usuario actual
     @Test
-    public void validateMessageOwner(){
+    void validateMessageOwner(){
         Message message = Message.builder().receiverUser(User.builder().id(1L).username("johnny").build()).build();
         MessageAccessDeniedExcepcion e = assertThrows(MessageAccessDeniedExcepcion.class,
                 () -> validation.validateMessageAsRead(message, "peter"));

@@ -40,7 +40,7 @@ public class SupplierServiceTest {
 
     //Prueba para crear un nuevo proveedor
     @Test
-    public void createSupplier_valid(){
+    void createSupplier_valid(){
         SupplierRequestDTO dto = SupplierRequestDTO.builder().rut("12345678-9").name("Sony").email("sony@test.com")
                 .phone("+569 12345678").build();
         when(repo.findByRut(supplier.getRut())).thenReturn(Optional.empty());
@@ -61,7 +61,7 @@ public class SupplierServiceTest {
         assertEquals(result.getEmail(), dto.getEmail());
     }
     @Test
-    public void createSupplier_ExistingSupplier(){
+    void createSupplier_ExistingSupplier(){
         SupplierRequestDTO dto = SupplierRequestDTO.builder().rut("12345678-9").name("Sony").email("sony@test.com")
                 .phone("+569 12345678").build();
         when(repo.findByRut(dto.getRut())).thenReturn(Optional.of(supplier));
@@ -78,7 +78,7 @@ public class SupplierServiceTest {
 
     //Prueba para actualizar un proveedor
     @Test
-    public void updateSupplier_valid(){
+    void updateSupplier_valid(){
         SupplierRequestDTO dto = SupplierRequestDTO.builder().rut("12345678-9").name("Sony").email("sony@test.cl")
                 .phone("+569 12345321").build();
         when(repo.findByRut(dto.getRut())).thenReturn(Optional.of(supplier));
@@ -99,7 +99,7 @@ public class SupplierServiceTest {
         assertEquals(result.getRut(), dto.getRut());
     }
     @Test
-    public void updateSupplier_invalidNull(){
+    void updateSupplier_invalidNull(){
         SupplierRequestDTO dto = SupplierRequestDTO.builder().rut("12345678-9").name("Sony").email("sony@test.cl")
                 .phone("+569 12345321").build();
         when(repo.findByRut(dto.getRut())).thenReturn(Optional.empty());
@@ -115,7 +115,7 @@ public class SupplierServiceTest {
 
     //Prueba para obtener todos los proveedores
     @Test
-    public void getAll_valid(){
+    void getAll_valid(){
         Supplier supplier1 = Supplier.builder().id(2L).rut("12345632-9").name("Microsoft").email("microsoft@test.com")
                 .phone("+569 12345678").build();
         when(repo.findAll()).thenReturn(List.of(supplier, supplier1));
@@ -129,7 +129,7 @@ public class SupplierServiceTest {
 
     //Prueba para obtener un proveedor por rut
     @Test
-    public void getDtoByRut_valid(){
+    void getDtoByRut_valid(){
         SupplierResponseDTO response = SupplierResponseDTO.builder().rut("12345678-9").name("Sony")
                 .email("sony@test.com").phone("+569 12345678").build();
         when(repo.findByRut(supplier.getRut())).thenReturn(Optional.of(supplier));

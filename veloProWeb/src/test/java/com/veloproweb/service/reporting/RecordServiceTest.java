@@ -40,7 +40,7 @@ public class RecordServiceTest {
 
     //Prueba para registrar una entrada del sistema
     @Test
-    public void registerEntry(){
+    void registerEntry(){
         when(userDetails.getUsername()).thenReturn("johnny");
         doReturn(List.of(new SimpleGrantedAuthority("ADMIN"))).when(userDetails).getAuthorities();
         when(userService.getUserByUsername("johnny")).thenReturn(user);
@@ -66,7 +66,7 @@ public class RecordServiceTest {
 
     //Prueba para registrar una salida del sistema
     @Test
-    public void registerEnd() {
+    void registerEnd() {
         when(userDetails.getUsername()).thenReturn("johnny");
         doReturn(List.of(new SimpleGrantedAuthority("ADMIN"))).when(userDetails).getAuthorities();
         when(userService.getUserByUsername("johnny")).thenReturn(user);
@@ -92,7 +92,7 @@ public class RecordServiceTest {
 
     //Prueba para registrar una acción en el sistema
     @Test
-    public void registerAction() {
+    void registerAction() {
         when(userDetails.getUsername()).thenReturn("johnny");
         doReturn(List.of(new SimpleGrantedAuthority("ADMIN"))).when(userDetails).getAuthorities();
         when(userService.getUserByUsername("johnny")).thenReturn(user);
@@ -118,7 +118,7 @@ public class RecordServiceTest {
 
     //Prueba para obtener una lista de registros
     @Test
-    public void getAllRecord() {
+    void getAllRecord() {
         Record loginRecord = Record.builder().id(1L).user(user).comment(null).action("LOGIN")
                 .entryDate(LocalDateTime.now()).actionDate(null).endDate(null).build();
         Record logoutRecord = Record.builder().id(1L).user(user).comment(null).action("LOGOUT")

@@ -39,7 +39,7 @@ public class UnitServiceTest {
 
     //Prueba para crear una nueva unidad de medida
     @Test
-    public void save_valid(){
+    void save_valid(){
         when(unitRepo.findByNameUnit("10 KG")).thenReturn(Optional.empty());
         doNothing().when(validator).validateUnitDoesNotExist(null);
         doNothing().when(validator).validateUnitNameFormat(unit);
@@ -54,7 +54,7 @@ public class UnitServiceTest {
         assertEquals(result.getNameUnit(), unit.getNameUnit());
     }
     @Test
-    public void save_invalidExistingUnit(){
+    void save_invalidExistingUnit(){
         when(unitRepo.findByNameUnit("35 KG")).thenReturn(Optional.of(existingUnit));
         doThrow(new UnitAlreadyExistsException("Nombre Existente: Hay registro de esta unidad de medida."))
                 .when(validator).validateUnitDoesNotExist(existingUnit);
@@ -90,7 +90,7 @@ public class UnitServiceTest {
 
     //Prueba para obtener todas las unidades de medida
     @Test
-    public void getAll_valid(){
+    void getAll_valid(){
         List<UnitProduct> units = List.of(unitGr, unit, existingUnit, unitUn);
         when(unitRepo.findAllOrderByNameAsc()).thenReturn(units);
 

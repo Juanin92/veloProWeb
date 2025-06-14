@@ -35,7 +35,7 @@ public class ProductValidatorTest {
     //Prueba para validar monto del stock del producto
     @ParameterizedTest
     @ValueSource(ints = {0, -1})
-    public void validateStock_invalid(int value){
+    void validateStock_invalid(int value){
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validateStock(value));
         assertEquals("Cantidad de ser mayor a 0", exception.getMessage());
     }
@@ -43,7 +43,7 @@ public class ProductValidatorTest {
     //Prueba para validar monto del umbral crítico del producto
     @ParameterizedTest
     @ValueSource(ints = {0, -1})
-    public void validateThreshold_invalid(int value){
+    void validateThreshold_invalid(int value){
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validateThreshold(value));
         assertEquals("Cantidad de ser mayor a 0", exception.getMessage());
     }
@@ -51,14 +51,14 @@ public class ProductValidatorTest {
     //Prueba para validar monto del precio de venta del producto
     @ParameterizedTest
     @ValueSource(ints = {0, -1})
-    public void validateSalePrice_invalid(int value){
+    void validateSalePrice_invalid(int value){
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> validator.validateSalePrice(value));
         assertEquals("Precio de ser mayor a 0", exception.getMessage());
     }
 
     //Prueba para validar si el producto está activado
     @Test
-    public void isActivated_invalid(){
+    void isActivated_invalid(){
         ProductAlreadyActivatedException e = assertThrows(ProductAlreadyActivatedException.class,
                 ()-> validator.isActivated(product));
         assertEquals("El producto ya está activado.", e.getMessage());
@@ -66,7 +66,7 @@ public class ProductValidatorTest {
 
     //Prueba para validar si el producto está desactivado
     @Test
-    public void isDeleted_invalid(){
+    void isDeleted_invalid(){
         product.setStatus(false);
         ProductAlreadyDeletedException e = assertThrows(ProductAlreadyDeletedException.class,
                 ()-> validator.isDeleted(product));

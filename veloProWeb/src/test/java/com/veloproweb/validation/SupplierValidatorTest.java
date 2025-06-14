@@ -17,7 +17,7 @@ public class SupplierValidatorTest {
 
     //Prueba para validar proveedor no exista
     @Test
-    public void validateSupplierDoesNotExist_valid(){
+    void validateSupplierDoesNotExist_valid(){
         Supplier supplier = Supplier.builder().build();
 
         SupplierAlreadyExistsException e = assertThrows(SupplierAlreadyExistsException.class,
@@ -27,7 +27,7 @@ public class SupplierValidatorTest {
 
     //Prueba para validar proveedor exista
     @Test
-    public void validateSupplierExists_valid(){
+    void validateSupplierExists_valid(){
         SupplierNotFoundException e = assertThrows(SupplierNotFoundException.class,
                 () -> validator.validateSupplierExists(null));
         assertEquals("No existe registro del proveedor", e.getMessage());

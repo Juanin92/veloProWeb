@@ -43,7 +43,7 @@ public class SaleDetailServiceTest {
 
     //Prueba para crear un detalle de venta
     @Test
-    public void addDetailsToSale(){
+    void addDetailsToSale(){
         Product product = Product.builder().id(1L).description("Product Description").salePrice(100).build();
         Sale sale = Sale.builder().id(1L).paymentMethod(PaymentMethod.EFECTIVO).totalSale(1000).tax(10)
                 .discount(0).document("0001").build();
@@ -74,7 +74,7 @@ public class SaleDetailServiceTest {
         assertNull(detailMapped.getDispatch());
     }
     @Test
-    public void add_saleNotFound(){
+    void add_saleNotFound(){
         doThrow(new SaleNotFoundException("Venta no encontrada")).when(validator).hasSale(null);
         SaleNotFoundException exception = assertThrows(SaleNotFoundException.class,
                 () -> saleDetailService.addDetailsToSale(List.of(), any(Sale.class), userDetails));

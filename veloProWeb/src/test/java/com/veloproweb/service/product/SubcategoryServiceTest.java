@@ -39,7 +39,7 @@ public class SubcategoryServiceTest {
 
     //Prueba para crear una nueva subcategoría
     @Test
-    public void save_valid(){
+    void save_valid(){
         subcategory = SubcategoryProduct.builder().id(null).name("Milk").category(category).build();
         when(subcategoryProductRepo.findByNameAndCategoryId(subcategory.getName(), category.getId()))
                 .thenReturn(Optional.empty());
@@ -59,7 +59,7 @@ public class SubcategoryServiceTest {
         assertEquals(category, result.getCategory());
     }
     @Test
-    public void save_invalidExistingSubcategory(){
+    void save_invalidExistingSubcategory(){
         subcategory = SubcategoryProduct.builder().id(null).name("Milk").category(category).build();
         when(subcategoryProductRepo.findByNameAndCategoryId(subcategory.getName(), category.getId()))
                 .thenReturn(Optional.of(subcategory));
@@ -79,7 +79,7 @@ public class SubcategoryServiceTest {
                 subcategory.getCategory().getName()), exception.getMessage());
     }
     @Test
-    public void save_invalidNullCategory(){
+    void save_invalidNullCategory(){
         subcategory = SubcategoryProduct.builder().id(null).name("Milk").category(null).build();
         doThrow(new CategoryNotFoundException("Dede seleccionar una categoría."))
                 .when(validator).validateSubcategoryHasCategory(subcategory);
@@ -96,7 +96,7 @@ public class SubcategoryServiceTest {
 
     //Prueba para obtener una lista de subcategoría por ID de categoría
     @Test
-    public void getSubcategoryByCategoryID_valid(){
+    void getSubcategoryByCategoryID_valid(){
         subcategory = SubcategoryProduct.builder().id(1L).name("Milk").category(category).build();
         SubcategoryProduct subcategory2 = SubcategoryProduct.builder().id(2L).name("Pasta").category(category).build();
         SubcategoryProduct subcategory3 = SubcategoryProduct.builder().id(3L).name("Meat").category(category).build();
@@ -115,7 +115,7 @@ public class SubcategoryServiceTest {
         assertEquals(expectedSubcategories.get(1).getName(), result.get(1).getName());
     }
     @Test
-    public void getSubcategoryByCategoryID_validEmptyList(){
+    void getSubcategoryByCategoryID_validEmptyList(){
         when(categoryProductRepo.findById(1L)).thenReturn(Optional.of(category));
 
         List<SubcategoryProduct> expectedSubcategories = List.of();
