@@ -5,7 +5,7 @@ import com.veloproweb.exceptions.sale.CashRegisterNotFoundException;
 import com.veloproweb.exceptions.sale.InvalidAmountCashRegisterException;
 import com.veloproweb.exceptions.sale.UnauthorizedCashRegisterAccessException;
 import com.veloproweb.model.dto.sale.CashRegisterRequestDTO;
-import com.veloproweb.model.entity.Sale.CashRegister;
+import com.veloproweb.model.entity.sale.CashRegister;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;

@@ -1,8 +1,8 @@
 package com.veloproweb.mapper;
 
 import com.veloproweb.model.dto.sale.CashRegisterResponseDTO;
-import com.veloproweb.model.entity.Sale.CashRegister;
-import com.veloproweb.model.entity.User.User;
+import com.veloproweb.model.entity.sale.CashRegister;
+import com.veloproweb.model.entity.user.User;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;

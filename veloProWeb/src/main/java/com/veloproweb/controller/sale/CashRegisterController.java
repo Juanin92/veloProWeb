@@ -3,7 +3,7 @@ package com.veloproweb.controller.sale;
 import com.veloproweb.model.dto.sale.CashRegisterRequestDTO;
 import com.veloproweb.model.dto.sale.CashRegisterResponseDTO;
 import com.veloproweb.service.reporting.interfaces.IRecordService;
-import com.veloproweb.service.sale.Interface.ICashRegisterService;
+import com.veloproweb.service.sale.interfaces.ICashRegisterService;
 import com.veloproweb.util.ResponseMessage;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

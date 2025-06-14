@@ -4,7 +4,7 @@ import com.veloproweb.exceptions.sale.CashRegisterDateNotMatchException;
 import com.veloproweb.exceptions.sale.CashRegisterNotFoundException;
 import com.veloproweb.exceptions.sale.InvalidAmountCashRegisterException;
 import com.veloproweb.exceptions.sale.UnauthorizedCashRegisterAccessException;
-import com.veloproweb.model.entity.Sale.CashRegister;
+import com.veloproweb.model.entity.sale.CashRegister;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
