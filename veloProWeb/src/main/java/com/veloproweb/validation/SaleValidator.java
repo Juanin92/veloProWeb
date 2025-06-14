@@ -1,7 +1,7 @@
 package com.veloproweb.validation;
 
 import com.veloproweb.exceptions.sale.SaleNotFoundException;
-import com.veloproweb.model.entity.Sale.Sale;
+import com.veloproweb.model.entity.sale.Sale;
 import org.springframework.stereotype.Component;
 
 @Component

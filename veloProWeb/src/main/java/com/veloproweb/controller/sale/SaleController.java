@@ -2,11 +2,11 @@ package com.veloproweb.controller.sale;
 
 import com.veloproweb.model.dto.sale.SaleRequestDTO;
 import com.veloproweb.model.dto.sale.SaleResponseDTO;
-import com.veloproweb.model.entity.Sale.Sale;
+import com.veloproweb.model.entity.sale.Sale;
 import com.veloproweb.service.reporting.interfaces.IRecordService;
-import com.veloproweb.service.sale.Interface.IDispatchService;
-import com.veloproweb.service.sale.Interface.ISaleDetailService;
-import com.veloproweb.service.sale.Interface.ISaleService;
+import com.veloproweb.service.sale.interfaces.IDispatchService;
+import com.veloproweb.service.sale.interfaces.ISaleDetailService;
+import com.veloproweb.service.sale.interfaces.ISaleService;
 import com.veloproweb.util.EmailService;
 import com.veloproweb.util.ResponseMessage;
 import lombok.AllArgsConstructor;

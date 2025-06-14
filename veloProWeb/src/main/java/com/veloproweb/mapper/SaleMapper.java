@@ -2,9 +2,9 @@ package com.veloproweb.mapper;
 
 import com.veloproweb.model.Enum.PaymentMethod;
 import com.veloproweb.model.dto.sale.*;
-import com.veloproweb.model.entity.Sale.Dispatch;
-import com.veloproweb.model.entity.Sale.Sale;
-import com.veloproweb.model.entity.Sale.SaleDetail;
+import com.veloproweb.model.entity.sale.Dispatch;
+import com.veloproweb.model.entity.sale.Sale;
+import com.veloproweb.model.entity.sale.SaleDetail;
 import com.veloproweb.model.entity.customer.Customer;
 import com.veloproweb.model.entity.product.Product;
 import com.veloproweb.util.IdentifyDocumentGenerator;

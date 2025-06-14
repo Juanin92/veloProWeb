@@ -1,6 +1,6 @@
-package com.veloproweb.repository.Sale;
+package com.veloproweb.repository.sale;
 
-import com.veloproweb.model.entity.Sale.Sale;
+import com.veloproweb.model.entity.sale.Sale;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

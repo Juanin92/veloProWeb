@@ -1,4 +1,4 @@
-package com.veloproweb.model.entity.Sale;
+package com.veloproweb.model.entity.sale;
 
 import com.veloproweb.model.entity.product.Product;
 import jakarta.persistence.*;

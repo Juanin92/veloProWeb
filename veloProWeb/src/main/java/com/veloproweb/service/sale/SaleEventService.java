@@ -4,7 +4,7 @@ import com.veloproweb.model.Enum.PaymentMethod;
 import com.veloproweb.model.entity.customer.Customer;
 import com.veloproweb.service.customer.interfaces.ICustomerService;
 import com.veloproweb.service.customer.interfaces.ITicketHistoryService;
-import com.veloproweb.service.sale.Interface.ISaleEventService;
+import com.veloproweb.service.sale.interfaces.ISaleEventService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
