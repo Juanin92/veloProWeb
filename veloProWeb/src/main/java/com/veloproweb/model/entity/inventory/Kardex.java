@@ -1,7 +1,7 @@
 package com.veloproweb.model.entity.inventory;
 
 import com.veloproweb.model.entity.product.Product;
-import com.veloproweb.model.entity.User.User;
+import com.veloproweb.model.entity.user.User;
 import com.veloproweb.model.Enum.MovementsType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

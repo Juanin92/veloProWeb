@@ -2,7 +2,7 @@ package com.veloproweb.mapper;
 
 import com.veloproweb.model.Enum.MovementsType;
 import com.veloproweb.model.dto.inventory.KardexResponseDTO;
-import com.veloproweb.model.entity.User.User;
+import com.veloproweb.model.entity.user.User;
 import com.veloproweb.model.entity.inventory.Kardex;
 import com.veloproweb.model.entity.product.Product;
 import org.springframework.stereotype.Component;
