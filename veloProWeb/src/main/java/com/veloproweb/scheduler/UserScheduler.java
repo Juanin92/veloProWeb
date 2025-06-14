@@ -1,6 +1,6 @@
 package com.veloproweb.scheduler;
 
-import com.veloproweb.model.entity.User.User;
+import com.veloproweb.model.entity.user.User;
 import com.veloproweb.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;

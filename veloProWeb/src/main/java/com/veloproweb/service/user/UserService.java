@@ -5,7 +5,7 @@ import com.veloproweb.mapper.UserMapper;
 import com.veloproweb.model.dto.user.UpdateUserDTO;
 import com.veloproweb.model.dto.user.UserRequestDTO;
 import com.veloproweb.model.dto.user.UserResponseDTO;
-import com.veloproweb.model.entity.User.User;
+import com.veloproweb.model.entity.user.User;
 import com.veloproweb.repository.UserRepo;
 import com.veloproweb.service.user.interfaces.IUserService;
 import com.veloproweb.validation.UserValidator;

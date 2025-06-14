@@ -1,7 +1,7 @@
-package com.veloproweb.model.entity.User;
+package com.veloproweb.model.entity.user;
 
 import com.veloproweb.model.entity.inventory.Kardex;
-import com.veloproweb.model.entity.Sale.CashRegister;
+import com.veloproweb.model.entity.sale.CashRegister;
 import com.veloproweb.model.Enum.Rol;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

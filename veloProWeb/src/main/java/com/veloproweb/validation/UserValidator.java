@@ -3,7 +3,7 @@ package com.veloproweb.validation;
 import com.veloproweb.exceptions.user.*;
 import com.veloproweb.exceptions.validation.ValidationException;
 import com.veloproweb.model.dto.user.UpdateUserDTO;
-import com.veloproweb.model.entity.User.User;
+import com.veloproweb.model.entity.user.User;
 import com.veloproweb.model.Enum.Rol;
 import org.springframework.stereotype.Component;
 

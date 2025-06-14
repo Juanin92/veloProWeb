@@ -2,7 +2,7 @@ package com.veloproweb.mapper;
 
 import com.veloproweb.model.dto.user.UserRequestDTO;
 import com.veloproweb.model.dto.user.UserResponseDTO;
-import com.veloproweb.model.entity.User.User;
+import com.veloproweb.model.entity.user.User;
 import com.veloproweb.util.TextFormatter;
 import org.springframework.stereotype.Component;
 
