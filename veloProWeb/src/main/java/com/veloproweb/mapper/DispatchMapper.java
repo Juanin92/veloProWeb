@@ -4,7 +4,7 @@ import com.veloproweb.model.Enum.DispatchStatus;
 import com.veloproweb.model.dto.sale.DispatchRequestDTO;
 import com.veloproweb.model.dto.sale.DispatchResponseDTO;
 import com.veloproweb.model.dto.sale.SaleDetailResponseDTO;
-import com.veloproweb.model.entity.Sale.Dispatch;
+import com.veloproweb.model.entity.sale.Dispatch;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;

@@ -1,4 +1,4 @@
-package com.veloproweb.model.entity.Sale;
+package com.veloproweb.model.entity.sale;
 
 import com.veloproweb.model.Enum.DispatchStatus;
 import jakarta.persistence.*;
