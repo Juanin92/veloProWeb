@@ -1,6 +1,6 @@
 package com.veloproweb.service.reporting;
 
-import com.veloproweb.model.dto.Report.*;
+import com.veloproweb.model.dto.report.*;
 import com.veloproweb.repository.reporting.ReportRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
