@@ -4,7 +4,7 @@ import com.veloproweb.exceptions.communication.MessageAccessDeniedExcepcion;
 import com.veloproweb.exceptions.communication.MessageAlreadyDeletedException;
 import com.veloproweb.exceptions.communication.MessageAlreadyReadException;
 import com.veloproweb.exceptions.communication.MessageReceiverUserException;
-import com.veloproweb.model.entity.User.User;
+import com.veloproweb.model.entity.user.User;
 import com.veloproweb.model.entity.communication.Message;
 import org.springframework.stereotype.Component;
 
