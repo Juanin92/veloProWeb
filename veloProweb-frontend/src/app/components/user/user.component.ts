@@ -6,7 +6,6 @@ import { UserValidator } from '../../validation/user-validator';
 import { Role } from '../../models/enum/role';
 import { TooltipService } from '../../utils/tooltip.service';
 import { NotificationService } from '../../utils/notification-service.service';
-import { UserDTO } from '../../models/DTO/user-dto';
 import * as bootstrap from 'bootstrap';
 import { UserPermissionsService } from '../../services/permissions/user-permissions.service';
 import { UserResponse } from '../../models/entity/user/user-response';
@@ -32,7 +31,6 @@ export class UserComponent implements OnInit, AfterViewInit {
   validator = UserValidator;
   roles: string[] = Object.values(Role);
   user: UserResponse;
-  selectedUser: UserDTO | null = null;
   touchedFields: Record<string, boolean> = {};
   dropdownInstance!: bootstrap.Dropdown;
   sortDate: boolean = true;
