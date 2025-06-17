@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { LoginRequest } from '../../models/DTO/login-request';
+import { LoginRequest } from '../../models/entity/user/login-request';
 import { Observable } from 'rxjs';
-import { AuthRequestDTO } from '../../models/DTO/auth-request-dto';
+import { AuthRequest } from '../../models/entity/user/auth-request';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +29,7 @@ export class AuthService {
     return this.httpClient.post<{ message: string }>(`${this.apiUrl}/logout`, {}, { headers: this.getAuthHeaders() });
   }
 
-  getAuthAccess(auth: AuthRequestDTO): Observable<boolean>{
+  getAuthAccess(auth: AuthRequest): Observable<boolean>{
     return this.httpClient.post<boolean>(`${this.apiUrl}/verificar`, auth, { headers: this.getAuthHeaders() });;
   }
 
