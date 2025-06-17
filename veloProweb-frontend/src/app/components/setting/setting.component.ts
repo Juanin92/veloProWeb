@@ -10,7 +10,7 @@ import { SettingPermissionsService } from '../../services/permissions/setting-pe
 import { NotificationService } from '../../utils/notification-service.service';
 import { AuthService } from '../../services/user/auth.service';
 import { EncryptionService } from '../../security/encryption.service';
-import { AuthRequestDTO } from '../../models/DTO/auth-request-dto';
+import { AuthRequest } from '../../models/entity/user/auth-request';
 import { ErrorMessageService } from '../../utils/error-message.service';
 import { RegisterComponent } from './register/register.component';
 
@@ -73,7 +73,7 @@ export class SettingComponent{
 
   getAccessHistory(): void{
     if(this.encryptedCode && this.pass.trim() !== ''){
-      const authRequest: AuthRequestDTO = {identifier: '',
+      const authRequest: AuthRequest = {identifier: '',
         token: this.encryptionService.encryptPassword(this.pass, this.encryptedCode)};
       this.authService.getAuthAccess(authRequest).subscribe({
         next:(response)=>{ this.access = response;},
