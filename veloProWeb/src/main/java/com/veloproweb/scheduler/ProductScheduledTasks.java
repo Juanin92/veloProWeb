@@ -4,6 +4,7 @@ import com.veloproweb.model.entity.product.Product;
 import com.veloproweb.repository.product.ProductRepo;
 import com.veloproweb.service.product.interfaces.IProductEventService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,7 @@ public class ProductScheduledTasks {
      * @Scheduled - Está programado para actuar cada 6 hr automáticamente
      */
     @Scheduled(fixedRate = 21600000)
+    @Async("taskExecutor")
     public void checkAndHandleProductAlerts() {
         List<Product> noStockProducts = productRepo.findOutOfStock();
         noStockProducts.forEach(productEventService::handleNoStockAlert);

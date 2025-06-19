@@ -8,6 +8,7 @@ import com.veloproweb.service.customer.interfaces.ICustomerService;
 import com.veloproweb.service.customer.interfaces.ITicketHistoryService;
 import com.veloproweb.util.EmailService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +32,7 @@ public class TicketValidatorScheduler {
      * y se envía un correo electrónico al cliente si el ticket está vencido.
      */
     @Scheduled(cron = "0 0 12 * * ?") // Cada día a las 12:00 PM
+    @Async("taskExecutor")
     public void validateTicketsDaily() {
         LocalDate today = LocalDate.now();
         if (lastValidationDate == null || !lastValidationDate.equals(today)) {
