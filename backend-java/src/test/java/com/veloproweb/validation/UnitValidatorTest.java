@@ -20,7 +20,7 @@ class UnitValidatorTest {
 
     //Prueba para validar una unidad de medida
     @Test
-    void validateUnit_validExistsException(){
+    void validateUnit_ExistsException(){
         UnitProduct unit = UnitProduct.builder().build();
         UnitAlreadyExistsException e = assertThrows(UnitAlreadyExistsException.class,
                 () -> validator.validateUnitDoesNotExist(unit));
