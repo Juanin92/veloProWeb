@@ -31,7 +31,7 @@ jobs:
           restore-keys: ${{ runner.os }}-maven
 
       - name: Run tests
-        run: mvn -f backend/pom.xml test
+        run: mvn -f backend-java/pom.xml test
 
   build:
     runs-on: ubuntu-latest
@@ -47,13 +47,13 @@ jobs:
           distribution: 'temurin'
 
       - name: Build jar
-        run: mvn -f backend/pom.xml package -DskipTests
+        run: mvn -f backend-java/pom.xml package -DskipTests
 
       - name: SonarQube Analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          mvn -f backend/pom.xml sonar:sonar \
+          mvn -f backend-java/pom.xml sonar:sonar \
             -Dsonar.projectKey=velopro-backend \
             -Dsonar.host.url=http://localhost:9000 \
             -Dsonar.login=$SONAR_TOKEN
