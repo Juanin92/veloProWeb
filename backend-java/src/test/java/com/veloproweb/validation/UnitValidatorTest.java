@@ -30,7 +30,7 @@ class UnitValidatorTest {
     //Prueba para validar el formato del nombre de la unidad de medida
     @ParameterizedTest
     @ValueSource(strings = {"2 kilo ", "1 unidad"})
-    void validateUnit_invalid(String value){
+    void validateUnit_name(String value){
         UnitProduct unit = UnitProduct.builder().nameUnit(value).build();
         ValidationException exception = assertThrows(ValidationException.class,
                 () -> validator.validateUnitNameFormat(unit));
