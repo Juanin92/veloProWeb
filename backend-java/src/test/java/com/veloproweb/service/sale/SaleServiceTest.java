@@ -20,6 +20,8 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,11 +37,13 @@ class SaleServiceTest {
     @Spy private SaleMapper mapper;
     private Sale sale;
     private Customer customer;
+    private String date;
 
     @BeforeEach
     void setUp(){
         sale = Sale.builder().id(1L).document("0001").build();
         customer = Customer.builder().id(1L).name("John").surname("Doe").build();
+        date = LocalDate.now().format(DateTimeFormatter.ofPattern("MMyy"));
     }
 
     //Prueba para crear uan nueva venta de diferentes modos de pago
@@ -63,7 +67,7 @@ class SaleServiceTest {
         verify(saleRepo, times(1)).save(saleCreated);
 
         assertEquals(saleMapped, saleCreated);
-        assertEquals("BO-0625-0001", saleCreated.getDocument());
+        assertEquals(String.format("BO-%s-0001",date), saleCreated.getDocument());
         assertEquals("Efectivo: $1000", saleCreated.getComment());
         assertEquals(PaymentMethod.EFECTIVO, saleCreated.getPaymentMethod());
         assertTrue(saleCreated.isStatus());
@@ -89,7 +93,7 @@ class SaleServiceTest {
         verify(saleRepo, times(1)).save(saleCreated);
 
         assertEquals(saleMapped, saleCreated);
-        assertEquals("BO-0625-0001", saleCreated.getDocument());
+        assertEquals(String.format("BO-%s-0001",date), saleCreated.getDocument());
         assertEquals("Comprobante: n°ticket number", saleCreated.getComment());
         assertEquals(PaymentMethod.DEBITO, saleCreated.getPaymentMethod());
         assertTrue(saleCreated.isStatus());
@@ -115,7 +119,7 @@ class SaleServiceTest {
         verify(saleRepo, times(1)).save(saleCreated);
 
         assertEquals(saleMapped, saleCreated);
-        assertEquals("BO-0625-0001", saleCreated.getDocument());
+        assertEquals(String.format("BO-%s-0001",date), saleCreated.getDocument());
         assertEquals("Comprobante: n°ticket number", saleCreated.getComment());
         assertEquals(PaymentMethod.CREDITO, saleCreated.getPaymentMethod());
         assertTrue(saleCreated.isStatus());
@@ -142,7 +146,7 @@ class SaleServiceTest {
         verify(saleRepo, times(1)).save(saleCreated);
 
         assertEquals(saleMapped, saleCreated);
-        assertEquals("BO-0625-0001", saleCreated.getDocument());
+        assertEquals(String.format("BO-%s-0001",date), saleCreated.getDocument());
         assertEquals("Transferencia: n°transfer number", saleCreated.getComment());
         assertEquals(PaymentMethod.TRANSFERENCIA, saleCreated.getPaymentMethod());
         assertTrue(saleCreated.isStatus());
@@ -172,7 +176,7 @@ class SaleServiceTest {
         verify(saleRepo, times(1)).save(saleCreated);
 
         assertEquals(saleMapped, saleCreated);
-        assertEquals("BO-0625-0001", saleCreated.getDocument());
+        assertEquals(String.format("BO-%s-0001",date), saleCreated.getDocument());
         assertNull(saleCreated.getComment());
         assertEquals(PaymentMethod.PRESTAMO, saleCreated.getPaymentMethod());
         assertTrue(saleCreated.isStatus());
@@ -202,7 +206,7 @@ class SaleServiceTest {
         verify(saleRepo, times(1)).save(saleCreated);
 
         assertEquals(saleMapped, saleCreated);
-        assertEquals("BO-0625-0001", saleCreated.getDocument());
+        assertEquals(String.format("BO-%s-0001",date), saleCreated.getDocument());
         assertEquals("Abono inicial: $ticket number", saleCreated.getComment());
         assertEquals(PaymentMethod.MIXTO, saleCreated.getPaymentMethod());
         assertTrue(saleCreated.isStatus());
