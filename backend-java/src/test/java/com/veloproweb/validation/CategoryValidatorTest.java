@@ -17,7 +17,7 @@ class CategoryValidatorTest {
 
     //Prueba para validar la existencia de una categoría
     @Test
-    void validateCategory_validException(){
+    void validateCategory_Exception(){
         CategoryProduct category = CategoryProduct.builder().build();
         CategoryAlreadyExistsException e = assertThrows(CategoryAlreadyExistsException.class,
                 () -> validator.validateCategoryDoesNotExist(category));
