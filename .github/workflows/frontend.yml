@@ -1,0 +1,73 @@
+name: CI Frontend-angular
+
+on:
+  push:
+    paths:
+      - 'frontend/**'
+  pull_request:
+    paths:
+      - 'frontend/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node
+
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm install
+
+      - name: Run unit tests
+        run: |
+          cd frontend
+          npm run test -- --watch=false --no-progress --browsers=ChromeHeadlessCI
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm install
+
+      - name: Build Angular app
+        run: |
+          cd frontend
+          npm run build
+
+      - name: SonarQube Analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          cd frontend
+          npx sonar-scanner \
+            -Dsonar.projectKey=velopro-frontend \
+            -Dsonar.sources=src \
+            -Dsonar.host.url=http://localhost:9000 \
+            -Dso
