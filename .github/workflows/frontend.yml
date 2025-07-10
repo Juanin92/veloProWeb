@@ -60,14 +60,3 @@ jobs:
         run: |
           cd frontend
           npm run build
-
-      - name: SonarQube Analysis
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          cd frontend
-          npx sonar-scanner \
-            -Dsonar.projectKey=velopro-frontend \
-            -Dsonar.sources=src \
-            -Dsonar.host.url=http://localhost:9000 \
-            -Dso

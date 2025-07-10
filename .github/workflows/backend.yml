@@ -48,12 +48,3 @@ jobs:
 
       - name: Build jar
         run: mvn -f backend-java/pom.xml package -DskipTests
-
-      - name: SonarQube Analysis
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          mvn -f backend-java/pom.xml sonar:sonar \
-            -Dsonar.projectKey=velopro-backend \
-            -Dsonar.host.url=http://localhost:9000 \
-            -Dsonar.login=$SONAR_TOKEN
