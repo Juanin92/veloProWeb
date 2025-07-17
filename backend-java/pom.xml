@@ -169,15 +169,6 @@
 						</goals>
 					</execution>
 				</executions>
-				<configuration>
-					<excludes>
-						<exclude>com/veloproweb/model/dto/report/*DTO*</exclude>
-						<exclude>com/veloproweb/repository/*MockitoMock*</exclude>
-						<exclude>com/veloproweb/model/dto/data/*Builder*</exclude>
-						<exclude>com/veloproweb/exceptions/data/*Exception*</exclude>
-						<exclude>com/veloproweb/service/product/interfaces/*MockitoMock*</exclude>
-					</excludes>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
