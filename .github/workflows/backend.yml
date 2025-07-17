@@ -65,7 +65,7 @@ jobs:
       - name: Build and analyse with SonarCloud
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=veloproweb -f backend-java/pom.xml
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Juanin92_veloProWeb -f backend-java/pom.xml
 
   build:
     runs-on: ubuntu-latest
