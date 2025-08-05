@@ -22,7 +22,7 @@ public class UnitProduct {
 
     @NotBlank(message = "El nombre de la unidad de medida es obligatoria")
     @Size(min = 2, message = "El nombre de la unidad de medida debe tener al menos 3 caracteres")
-    @Pattern(regexp = "^[0-9]+ [a-zA-Z]+$",
+    @Pattern(regexp = "\\d+ [a-zA-Z]+$",
             message = "El nombre debe tener un número seguido de un espacio y letras. Ejemplo: '10 gr'")
     private String nameUnit;
 
