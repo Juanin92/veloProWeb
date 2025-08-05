@@ -17,13 +17,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseEntity<String> MissingServletRequestParameterException(MissingServletRequestParameterException ex) {
+    public ResponseEntity<String> missingServletRequestParameterException(MissingServletRequestParameterException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("Falta un parámetro requerido: " + ex.getParameterName());
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<String> AccessDeniedException(AccessDeniedException ex) {
+    public ResponseEntity<String> accessDeniedException(AccessDeniedException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body("Acceso denegado. No tienes permiso para acceder a este recurso. " + ex.getMessage());
     }
