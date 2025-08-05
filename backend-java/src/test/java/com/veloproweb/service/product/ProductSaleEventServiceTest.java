@@ -1,6 +1,6 @@
 package com.veloproweb.service.product;
 
-import com.veloproweb.model.Enum.MovementsType;
+import com.veloproweb.model.enums.MovementsType;
 import com.veloproweb.model.dto.product.ProductUpdatedRequestDTO;
 import com.veloproweb.model.entity.inventory.Kardex;
 import com.veloproweb.model.entity.product.Product;

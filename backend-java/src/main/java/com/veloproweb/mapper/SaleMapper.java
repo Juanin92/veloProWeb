@@ -1,6 +1,6 @@
 package com.veloproweb.mapper;
 
-import com.veloproweb.model.Enum.PaymentMethod;
+import com.veloproweb.model.enums.PaymentMethod;
 import com.veloproweb.model.dto.sale.*;
 import com.veloproweb.model.entity.sale.Dispatch;
 import com.veloproweb.model.entity.sale.Sale;

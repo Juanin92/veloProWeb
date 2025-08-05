@@ -1,6 +1,6 @@
 package com.veloproweb.model.entity.sale;
 
-import com.veloproweb.model.Enum.DispatchStatus;
+import com.veloproweb.model.enums.DispatchStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

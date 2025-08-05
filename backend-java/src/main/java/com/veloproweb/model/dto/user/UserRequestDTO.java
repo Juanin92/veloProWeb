@@ -1,6 +1,6 @@
 package com.veloproweb.model.dto.user;
 
-import com.veloproweb.model.Enum.Rol;
+import com.veloproweb.model.enums.Rol;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

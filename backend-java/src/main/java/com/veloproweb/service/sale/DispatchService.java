@@ -3,7 +3,7 @@ package com.veloproweb.service.sale;
 import com.veloproweb.exceptions.sale.DispatchNotFoundException;
 import com.veloproweb.exceptions.sale.InvalidDispatchStatusException;
 import com.veloproweb.mapper.DispatchMapper;
-import com.veloproweb.model.Enum.DispatchStatus;
+import com.veloproweb.model.enums.DispatchStatus;
 import com.veloproweb.model.dto.sale.DispatchRequestDTO;
 import com.veloproweb.model.dto.sale.DispatchResponseDTO;
 import com.veloproweb.model.entity.sale.Dispatch;

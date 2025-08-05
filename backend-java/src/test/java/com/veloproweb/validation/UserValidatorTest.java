@@ -4,7 +4,7 @@ import com.veloproweb.exceptions.user.*;
 import com.veloproweb.exceptions.validation.ValidationException;
 import com.veloproweb.model.dto.user.UpdateUserDTO;
 import com.veloproweb.model.entity.user.User;
-import com.veloproweb.model.Enum.Rol;
+import com.veloproweb.model.enums.Rol;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;

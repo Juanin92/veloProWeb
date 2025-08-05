@@ -1,6 +1,6 @@
 package com.veloproweb.model.dto.inventory;
 
-import com.veloproweb.model.Enum.MovementsType;
+import com.veloproweb.model.enums.MovementsType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

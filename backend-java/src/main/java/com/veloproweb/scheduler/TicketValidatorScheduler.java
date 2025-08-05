@@ -1,6 +1,6 @@
 package com.veloproweb.scheduler;
 
-import com.veloproweb.model.Enum.PaymentStatus;
+import com.veloproweb.model.enums.PaymentStatus;
 import com.veloproweb.model.dto.customer.CustomerResponseDTO;
 import com.veloproweb.model.entity.customer.Customer;
 import com.veloproweb.model.entity.customer.TicketHistory;

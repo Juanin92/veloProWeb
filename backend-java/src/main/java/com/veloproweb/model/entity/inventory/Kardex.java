@@ -2,7 +2,7 @@ package com.veloproweb.model.entity.inventory;
 
 import com.veloproweb.model.entity.product.Product;
 import com.veloproweb.model.entity.user.User;
-import com.veloproweb.model.Enum.MovementsType;
+import com.veloproweb.model.enums.MovementsType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

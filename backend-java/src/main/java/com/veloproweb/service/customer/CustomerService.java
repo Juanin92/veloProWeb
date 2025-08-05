@@ -5,7 +5,7 @@
     import com.veloproweb.model.dto.customer.CustomerRequestDTO;
     import com.veloproweb.model.dto.customer.CustomerResponseDTO;
     import com.veloproweb.model.entity.customer.Customer;
-    import com.veloproweb.model.Enum.PaymentStatus;
+    import com.veloproweb.model.enums.PaymentStatus;
     import com.veloproweb.repository.customer.CustomerRepo;
     import com.veloproweb.service.customer.interfaces.ICustomerService;
     import com.veloproweb.util.TextFormatter;

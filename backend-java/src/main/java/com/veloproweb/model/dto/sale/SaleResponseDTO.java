@@ -1,6 +1,6 @@
 package com.veloproweb.model.dto.sale;
 
-import com.veloproweb.model.Enum.PaymentMethod;
+import com.veloproweb.model.enums.PaymentMethod;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

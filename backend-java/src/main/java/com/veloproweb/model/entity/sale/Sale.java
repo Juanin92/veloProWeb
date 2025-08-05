@@ -1,7 +1,7 @@
 package com.veloproweb.model.entity.sale;
 
 import com.veloproweb.model.entity.customer.Customer;
-import com.veloproweb.model.Enum.PaymentMethod;
+import com.veloproweb.model.enums.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

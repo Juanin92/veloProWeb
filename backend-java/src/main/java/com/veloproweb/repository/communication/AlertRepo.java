@@ -1,6 +1,6 @@
 package com.veloproweb.repository.communication;
 
-import com.veloproweb.model.Enum.AlertStatus;
+import com.veloproweb.model.enums.AlertStatus;
 import com.veloproweb.model.entity.product.Product;
 import com.veloproweb.model.entity.communication.Alert;
 import org.springframework.data.jpa.repository.JpaRepository;

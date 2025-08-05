@@ -1,6 +1,6 @@
 package com.veloproweb.service.sale.interfaces;
 
-import com.veloproweb.model.Enum.PaymentMethod;
+import com.veloproweb.model.enums.PaymentMethod;
 import com.veloproweb.model.entity.customer.Customer;
 
 public interface ISaleEventService {

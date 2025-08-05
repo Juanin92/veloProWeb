@@ -1,6 +1,6 @@
 package com.veloproweb.model.dto.sale;
 
-import com.veloproweb.model.Enum.DispatchStatus;
+import com.veloproweb.model.enums.DispatchStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

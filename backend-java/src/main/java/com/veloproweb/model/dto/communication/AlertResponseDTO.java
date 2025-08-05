@@ -1,6 +1,6 @@
 package com.veloproweb.model.dto.communication;
 
-import com.veloproweb.model.Enum.AlertStatus;
+import com.veloproweb.model.enums.AlertStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
