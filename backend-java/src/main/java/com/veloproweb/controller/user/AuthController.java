@@ -40,9 +40,8 @@ public class AuthController {
     public ResponseEntity<Map<String, String>> login(@RequestBody @Valid LoginRequestDTO user) throws Exception {
         loginService.validateLoginAccess(user.getUsername());
         String decryptedPassword = encryptionService.decrypt(user.getPassword());
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getUsername(), decryptedPassword)
-        );
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                user.getUsername(), decryptedPassword));
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
         String jwtToken = jwtUtil.generateToken(userDetails);
         String role = userDetails.getAuthorities().stream()
