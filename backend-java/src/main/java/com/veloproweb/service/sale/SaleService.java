@@ -92,9 +92,10 @@ public class SaleService implements ISaleService {
         };
         Sale sale = mapper.toSaleEntity(dto, lastDocument, paymentMethod, comment, customer);
 
-        switch (paymentMethod) {
-            case PRESTAMO -> eventService.createSaleLoanPaymentEvent(customer, dto.getTotal());
-            case MIXTO    -> eventService.createSaleMixPaymentEvent(customer, dto.getTotal());
+        if (paymentMethod == PaymentMethod.PRESTAMO) {
+            eventService.createSaleLoanPaymentEvent(customer, dto.getTotal());
+        } else if (paymentMethod == PaymentMethod.MIXTO) {
+            eventService.createSaleMixPaymentEvent(customer, dto.getTotal());
         }
 
         return sale;
