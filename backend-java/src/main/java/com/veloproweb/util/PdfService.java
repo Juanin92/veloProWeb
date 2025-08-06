@@ -124,10 +124,8 @@ public class PdfService {
     public void deleteSalesReceiptPDF(String documentNumber) {
         String filePath = "src/main/resources/static/pdf/boleta_" + documentNumber + ".pdf";
         File file = new File(filePath);
-        if (file.exists()) {
-            if (!file.delete()) {
-                logger.warn("No se pudo eliminar el archivo: {}", filePath);
-            }
+        if (file.exists() && !file.delete()) {
+            logger.warn("No se pudo eliminar el archivo: {}", filePath);
         }
     }
 }
