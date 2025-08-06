@@ -10,7 +10,6 @@ import com.veloproweb.model.entity.purchase.Supplier;
 import com.veloproweb.repository.purchase.PurchaseRepo;
 import com.veloproweb.service.purchase.interfaces.ISupplierService;
 import com.veloproweb.validation.PurchaseValidator;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -31,10 +30,6 @@ class PurchaseServiceTest {
     @Mock private ISupplierService supplierService;
     @Mock private PurchaseMapper mapper;
     @Mock private PurchaseValidator validator;
-
-    @BeforeEach
-    void setUp(){
-    }
 
     //Prueba para crear una nueva compra
     @Test
