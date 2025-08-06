@@ -42,7 +42,7 @@ public class CashRegisterValidator {
         }
     }
 
-    public void validateRoleCanRegister(Boolean canNotRegister){
+    public void validateRoleCanRegister(boolean canNotRegister){
         if (canNotRegister) {
             throw new UnauthorizedCashRegisterAccessException("Este rol no puede operar con registros de caja");
         }
