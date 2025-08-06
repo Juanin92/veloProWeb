@@ -222,7 +222,7 @@ public class EmailService {
         if (comment == null || !comment.matches(".*\\$\\d+.*")) {
             return 0;
         }
-        return Integer.parseInt(comment.replaceAll("[^0-9]", ""));
+        return Integer.parseInt(comment.replaceAll("\\D", ""));
     }
 }
 
