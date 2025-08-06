@@ -44,10 +44,8 @@ public class LoginService implements ILoginService {
     @Override
     public void validateSecurityToken(String username, String token) {
         User user = userService.getUserByUsername(username);
-        if (user != null && user.getToken() != null) {
-            if (!passwordEncoder.matches(token, user.getToken())){
-                throw new InvalidTokenException("El código de seguridad ingresado es incorrecto");
-            }
+        if (user != null && user.getToken() != null && !passwordEncoder.matches(token, user.getToken())) {
+            throw new InvalidTokenException("El código de seguridad ingresado es incorrecto");
         }
     }
 
