@@ -59,7 +59,7 @@ public class PdfService {
 
         // Logo
         Image logo = Image.getInstance("src/main/resources/static/Img/principalLogo.png");
-        logo.setAlignment(Image.ALIGN_RIGHT);
+        logo.setAlignment(Element.ALIGN_RIGHT);
         logo.scaleToFit(100, 100);
         document.add(logo);
 
