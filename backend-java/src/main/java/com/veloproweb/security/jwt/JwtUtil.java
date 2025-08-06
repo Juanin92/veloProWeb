@@ -14,14 +14,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.logging.Logger;
 
 @Component
 public class JwtUtil {
 
     @Value("${jwt.secret}")
     private String secret;
-    Logger logger = Logger.getLogger(JwtUtil.class.getName());
 
     /**
      * Extrae el nombre de usuario del token JWT.
@@ -62,8 +60,7 @@ public class JwtUtil {
         try {
             return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
         } catch (Exception e) {
-            logger.info("Error extracting claims from token: " + e.getMessage());
-            throw e;
+            throw new IllegalArgumentException("Token inválido o expirado", e);
         }
     }
 
