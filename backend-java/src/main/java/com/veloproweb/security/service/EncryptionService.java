@@ -1,5 +1,6 @@
 package com.veloproweb.security.service;
 
+import com.veloproweb.exceptions.security.PasswordDecryptionException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +23,18 @@ public class EncryptionService {
      * @param encryptedPassword contraseña a encriptar
      * @return contraseña encriptada
      */
-    public String decrypt(String encryptedPassword) throws Exception {
-        byte[] decodedKey = Base64.getDecoder().decode(encryptionKeyBase64);
-        SecretKeySpec secretKey = new SecretKeySpec(decodedKey, "AES");
-        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-        cipher.init(Cipher.DECRYPT_MODE, secretKey);
-        byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedPassword));
-        return new String(decryptedBytes);
+    public String decrypt(String encryptedPassword) {
+        try {
+            byte[] decodedKey = Base64.getDecoder().decode(encryptionKeyBase64);
+            SecretKeySpec secretKey = new SecretKeySpec(decodedKey, "AES");
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedPassword));
+            return new String(decryptedBytes);
+        } catch (Exception e) {
+            throw new PasswordDecryptionException(
+                    "Error al descifrar la contraseña. Posible corrupción de datos o clave incompatible");
+        }
+
     }
 }
