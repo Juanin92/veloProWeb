@@ -14,12 +14,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.logging.Logger;
 
 @Component
 public class JwtUtil {
 
     @Value("${jwt.secret}")
     private String secret;
+    Logger logger = Logger.getLogger(JwtUtil.class.getName());
 
     /**
      * Extrae el nombre de usuario del token JWT.
@@ -57,11 +59,10 @@ public class JwtUtil {
      * @return - Las reclamaciones del token.
      */
     private Claims extractAllClaims(String token) {
-//        return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
         try {
             return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
         } catch (Exception e) {
-            System.out.println("Error extracting claims from token: " + e.getMessage());
+            logger.info("Error extracting claims from token: " + e.getMessage());
             throw e;
         }
     }
