@@ -1,13 +1,11 @@
 package com.veloproweb.model.entity.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.veloproweb.model.entity.inventory.Kardex;
 import com.veloproweb.model.entity.sale.CashRegister;
 import com.veloproweb.model.enums.Rol;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -16,7 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -43,6 +42,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Rol role;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Kardex> kardexList = new ArrayList<>();
 
