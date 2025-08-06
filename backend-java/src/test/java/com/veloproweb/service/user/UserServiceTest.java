@@ -378,7 +378,7 @@ class UserServiceTest {
     void updateUserData_OwnNotFound(){
         when(userRepo.findByUsername("johnny")).thenReturn(Optional.empty());
         UserNotFoundException e = assertThrows(UserNotFoundException.class,() ->
-                userService.updateOwnData(any(UpdateUserDTO.class), "johnny"));
+                userService.updateOwnData(null, "johnny"));
 
         verify(userRepo, times(1)).findByUsername("johnny");
         verify(validator, never()).validateIsNotDeleted(true);
@@ -398,8 +398,10 @@ class UserServiceTest {
         when(userRepo.findByUsername("johnny")).thenReturn(Optional.of(existingUser));
         doThrow(new UserAlreadyDeletedException("Usuario ya está inactivo")).when(validator)
                 .validateIsNotDeleted(existingUser.isStatus());
+
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
         UserAlreadyDeletedException e = assertThrows(UserAlreadyDeletedException.class,() ->
-                userService.updateOwnData(any(UpdateUserDTO.class), "johnny"));
+                userService.updateOwnData(updateUserDTO, "johnny"));
 
         verify(userRepo, times(1)).findByUsername("johnny");
         verify(validator, times(1)).validateIsNotDeleted(existingUser.isStatus());
