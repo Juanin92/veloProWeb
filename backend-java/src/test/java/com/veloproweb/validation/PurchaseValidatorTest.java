@@ -30,9 +30,10 @@ class PurchaseValidatorTest {
     void validateTotal_valid(){
         PurchaseDetailRequestDTO dto = PurchaseDetailRequestDTO.builder().total(1000).build();
         PurchaseDetailRequestDTO dto2 = PurchaseDetailRequestDTO.builder().total(1000).build();
+        List<PurchaseDetailRequestDTO> details = List.of(dto, dto2);
 
         PurchaseTotalMismatchException e = assertThrows(PurchaseTotalMismatchException.class,
-                ()-> validator.validateTotal(3000, List.of(dto, dto2)));
+                ()-> validator.validateTotal(3000, details));
         assertEquals("""
                     Valor de total de compra no coinciden \
                     
