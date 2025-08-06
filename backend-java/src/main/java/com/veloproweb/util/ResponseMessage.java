@@ -5,6 +5,9 @@ import java.util.Map;
 
 public class ResponseMessage {
 
+    private ResponseMessage() {
+    }
+
     /**
      * Crear un mensaje de respuesta en formato JSON
      * @param text - texto del mensaje

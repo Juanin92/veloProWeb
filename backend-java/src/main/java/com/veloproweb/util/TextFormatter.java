@@ -2,6 +2,9 @@ package com.veloproweb.util;
 
 public class TextFormatter {
 
+    private TextFormatter() {
+    }
+
     /**
      * Convierte la primera letra de cada palabra en mayúscula
      * @param value cadena de texto a capitalizar
