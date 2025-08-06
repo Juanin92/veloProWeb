@@ -87,12 +87,12 @@ public class TicketHistoryService implements ITicketHistoryService {
 
     /**
      * Obtener un ticket específico
-     * @param Id - Identificador de ticket a buscar
+     * @param id - Identificador de ticket a buscar
      * @return - Ticket encontrado o excepción depende del caso
      */
     @Override
-    public TicketHistory getTicketById(Long Id) {
-        return ticketHistoryRepo.findById(Id).orElseThrow(() -> new TicketNotFoundException("Ticket no encontrado"));
+    public TicketHistory getTicketById(Long id) {
+        return ticketHistoryRepo.findById(id).orElseThrow(() -> new TicketNotFoundException("Ticket no encontrado"));
     }
 
     /**

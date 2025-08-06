@@ -3,7 +3,7 @@ package com.veloproweb.service.reporting;
 import com.veloproweb.model.dto.reporting.RecordResponseDTO;
 import com.veloproweb.model.entity.reporting.Record;
 import com.veloproweb.model.entity.user.User;
-import com.veloproweb.model.Enum.Rol;
+import com.veloproweb.model.enums.Rol;
 import com.veloproweb.repository.reporting.RecordRepo;
 import com.veloproweb.service.user.interfaces.IUserService;
 import com.veloproweb.validation.UserValidator;

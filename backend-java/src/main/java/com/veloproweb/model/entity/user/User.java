@@ -2,7 +2,7 @@ package com.veloproweb.model.entity.user;
 
 import com.veloproweb.model.entity.inventory.Kardex;
 import com.veloproweb.model.entity.sale.CashRegister;
-import com.veloproweb.model.Enum.Rol;
+import com.veloproweb.model.enums.Rol;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,6 +1,6 @@
 package com.veloproweb.model.dto.product;
 
-import com.veloproweb.model.Enum.StatusProduct;
+import com.veloproweb.model.enums.StatusProduct;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

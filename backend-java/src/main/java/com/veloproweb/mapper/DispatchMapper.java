@@ -1,6 +1,6 @@
 package com.veloproweb.mapper;
 
-import com.veloproweb.model.Enum.DispatchStatus;
+import com.veloproweb.model.enums.DispatchStatus;
 import com.veloproweb.model.dto.sale.DispatchRequestDTO;
 import com.veloproweb.model.dto.sale.DispatchResponseDTO;
 import com.veloproweb.model.dto.sale.SaleDetailResponseDTO;

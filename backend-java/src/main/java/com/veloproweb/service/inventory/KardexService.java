@@ -5,7 +5,7 @@ import com.veloproweb.model.dto.inventory.KardexResponseDTO;
 import com.veloproweb.model.entity.inventory.Kardex;
 import com.veloproweb.model.entity.user.User;
 import com.veloproweb.model.entity.product.Product;
-import com.veloproweb.model.Enum.MovementsType;
+import com.veloproweb.model.enums.MovementsType;
 import com.veloproweb.repository.KardexRepo;
 import com.veloproweb.service.user.interfaces.IUserService;
 import lombok.AllArgsConstructor;

@@ -3,7 +3,7 @@ package com.veloproweb.service.inventory;
 import com.veloproweb.model.dto.inventory.KardexResponseDTO;
 import com.veloproweb.model.entity.inventory.Kardex;
 import com.veloproweb.model.entity.product.Product;
-import com.veloproweb.model.Enum.MovementsType;
+import com.veloproweb.model.enums.MovementsType;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;

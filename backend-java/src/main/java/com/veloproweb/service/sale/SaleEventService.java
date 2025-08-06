@@ -1,6 +1,6 @@
 package com.veloproweb.service.sale;
 
-import com.veloproweb.model.Enum.PaymentMethod;
+import com.veloproweb.model.enums.PaymentMethod;
 import com.veloproweb.model.entity.customer.Customer;
 import com.veloproweb.service.customer.interfaces.ICustomerService;
 import com.veloproweb.service.customer.interfaces.ITicketHistoryService;

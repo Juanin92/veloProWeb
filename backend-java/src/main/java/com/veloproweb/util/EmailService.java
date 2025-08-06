@@ -5,7 +5,7 @@ import com.veloproweb.model.entity.customer.TicketHistory;
 import com.veloproweb.model.entity.sale.Sale;
 import com.veloproweb.model.entity.data.LocalData;
 import com.veloproweb.model.entity.user.User;
-import com.veloproweb.model.Enum.PaymentMethod;
+import com.veloproweb.model.enums.PaymentMethod;
 import com.veloproweb.service.data.ILocalDataService;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -222,7 +222,7 @@ public class EmailService {
         if (comment == null || !comment.matches(".*\\$\\d+.*")) {
             return 0;
         }
-        return Integer.parseInt(comment.replaceAll("[^0-9]", ""));
+        return Integer.parseInt(comment.replaceAll("\\D", ""));
     }
 }
 

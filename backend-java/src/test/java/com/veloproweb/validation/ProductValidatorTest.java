@@ -3,7 +3,7 @@ package com.veloproweb.validation;
 import com.veloproweb.exceptions.product.ProductAlreadyActivatedException;
 import com.veloproweb.exceptions.product.ProductAlreadyDeletedException;
 import com.veloproweb.model.entity.product.*;
-import com.veloproweb.model.Enum.StatusProduct;
+import com.veloproweb.model.enums.StatusProduct;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

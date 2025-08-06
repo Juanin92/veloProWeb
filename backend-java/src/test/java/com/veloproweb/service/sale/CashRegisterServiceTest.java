@@ -5,7 +5,7 @@ import com.veloproweb.exceptions.sale.CashRegisterNotFoundException;
 import com.veloproweb.exceptions.sale.InvalidAmountCashRegisterException;
 import com.veloproweb.exceptions.sale.UnauthorizedCashRegisterAccessException;
 import com.veloproweb.mapper.CashRegisterMapper;
-import com.veloproweb.model.Enum.Rol;
+import com.veloproweb.model.enums.Rol;
 import com.veloproweb.model.dto.sale.CashRegisterRequestDTO;
 import com.veloproweb.model.dto.sale.CashRegisterResponseDTO;
 import com.veloproweb.model.entity.sale.CashRegister;

@@ -1,4 +1,4 @@
-package com.veloproweb.model.Enum;
+package com.veloproweb.model.enums;
 
 public enum StatusProduct {
     DISPONIBLE,

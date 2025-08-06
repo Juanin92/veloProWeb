@@ -8,7 +8,7 @@ import com.veloproweb.model.dto.sale.SaleResponseDTO;
 import com.veloproweb.model.entity.sale.SaleDetail;
 import com.veloproweb.model.entity.customer.Customer;
 import com.veloproweb.model.entity.sale.Sale;
-import com.veloproweb.model.Enum.PaymentMethod;
+import com.veloproweb.model.enums.PaymentMethod;
 import com.veloproweb.model.entity.product.Product;
 import com.veloproweb.repository.sale.SaleRepo;
 import com.veloproweb.service.sale.interfaces.ISaleEventService;

@@ -6,7 +6,7 @@ import com.veloproweb.model.dto.user.UpdateUserDTO;
 import com.veloproweb.model.dto.user.UserRequestDTO;
 import com.veloproweb.model.dto.user.UserResponseDTO;
 import com.veloproweb.model.entity.user.User;
-import com.veloproweb.model.Enum.Rol;
+import com.veloproweb.model.enums.Rol;
 import com.veloproweb.repository.UserRepo;
 import com.veloproweb.validation.UserValidator;
 import org.junit.jupiter.api.Test;

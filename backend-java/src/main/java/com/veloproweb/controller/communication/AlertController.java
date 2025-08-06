@@ -1,6 +1,6 @@
 package com.veloproweb.controller.communication;
 
-import com.veloproweb.model.Enum.AlertStatus;
+import com.veloproweb.model.enums.AlertStatus;
 import com.veloproweb.model.dto.communication.AlertResponseDTO;
 import com.veloproweb.service.communication.interfaces.IAlertService;
 import com.veloproweb.util.ResponseMessage;

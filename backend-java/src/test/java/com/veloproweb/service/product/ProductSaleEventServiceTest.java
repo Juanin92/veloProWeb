@@ -1,6 +1,6 @@
 package com.veloproweb.service.product;
 
-import com.veloproweb.model.Enum.MovementsType;
+import com.veloproweb.model.enums.MovementsType;
 import com.veloproweb.model.dto.product.ProductUpdatedRequestDTO;
 import com.veloproweb.model.entity.inventory.Kardex;
 import com.veloproweb.model.entity.product.Product;
@@ -20,7 +20,7 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ProductSaleEventServiceTest {
+class ProductSaleEventServiceTest {
 
     @InjectMocks private ProductEventService productEventService;
     @Mock private IKardexService kardexService;

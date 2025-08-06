@@ -12,5 +12,5 @@ public interface ITicketHistoryService {
     List<TicketHistory> getByCustomerId(Long id);
     List<TicketResponseDTO> getByCustomerIdDTO(Long id);
     void updateStatus(TicketHistory  ticket);
-    TicketHistory getTicketById(Long Id);
+    TicketHistory getTicketById(Long id);
 }

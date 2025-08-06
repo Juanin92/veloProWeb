@@ -1,6 +1,6 @@
 package com.veloproweb.model.dto.customer;
 
-import com.veloproweb.model.Enum.PaymentStatus;
+import com.veloproweb.model.enums.PaymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

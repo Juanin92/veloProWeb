@@ -1,7 +1,7 @@
 package com.veloproweb.service.purchase;
 
 import com.veloproweb.mapper.PurchaseMapper;
-import com.veloproweb.model.Enum.MovementsType;
+import com.veloproweb.model.enums.MovementsType;
 import com.veloproweb.model.dto.purchase.PurchaseDetailRequestDTO;
 import com.veloproweb.model.entity.product.Product;
 import com.veloproweb.model.entity.purchase.Purchase;

@@ -2,14 +2,14 @@ package com.veloproweb.service.sale;
 
 import com.veloproweb.exceptions.sale.SaleNotFoundException;
 import com.veloproweb.mapper.SaleMapper;
-import com.veloproweb.model.Enum.PaymentMethod;
+import com.veloproweb.model.enums.PaymentMethod;
 import com.veloproweb.model.dto.sale.SaleDetailRequestDTO;
 import com.veloproweb.model.dto.sale.SaleDetailResponseDTO;
 import com.veloproweb.model.entity.sale.Dispatch;
 import com.veloproweb.model.entity.product.Product;
 import com.veloproweb.model.entity.sale.Sale;
 import com.veloproweb.model.entity.sale.SaleDetail;
-import com.veloproweb.model.Enum.MovementsType;
+import com.veloproweb.model.enums.MovementsType;
 import com.veloproweb.repository.sale.DispatchRepo;
 import com.veloproweb.repository.sale.SaleDetailRepo;
 import com.veloproweb.service.product.ProductService;

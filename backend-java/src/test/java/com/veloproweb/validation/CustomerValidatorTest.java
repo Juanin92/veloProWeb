@@ -6,7 +6,7 @@ import com.veloproweb.exceptions.customer.CustomerAlreadyExistsException;
 import com.veloproweb.exceptions.customer.InvalidPaymentAmountException;
 import com.veloproweb.exceptions.validation.ValidationException;
 import com.veloproweb.model.entity.customer.Customer;
-import com.veloproweb.model.Enum.PaymentStatus;
+import com.veloproweb.model.enums.PaymentStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

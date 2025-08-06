@@ -1,6 +1,6 @@
 package com.veloproweb.mapper;
 
-import com.veloproweb.model.Enum.StatusProduct;
+import com.veloproweb.model.enums.StatusProduct;
 import com.veloproweb.model.dto.product.ProductRequestDTO;
 import com.veloproweb.model.dto.product.ProductResponseDTO;
 import com.veloproweb.model.entity.product.Product;

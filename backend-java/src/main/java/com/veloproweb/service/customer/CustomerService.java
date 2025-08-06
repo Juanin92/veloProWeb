@@ -5,7 +5,7 @@
     import com.veloproweb.model.dto.customer.CustomerRequestDTO;
     import com.veloproweb.model.dto.customer.CustomerResponseDTO;
     import com.veloproweb.model.entity.customer.Customer;
-    import com.veloproweb.model.Enum.PaymentStatus;
+    import com.veloproweb.model.enums.PaymentStatus;
     import com.veloproweb.repository.customer.CustomerRepo;
     import com.veloproweb.service.customer.interfaces.ICustomerService;
     import com.veloproweb.util.TextFormatter;
@@ -65,12 +65,12 @@
 
         /**
          * Obtiene un cliente específico
-         * @param ID - Identificador del cliente
+         * @param id - Identificador del cliente
          * @return - Objeto de cliente o una excepción si no encuentra nada
          */
         @Override
-        public Customer getCustomerById(Long ID) {
-            return customerRepo.findById(ID).orElseThrow(() -> new CustomerNotFoundException("Cliente no encontrado"));
+        public Customer getCustomerById(Long id) {
+            return customerRepo.findById(id).orElseThrow(() -> new CustomerNotFoundException("Cliente no encontrado"));
         }
 
         /**
@@ -188,7 +188,7 @@
         }
 
         /**
-         * Asigna un valor predeterminado al email del cliente si este es nulo o vacio
+         * Asigna un valor predeterminado al email del cliente si este es nulo o vacío
          * @param customer - cliente a asignar el email
          */
         private void assignDefaultEmail(Customer customer){

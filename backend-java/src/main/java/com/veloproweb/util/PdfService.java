@@ -7,7 +7,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.veloproweb.model.dto.sale.SaleDetailResponseDTO;
 import com.veloproweb.model.entity.sale.Sale;
 import com.veloproweb.model.entity.data.LocalData;
-import com.veloproweb.model.Enum.PaymentMethod;
+import com.veloproweb.model.enums.PaymentMethod;
 import com.veloproweb.service.sale.interfaces.ISaleDetailService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;

@@ -1,6 +1,6 @@
 package com.veloproweb.config;
 
-import com.veloproweb.model.Enum.Rol;
+import com.veloproweb.model.enums.Rol;
 import com.veloproweb.security.jwt.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

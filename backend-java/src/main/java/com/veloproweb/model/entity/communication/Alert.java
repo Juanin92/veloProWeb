@@ -1,6 +1,6 @@
 package com.veloproweb.model.entity.communication;
 
-import com.veloproweb.model.Enum.AlertStatus;
+import com.veloproweb.model.enums.AlertStatus;
 import com.veloproweb.model.entity.product.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
