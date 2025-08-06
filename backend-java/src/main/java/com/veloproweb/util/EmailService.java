@@ -8,7 +8,7 @@ import com.veloproweb.model.entity.user.User;
 import com.veloproweb.model.enums.PaymentMethod;
 import com.veloproweb.service.data.ILocalDataService;
 import jakarta.mail.internet.MimeMessage;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -19,10 +19,11 @@ import java.util.Objects;
 import java.util.Properties;
 
 @Service
+@AllArgsConstructor
 public class EmailService {
 
-    @Autowired private ILocalDataService localDataService;
-    @Autowired private PdfService pdfService;
+    private final ILocalDataService localDataService;
+    private final PdfService pdfService;
     private LocalData localData;
 
     /**
