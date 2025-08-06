@@ -38,7 +38,6 @@ public class SaleController {
         Sale sale = saleService.createSale(dto);
         saleDetailService.addDetailsToSale(dto.getDetailList(), sale, userDetails);
         recordService.registerAction(userDetails, "CREATE", "Venta realizada " + sale.getDocument());
-//        emailService.sendSalesReceiptEmail(sale);
         return new ResponseEntity<>(ResponseMessage.message("Venta registrada correctamente!"), HttpStatus.CREATED);
     }
 
