@@ -20,7 +20,7 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ProductSaleEventServiceTest {
+class ProductSaleEventServiceTest {
 
     @InjectMocks private ProductEventService productEventService;
     @Mock private IKardexService kardexService;
