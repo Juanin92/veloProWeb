@@ -24,10 +24,7 @@ public class SaleEventService implements ISaleEventService {
      */
     @Override
     public void createSaleLoanPaymentEvent(Customer customer, int amount) {
-        customer.setTotalDebt(customer.getDebt() + amount);
-        customerService.updateTotalDebt(customer);
-        customerService.addSaleToCustomer(customer);
-        ticketHistoryService.addTicketToCustomer(customer, amount);
+        processPayment(customer, amount);
     }
 
     /**
@@ -38,10 +35,7 @@ public class SaleEventService implements ISaleEventService {
      */
     @Override
     public void createSaleMixPaymentEvent(Customer customer, int amount) {
-        customer.setTotalDebt(customer.getDebt() + amount);
-        customerService.updateTotalDebt(customer);
-        customerService.addSaleToCustomer(customer);
-        ticketHistoryService.addTicketToCustomer(customer, amount);
+        processPayment(customer, amount);
     }
 
     /**
@@ -56,5 +50,18 @@ public class SaleEventService implements ISaleEventService {
             return customerService.getCustomerById(idCustomer);
         }
         return  null;
+    }
+
+    /**
+     * Procesa el pago de un cliente.
+     * Este método actualiza la deuda del cliente, agrega la venta al cliente
+     * @param customer - Cliente que realiza el pago
+     * @param amount - Monto del pago realizado
+     */
+    private void processPayment(Customer customer, int amount){
+        customer.setTotalDebt(customer.getDebt() + amount);
+        customerService.updateTotalDebt(customer);
+        customerService.addSaleToCustomer(customer);
+        ticketHistoryService.addTicketToCustomer(customer, amount);
     }
 }
