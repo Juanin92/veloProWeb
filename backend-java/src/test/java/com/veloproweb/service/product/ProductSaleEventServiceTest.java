@@ -114,34 +114,34 @@ class ProductSaleEventServiceTest {
     @Test
     void checkLowSales_valid(){
         LocalDate days = LocalDate.now().minusDays(90);
-        Product product = Product.builder().id(1L).description("Product test").stock(10).buyPrice(2000).build();
-        Kardex kardexEntry = Kardex.builder().id(1L).product(product).quantity(20).movementsType(MovementsType.ENTRADA)
+        Product productTest = Product.builder().id(1L).description("Product test").stock(10).buyPrice(2000).build();
+        Kardex kardexEntry = Kardex.builder().id(1L).product(productTest).quantity(20).movementsType(MovementsType.ENTRADA)
                 .date(LocalDate.now().minusDays(95)).stock(10).price(2000).build();
-        Kardex kardexExit = Kardex.builder().id(1L).product(product).quantity(2).movementsType(MovementsType.SALIDA)
+        Kardex kardexExit = Kardex.builder().id(1L).product(productTest).quantity(2).movementsType(MovementsType.SALIDA)
                 .date(LocalDate.now().minusDays(85)).stock(19).price(2000).build();
-        when(kardexService.getProductMovementsSinceDate(product, days)).thenReturn(List.of(kardexEntry, kardexExit));
-        String description = String.format("Producto sin Ventas (+ 90 días) -> %s", product.getDescription());
-        when(alertService.isAlertActive(product, description)).thenReturn(false);
+        when(kardexService.getProductMovementsSinceDate(productTest, days)).thenReturn(List.of(kardexEntry, kardexExit));
+        String description = String.format("Producto sin Ventas (+ 90 días) -> %s", productTest.getDescription());
+        when(alertService.isAlertActive(productTest, description)).thenReturn(false);
 
-        productEventService.checkLowSales(product);
+        productEventService.checkLowSales(productTest);
 
-        verify(kardexService, times(1)).getProductMovementsSinceDate(product, days);
-        verify(alertService, times(1)).isAlertActive(product, description);
-        verify(alertService, times(1)).createAlert(product, description);
+        verify(kardexService, times(1)).getProductMovementsSinceDate(productTest, days);
+        verify(alertService, times(1)).isAlertActive(productTest, description);
+        verify(alertService, times(1)).createAlert(productTest, description);
     }
     @Test
     void checkLowSales_noLowSalesCondition() {
         LocalDate days = LocalDate.now().minusDays(90);
-        Product product = Product.builder().build();
-        Kardex kardexEntry = Kardex.builder().id(1L).product(product).quantity(20).movementsType(MovementsType.ENTRADA)
+        Product productTest = Product.builder().build();
+        Kardex kardexEntry = Kardex.builder().id(1L).product(productTest).quantity(20).movementsType(MovementsType.ENTRADA)
                 .date(LocalDate.now().minusDays(95)).stock(10).price(2000).build();
-        Kardex kardexExit = Kardex.builder().id(1L).product(product).quantity(19).movementsType(MovementsType.SALIDA)
+        Kardex kardexExit = Kardex.builder().id(1L).product(productTest).quantity(19).movementsType(MovementsType.SALIDA)
                 .date(LocalDate.now().minusDays(85)).stock(19).price(2000).build();
-        when(kardexService.getProductMovementsSinceDate(product, days)).thenReturn(List.of(kardexEntry, kardexExit));
+        when(kardexService.getProductMovementsSinceDate(productTest, days)).thenReturn(List.of(kardexEntry, kardexExit));
 
-        productEventService.checkLowSales(product);
+        productEventService.checkLowSales(productTest);
 
-        verify(kardexService, times(1)).getProductMovementsSinceDate(product, days);
+        verify(kardexService, times(1)).getProductMovementsSinceDate(productTest, days);
         verifyNoInteractions(alertService);
     }
     @Test
