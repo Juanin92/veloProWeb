@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class LocalDataService implements ILocalDataService {
 
     private final LocalDataRepo localDataRepo;
-    private final static Long LOCAL_DATA_ID = 1L;
+    private static final Long LOCAL_DATA_ID = 1L;
 
     /**
      * Actualiza los datos locales
