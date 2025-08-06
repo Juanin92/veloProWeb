@@ -15,12 +15,12 @@ public class UserRequestDTO {
 
     @NotBlank(message = "El nombre del usuario es obligatorio")
     @Size(min = 3, message = "El nombre debe tener al menos 3 caracteres")
-    @Pattern(regexp = "^(?!null|NULL$)[\\p{L} ]+$", message = "El nombre solo puede contener letras")
+    @Pattern(regexp = "^(?!^(null|NULL)$)[\\p{L} ]+$", message = "El nombre solo puede contener letras")
     private String name;
 
     @NotBlank(message = "El apellido del usuario es obligatorio")
     @Size(min = 3, message = "El apellido debe tener al menos 3 caracteres")
-    @Pattern(regexp = "^(?!null|NULL$)[\\p{L} ]+$", message = "El apellido solo puede contener letras")
+    @Pattern(regexp = "^(?!^(null|NULL)$)[\\p{L} ]+$", message = "El apellido solo puede contener letras")
     private String surname;
 
     @NotBlank(message = "El nombre de usuario es obligatorio")

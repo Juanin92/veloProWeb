@@ -26,7 +26,7 @@ public class CategoryProduct {
 
     @NotBlank(message = "El nombre de la categoría es obligatoria")
     @Size(min = 3, message = "El nombre de la categoría debe tener al menos 2 caracteres")
-    @Pattern(regexp = "^(?!null|NULL$)[\\p{L} ]+$", message = "El nombre solo puede contener letras")
+    @Pattern(regexp = "^(?!^(null|NULL)$)[\\p{L} ]+$", message = "El nombre solo puede contener letras")
     private String name;
 
     @JsonIgnore
