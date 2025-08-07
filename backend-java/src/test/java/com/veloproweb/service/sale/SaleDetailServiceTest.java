@@ -93,18 +93,20 @@ class SaleDetailServiceTest {
         SaleDetail saleDetailMapped = mapper.toSaleDetailEntityFromDispatch(dto, product, dispatch);
 
         saleDetailService.createSaleDetailsToDispatch(List.of(dto), dispatch);
+        ArgumentCaptor<SaleDetail> saleDetailCaptor = ArgumentCaptor.forClass(SaleDetail.class);
 
         verify(productService, times(1)).getProductById(dto.getIdProduct());
         verify(mapper, times(2)).toSaleDetailEntityFromDispatch(dto, product, dispatch);
-        verify(saleDetailRepo, times(1)).save(saleDetailMapped);
+        verify(saleDetailRepo, times(1)).save(saleDetailCaptor.capture());
         verify(productService, times(1)).updateStockAndReserveDispatch(product,
                 saleDetailMapped.getQuantity(), true);
 
-        assertEquals(dispatch, saleDetailMapped.getDispatch());
-        assertEquals(product, saleDetailMapped.getProduct());
-        assertEquals(1, saleDetailMapped.getQuantity());
-        assertEquals(119, saleDetailMapped.getPrice());
-        assertNull(saleDetailMapped.getSale());
+        SaleDetail result = saleDetailCaptor.getValue();
+        assertEquals(dispatch, result.getDispatch());
+        assertEquals(product, result.getProduct());
+        assertEquals(1, result.getQuantity());
+        assertEquals(119, result.getPrice());
+        assertNull(result.getSale());
     }
 
     //Prueba para agregar un venta al detalle de venta de un despacho

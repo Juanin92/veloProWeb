@@ -27,7 +27,7 @@ public class EncryptionService {
         try {
             byte[] decodedKey = Base64.getDecoder().decode(encryptionKeyBase64);
             SecretKeySpec secretKey = new SecretKeySpec(decodedKey, "AES");
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
             byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedPassword));
             return new String(decryptedBytes);
@@ -35,6 +35,5 @@ public class EncryptionService {
             throw new PasswordDecryptionException(
                     "Error al descifrar la contraseña. Posible corrupción de datos o clave incompatible");
         }
-
     }
 }

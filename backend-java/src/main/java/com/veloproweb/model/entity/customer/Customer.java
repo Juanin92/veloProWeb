@@ -1,17 +1,16 @@
 package com.veloproweb.model.entity.customer;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.veloproweb.model.enums.PaymentStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,9 +30,11 @@ public class Customer {
     private PaymentStatus status;
     private boolean account;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<PaymentCustomer> paymentCustomerList = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<TicketHistory> ticketHistoryList = new ArrayList<>();
 }

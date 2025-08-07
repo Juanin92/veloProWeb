@@ -55,6 +55,36 @@ class LoginServiceTest {
         verify(passwordEncoder, times(1)).matches(originalToken, user.getToken());
     }
     @Test
+    void validateSecurityToken_tokenNull(){
+        User user = User.builder().username("johnny").name("John").surname("Doe").token(null).build();
+        when(userService.getUserByUsername("johnny")).thenReturn(user);
+
+        loginService.validateSecurityToken("johnny", null);
+
+        verify(userService, times(1)).getUserByUsername("johnny");
+        verify(passwordEncoder, never()).matches("originalToken", null);
+    }
+    @Test
+    void validateSecurityToken_userNull(){
+        when(userService.getUserByUsername("johnny")).thenReturn(null);
+
+        loginService.validateSecurityToken("johnny", "testToken");
+
+        verify(userService, times(1)).getUserByUsername("johnny");
+    }
+    @Test
+    void validateSecurityToken_tokenNotMatches(){
+        String originalToken = "originalToken";
+        User user = User.builder().username("johnny").name("John").surname("Doe").token("testToken").build();
+        when(userService.getUserByUsername("johnny")).thenReturn(user);
+        when(passwordEncoder.matches(originalToken, user.getToken())).thenReturn(true);
+
+        loginService.validateSecurityToken("johnny", originalToken);
+
+        verify(userService, times(1)).getUserByUsername("johnny");
+        verify(passwordEncoder, times(1)).matches(originalToken, user.getToken());
+    }
+    @Test
     void validateSecurityToken_exception() {
         String originalToken = "testToken";
         User user = User.builder().username("johnny").name("John").surname("Doe").token("token").build();
@@ -113,6 +143,7 @@ class LoginServiceTest {
         assertEquals("El usuario ha sido eliminado. No se puede realizar la operación.", e.getMessage());
     }
 
+    //Prueba para verificar que el usuario autenticado no se encuentre eliminado
     @Test
     void validateLoginAccess() {
         User user = User.builder().username("johnny").name("John").surname("Doe").status(false).token(null).build();
@@ -127,5 +158,16 @@ class LoginServiceTest {
         verify(validator, times(1)).validateUserIsNotDeleted(false);
 
         assertEquals("El usuario ha sido eliminado. No se puede realizar la operación.", e.getMessage());
+    }
+    @Test
+    void validateLoginAccess_userNotEliminated(){
+        User user = User.builder().username("johnny").name("John").surname("Doe").status(true).token(null).build();
+        when(userService.getUserByUsername("johnny")).thenReturn(user);
+        doNothing().when(validator).validateUserIsNotDeleted(user.isStatus());
+
+        loginService.validateLoginAccess("johnny");
+
+        verify(userService, times(1)).getUserByUsername("johnny");
+        verify(validator, times(1)).validateUserIsNotDeleted(true);
     }
 }

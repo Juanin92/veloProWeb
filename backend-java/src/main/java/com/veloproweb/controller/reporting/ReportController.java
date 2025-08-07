@@ -24,6 +24,8 @@ public class ReportController {
 
     private final IReportService reportService;
     private final IRecordService recordService;
+    private static final String VIEW_CHART = "VIEW_CHART";
+    private static final String MESSAGE = "message";
 
     @GetMapping("/cantidad_ventas")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE')")
@@ -31,11 +33,11 @@ public class ReportController {
                                                @AuthenticationPrincipal UserDetails userDetails){
         try{
             List<DailySaleCountDTO> dtoList = reportService.getDailySale(startDate, endDate);
-            recordService.registerAction(userDetails, "VIEW_CHART", "Gráfico de ventas diarias");
+            recordService.registerAction(userDetails, VIEW_CHART, "Gráfico de ventas diarias");
             return ResponseEntity.ok(dtoList);
         }catch (IllegalArgumentException e){
             Map<String, String> response = new HashMap<>();
-            response.put("message", e.getMessage());
+            response.put(MESSAGE, e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
@@ -46,11 +48,11 @@ public class ReportController {
                                                     @AuthenticationPrincipal UserDetails userDetails){
         try{
             List<DailySaleSumDTO> dtoList = reportService.getTotalSaleDaily(startDate, endDate);
-            recordService.registerAction(userDetails, "VIEW_CHART", "Gráfico de suma de ventas diarias");
+            recordService.registerAction(userDetails, VIEW_CHART, "Gráfico de suma de ventas diarias");
             return ResponseEntity.ok(dtoList);
         }catch (IllegalArgumentException e){
             Map<String, String> response = new HashMap<>();
-            response.put("message", e.getMessage());
+            response.put(MESSAGE, e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
@@ -62,11 +64,11 @@ public class ReportController {
                                                            @AuthenticationPrincipal UserDetails userDetails){
         try{
             List<DailySaleAvgDTO> dtoList = reportService.getAverageTotalSaleDaily(startDate, endDate);
-            recordService.registerAction(userDetails, "VIEW_CHART", "Gráfico de promedio ventas diarias");
+            recordService.registerAction(userDetails, VIEW_CHART, "Gráfico de promedio ventas diarias");
             return ResponseEntity.ok(dtoList);
         }catch (IllegalArgumentException e){
             Map<String, String> response = new HashMap<>();
-            response.put("message", e.getMessage());
+            response.put(MESSAGE, e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
@@ -77,11 +79,11 @@ public class ReportController {
                                                  @AuthenticationPrincipal UserDetails userDetails){
         try{
             List<DailySaleEarningDTO> dtoList = reportService.getEarningSale(startDate, endDate);
-            recordService.registerAction(userDetails, "VIEW_CHART", "Gráfico de ganancias ventas diarias");
+            recordService.registerAction(userDetails, VIEW_CHART, "Gráfico de ganancias ventas diarias");
             return ResponseEntity.ok(dtoList);
         }catch (IllegalArgumentException e){
             Map<String, String> response = new HashMap<>();
-            response.put("message", e.getMessage());
+            response.put(MESSAGE, e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
@@ -93,11 +95,11 @@ public class ReportController {
                                                      @AuthenticationPrincipal UserDetails userDetails){
         try{
             List<ProductReportDTO> dtoList = reportService.getMostProductSale(startDate, endDate);
-            recordService.registerAction(userDetails, "VIEW_CHART", "Gráfico de productos más vendidos");
+            recordService.registerAction(userDetails, VIEW_CHART, "Gráfico de productos más vendidos");
             return ResponseEntity.ok(dtoList);
         }catch (IllegalArgumentException e){
             Map<String, String> response = new HashMap<>();
-            response.put("message", e.getMessage());
+            response.put(MESSAGE, e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
@@ -109,11 +111,11 @@ public class ReportController {
                                                       @AuthenticationPrincipal UserDetails userDetails){
         try{
             List<ProductReportDTO> dtoList = reportService.getMostCategorySale(startDate, endDate);
-            recordService.registerAction(userDetails, "VIEW_CHART", "Gráfico de categorías más vendidas");
+            recordService.registerAction(userDetails, VIEW_CHART, "Gráfico de categorías más vendidas");
             return ResponseEntity.ok(dtoList);
         }catch (IllegalArgumentException e){
             Map<String, String> response = new HashMap<>();
-            response.put("message", e.getMessage());
+            response.put(MESSAGE, e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }

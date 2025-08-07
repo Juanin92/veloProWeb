@@ -21,8 +21,8 @@ class CommunicationValidationTest {
     //Prueba que el usuario actual no sea el propietario del mensaje
     @Test
     void validateSenderAndReceiverAreDifferent() {
-        Message message = Message.builder().receiverUser(User.builder().id(1L).username("johnny").build()).build();
         User currentUser = User.builder().id(1L).username("johnny").build();
+        Message message = Message.builder().receiverUser(currentUser).build();
         MessageReceiverUserException e = assertThrows(MessageReceiverUserException.class,
                 () -> validation.validateSenderAndReceiverAreDifferent(message, currentUser));
         assertEquals("No puedes enviarte un mensaje a ti mismo", e.getMessage());
