@@ -141,23 +141,22 @@ class MessageServiceTest {
     @Test
     void sendMessage_receiverUserEqualSenderUserException() {
         MessageRequestDTO dto = MessageRequestDTO.builder().context("test").receiverUser("johnny").build();
-        User receiverUser = User.builder().id(1L).name("John").surname("Doe").username("johnny").build();
-        User senderUser = User.builder().id(1L).name("John").surname("Doe").username("johnny").build();
-        when(userService.getUserByUsername(dto.getReceiverUser())).thenReturn(receiverUser);
-        when(userService.getUserByUsername("johnny")).thenReturn(senderUser);
+        User user = User.builder().id(1L).name("John").surname("Doe").username("johnny").build();
+        when(userService.getUserByUsername(dto.getReceiverUser())).thenReturn(user);
+        when(userService.getUserByUsername("johnny")).thenReturn(user);
 
-        Message message = Message.builder().id(1L).context("test").isDelete(false).isRead(false).senderUser(senderUser)
-                .receiverUser(receiverUser).created(LocalDate.now()).build();
-        when(mapper.toEntity(dto.getContext(), senderUser, receiverUser)).thenReturn(message);
+        Message message = Message.builder().id(1L).context("test").isDelete(false).isRead(false).senderUser(user)
+                .receiverUser(user).created(LocalDate.now()).build();
+        when(mapper.toEntity(dto.getContext(), user, user)).thenReturn(message);
         doThrow(new MessageReceiverUserException("No puedes enviarte un mensaje a ti mismo")).when(validation)
-                .validateSenderAndReceiverAreDifferent(message, receiverUser);
+                .validateSenderAndReceiverAreDifferent(message, user);
 
         MessageReceiverUserException e = assertThrows(MessageReceiverUserException.class,
                 () -> messageService.sendMessage(dto, "johnny"));
 
         verify(userService, times(2)).getUserByUsername(anyString());
-        verify(mapper, times(1)).toEntity(dto.getContext(), senderUser, receiverUser);
-        verify(validation, times(1)).validateSenderAndReceiverAreDifferent(message, receiverUser);
+        verify(mapper, times(1)).toEntity(dto.getContext(), user, user);
+        verify(validation, times(1)).validateSenderAndReceiverAreDifferent(message, user);
         verify(messageRepo, never()).save(any(Message.class));
 
         assertEquals("No puedes enviarte un mensaje a ti mismo", e.getMessage());
