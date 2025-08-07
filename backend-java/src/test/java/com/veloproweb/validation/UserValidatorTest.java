@@ -151,8 +151,9 @@ class UserValidatorTest {
     @Test
     void validateUserIsNotDeleted() {
         User user = User.builder().status(false).build();
+        boolean status = user.isStatus();
         UserAlreadyDeletedException e = assertThrows(UserAlreadyDeletedException.class,
-                () -> validator.validateUserIsNotDeleted(user.isStatus()));
+                () -> validator.validateUserIsNotDeleted(status));
 
         assertEquals("El usuario ha sido eliminado. No se puede realizar la operación.", e.getMessage());
     }

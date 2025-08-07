@@ -1,7 +1,7 @@
 package com.veloproweb.security.service;
 
 import com.veloproweb.repository.UserRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -16,9 +16,10 @@ import java.util.Optional;
 
 //Se encarga de cargar los detalles de un usuario desde la base de datos
 @Service
+@AllArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    @Autowired private UserRepo userRepo;
+    private final UserRepo userRepo;
 
     /**
      * Carga los detalles de un usuario por su nombre de usuario.

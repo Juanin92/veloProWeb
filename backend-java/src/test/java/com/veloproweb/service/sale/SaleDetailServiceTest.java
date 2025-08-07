@@ -77,7 +77,7 @@ class SaleDetailServiceTest {
     void add_saleNotFound(){
         doThrow(new SaleNotFoundException("Venta no encontrada")).when(validator).hasSale(null);
         SaleNotFoundException exception = assertThrows(SaleNotFoundException.class,
-                () -> saleDetailService.addDetailsToSale(List.of(), any(Sale.class), userDetails));
+                () -> saleDetailService.addDetailsToSale(List.of(), null, userDetails));
 
         verify(saleDetailRepo, never()).save(any(SaleDetail.class));
         assertEquals( "Venta no encontrada", exception.getMessage());

@@ -20,12 +20,12 @@ public class CustomerRequestDTO {
 
     @NotBlank(message = "El nombre es obligatorio")
     @Size(min = 3, message = "El nombre debe tener al menos 3 caracteres")
-    @Pattern(regexp = "^(?!null|NULL$)[\\p{L} ]+$", message = "El nombre solo puede contener letras")
+    @Pattern(regexp = "^(?!^(null|NULL)$)[\\p{L} ]+$", message = "El nombre solo puede contener letras")
     private String name;
 
     @NotBlank(message = "El apellido es obligatorio")
     @Size(min = 3, message = "El apellido debe tener al menos 3 caracteres")
-    @Pattern(regexp = "^(?!null|NULL$)[\\p{L} ]+$", message = "El apellido solo puede contener letras")
+    @Pattern(regexp = "^(?!^(null|NULL)$)[\\p{L} ]+$", message = "El apellido solo puede contener letras")
     private String surname;
 
     @NotBlank(message = "El Teléfono es obligatorio")

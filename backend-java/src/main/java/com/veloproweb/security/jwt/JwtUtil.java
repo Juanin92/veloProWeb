@@ -57,12 +57,10 @@ public class JwtUtil {
      * @return - Las reclamaciones del token.
      */
     private Claims extractAllClaims(String token) {
-//        return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
         try {
             return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
         } catch (Exception e) {
-            System.out.println("Error extracting claims from token: " + e.getMessage());
-            throw e;
+            throw new IllegalArgumentException("Token inválido o expirado", e);
         }
     }
 

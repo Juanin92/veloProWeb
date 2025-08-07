@@ -23,7 +23,7 @@ public class SubcategoryProduct {
 
     @NotBlank(message = "El nombre de la subcategoría es obligatoria")
     @Size(min = 3, message = "El nombre de la subcategoría debe tener al menos 2 caracteres")
-    @Pattern(regexp = "^(?!null|NULL$)[\\p{L} ]+$", message = "El nombre solo puede contener letras")
+    @Pattern(regexp = "^(?!^(null|NULL)$)[\\p{L} ]+$", message = "El nombre solo puede contener letras")
     private String name;
 
     @NotNull(message = "Debe seleccionar una categoría")

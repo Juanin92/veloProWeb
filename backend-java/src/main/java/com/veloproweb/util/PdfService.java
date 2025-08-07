@@ -14,8 +14,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -123,11 +126,13 @@ public class PdfService {
      */
     public void deleteSalesReceiptPDF(String documentNumber) {
         String filePath = "src/main/resources/static/pdf/boleta_" + documentNumber + ".pdf";
-        File file = new File(filePath);
-        if (file.exists()) {
-            if (!file.delete()) {
-                logger.warn("No se pudo eliminar el archivo: {}", filePath);
-            }
+        Path path = Paths.get(filePath);
+
+        try {
+            Files.delete(path);
+            logger.info("Archivo eliminado correctamente: {}", filePath);
+        } catch (IOException e) {
+            logger.warn("No se pudo eliminar el archivo: {}", filePath, e);
         }
     }
 }

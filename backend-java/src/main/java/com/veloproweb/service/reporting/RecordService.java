@@ -32,9 +32,9 @@ public class RecordService implements IRecordService {
     public void registerEntry(UserDetails userDetails) {
         User user = validateAndGetUser(userDetails);
 
-        Record record = saveRecord(user, "LOGIN", null, LocalDateTime.now(), null,
+        Record recordEntry = saveRecord(user, "LOGIN", null, LocalDateTime.now(), null,
                 null);
-        recordRepo.save(record);
+        recordRepo.save(recordEntry);
     }
 
     /**
@@ -46,9 +46,9 @@ public class RecordService implements IRecordService {
     public void registerEnd(UserDetails userDetails) {
         User user = validateAndGetUser(userDetails);
 
-        Record record = saveRecord(user, "LOGOUT", null, null, null,
+        Record recordEnd = saveRecord(user, "LOGOUT", null, null, null,
                 LocalDateTime.now());
-        recordRepo.save(record);
+        recordRepo.save(recordEnd);
     }
 
     /**
@@ -62,8 +62,8 @@ public class RecordService implements IRecordService {
     public void registerAction(UserDetails userDetails, String action, String comment) {
         User user = validateAndGetUser(userDetails);
 
-        Record record = saveRecord(user, action, comment, null, LocalDateTime.now(), null);
-        recordRepo.save(record);
+        Record recordAction = saveRecord(user, action, comment, null, LocalDateTime.now(), null);
+        recordRepo.save(recordAction);
     }
 
     /**
@@ -75,7 +75,7 @@ public class RecordService implements IRecordService {
     @Override
     public void registerActionManual(String username, String action, String comment) {
         User user = userService.getUserByUsername(username);
-        Record record = Record.builder()
+        Record recordActionManual = Record.builder()
                 .entryDate(null)
                 .endDate(null)
                 .actionDate(LocalDateTime.now())
@@ -83,7 +83,7 @@ public class RecordService implements IRecordService {
                 .comment(comment)
                 .user(user)
                 .build();
-        recordRepo.save(record);
+        recordRepo.save(recordActionManual);
     }
 
     /**
@@ -146,17 +146,17 @@ public class RecordService implements IRecordService {
 
     /**
      * Mapear un registro a un DTO de respuesta
-     * @param record - registro a mapear
+     * @param originalRecord - registro a mapear
      * @return - DTO del registro
      */
-    private RecordResponseDTO mapToDTO(Record record){
+    private RecordResponseDTO mapToDTO(Record originalRecord){
         return RecordResponseDTO.builder()
-                .entryDate(record.getEntryDate())
-                .actionDate(record.getActionDate())
-                .endDate(record.getEndDate())
-                .action(record.getAction())
-                .comment(record.getComment())
-                .user(String.format("%s %s", record.getUser().getName(), record.getUser().getSurname()))
+                .entryDate(originalRecord.getEntryDate())
+                .actionDate(originalRecord.getActionDate())
+                .endDate(originalRecord.getEndDate())
+                .action(originalRecord.getAction())
+                .comment(originalRecord.getComment())
+                .user(String.format("%s %s", originalRecord.getUser().getName(), originalRecord.getUser().getSurname()))
                 .build();
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -47,7 +48,8 @@ public class SupplierService implements ISupplierService {
         Supplier supplierExists = getSupplierCreated(dto.getRut());
         validator.validateSupplierExists(supplierExists);
         mapper.updateSupplierFromDto(supplierExists, dto);
-        supplierRepo.save(supplierExists);
+        Optional.of(supplierExists)
+                        .ifPresent(supplierRepo::save);
     }
 
     /**

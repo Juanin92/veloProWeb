@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 public class IdentifyDocumentGenerator {
 
+    private IdentifyDocumentGenerator() {}
+
     /**
      * Genera el identificador del documento de ticket.
      * @param document - último documento con el formato creado

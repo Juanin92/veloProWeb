@@ -49,7 +49,7 @@ public class PurchaseMapper {
                 .detailsList(
                         purchase.getPurchaseDetails().stream()
                         .map(this::toDetailPurchaseResponseDTO)
-                                .collect(Collectors.toList())
+                                .toList()
                 )
                 .build();
     }

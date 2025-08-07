@@ -3,7 +3,7 @@ package com.veloproweb.controller.reporting;
 import com.veloproweb.model.dto.report.*;
 import com.veloproweb.service.reporting.interfaces.IRecordService;
 import com.veloproweb.service.reporting.interfaces.IReportService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,24 +16,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Controlador REST para gestionar operaciones relacionadas con reportes de ventas.
- * Este controlador proporciona endpoints para obtener listas.
- */
 @RestController
 @RequestMapping("/reportes")
 @CrossOrigin(origins = "http://localhost:4200")
+@AllArgsConstructor
 public class ReportController {
 
-    @Autowired private IReportService reportService;
-    @Autowired private IRecordService recordService;
+    private final IReportService reportService;
+    private final IRecordService recordService;
 
-    /**
-     * Obtener el conteo diario de ventas en un rango de fechas.
-     * @param startDate - Fecha de inicio del rango (inclusive).
-     * @param endDate - Fecha de fin del rango (inclusive).
-     * @return - ResponseEntity Lista de objetos dto o mensaje de excepción
-     */
     @GetMapping("/cantidad_ventas")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE')")
     public ResponseEntity<Object> getDailySale(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate,
@@ -49,12 +40,6 @@ public class ReportController {
         }
     }
 
-    /**
-     * Obtener la suma diaria de ventas en un rango de fechas.
-     * @param startDate - Fecha de inicio del rango (inclusive).
-     * @param endDate - Fecha de fin del rango (inclusive).
-     * @return - ResponseEntity Lista de objetos dto o mensaje de excepción
-     */
     @GetMapping("/monto_ventas")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE')")
     public ResponseEntity<Object> getTotalSaleDaily(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate,
@@ -70,12 +55,6 @@ public class ReportController {
         }
     }
 
-    /**
-     * Obtener el promedio diario de ventas en un rango de fechas.
-     * @param startDate - Fecha de inicio del rango (inclusive).
-     * @param endDate - Fecha de fin del rango (inclusive).
-     * @return - ResponseEntity Lista de objetos dto o mensaje de excepción
-     */
     @GetMapping("/promedio_ventas")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE')")
     public ResponseEntity<Object> getAverageTotalSaleDaily(@RequestParam LocalDate startDate,
@@ -92,12 +71,6 @@ public class ReportController {
         }
     }
 
-    /**
-     * Obtener las ganancias diarias de ventas en un rango de fechas.
-     * @param startDate - Fecha de inicio del rango (inclusive).
-     * @param endDate - Fecha de fin del rango (inclusive).
-     * @return - ResponseEntity Lista de objetos dto o mensaje de excepción
-     */
     @GetMapping("/ganancias_ventas")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE')")
     public ResponseEntity<Object> getEarningSale(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate,
@@ -113,12 +86,6 @@ public class ReportController {
         }
     }
 
-    /**
-     * Obtener los productos más vendidos en un rango de fechas.
-     * @param startDate - Fecha de inicio del rango (inclusive).
-     * @param endDate - Fecha de fin del rango (inclusive).
-     * @return - ResponseEntity Lista de objetos dto o mensaje de excepción
-     */
     @GetMapping("/producto_ventas")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE')")
     public ResponseEntity<Object> getMostProductSale(@RequestParam LocalDate startDate,
@@ -135,12 +102,6 @@ public class ReportController {
         }
     }
 
-    /**
-     * Obtener las categorías más vendidas en un rango de fechas.
-     * @param startDate - Fecha de inicio del rango (inclusive).
-     * @param endDate - Fecha de fin del rango (inclusive).
-     * @return - ResponseEntity Lista de objetos dto o mensaje de excepción
-     */
     @GetMapping("/categoria_ventas")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'WAREHOUSE')")
     public ResponseEntity<Object> getMostCategorySale(@RequestParam LocalDate startDate,
