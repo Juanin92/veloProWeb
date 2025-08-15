@@ -24,14 +24,13 @@ public class EmailService {
 
     private final ILocalDataService localDataService;
     private final PdfService pdfService;
-    private LocalData localData;
 
     /**
      * Configura el JavaMailSender para enviar correos electrónicos.
      * @return JavaMailSenderImpl configurado.
      */
     private JavaMailSenderImpl getJavaMailSender() {
-        localData = getLocalData();
+        LocalData localData = getLocalData();
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
@@ -59,10 +58,10 @@ public class EmailService {
         String text = String.format(""" 
                 Hola %s,
 
-                Esperamos que te encuentres bien. Queremos recordarte que tu boleta con el número **%s** ha vencido. 
+                Esperamos que te encuentres bien. Queremos recordarte que tu boleta con el número **%s** ha vencido.
                 Fecha de compra: **%s**.
 
-                Te invitamos a ponerte en contacto con nosotros para facilitar el proceso de pago y resolver cualquier duda que puedas tener. 
+                Te invitamos a ponerte en contacto con nosotros para facilitar el proceso de pago y resolver cualquier duda que puedas tener.
                 Tu satisfacción es muy importante para nosotros.
 
                 ¡Gracias por tu atención y preferencia!
@@ -87,7 +86,7 @@ public class EmailService {
             if (!"x@x.xxx".equals(to)) {
                 try {
                     // Generar el PDF antes de enviarlo
-                    localData = getLocalData();
+                    LocalData localData = getLocalData();
                     String filePath = pdfService.generateSalesReceiptPDF(sale, localData);
 
                     JavaMailSenderImpl mailSender = getJavaMailSender();
