@@ -5,7 +5,6 @@ import { AuthService } from '../../services/user/auth.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../utils/notification-service.service';
-import { EncryptionService } from '../../security/encryption.service';
 import { ErrorMessageService } from '../../utils/error-message.service';
 
 @Component({
@@ -17,7 +16,6 @@ import { ErrorMessageService } from '../../utils/error-message.service';
 })
 export class LoginComponent implements OnInit {
 
-  encryptionKey: string = '';
   sendCode: boolean = false;
   userLogin: LoginRequest = {
     username: '',
@@ -27,26 +25,18 @@ export class LoginComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private encryptionService: EncryptionService,
     private notification: NotificationService,
     private errorMessage: ErrorMessageService) { }
 
   ngOnInit(): void {
-    this.getEncryptedKey();
     this.resetCache();
   }
 
-  getEncryptedKey(): void{
-    this.authService.getEncryptionKey().subscribe((key) => { 
-      this.encryptionKey = key;
-    });
-  }
-
   isLoginUser() {
-    if (this.userLogin && this.encryptionKey) {
+    if (this.userLogin) {
       const encryptedUser: LoginRequest = {
         username: this.userLogin.username,
-        password: this.encryptionService.encryptPassword(this.userLogin.password, this.encryptionKey)
+        password: this.userLogin.password
       }
       if(this.sendCode){
         this.loginWithCode(encryptedUser);
