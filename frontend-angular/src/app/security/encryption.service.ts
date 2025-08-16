@@ -1,20 +1,19 @@
-import { Injectable } from '@angular/core';
-import * as CryptoJS from 'crypto-js';
+// import { Injectable } from '@angular/core';
+// import * as CryptoJS from 'crypto-js';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class EncryptionService {
+// @Injectable({
+//   providedIn: 'root'
+// })
+// export class EncryptionService {
 
-  constructor() { }
+//   constructor() { }
 
-  encryptPassword(password: string, encryptionKey: string): string {
-    const key = CryptoJS.enc.Base64.parse(encryptionKey);
-    const encrypted = CryptoJS.AES.encrypt(password, key, {
-        mode: CryptoJS.mode.ECB,
-        padding: CryptoJS.pad.Pkcs7
-    });
-    return encrypted.toString();
-  }
-  
-}
+//   encryptPassword(password: string, encryptionKey: string): string {
+//     const key = CryptoJS.enc.Base64.parse(encryptionKey);
+//     const encrypted = CryptoJS.AES.encrypt(password, key, {
+//       mode: CryptoJS.mode.GCM,
+//       padding: CryptoJS.pad.NoPadding
+//     });
+//     return encrypted.toString();
+//   }
+// }
