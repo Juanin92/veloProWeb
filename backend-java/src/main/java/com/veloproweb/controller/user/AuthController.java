@@ -2,7 +2,6 @@ package com.veloproweb.controller.user;
 
 import com.veloproweb.model.dto.user.AuthRequestDTO;
 import com.veloproweb.model.dto.user.LoginRequestDTO;
-import com.veloproweb.security.service.EncryptionService;
 import com.veloproweb.security.jwt.JwtUtil;
 import com.veloproweb.service.reporting.interfaces.IRecordService;
 import com.veloproweb.service.user.interfaces.ILoginService;
@@ -10,7 +9,6 @@ import com.veloproweb.util.ResponseMessage;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,7 +28,6 @@ public class AuthController {
 
     private final IRecordService recordService;
     private final ILoginService loginService;
-    private final EncryptionService encryptionService;
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
@@ -38,9 +35,8 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody @Valid LoginRequestDTO user) throws Exception {
         loginService.validateLoginAccess(user.getUsername());
-        String decryptedPassword = encryptionService.decrypt(user.getPassword());
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                user.getUsername(), decryptedPassword));
+                user.getUsername(), user.getPassword()));
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
         String jwtToken = jwtUtil.generateToken(userDetails);
         String role = userDetails.getAuthorities().stream()
@@ -56,8 +52,7 @@ public class AuthController {
     public ResponseEntity<Map<String, String>> loginWithCode(@RequestBody @Valid LoginRequestDTO user) throws Exception
     {
         loginService.validateLoginAccess(user.getUsername());
-        String decryptedPassword = encryptionService.decrypt(user.getPassword());
-        loginService.validateSecurityToken(user.getUsername(), decryptedPassword);
+        loginService.validateSecurityToken(user.getUsername(), user.getPassword());
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
         String jwtToken = jwtUtil.generateToken(userDetails);
         String role = userDetails.getAuthorities().stream()
@@ -80,8 +75,7 @@ public class AuthController {
     @PreAuthorize("hasAnyAuthority('MASTER')")
     public ResponseEntity<Boolean> getAuthAccess(@RequestBody AuthRequestDTO dto,
                                                  @AuthenticationPrincipal UserDetails userDetails) throws Exception {
-        String decryptedPassword = encryptionService.decrypt(dto.getToken());
-        return ResponseEntity.ok(loginService.isPasswordValid(decryptedPassword, userDetails));
+        return ResponseEntity.ok(loginService.isPasswordValid(dto.getToken(), userDetails));
     }
 
     @PostMapping("/olvide-codigo")
@@ -96,13 +90,6 @@ public class AuthController {
             return new ResponseEntity<>(ResponseMessage.messageWithBooleanKey("message", e.getMessage(),
                     "action", false), HttpStatus.CONFLICT);
         }
-    }
-
-    @GetMapping("/encriptado")
-    public ResponseEntity<String> getEncryptionKey() {
-        return ResponseEntity.ok()
-                .contentType(MediaType.TEXT_PLAIN)
-                .body(encryptionService.getEncryptionKey());
     }
 
     @GetMapping("/me")
