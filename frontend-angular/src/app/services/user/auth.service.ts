@@ -13,10 +13,6 @@ export class AuthService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getEncryptionKey(): Observable<string> {
-    return this.httpClient.get(`${this.apiUrl}/encriptado`, { responseType: 'text' });
-  }
-
   login(loginRequest: LoginRequest): Observable<{ token: string, role: string }> {
     return this.httpClient.post<{ token: string, role: string }>(`${this.apiUrl}/login`, loginRequest);
   }
