@@ -9,7 +9,6 @@ import { TaskLayoutComponent } from "../communication/task-layout/task-layout.co
 import { SettingPermissionsService } from '../../services/permissions/setting-permissions.service';
 import { NotificationService } from '../../utils/notification-service.service';
 import { AuthService } from '../../services/user/auth.service';
-import { EncryptionService } from '../../security/encryption.service';
 import { AuthRequest } from '../../models/entity/user/auth-request';
 import { ErrorMessageService } from '../../utils/error-message.service';
 import { RegisterComponent } from './register/register.component';
@@ -26,12 +25,10 @@ export class SettingComponent{
   data: LocalData;
   access: boolean = false;
   pass: string = '';
-  encryptedCode: string = '';
 
   constructor(
     private localDataService: LocalDataService,
     private authService: AuthService,
-    private encryptionService: EncryptionService,
     protected permission: SettingPermissionsService,
     private errorMessage: ErrorMessageService,
     private notification: NotificationService){
@@ -61,20 +58,11 @@ export class SettingComponent{
     }
   }
 
-  getEncryptedKey(): void{
-    this.authService.getEncryptionKey().subscribe({
-      next: (key) => { this.encryptedCode = key;},
-      error: (error) => {
-        const message = this.errorMessage.errorMessageExtractor(error);
-          this.notification.showErrorToast(message, 'top', 3000);
-      }
-    });
-  }
-
   getAccessHistory(): void{
-    if(this.encryptedCode && this.pass.trim() !== ''){
+    if(this.pass.trim() !== ''){
       const authRequest: AuthRequest = {identifier: '',
-        token: this.encryptionService.encryptPassword(this.pass, this.encryptedCode)};
+        token: this.pass
+      };
       this.authService.getAuthAccess(authRequest).subscribe({
         next:(response)=>{ this.access = response;},
         error:(error)=>{
